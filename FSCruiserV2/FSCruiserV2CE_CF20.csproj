@@ -1,0 +1,370 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AFD7A43E-A691-4A30-859A-28C9245EB0FC}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FSCruiserV2</RootNamespace>
+    <AssemblyName>FSCruiserV2CE_CF20</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>WindowsCE</PlatformFamilyName>
+    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
+    <OSVersion>5.0</OSVersion>
+    <DeployDirSuffix>FSCruiserV2CE_CF20</DeployDirSuffix>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <NativePlatformName>Windows CE</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+    <StartupObject>FSCruiserV2.Program</StartupObject>
+    <ApplicationIcon>fscruiser.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WindowsCE CF20 PocketPC Mobile</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;WindowsCE CF20 PocketPC</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.WindowsCE.Forms" />
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataGrid" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Constants.cs" />
+    <Compile Include="CountTreeExtensions.cs" />
+    <Compile Include="Forms\ControlTreeDataGrid.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\Form3PNumPad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form3PPNTPlotInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form3PPNTPlotInfo.designer.cs">
+      <DependentUpon>Form3PPNTPlotInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormAbout.Designer.cs">
+      <DependentUpon>FormAbout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormAddPopulation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormAddPopulation.Designer.cs">
+      <DependentUpon>FormAddPopulation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormBackupUtility.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormBackupUtility.Designer.cs">
+      <DependentUpon>FormBackupUtility.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCruiseInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCruiseInfo.Designer.cs">
+      <DependentUpon>FormCruiseInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCruiserSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCruiserSelection.designer.cs">
+      <DependentUpon>FormCruiserSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCruiserSelection.Logic.cs" />
+    <Compile Include="Forms\FormDataEntry.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormDataEntry.Designer.cs">
+      <DependentUpon>FormDataEntry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormDataEntryBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormDeviceInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormDeviceInfo.Designer.cs">
+      <DependentUpon>FormDeviceInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormEditSampleGroup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormEditSampleGroup.Designer.cs">
+      <DependentUpon>FormEditSampleGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormEditTreeDefault.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormEditTreeDefault.Designer.cs">
+      <DependentUpon>FormEditTreeDefault.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormLimitingDistance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormLimitingDistance.Designer.cs">
+      <DependentUpon>FormLimitingDistance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormLogs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormLogs.Designer.cs">
+      <DependentUpon>FormLogs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormManageCruisers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormManageCruisers.Designer.cs">
+      <DependentUpon>FormManageCruisers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormNumPad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormPlotInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormPlotInfo.Designer.cs">
+      <DependentUpon>FormPlotInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormTallySettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormTallySettings.Designer.cs">
+      <DependentUpon>FormTallySettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormTallySetup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormTallySetup.Designer.cs">
+      <DependentUpon>FormTallySetup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ICruiserSelectionView.cs" />
+    <Compile Include="Forms\IDataEntryPage.cs" />
+    <Compile Include="Forms\IDataEntryView.cs" />
+    <Compile Include="Forms\IPlotInfoDialog.cs" />
+    <Compile Include="Forms\IPlotLayout.cs" />
+    <Compile Include="Forms\ITallyView.cs" />
+    <Compile Include="Forms\LayoutPlot.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\LayoutTreeBased.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\LayoutTreeBased.Designer.cs">
+      <DependentUpon>LayoutTreeBased.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Logic\ApplicationController.cs" />
+    <Compile Include="Logic\ApplicationSettings.cs" />
+    <Compile Include="Logic\CountTreeVM.cs" />
+    <Compile Include="Logic\CruiserVM.cs" />
+    <Compile Include="Logic\CuttingUnitInfo.cs" />
+    <Compile Include="Logic\DataGridAdjuster.cs" />
+    <Compile Include="Logic\FomrDataEntry.Logic.cs" />
+    <Compile Include="Logic\IApplicationController.cs" />
+    <Compile Include="Forms\ITreeView.cs" />
+    <Compile Include="Logic\IViewController.cs" />
+    <Compile Include="Logic\LayoutPlot.Logic.cs" />
+    <Compile Include="Logic\PlotInfo.cs" />
+    <Compile Include="Logic\SampleGroupVM.cs" />
+    <Compile Include="Logic\StratumInfo.cs" />
+    <Compile Include="Logic\SubPopInfo.cs" />
+    <Compile Include="Logic\TallyAction.cs" />
+    <Compile Include="Logic\TallySettingsDO.cs" />
+    <Compile Include="Logic\TreeVM.cs" />
+    <Compile Include="Logic\ViewController.cs" />
+    <Compile Include="Logic\ViewController_Base.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfoCE_CF20.cs" />
+    <EmbeddedResource Include="Forms\FormAbout.resx">
+      <DependentUpon>FormAbout.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormAddPopulation.resx">
+      <DependentUpon>FormAddPopulation.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormCruiseInfo.resx">
+      <DependentUpon>FormCruiseInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormDataEntry.resx">
+      <DependentUpon>FormDataEntry.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormDeviceInfo.resx">
+      <DependentUpon>FormDeviceInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormNumPad.resx">
+      <DependentUpon>FormNumPad.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormPlotInfo.resx">
+      <DependentUpon>FormPlotInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormTallySettings.resx">
+      <DependentUpon>FormTallySettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LayoutPlot.resx">
+      <DependentUpon>LayoutPlot.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LayoutTreeBased.resx">
+      <DependentUpon>LayoutTreeBased.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TallyRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TallyRow.Designer.cs">
+      <DependentUpon>TallyRow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Win32.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FMSC_Logo.jpg" />
+    <EmbeddedResource Include="Forms\Form3PNumPad.resx">
+      <DependentUpon>Form3PNumPad.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form3PPNTPlotInfo.resx">
+      <DependentUpon>Form3PPNTPlotInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormBackupUtility.resx">
+      <DependentUpon>FormBackupUtility.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormCruiserSelection.resx">
+      <DependentUpon>FormCruiserSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormDataEntryBase.resx">
+      <DependentUpon>FormDataEntryBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormEditSampleGroup.resx">
+      <DependentUpon>FormEditSampleGroup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormEditTreeDefault.resx">
+      <DependentUpon>FormEditTreeDefault.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormLimitingDistance.resx">
+      <DependentUpon>FormLimitingDistance.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormLogs.resx">
+      <DependentUpon>FormLogs.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormManageCruisers.resx">
+      <DependentUpon>FormManageCruisers.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormTallySetup.resx">
+      <DependentUpon>FormTallySetup.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TallyRow.resx">
+      <DependentUpon>TallyRow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\CruiseDAL\SQLite\Mobile_CF20\SQLite.Interop.094.dll">
+      <Link>SQLite.Interop.094.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="fscruiser.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CruiseDAL.DataObjects.SampleGroupDO.datasource" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CruiseDAL\CruiseDAL\CruiseDAL_CF20.csproj">
+      <Project>{DC8A4894-F4A8-4554-B475-2EBAD49AF148}</Project>
+      <Name>CruiseDAL_CF20</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FMSC.Controls\FMSC.Controls\FMSCUI_CF20.csproj">
+      <Project>{66B57265-EED3-49D7-B3B7-68CDE1061085}</Project>
+      <Name>FMSCUI_CF20</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FMSC.Sampling\FMSC.Sampling\FMSC.Sampling_CE_CF20.csproj">
+      <Project>{932C2341-A331-4B7C-8BC9-9D3491F1821B}</Project>
+      <Name>FMSC.Sampling_CE_CF20</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FMSC.Utility\FMSC.Utility\FMCSUtil_CF20.csproj">
+      <Project>{2B5BA2D4-7D46-4BF3-A775-2A0F849BE92B}</Project>
+      <Name>FMCSUtil_CF20</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

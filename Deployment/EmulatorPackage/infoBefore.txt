@@ -1,0 +1,2 @@
+THIS INSTALLER IS FOR TESTING PURPOSES ONLY. 
+Included in this installer is a copy of Windows Mobile 6 emulator that allows you to run Windows Mobile applications using an emulator, and a Windows Mobile device state file, that includes FSCruiserV2 preinstalled. 
