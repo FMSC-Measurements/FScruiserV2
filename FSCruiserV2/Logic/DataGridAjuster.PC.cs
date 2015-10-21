@@ -10,17 +10,35 @@ namespace FSCruiserV2.Logic
 {
     public static class DataGridAdjuster
     {
+        public static List<TreeFieldSetupDO> GetTreeFieldSetupByStratum(DAL dal, long stratum_cn)
+        {
+            //   return base.DAL.Read<TreeFieldSetupDO>(TREEFIELDSETUP._NAME, TREEFIELDSETUP.STRATUM_CN + " = ?", new string[] { stratum_cn });
+            return dal.Read<TreeFieldSetupDO>(CruiseDAL.Schema.TREEFIELDSETUP._NAME, "WHERE " + CruiseDAL.Schema.TREEFIELDSETUP.STRATUM_CN + " = ?  ORDER BY " + CruiseDAL.Schema.TREEFIELDSETUP.FIELDORDER, stratum_cn);
+
+        }
+
+        public static List<TreeFieldSetupDO> GetTreeFieldSetupByUnit(DAL dal, long unit_cn)
+        {
+            return dal.Read<TreeFieldSetupDO>(CruiseDAL.Schema.TREEFIELDSETUP._NAME,
+                    @"JOIN CuttingUnitStratum 
+                    ON TreeFieldSetup.Stratum_CN = CuttingUnitStratum.Stratum_CN 
+                    WHERE CuttingUnitStratum.CuttingUnit_CN = ?  
+                    Group BY TreeFieldSetup.Field 
+                    ORDER BY TreeFieldSetup.FieldOrder;", unit_cn);
+
+        }
+
         //TODO GetTreeFieldSetups and GetTreeFieldNames should be extracted to a common base class
         private static List<TreeFieldSetupDO> GetTreeFieldSetups(DAL db, CuttingUnitDO unit, StratumVM stratum)
         {
             List<TreeFieldSetupDO> fieldSetups = null;
             if (stratum != null)
             {
-                fieldSetups = Services.TreeFieldSetupService.GetTreeFieldSetupByStratum(db, stratum.Stratum_CN.Value);
+                fieldSetups = GetTreeFieldSetupByStratum(db, stratum.Stratum_CN.Value);
             }
             else
             {
-                fieldSetups = Services.TreeFieldSetupService.GetTreeFieldSetupByUnit(db, unit.CuttingUnit_CN.Value);
+                fieldSetups = GetTreeFieldSetupByUnit(db, unit.CuttingUnit_CN.Value);
             }
 
             if (fieldSetups.Count == 0)

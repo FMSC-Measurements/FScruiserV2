@@ -339,17 +339,17 @@
       <Project>{DC8A4894-F4A8-4554-B475-2EBAD49AF148}</Project>
       <Name>CruiseDAL_CF20</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FMSC.Controls\FMSC.Controls\FMSCUI_CF20.csproj">
+    <ProjectReference Include="..\FMSC.Controls\FMSC.Controls\FMSC.Controls_CF20.csproj">
       <Project>{66B57265-EED3-49D7-B3B7-68CDE1061085}</Project>
-      <Name>FMSCUI_CF20</Name>
+      <Name>FMSC.Controls_CF20</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FMSC.Sampling\FMSC.Sampling\FMSC.Sampling_CE_CF20.csproj">
+    <ProjectReference Include="..\FMSC.Sampling\FMSC.Sampling\FMSC.Sampling_CF20.csproj">
       <Project>{932C2341-A331-4B7C-8BC9-9D3491F1821B}</Project>
-      <Name>FMSC.Sampling_CE_CF20</Name>
+      <Name>FMSC.Sampling_CF20</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FMSC.Utility\FMSC.Utility\FMCSUtil_CF20.csproj">
+    <ProjectReference Include="..\FMSC.Util\FMSC.Utility\FMSC.Utility_CF20.csproj">
       <Project>{2B5BA2D4-7D46-4BF3-A775-2A0F849BE92B}</Project>
-      <Name>FMCSUtil_CF20</Name>
+      <Name>FMSC.Utility_CF20</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />

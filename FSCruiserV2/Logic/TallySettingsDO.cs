@@ -8,7 +8,7 @@ namespace FSCruiserV2.Logic
     /// <summary>
     /// What is the purpose of this class? It is a place holder of sorts. I figure that the CountTree table needs to be broken up into seperate data/settings tables
     /// </summary>
-    [Table(TableName="CountTree")]
+    [SQLEntity(TableName="CountTree")]
     public class TallySettingsDO : DataObject
     {
         public TallySettingsDO() 
