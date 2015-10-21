@@ -1,7 +1,9 @@
 ﻿using System.Windows.Forms;
-using FSCruiserV2.Logic;
+using FSCruiser.Core.Models;
+using FSCruiser.Core.DataEntry;
 
-namespace FSCruiserV2.Forms
+
+namespace FSCruiser.Core.ViewInterfaces
 {
     public interface IPlotLayout : ITallyView, ITreeView
     {

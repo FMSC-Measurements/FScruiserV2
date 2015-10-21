@@ -5,7 +5,7 @@ using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
 using FMSC.Sampling;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.Core.Models
 {
     public class SampleGroupVM : SampleGroupDO
     {

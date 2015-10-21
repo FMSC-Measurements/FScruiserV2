@@ -3,7 +3,7 @@ using CruiseDAL.DataObjects;
 using FMSC.Sampling;
 using System.Xml.Serialization;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.Core.Models
 {
     [Serializable]
     public class TallyAction

@@ -1,7 +1,7 @@
 ﻿using CruiseDAL.DataObjects;
-using CruiseDAL; 
+using CruiseDAL;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.Core.Models
 {
     public class TreeVM : TreeDO
     {

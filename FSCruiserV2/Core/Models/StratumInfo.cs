@@ -5,7 +5,7 @@ using CruiseDAL.DataObjects;
 using System.Windows.Forms;
 using FMSC.Sampling;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.Core.Models
 {
     public class StratumVM : StratumDO
     {

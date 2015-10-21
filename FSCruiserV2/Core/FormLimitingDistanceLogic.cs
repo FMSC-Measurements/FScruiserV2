@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using FSCruiserV2.Forms;
+using FSCruiser.Core.ViewInterfaces;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.Core
 {
     public class FormLimitingDistanceLogic
     {

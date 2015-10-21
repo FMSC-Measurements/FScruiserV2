@@ -1,7 +1,9 @@
 ﻿using System;
-using FSCruiserV2.Logic;
+using FSCruiser.Core.Models;
+using FSCruiser.Core.ViewInterfaces;
 
-namespace FSCruiserV2.Forms
+
+namespace FSCruiser.Core
 {
     public class FormCruiserSelectionLogic
     {

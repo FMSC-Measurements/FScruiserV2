@@ -1,11 +1,13 @@
 ﻿using System;
 
 using System.Collections.Generic;
-using FSCruiserV2.Forms;
 using System.Windows.Forms;
 using System.ComponentModel;
+using FSCruiser.Core.Models;
+using FSCruiser.Core.ViewInterfaces;
+using FSCruiser.WinForms.DataEntry;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.Core.DataEntry
 {
     public class LayoutPlotLogic
     {
@@ -77,10 +79,10 @@ namespace FSCruiserV2.Logic
             ((System.ComponentModel.ISupportInitialize)(this._BS_Plots)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._BS_Trees)).BeginInit();
 
-            this._BS_Plots.DataSource = typeof(FSCruiserV2.Logic.PlotVM);
+            this._BS_Plots.DataSource = typeof(PlotVM);
             this._BS_Plots.CurrentChanged += new System.EventHandler(this._BS_Plots_CurrentChanged);
 
-            this._BS_Trees.DataSource = typeof(FSCruiserV2.Logic.TreeVM);
+            this._BS_Trees.DataSource = typeof(TreeVM);
             this._BS_Trees.CurrentChanged += new System.EventHandler(this._BS_Trees_CurrentChanged);
 
             ((System.ComponentModel.ISupportInitialize)(this._BS_Plots)).EndInit();

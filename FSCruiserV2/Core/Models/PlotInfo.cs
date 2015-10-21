@@ -6,7 +6,7 @@ using System.ComponentModel;
 using CruiseDAL;
 using CruiseDAL.Schema;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.Core.Models
 {
     public class PlotVM : PlotDO
     {

@@ -6,7 +6,7 @@ using FMSC.Sampling;
 using System.Xml.Serialization;
 using System.IO;
 
-namespace FSCruiserV2.Logic.DataObjectExtensionMethods
+namespace FSCruiser.Core
 {
     public static class CountTreeExtensions
     {

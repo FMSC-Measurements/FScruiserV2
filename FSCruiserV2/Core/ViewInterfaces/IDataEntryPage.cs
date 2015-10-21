@@ -1,6 +1,5 @@
 ﻿
-using FSCruiserV2.Logic;
-namespace FSCruiserV2.Forms
+namespace FSCruiser.Core.ViewInterfaces
 {
     public interface IDataEntryPage
     {

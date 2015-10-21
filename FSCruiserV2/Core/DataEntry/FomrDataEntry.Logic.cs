@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.DataObjects;
-using FSCruiserV2.Forms;
 using System.ComponentModel;
 using System.Windows.Forms;
 using FMSC.Sampling;
 using CruiseDAL;
+using FSCruiser.Core.ViewInterfaces;
+using FSCruiser.Core.Models;
+using FSCruiser.WinForms.DataEntry;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.Core.DataEntry
 {
     public class FormDataEntryLogic
     {

@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FSCruiserV2.Forms;
 using System.Windows.Forms;
 using System.Threading;
 using System.ComponentModel;
 using CruiseDAL.DataObjects;
+using FSCruiser.Core;
+using FSCruiser.Core.Models;
+using FSCruiser.WinForms.DataEntry;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.WinForms
 {
 
 

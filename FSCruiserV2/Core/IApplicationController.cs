@@ -1,7 +1,8 @@
 ﻿using System;
 using CruiseDAL.DataObjects;
 using System.Collections.Generic;
-namespace FSCruiserV2.Logic
+using FSCruiser.Core.Models;
+namespace FSCruiser.Core
 {
     public interface IApplicationController : IDisposable
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.Core.ViewInterfaces
 {
     interface INumPad
     {

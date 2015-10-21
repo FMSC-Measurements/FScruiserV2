@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.Core.ViewInterfaces
 {
     public interface ILimitingDistanceView
     {

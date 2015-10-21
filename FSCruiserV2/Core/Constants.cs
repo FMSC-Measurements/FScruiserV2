@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.DataObjects;
 
-namespace FSCruiserV2
+namespace FSCruiser.Core
 {
     public static class Constants
     {

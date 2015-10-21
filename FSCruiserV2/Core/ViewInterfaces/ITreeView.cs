@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
-using FSCruiserV2.Logic;
+using FSCruiser.Core.Models;
 
-namespace FSCruiserV2.Forms
+
+namespace FSCruiser.Core.ViewInterfaces
 {
-    public interface ITreeView: FSCruiserV2.Forms.IDataEntryPage
+    public interface ITreeView: IDataEntryPage
     {
         bool UserCanAddTrees { get; set; }
         //String[] VisableFields { get; }

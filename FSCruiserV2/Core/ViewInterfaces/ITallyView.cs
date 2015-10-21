@@ -4,9 +4,10 @@ using System.Text;
 using FMSC.Sampling;
 using CruiseDAL.DataObjects;
 using System.Windows.Forms;
-using FSCruiserV2.Logic;
+using FSCruiser.Core.DataEntry;
+using FSCruiser.Core.Models;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.Core.ViewInterfaces
 {
     public delegate Control MakeCountTallyRowHadler(Control container, CountTreeVM count); 
 

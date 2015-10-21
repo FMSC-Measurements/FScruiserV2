@@ -2,13 +2,16 @@
 
 using System.Collections.Generic;
 using System.Text;
-using FSCruiserV2.Forms;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
+using FSCruiser.WinForms;
+using FSCruiser.WinForms.DataEntry;
+using FSCruiser.Core.Models;
+using FSCruiser.Core.ViewInterfaces;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.Core
 {
     public abstract class WinFormsViewControllerBase : IViewController
     {

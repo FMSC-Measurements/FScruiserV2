@@ -5,8 +5,10 @@ using System.Text;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using CruiseDAL;
+using FSCruiser.Core.Models;
+using FSCruiser.Core;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.WinForms
 {
     public static class DataGridAdjuster
     {

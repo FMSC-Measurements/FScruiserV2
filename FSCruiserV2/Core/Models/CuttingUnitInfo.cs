@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using System.ComponentModel;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.Core.Models
 {
     public class CuttingUnitVM : CuttingUnitDO
     {

@@ -1,6 +1,6 @@
 ﻿using CruiseDAL.DataObjects;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.Core.Models
 {
     public class SubPop
     {

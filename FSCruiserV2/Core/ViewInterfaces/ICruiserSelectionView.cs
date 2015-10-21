@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using FSCruiserV2.Logic;
+using FSCruiser.Core.Models;
 
-namespace FSCruiserV2.Forms
+
+namespace FSCruiser.Core.ViewInterfaces
 {
     public interface ICruiserSelectionView 
     {

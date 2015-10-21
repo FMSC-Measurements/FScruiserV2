@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using CruiseDAL;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.Core.Models
 {
     /// <summary>
     /// What is the purpose of this class? It is a place holder of sorts. I figure that the CountTree table needs to be broken up into seperate data/settings tables

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.Core.Models
 {
     [Serializable]
     public class CruiserVM

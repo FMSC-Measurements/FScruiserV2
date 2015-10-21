@@ -1,8 +1,10 @@
 ﻿using System;
 using CruiseDAL.DataObjects;
-using FSCruiserV2.Forms;
 using System.Windows.Forms;
-namespace FSCruiserV2.Logic
+using FSCruiser.Core.Models;
+using FSCruiser.WinForms;
+using FSCruiser.WinForms.DataEntry;
+namespace FSCruiser.Core
 {
     public delegate void HandleCruiseDataLoadedEventHandler();
 
