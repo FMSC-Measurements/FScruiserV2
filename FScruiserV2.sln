@@ -12,9 +12,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FMSC.Controls", "FMSC.Controls", "{0342DDBE-0C70-4BF8-8D15-7DD81021A419}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logic", "Logic", "{9ACC8380-6CB0-4051-8772-A63AF9120A3C}"
-	ProjectSection(SolutionItems) = preProject
-		FSCruiserV2\Logic\TallyAction.cs = FSCruiserV2\Logic\TallyAction.cs
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FMSC.Sampling", "FMSC.Sampling", "{0A2F0767-2EF9-477F-8AB0-4D5B2E1E4861}"
 EndProject
@@ -72,9 +69,9 @@ Global
 		{9568C413-05B2-4672-AD7B-E4101537AB26}.Debug with args|x86.ActiveCfg = Debug|x86
 		{9568C413-05B2-4672-AD7B-E4101537AB26}.Debug with args|x86.Build.0 = Debug|x86
 		{9568C413-05B2-4672-AD7B-E4101537AB26}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{9568C413-05B2-4672-AD7B-E4101537AB26}.Debug|Any CPU.Build.0 = Debug|x86
 		{9568C413-05B2-4672-AD7B-E4101537AB26}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{9568C413-05B2-4672-AD7B-E4101537AB26}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{9568C413-05B2-4672-AD7B-E4101537AB26}.Debug|Mixed Platforms.Deploy.0 = Debug|x86
 		{9568C413-05B2-4672-AD7B-E4101537AB26}.Debug|x86.ActiveCfg = Debug|x86
 		{9568C413-05B2-4672-AD7B-E4101537AB26}.Debug|x86.Build.0 = Debug|x86
 		{9568C413-05B2-4672-AD7B-E4101537AB26}.Release with args|Any CPU.ActiveCfg = Release|x86
@@ -116,7 +113,6 @@ Global
 		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Debug with args|x86.ActiveCfg = Debug|x86
 		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Debug with args|x86.Build.0 = Debug|x86
 		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Debug|Any CPU.Build.0 = Debug|x86
 		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Debug|x86.ActiveCfg = Debug|x86
@@ -237,7 +233,6 @@ Global
 		{CD0906AB-CAB0-4B02-BD38-70572B4D581B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{CD0906AB-CAB0-4B02-BD38-70572B4D581B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{CD0906AB-CAB0-4B02-BD38-70572B4D581B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{CD0906AB-CAB0-4B02-BD38-70572B4D581B}.Debug|Mixed Platforms.Deploy.0 = Debug|Any CPU
 		{CD0906AB-CAB0-4B02-BD38-70572B4D581B}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{CD0906AB-CAB0-4B02-BD38-70572B4D581B}.Release with args|Any CPU.ActiveCfg = Release|Any CPU
 		{CD0906AB-CAB0-4B02-BD38-70572B4D581B}.Release with args|Any CPU.Build.0 = Release|Any CPU
