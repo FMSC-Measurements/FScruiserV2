@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion(FSCruiserV2.Constants.FSCRUISER_VERSION)]
+[assembly: AssemblyVersion(FSCruiser.Core.Constants.FSCRUISER_VERSION)]
 
 // Below attribute is to suppress FxCop warning "CA2232 : Microsoft.Usage : Add STAThreadAttribute to assembly"
 // as Device app does not support STA thread.

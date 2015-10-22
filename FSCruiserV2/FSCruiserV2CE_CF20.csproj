@@ -18,7 +18,7 @@
     <NativePlatformName>Windows CE</NativePlatformName>
     <FormFactorID>
     </FormFactorID>
-    <StartupObject>FSCruiserV2.Program</StartupObject>
+    <StartupObject>FSCruiser.WinForms.Program</StartupObject>
     <ApplicationIcon>fscruiser.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -57,201 +57,204 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
-    <Compile Include="CountTreeExtensions.cs" />
-    <Compile Include="Forms\ControlTreeDataGrid.cs">
+    <Compile Include="Core\ApplicationController.cs" />
+    <Compile Include="Core\ApplicationSettings.cs" />
+    <Compile Include="Core\Constants.cs" />
+    <Compile Include="Core\CountTreeExtensions.cs" />
+    <Compile Include="Core\FormLimitingDistanceLogic.cs" />
+    <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
+    <Compile Include="Core\ViewInterfaces\INumPad.cs" />
+    <Compile Include="NetCF\WinForms\DataEntry\ControlTreeDataGrid.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\Form3PNumPad.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\Form3PNumPad.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Form3PPNTPlotInfo.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\Form3PPNTPlotInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Form3PPNTPlotInfo.designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\Form3PPNTPlotInfo.designer.cs">
       <DependentUpon>Form3PPNTPlotInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormAbout.cs">
+    <Compile Include="NetCF\WinForms\FormAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormAbout.Designer.cs">
+    <Compile Include="NetCF\WinForms\FormAbout.Designer.cs">
       <DependentUpon>FormAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormAddPopulation.cs">
+    <Compile Include="NetCF\WinForms\FormAddPopulation.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormAddPopulation.Designer.cs">
+    <Compile Include="NetCF\WinForms\FormAddPopulation.Designer.cs">
       <DependentUpon>FormAddPopulation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormBackupUtility.cs">
+    <Compile Include="NetCF\WinForms\FormBackupUtility.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormBackupUtility.Designer.cs">
+    <Compile Include="NetCF\WinForms\FormBackupUtility.Designer.cs">
       <DependentUpon>FormBackupUtility.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormCruiseInfo.cs">
+    <Compile Include="NetCF\WinForms\FormCruiseInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormCruiseInfo.Designer.cs">
+    <Compile Include="NetCF\WinForms\FormCruiseInfo.Designer.cs">
       <DependentUpon>FormCruiseInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormCruiserSelection.cs">
+    <Compile Include="NetCF\WinForms\FormCruiserSelection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormCruiserSelection.designer.cs">
+    <Compile Include="NetCF\WinForms\FormCruiserSelection.designer.cs">
       <DependentUpon>FormCruiserSelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormCruiserSelection.Logic.cs" />
-    <Compile Include="Forms\FormDataEntry.cs">
+    <Compile Include="Core\FormCruiserSelection.Logic.cs" />
+    <Compile Include="NetCF\WinForms\DataEntry\FormDataEntry.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormDataEntry.Designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormDataEntry.Designer.cs">
       <DependentUpon>FormDataEntry.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormDataEntryBase.cs">
+    <Compile Include="WinForms.Common\FormDataEntryBase.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormDeviceInfo.cs">
+    <Compile Include="NetCF\WinForms\FormDeviceInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormDeviceInfo.Designer.cs">
+    <Compile Include="NetCF\WinForms\FormDeviceInfo.Designer.cs">
       <DependentUpon>FormDeviceInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormEditSampleGroup.cs">
+    <Compile Include="NetCF\WinForms\FormEditSampleGroup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormEditSampleGroup.Designer.cs">
+    <Compile Include="NetCF\WinForms\FormEditSampleGroup.Designer.cs">
       <DependentUpon>FormEditSampleGroup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormEditTreeDefault.cs">
+    <Compile Include="NetCF\WinForms\FormEditTreeDefault.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormEditTreeDefault.Designer.cs">
+    <Compile Include="NetCF\WinForms\FormEditTreeDefault.Designer.cs">
       <DependentUpon>FormEditTreeDefault.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormLimitingDistance.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormLimitingDistance.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormLimitingDistance.Designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormLimitingDistance.Designer.cs">
       <DependentUpon>FormLimitingDistance.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormLogs.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormLogs.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormLogs.Designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormLogs.Designer.cs">
       <DependentUpon>FormLogs.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormMain.cs">
+    <Compile Include="NetCF\WinForms\FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormMain.Designer.cs">
+    <Compile Include="NetCF\WinForms\FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormManageCruisers.cs">
+    <Compile Include="NetCF\WinForms\FormManageCruisers.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormManageCruisers.Designer.cs">
+    <Compile Include="NetCF\WinForms\FormManageCruisers.Designer.cs">
       <DependentUpon>FormManageCruisers.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormNumPad.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormNumPad.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormPlotInfo.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormPlotInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormPlotInfo.Designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormPlotInfo.Designer.cs">
       <DependentUpon>FormPlotInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormTallySettings.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormTallySettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormTallySettings.Designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormTallySettings.Designer.cs">
       <DependentUpon>FormTallySettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormTallySetup.cs">
+    <Compile Include="NetCF\WinForms\FormTallySetup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormTallySetup.Designer.cs">
+    <Compile Include="NetCF\WinForms\FormTallySetup.Designer.cs">
       <DependentUpon>FormTallySetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ICruiserSelectionView.cs" />
-    <Compile Include="Forms\IDataEntryPage.cs" />
-    <Compile Include="Forms\IDataEntryView.cs" />
-    <Compile Include="Forms\IPlotInfoDialog.cs" />
-    <Compile Include="Forms\IPlotLayout.cs" />
-    <Compile Include="Forms\ITallyView.cs" />
-    <Compile Include="Forms\LayoutPlot.cs">
+    <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
+    <Compile Include="Core\ViewInterfaces\IDataEntryPage.cs" />
+    <Compile Include="Core\ViewInterfaces\IDataEntryView.cs" />
+    <Compile Include="Core\ViewInterfaces\IPlotInfoDialog.cs" />
+    <Compile Include="Core\ViewInterfaces\IPlotLayout.cs" />
+    <Compile Include="Core\ViewInterfaces\ITallyView.cs" />
+    <Compile Include="NetCF\WinForms\DataEntry\LayoutPlot.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\LayoutTreeBased.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\LayoutTreeBased.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\LayoutTreeBased.Designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\LayoutTreeBased.Designer.cs">
       <DependentUpon>LayoutTreeBased.cs</DependentUpon>
     </Compile>
-    <Compile Include="Logic\ApplicationController.cs" />
-    <Compile Include="Logic\ApplicationSettings.cs" />
-    <Compile Include="Logic\CountTreeVM.cs" />
-    <Compile Include="Logic\CruiserVM.cs" />
-    <Compile Include="Logic\CuttingUnitInfo.cs" />
-    <Compile Include="Logic\DataGridAdjuster.cs" />
-    <Compile Include="Logic\FomrDataEntry.Logic.cs" />
-    <Compile Include="Logic\IApplicationController.cs" />
-    <Compile Include="Forms\ITreeView.cs" />
-    <Compile Include="Logic\IViewController.cs" />
-    <Compile Include="Logic\LayoutPlot.Logic.cs" />
-    <Compile Include="Logic\PlotInfo.cs" />
-    <Compile Include="Logic\SampleGroupVM.cs" />
-    <Compile Include="Logic\StratumInfo.cs" />
-    <Compile Include="Logic\SubPopInfo.cs" />
-    <Compile Include="Logic\TallyAction.cs" />
-    <Compile Include="Logic\TallySettingsDO.cs" />
-    <Compile Include="Logic\TreeVM.cs" />
-    <Compile Include="Logic\ViewController.cs" />
-    <Compile Include="Logic\ViewController_Base.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Core\Models\CountTreeVM.cs" />
+    <Compile Include="Core\Models\CruiserVM.cs" />
+    <Compile Include="Core\Models\CuttingUnitInfo.cs" />
+    <Compile Include="NetCF\DataGridAdjuster.cs" />
+    <Compile Include="Core\DataEntry\FomrDataEntry.Logic.cs" />
+    <Compile Include="Core\IApplicationController.cs" />
+    <Compile Include="Core\ViewInterfaces\ITreeView.cs" />
+    <Compile Include="Core\IViewController.cs" />
+    <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
+    <Compile Include="Core\Models\PlotInfo.cs" />
+    <Compile Include="Core\Models\SampleGroupVM.cs" />
+    <Compile Include="Core\Models\StratumInfo.cs" />
+    <Compile Include="Core\Models\SubPopInfo.cs" />
+    <Compile Include="Core\Models\TallyAction.cs" />
+    <Compile Include="Core\Models\TallySettingsDO.cs" />
+    <Compile Include="Core\Models\TreeVM.cs" />
+    <Compile Include="NetCF\WinForms\ViewController.cs" />
+    <Compile Include="WinForms.Common\ViewController_Base.cs" />
+    <Compile Include="NetCF\Program.cs" />
     <Compile Include="Properties\AssemblyInfoCE_CF20.cs" />
-    <EmbeddedResource Include="Forms\FormAbout.resx">
+    <EmbeddedResource Include="NetCF\WinForms\FormAbout.resx">
       <DependentUpon>FormAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormAddPopulation.resx">
+    <EmbeddedResource Include="NetCF\WinForms\FormAddPopulation.resx">
       <DependentUpon>FormAddPopulation.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormCruiseInfo.resx">
+    <EmbeddedResource Include="NetCF\WinForms\FormCruiseInfo.resx">
       <DependentUpon>FormCruiseInfo.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormDataEntry.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormDataEntry.resx">
       <DependentUpon>FormDataEntry.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormDeviceInfo.resx">
+    <EmbeddedResource Include="NetCF\WinForms\FormDeviceInfo.resx">
       <DependentUpon>FormDeviceInfo.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormMain.resx">
+    <EmbeddedResource Include="NetCF\WinForms\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormNumPad.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormNumPad.resx">
       <DependentUpon>FormNumPad.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormPlotInfo.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormPlotInfo.resx">
       <DependentUpon>FormPlotInfo.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormTallySettings.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormTallySettings.resx">
       <DependentUpon>FormTallySettings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\LayoutPlot.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\LayoutPlot.resx">
       <DependentUpon>LayoutPlot.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\LayoutTreeBased.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\LayoutTreeBased.resx">
       <DependentUpon>LayoutTreeBased.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -265,61 +268,61 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="TallyRow.cs">
+    <Compile Include="NetCF\WinForms\TallyRow.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="TallyRow.Designer.cs">
+    <Compile Include="NetCF\WinForms\TallyRow.Designer.cs">
       <DependentUpon>TallyRow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Win32.cs" />
+    <Compile Include="NetCF\Win32.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FMSC_Logo.jpg" />
-    <EmbeddedResource Include="Forms\Form3PNumPad.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\Form3PNumPad.resx">
       <DependentUpon>Form3PNumPad.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form3PPNTPlotInfo.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\Form3PPNTPlotInfo.resx">
       <DependentUpon>Form3PPNTPlotInfo.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormBackupUtility.resx">
+    <EmbeddedResource Include="NetCF\WinForms\FormBackupUtility.resx">
       <DependentUpon>FormBackupUtility.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormCruiserSelection.resx">
+    <EmbeddedResource Include="NetCF\WinForms\FormCruiserSelection.resx">
       <DependentUpon>FormCruiserSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormDataEntryBase.resx">
+    <EmbeddedResource Include="WinForms.Common\FormDataEntryBase.resx">
       <DependentUpon>FormDataEntryBase.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormEditSampleGroup.resx">
+    <EmbeddedResource Include="NetCF\WinForms\FormEditSampleGroup.resx">
       <DependentUpon>FormEditSampleGroup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormEditTreeDefault.resx">
+    <EmbeddedResource Include="NetCF\WinForms\FormEditTreeDefault.resx">
       <DependentUpon>FormEditTreeDefault.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormLimitingDistance.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormLimitingDistance.resx">
       <DependentUpon>FormLimitingDistance.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormLogs.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormLogs.resx">
       <DependentUpon>FormLogs.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormManageCruisers.resx">
+    <EmbeddedResource Include="NetCF\WinForms\FormManageCruisers.resx">
       <DependentUpon>FormManageCruisers.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormTallySetup.resx">
+    <EmbeddedResource Include="NetCF\WinForms\FormTallySetup.resx">
       <DependentUpon>FormTallySetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="TallyRow.resx">
+    <EmbeddedResource Include="NetCF\WinForms\TallyRow.resx">
       <DependentUpon>TallyRow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
