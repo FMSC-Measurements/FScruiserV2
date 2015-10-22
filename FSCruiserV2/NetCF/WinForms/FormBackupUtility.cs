@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using CruiseDAL;
-using FSCruiserV2.Logic;
+using FSCruiser.Core;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.WinForms
 {
     public partial class FormBackupUtility : Form
     {

@@ -7,9 +7,10 @@ using System.Text;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using FMSC.Sampling;
-using FSCruiserV2.Logic;
+using FSCruiser.Core;
+using FSCruiser.Core.Models;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormTallySettings : Form
     {

@@ -8,10 +8,10 @@ using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
 using System.IO;
-using FSCruiserV2.Logic;
+using FSCruiser.Core;
 
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.WinForms
 {
     public partial class FormAbout : Form
     {

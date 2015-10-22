@@ -2,8 +2,9 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
+using FSCruiser.Core;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.WinForms
 {
     public partial class FormEditSampleGroup : Form
     {
@@ -47,7 +48,7 @@ namespace FSCruiserV2.Forms
             this._sProdCB.DataSource = Constants.PRODUCT_CODES.Clone();
             this._uomCB.DataSource = Constants.UOM_CODES.Clone();
 
-            if (FSCruiserV2.Logic.ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
+            if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
             {
                 this.WindowState = FormWindowState.Maximized;
                 this._ceDialogPanel.Visible = true;

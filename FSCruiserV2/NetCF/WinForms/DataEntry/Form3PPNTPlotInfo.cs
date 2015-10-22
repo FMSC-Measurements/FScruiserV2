@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using FSCruiserV2.Logic;
 using CruiseDAL.DataObjects;
 using FMSC.Sampling;
+using FSCruiser.Core.ViewInterfaces;
+using FSCruiser.Core;
+using FSCruiser.Core.Models;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.WinForms.DataEntry
 {
     public partial class Form3PPNTPlotInfo : Form, IPlotInfoDialog
     {

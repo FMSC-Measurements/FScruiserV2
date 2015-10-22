@@ -6,9 +6,11 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
-using FSCruiserV2.Logic;
+using FSCruiser.Core;
+using FSCruiser.Core.ViewInterfaces;
+using FSCruiser.Core.Models;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormPlotInfo : Form, IPlotInfoDialog
     {

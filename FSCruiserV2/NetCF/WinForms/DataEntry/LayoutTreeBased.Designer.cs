@@ -1,4 +1,5 @@
-﻿namespace FSCruiserV2.Forms
+﻿using FSCruiser.Core.Models;
+namespace FSCruiser.WinForms.DataEntry
 {
     partial class LayoutTreeBased
     {
@@ -53,7 +54,7 @@
             // 
             // _BS_tallyHistory
             // 
-            this._BS_tallyHistory.DataSource = typeof(FSCruiserV2.Logic.TallyAction);
+            this._BS_tallyHistory.DataSource = typeof(TallyAction);
             //this._BS_tallyHistory.ListChanged += new System.ComponentModel.ListChangedEventHandler(this._BS_tallyHistory_ListChanged);
             // 
             // _tallyHistoryLB

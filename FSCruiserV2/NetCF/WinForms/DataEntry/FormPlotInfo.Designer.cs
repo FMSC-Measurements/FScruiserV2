@@ -1,4 +1,4 @@
-﻿namespace FSCruiserV2.Forms
+﻿namespace FSCruiser.WinForms.DataEntry
 {
     partial class FormPlotInfo
     {
@@ -59,7 +59,7 @@
             // 
             // _BS_Plot
             // 
-            this._BS_Plot.DataSource = typeof(FSCruiserV2.Logic.PlotVM);
+            this._BS_Plot.DataSource = typeof(FSCruiser.Core.Models.PlotVM);
             // 
             // mainMenu1
             // 

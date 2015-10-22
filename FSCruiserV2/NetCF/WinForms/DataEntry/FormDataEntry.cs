@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using FSCruiserV2.Logic;
 using CruiseDAL.DataObjects;
 using FMSC.Sampling;
-using FSCruiserV2.Logic.DataObjectExtensionMethods;
 using FMSC.Controls;
 using Microsoft.WindowsCE.Forms;
 using System.ComponentModel;
+using FSCruiser.WinForms.Common;
+using FSCruiser.Core.ViewInterfaces;
+using FSCruiser.Core;
+using FSCruiser.Core.Models;
+using FSCruiser.Core.DataEntry;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormDataEntry : FormDataEntryBase, IDataEntryView
     {

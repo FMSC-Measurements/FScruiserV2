@@ -6,12 +6,12 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
-using FSCruiserV2.Logic;
 
 using SGType = CruiseDAL.DataObjects.SampleGroupDO;
-using StType = CruiseDAL.DataObjects.StratumDO; 
+using StType = CruiseDAL.DataObjects.StratumDO;
+using FSCruiser.Core;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.WinForms
 {
     public partial class FormAddPopulation : Form
     {
@@ -77,7 +77,7 @@ namespace FSCruiserV2.Forms
             this.Controller = controller;
             InitializeComponent();
 
-            if (FSCruiserV2.Logic.ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
+            if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
             {
                 this.WindowState = FormWindowState.Maximized;
                 this._ce_menuPanel.Visible = true;

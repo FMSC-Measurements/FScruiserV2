@@ -2,10 +2,11 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
-using FSCruiserV2.Logic;
 using FMSC.Controls;
+using FSCruiser.Core;
+using FSCruiser.Core.Models;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormLogs : Form
     {

@@ -1,4 +1,4 @@
-﻿namespace FSCruiserV2.Forms
+﻿namespace FSCruiser.WinForms.DataEntry
 {
     partial class FormLimitingDistance
     {

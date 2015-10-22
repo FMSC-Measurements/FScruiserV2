@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.WindowsCE.Forms;
-using FSCruiserV2.Logic;
 using FMSC.Controls;
 using CruiseDAL.DataObjects;
+using FSCruiser.Core.Models;
+using FSCruiser.Core;
+using FSCruiser.Core.ViewInterfaces;
+using FSCruiser.Core.DataEntry;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.WinForms.DataEntry
 {
     public class ControlTreeDataGrid : FMSC.Controls.EditableDataGrid, ITreeView
     {

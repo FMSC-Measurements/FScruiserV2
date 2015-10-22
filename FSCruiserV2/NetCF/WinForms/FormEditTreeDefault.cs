@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
-using FSCruiserV2.Logic;
+using FSCruiser.Core;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.WinForms
 {
     public partial class FormEditTreeDefault : Form
     {
@@ -30,7 +30,7 @@ namespace FSCruiserV2.Forms
             InitializeComponent();
             this._pProd_CB.DataSource = Constants.PRODUCT_CODES;
 
-            if (FSCruiserV2.Logic.ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
+            if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
             {
                 this.WindowState = FormWindowState.Maximized;
                 this._ceDialogPanel.Visible = true;

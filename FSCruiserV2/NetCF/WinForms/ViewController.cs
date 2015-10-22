@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using FSCruiserV2.Forms;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Threading;
 using CruiseDAL.DataObjects;
 using FMSC.Controls;
+using FSCruiser.Core;
+using FSCruiser.WinForms;
+using FSCruiser.Core.Models;
+using FSCruiser.WinForms.DataEntry;
+using FSCruiser.WinForms.Common;
 
-namespace FSCruiserV2.Logic
+namespace FSCruiser.WinForms
 {
     
 
@@ -48,7 +52,7 @@ namespace FSCruiserV2.Logic
 
         public override void SignalInvalidAction()
         {
-            Win32.MessageBeep(-1);
+            FSCruiser.WinForms.Win32.MessageBeep(-1);
         }
 
 

@@ -1,4 +1,4 @@
-﻿namespace FSCruiserV2
+﻿namespace FSCruiser.WinForms
 {
     partial class TallyRow
     {

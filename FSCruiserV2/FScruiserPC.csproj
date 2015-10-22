@@ -79,7 +79,6 @@
     <Compile Include="Core\Models\TallyAction.cs" />
     <Compile Include="Core\Models\TallySettingsDO.cs" />
     <Compile Include="Core\Models\TreeVM.cs" />
-    <Compile Include="Core\ViewController_Base.cs" />
     <Compile Include="Core\ApplicationSettings.cs" />
     <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
     <Compile Include="Core\ViewInterfaces\IDataEntryPage.cs" />
@@ -93,6 +92,7 @@
     <Compile Include="WinForms.Common\FormDataEntryBase.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="WinForms.Common\ViewController_Base.cs" />
     <Compile Include="WinForms\DataEntry\ControlTreeDataGrid.PC.cs">
       <SubType>Component</SubType>
     </Compile>

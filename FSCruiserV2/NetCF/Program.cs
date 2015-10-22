@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Logger;
-using FSCruiserV2.Logic;
 using System.Threading;
 using System.Xml.Serialization;
 using System.IO;
 using System.Reflection;
-using FSCruiserV2.Forms;
 using System.Diagnostics;
+using FSCruiser.Core;
 
-namespace FSCruiserV2
+namespace FSCruiser.WinForms
 {
     static class Program
     {

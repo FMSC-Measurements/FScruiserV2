@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using FSCruiser.Core.Models;
 using FSCruiser.WinForms;
 using FSCruiser.WinForms.DataEntry;
+
 namespace FSCruiser.Core
 {
     public delegate void HandleCruiseDataLoadedEventHandler();

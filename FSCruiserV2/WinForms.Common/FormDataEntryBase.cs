@@ -5,9 +5,9 @@ using System.Windows.Forms;
 
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
-using FSCruiser.WinForms.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.DataEntry;
+using FSCruiser.WinForms.DataEntry;
 
 namespace FSCruiser.WinForms.Common
 {

@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.WinForms.DataEntry
 {
-    public partial class FormNumPad : Form
+    public partial class Form3PNumPad : Form
     {
         #region Designer Code
         /// <summary>
@@ -40,6 +40,7 @@ namespace FSCruiserV2.Forms
             this._outputView = new System.Windows.Forms.TextBox();
             this._mainContentPanel = new System.Windows.Forms.Panel();
             this._row4 = new System.Windows.Forms.Panel();
+            this._STMBtn = new System.Windows.Forms.Button();
             this._clear = new System.Windows.Forms.Button();
             this._accept = new System.Windows.Forms.Button();
             this._num0 = new System.Windows.Forms.Button();
@@ -86,6 +87,7 @@ namespace FSCruiserV2.Forms
             // 
             // _row4
             // 
+            this._row4.Controls.Add(this._STMBtn);
             this._row4.Controls.Add(this._clear);
             this._row4.Controls.Add(this._accept);
             this._row4.Controls.Add(this._num0);
@@ -94,12 +96,22 @@ namespace FSCruiserV2.Forms
             this._row4.Name = "_row4";
             this._row4.Size = new System.Drawing.Size(240, 64);
             // 
+            // _STMBtn
+            // 
+            this._STMBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._STMBtn.Location = new System.Drawing.Point(60, 0);
+            this._STMBtn.Name = "_STMBtn";
+            this._STMBtn.Size = new System.Drawing.Size(60, 64);
+            this._STMBtn.TabIndex = 12;
+            this._STMBtn.Text = "STM";
+            this._STMBtn.Click += new System.EventHandler(this._STMBtn_Click);
+            // 
             // _clear
             // 
-            this._clear.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._clear.Location = new System.Drawing.Point(80, 0);
+            this._clear.Dock = System.Windows.Forms.DockStyle.Right;
+            this._clear.Location = new System.Drawing.Point(120, 0);
             this._clear.Name = "_clear";
-            this._clear.Size = new System.Drawing.Size(80, 64);
+            this._clear.Size = new System.Drawing.Size(60, 64);
             this._clear.TabIndex = 10;
             this._clear.Text = "&Clear";
             this._clear.Click += new System.EventHandler(this._clear_Click);
@@ -108,9 +120,9 @@ namespace FSCruiserV2.Forms
             // 
             this._accept.DialogResult = System.Windows.Forms.DialogResult.OK;
             this._accept.Dock = System.Windows.Forms.DockStyle.Right;
-            this._accept.Location = new System.Drawing.Point(160, 0);
+            this._accept.Location = new System.Drawing.Point(180, 0);
             this._accept.Name = "_accept";
-            this._accept.Size = new System.Drawing.Size(80, 64);
+            this._accept.Size = new System.Drawing.Size(60, 64);
             this._accept.TabIndex = 11;
             this._accept.Text = "&Accept";
             this._accept.Click += new System.EventHandler(this._accept_Click);
@@ -120,7 +132,7 @@ namespace FSCruiserV2.Forms
             this._num0.Dock = System.Windows.Forms.DockStyle.Left;
             this._num0.Location = new System.Drawing.Point(0, 0);
             this._num0.Name = "_num0";
-            this._num0.Size = new System.Drawing.Size(80, 64);
+            this._num0.Size = new System.Drawing.Size(60, 64);
             this._num0.TabIndex = 9;
             this._num0.Text = "0";
             this._num0.Click += new System.EventHandler(this._num0_Click);
@@ -245,7 +257,7 @@ namespace FSCruiserV2.Forms
             this._num1.Text = "1";
             this._num1.Click += new System.EventHandler(this._num1_Click);
             // 
-            // FormNumPad
+            // Form3PNumPad
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -253,8 +265,8 @@ namespace FSCruiserV2.Forms
             this.Controls.Add(this._mainContentPanel);
             this.Controls.Add(this._outputView);
             this.MinimizeBox = false;
-            this.Name = "FormNumPad";
-            this.Text = "Number Pad";
+            this.Name = "Form3PNumPad";
+            this.Text = "3P Number Pad";
             this._mainContentPanel.ResumeLayout(false);
             this._row4.ResumeLayout(false);
             this._row3.ResumeLayout(false);
@@ -288,13 +300,14 @@ namespace FSCruiserV2.Forms
 
         private int? _minValue;
         private int? _maxValue;
-        private bool _acceptNullInput = false; 
-        public FormNumPad()
+        private Button _STMBtn;
+        private bool _canReturnNull = false;
+        public Form3PNumPad()
         {
 
             InitializeComponent();
 
-            if (FSCruiserV2.Logic.ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
+            if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
             {
                 this.WindowState = FormWindowState.Maximized;
             }
@@ -329,13 +342,13 @@ namespace FSCruiserV2.Forms
             _row4.ResumeLayout();
         }
 
-        public DialogResult ShowDialog(int? initialValue, bool acceptNullInput)
+        public DialogResult ShowDialog(int? initialValue, bool canReturnNull)
         {
-            return this.ShowDialog(null, null, initialValue, acceptNullInput);
+            return this.ShowDialog(null, null, initialValue, canReturnNull);
         }
         
 
-        public DialogResult ShowDialog(int? min, int? max, int? initialValue, bool acceptNullInput)
+        public DialogResult ShowDialog(int? min, int? max, int? initialValue, bool canReturnNull)
         {
             if (min != null && min > 0 && min < max)
             {
@@ -354,11 +367,14 @@ namespace FSCruiserV2.Forms
                 this._maxValue = null;
             }
             this.UserEnteredValue = initialValue;
-            this._acceptNullInput = acceptNullInput;
+            this._canReturnNull = canReturnNull;
             return this.ShowDialog();
         }
 
         //public int MaxValue { get; set; }
+        /// <summary>
+        /// returns -1 if value is STM
+        /// </summary>
         public int? UserEnteredValue 
         {
             get
@@ -367,21 +383,33 @@ namespace FSCruiserV2.Forms
                 {
                     return null;
                 }
+                if (_outputView.Text == "STM")
+                {
+                    return -1;
+                }
                 return Convert.ToInt32(_outputView.Text);
             }
             set
             {
-                _outputView.Text = (value != null) ? value.Value.ToString() : "";
+                _outputView.Text = (value != null) ? value.Value.ToString() : String.Empty;
             }
         }
 
         private void _num1_Click(object sender, EventArgs e)
         {
+            if (_outputView.Text == "STM")
+            {
+                _outputView.Text = String.Empty;
+            }
             _outputView.Text += "1";
         }
 
         private void _num2_Click(object sender, EventArgs e)
         {
+            if (_outputView.Text == "STM")
+            {
+                _outputView.Text = String.Empty;
+            }
             _outputView.Text += "2";
         }
 
@@ -392,58 +420,91 @@ namespace FSCruiserV2.Forms
 
         private void _num4_Click(object sender, EventArgs e)
         {
+            if (_outputView.Text == "STM")
+            {
+                _outputView.Text = String.Empty;
+            }
             _outputView.Text += "4";
         }
 
         private void _num5_Click(object sender, EventArgs e)
         {
+            if (_outputView.Text == "STM")
+            {
+                _outputView.Text = String.Empty;
+            }
             _outputView.Text += "5";
         }
 
         private void _num6_Click(object sender, EventArgs e)
         {
+            if (_outputView.Text == "STM")
+            {
+                _outputView.Text = String.Empty;
+            }
             _outputView.Text += "6";
         }
 
         private void _num7_Click(object sender, EventArgs e)
         {
+            if (_outputView.Text == "STM")
+            {
+                _outputView.Text = String.Empty;
+            }
             _outputView.Text += "7";
         }
 
         private void _num8_Click(object sender, EventArgs e)
         {
+            if (_outputView.Text == "STM")
+            {
+                _outputView.Text = String.Empty;
+            }
             _outputView.Text += "8";
         }
 
         private void _num9_Click(object sender, EventArgs e)
         {
+            if (_outputView.Text == "STM")
+            {
+                _outputView.Text = String.Empty;
+            }
             _outputView.Text += "9";
         }
 
         private void _num0_Click(object sender, EventArgs e)
         {
+            if (_outputView.Text == "STM")
+            {
+                _outputView.Text = String.Empty;
+            }
             _outputView.Text += "0";
         }
 
         private void _clear_Click(object sender, EventArgs e)
         {
-            _outputView.Text = "";
+            _outputView.Text = String.Empty;
         }
 
         private void _accept_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            //this.DialogResult = DialogResult.OK;
+            //this.Close();
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
             
-            if (!_acceptNullInput && this.UserEnteredValue == null)
+            if (!_canReturnNull && this.UserEnteredValue == null)
             {
                 MessageBox.Show("No Value Entered");
                 e.Cancel = true;
+            }
+
+            if (this._outputView.Text == "STM")
+            {
+                return;
             }
 
             if(this._minValue != null && this.UserEnteredValue < this._minValue.Value)
@@ -482,6 +543,7 @@ namespace FSCruiserV2.Forms
             }
         }
 
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
@@ -510,32 +572,11 @@ namespace FSCruiserV2.Forms
             }
         }
 
-        //private void FormNumPad_KeyDown(object sender, KeyEventArgs e)
-        //{
-        //    if ((e.KeyData == System.Windows.Forms.Keys.Enter))
-        //    {
-        //        //this.Close();
-        //        this._accept_Click(null, null);
-        //        e.Handled = true;
-        //    }
-        //    if ((e.KeyData == System.Windows.Forms.Keys.Escape))
-        //    {
-        //        this.UserEnteredValue = null;
-        //        this.Close();
-        //        e.Handled = true; 
-        //    }
-        //    if ((e.KeyData == Keys.C))
-        //    {
-        //        this._clear_Click(null, null);
-        //        e.Handled = true;
-        //    }
-        //    if ((e.KeyData == Keys.A))
-        //    {
-        //        this._accept_Click(null, null);
-        //        e.Handled = true;
-        //    }
 
-        //}
+        private void _STMBtn_Click(object sender, EventArgs e)
+        {
+            this._outputView.Text = "STM";
+        }
 
 
 

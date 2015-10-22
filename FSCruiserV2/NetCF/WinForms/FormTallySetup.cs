@@ -1,12 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using FSCruiserV2.Logic;
 using CruiseDAL.DataObjects;
 
 using SGType = CruiseDAL.DataObjects.SampleGroupDO;
+using FSCruiser.Core;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.WinForms
 {
     public partial class FormTallySetup : Form
     {
@@ -17,7 +17,7 @@ namespace FSCruiserV2.Forms
             this.Controller = controller;
             InitializeComponent();
 
-            if (FSCruiserV2.Logic.ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
+            if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
             {
                 this.WindowState = FormWindowState.Maximized;
                 this._ce_menuPanel.Visible = true;

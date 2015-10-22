@@ -9,6 +9,7 @@ using CruiseDAL.DataObjects;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
 using FSCruiser.WinForms.DataEntry;
+using FSCruiser.WinForms.Common;
 
 namespace FSCruiser.WinForms
 {

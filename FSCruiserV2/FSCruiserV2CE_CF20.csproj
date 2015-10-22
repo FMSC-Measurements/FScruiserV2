@@ -18,7 +18,7 @@
     <NativePlatformName>Windows CE</NativePlatformName>
     <FormFactorID>
     </FormFactorID>
-    <StartupObject>FSCruiserV2.Program</StartupObject>
+    <StartupObject>FSCruiser.WinForms.Program</StartupObject>
     <ApplicationIcon>fscruiser.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -58,21 +58,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\ApplicationController.cs" />
+    <Compile Include="Core\ApplicationSettings.cs" />
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\CountTreeExtensions.cs" />
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
-    <Compile Include="NetCF\WinForms\ControlTreeDataGrid.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\ControlTreeDataGrid.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="NetCF\WinForms\Form3PNumPad.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\Form3PNumPad.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NetCF\WinForms\Form3PPNTPlotInfo.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\Form3PPNTPlotInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NetCF\WinForms\Form3PPNTPlotInfo.designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\Form3PPNTPlotInfo.designer.cs">
       <DependentUpon>Form3PPNTPlotInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="NetCF\WinForms\FormAbout.cs">
@@ -106,10 +107,10 @@
       <DependentUpon>FormCruiserSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\FormCruiserSelection.Logic.cs" />
-    <Compile Include="NetCF\WinForms\FormDataEntry.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormDataEntry.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NetCF\WinForms\FormDataEntry.Designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormDataEntry.Designer.cs">
       <DependentUpon>FormDataEntry.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms.Common\FormDataEntryBase.cs">
@@ -133,16 +134,16 @@
     <Compile Include="NetCF\WinForms\FormEditTreeDefault.Designer.cs">
       <DependentUpon>FormEditTreeDefault.cs</DependentUpon>
     </Compile>
-    <Compile Include="NetCF\WinForms\FormLimitingDistance.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormLimitingDistance.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NetCF\WinForms\FormLimitingDistance.Designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormLimitingDistance.Designer.cs">
       <DependentUpon>FormLimitingDistance.cs</DependentUpon>
     </Compile>
-    <Compile Include="NetCF\WinForms\FormLogs.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormLogs.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NetCF\WinForms\FormLogs.Designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormLogs.Designer.cs">
       <DependentUpon>FormLogs.cs</DependentUpon>
     </Compile>
     <Compile Include="NetCF\WinForms\FormMain.cs">
@@ -157,19 +158,19 @@
     <Compile Include="NetCF\WinForms\FormManageCruisers.Designer.cs">
       <DependentUpon>FormManageCruisers.cs</DependentUpon>
     </Compile>
-    <Compile Include="NetCF\WinForms\FormNumPad.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormNumPad.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NetCF\WinForms\FormPlotInfo.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormPlotInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NetCF\WinForms\FormPlotInfo.Designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormPlotInfo.Designer.cs">
       <DependentUpon>FormPlotInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="NetCF\WinForms\FormTallySettings.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormTallySettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NetCF\WinForms\FormTallySettings.Designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormTallySettings.Designer.cs">
       <DependentUpon>FormTallySettings.cs</DependentUpon>
     </Compile>
     <Compile Include="NetCF\WinForms\FormTallySetup.cs">
@@ -184,16 +185,15 @@
     <Compile Include="Core\ViewInterfaces\IPlotInfoDialog.cs" />
     <Compile Include="Core\ViewInterfaces\IPlotLayout.cs" />
     <Compile Include="Core\ViewInterfaces\ITallyView.cs" />
-    <Compile Include="NetCF\WinForms\LayoutPlot.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\LayoutPlot.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="NetCF\WinForms\LayoutTreeBased.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\LayoutTreeBased.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="NetCF\WinForms\LayoutTreeBased.Designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\LayoutTreeBased.Designer.cs">
       <DependentUpon>LayoutTreeBased.cs</DependentUpon>
     </Compile>
-    <Compile Include="Core\ViewInterfaces\ApplicationSettings.cs" />
     <Compile Include="Core\Models\CountTreeVM.cs" />
     <Compile Include="Core\Models\CruiserVM.cs" />
     <Compile Include="Core\Models\CuttingUnitInfo.cs" />
@@ -210,8 +210,8 @@
     <Compile Include="Core\Models\TallyAction.cs" />
     <Compile Include="Core\Models\TallySettingsDO.cs" />
     <Compile Include="Core\Models\TreeVM.cs" />
-    <Compile Include="Core\ViewController.cs" />
-    <Compile Include="Core\ViewController_Base.cs" />
+    <Compile Include="NetCF\WinForms\ViewController.cs" />
+    <Compile Include="WinForms.Common\ViewController_Base.cs" />
     <Compile Include="NetCF\Program.cs" />
     <Compile Include="Properties\AssemblyInfoCE_CF20.cs" />
     <EmbeddedResource Include="NetCF\WinForms\FormAbout.resx">
@@ -226,7 +226,7 @@
       <DependentUpon>FormCruiseInfo.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NetCF\WinForms\FormDataEntry.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormDataEntry.resx">
       <DependentUpon>FormDataEntry.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -238,23 +238,23 @@
       <DependentUpon>FormMain.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NetCF\WinForms\FormNumPad.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormNumPad.resx">
       <DependentUpon>FormNumPad.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NetCF\WinForms\FormPlotInfo.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormPlotInfo.resx">
       <DependentUpon>FormPlotInfo.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NetCF\WinForms\FormTallySettings.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormTallySettings.resx">
       <DependentUpon>FormTallySettings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NetCF\WinForms\LayoutPlot.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\LayoutPlot.resx">
       <DependentUpon>LayoutPlot.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NetCF\WinForms\LayoutTreeBased.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\LayoutTreeBased.resx">
       <DependentUpon>LayoutTreeBased.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -278,11 +278,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FMSC_Logo.jpg" />
-    <EmbeddedResource Include="NetCF\WinForms\Form3PNumPad.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\Form3PNumPad.resx">
       <DependentUpon>Form3PNumPad.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NetCF\WinForms\Form3PPNTPlotInfo.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\Form3PPNTPlotInfo.resx">
       <DependentUpon>Form3PPNTPlotInfo.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -306,11 +306,11 @@
       <DependentUpon>FormEditTreeDefault.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NetCF\WinForms\FormLimitingDistance.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormLimitingDistance.resx">
       <DependentUpon>FormLimitingDistance.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NetCF\WinForms\FormLogs.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormLogs.resx">
       <DependentUpon>FormLogs.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -354,9 +354,6 @@
       <Project>{2B5BA2D4-7D46-4BF3-A775-2A0F849BE92B}</Project>
       <Name>FMSC.Utility_CF20</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="WinForms\DataEntry\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

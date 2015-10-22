@@ -7,11 +7,12 @@ using System.Threading;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using FSCruiser.WinForms;
-using FSCruiser.WinForms.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
+using FSCruiser.Core;
+using FSCruiser.WinForms.DataEntry;
 
-namespace FSCruiser.Core
+namespace FSCruiser.WinForms.Common
 {
     public abstract class WinFormsViewControllerBase : IViewController
     {

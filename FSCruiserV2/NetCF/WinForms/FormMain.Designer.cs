@@ -1,4 +1,5 @@
-﻿namespace FSCruiserV2.Forms
+﻿using FSCruiser.Core.Models;
+namespace FSCruiser.WinForms
 {
     partial class FormMain
     {
@@ -172,7 +173,7 @@
             // 
             // _BS_cuttingUnits
             // 
-            this._BS_cuttingUnits.DataSource = typeof(FSCruiserV2.Logic.CuttingUnitVM);
+            this._BS_cuttingUnits.DataSource = typeof(CuttingUnitVM);
             this._BS_cuttingUnits.CurrentChanged += new System.EventHandler(this._BS_cuttingUnits_CurrentChanged);
             // 
             // panel4

@@ -5,11 +5,12 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using FSCruiserV2.Logic;
 using CruiseDAL.DataObjects;
 using System.Threading;
+using FSCruiser.Core;
+using FSCruiser.Core.Models;
 
-namespace FSCruiserV2.Forms
+namespace FSCruiser.WinForms
 {
     
 

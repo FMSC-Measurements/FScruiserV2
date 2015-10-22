@@ -8,8 +8,9 @@ using System.Windows.Forms;
 using FMSC.Controls;
 using FMSC.Controls.Mobile;
 using CruiseDAL.DataObjects;
+using FSCruiser.Core.Models;
 
-namespace FSCruiserV2
+namespace FSCruiser.WinForms
 {
     public partial class TallyRow : UserControl
     {
@@ -18,7 +19,7 @@ namespace FSCruiserV2
         public Button SettingsButton { get { return this._settingsButton; } }
         public Label HotKeyLabel { get { return this._hotKeyLabel; } }
         
-        public FSCruiserV2.Logic.CountTreeVM Count { get; set; }
+        public CountTreeVM Count { get; set; }
 
         public TallyRow()
         {

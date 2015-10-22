@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace FSCruiserV2
+namespace FSCruiser.WinForms
 {
     public static class Win32
     {
