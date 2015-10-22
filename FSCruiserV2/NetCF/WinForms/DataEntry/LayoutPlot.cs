@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
-using FSCruiserV2;
 using FMSC.Sampling;
 using System.ComponentModel;
 using FMSC.Controls;
