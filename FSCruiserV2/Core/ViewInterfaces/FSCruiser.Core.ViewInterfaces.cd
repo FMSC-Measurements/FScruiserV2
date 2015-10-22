@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Interface Name="FSCruiser.Core.ViewInterfaces.ICruiserSelectionView">
+    <Position X="6.75" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>QEAAAAAAIAAgAAAAAAAAAAEAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Core\ViewInterfaces\ICruiserSelectionView.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FSCruiser.Core.ViewInterfaces.IDataEntryPage">
+    <Position X="0.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAEAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Core\ViewInterfaces\IDataEntryPage.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FSCruiser.Core.ViewInterfaces.IDataEntryView">
+    <Position X="4.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAABIAAIBAAAAgAAAAAAQAABAAAAAAgIAAIAAA=</HashCode>
+      <FileName>Core\ViewInterfaces\IDataEntryView.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FSCruiser.Core.ViewInterfaces.ILimitingDistanceView">
+    <Position X="6.75" Y="3" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAABAAKAEAgAABAAAABAAAAACAABA=</HashCode>
+      <FileName>Core\ViewInterfaces\ILimitingDistanceView.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FSCruiser.Core.ViewInterfaces.INumPad">
+    <Position X="4.5" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\ViewInterfaces\INumPad.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FSCruiser.Core.ViewInterfaces.IPlotInfoDialog">
+    <Position X="9" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\ViewInterfaces\IPlotInfoDialog.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FSCruiser.Core.ViewInterfaces.IPlotLayout">
+    <Position X="0.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAgQAAAIAAACAAEQAAAAACAAEABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\ViewInterfaces\IPlotLayout.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FSCruiser.Core.ViewInterfaces.ITallyView">
+    <Position X="2.5" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAIBAAAAAAAAAAAAAAAAACAACAEQAAAAAAEAAA=</HashCode>
+      <FileName>Core\ViewInterfaces\ITallyView.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FSCruiser.Core.ViewInterfaces.ITreeView">
+    <Position X="0.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAEAAEAABAECAAAAAQAAAAQAQBAAAAgAAAAAIA=</HashCode>
+      <FileName>Core\ViewInterfaces\ITreeView.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Delegate Name="FSCruiser.Core.ViewInterfaces.MakeCountTallyRowHadler" Collapsed="true">
+    <Position X="3.5" Y="6.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Core\ViewInterfaces\ITallyView.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

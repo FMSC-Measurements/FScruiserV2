@@ -8,7 +8,7 @@
     <ProjectGuid>{9568C413-05B2-4672-AD7B-E4101537AB26}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FSCruiserV2</RootNamespace>
+    <RootNamespace>FSCruiser</RootNamespace>
     <AssemblyName>FScruiserPC</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -250,6 +250,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="Core\FSCruiser.Core.cd" />
+    <None Include="Core\ViewInterfaces\FSCruiser.Core.ViewInterfaces.cd" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.TreeDO.datasource" />
     <None Include="Properties\DataSources\FSCruiserV2.Logic.CuttingUnitVM.datasource" />

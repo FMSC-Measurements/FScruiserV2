@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="FSCruiser.Core.ApplicationController" BaseTypeListCollapsed="true">
+    <Position X="4.5" Y="0.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AqHCXZNYOChlSGgSFEAJuAkESQnUAlUAg4kLjFAggKY=</HashCode>
+      <FileName>Core\ApplicationController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Orientation="Left" Position="0.279" Collapsed="true" />
+  </Class>
+  <Class Name="FSCruiser.Core.ApplicationSettings">
+    <Position X="9" Y="0.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAEAAQAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\ApplicationSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Constants" Collapsed="true">
+    <Position X="11" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>OIAAgQAEAAAAAAAAAYAABEAAIAAEQQACAQAAAAGAAAA=</HashCode>
+      <FileName>Core\Constants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.CountTreeExtensions" Collapsed="true">
+    <Position X="11" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\CountTreeExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.FormCruiserSelectionLogic" Collapsed="true">
+    <Position X="9" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAACAAAAAAAAAEAAAAAABAAAAAEAACEAAAAA=</HashCode>
+      <FileName>Core\FormCruiserSelection.Logic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.FormLimitingDistanceLogic" Collapsed="true">
+    <Position X="9" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAQAAAAAAAAAAAAAAMAAAgBARAAAABAAAAAAAERA=</HashCode>
+      <FileName>Core\FormLimitingDistanceLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.DataEntry.FormDataEntryLogic" Collapsed="true">
+    <Position X="9" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QoAIIAAICUAIggACYQgAAGQUoIIBAwAACBBEIEAAAAA=</HashCode>
+      <FileName>Core\DataEntry\FomrDataEntry.Logic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="FSCruiser.Core.IApplicationController">
+    <Position X="0.5" Y="0.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AqHCGZBYMAggACgCEAAIoAEAQQjQAkEAgYECjEAggKI=</HashCode>
+      <FileName>Core\IApplicationController.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FSCruiser.Core.IViewController" Collapsed="true">
+    <Position X="9" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AMACACgIAIQUQBCAAAAABAAAUUACAgQEAAAQAAQBhEI=</HashCode>
+      <FileName>Core\IViewController.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="FSCruiser.Core.DataEntryMode" Collapsed="true">
+    <Position X="11" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAACAACAAEAAACAAAAAAAAAgAAAAEAAEAABA=</HashCode>
+      <FileName>Core\ApplicationController.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FSCruiser.Core.BackUpMethod" Collapsed="true">
+    <Position X="11" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAICAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Core\ApplicationController.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="FSCruiser.Core.HandleCruiseDataLoadedEventHandler" Collapsed="true">
+    <Position X="11" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\IViewController.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="FSCruiser.Core.ViewInterfaces.MakeCountTallyRowHadler" Collapsed="true">
+    <Position X="11" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Core\ViewInterfaces\ITallyView.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
