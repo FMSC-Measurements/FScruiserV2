@@ -13,6 +13,7 @@ using System.Reflection;
 using CruiseDAL;
 using CruiseDAL.Schema.Constants;
 using FSCruiser.Core.Models;
+using FMSC.ORM.Core.SQL;
 
 
 namespace FSCruiser.Core
@@ -144,12 +145,12 @@ namespace FSCruiser.Core
                 this.LoadDatabase(fileName);
                 return true;
             }
-            catch (CruiseDAL.ReadOnlyException ex)
+            catch (FMSC.ORM.ReadOnlyException ex)
             {
                 this.HandleException(ex, "Unable to open file becaus it is read only", false, true);                
                 return false;
             }
-            catch (CruiseDAL.DatabaseExecutionException ex)
+            catch (FMSC.ORM.SQLException ex)
             {
                 this.HandleException(ex, "Unable to open file : " + ex.GetType().Name, false, true);
                 return false;
@@ -307,8 +308,8 @@ namespace FSCruiser.Core
                 }
                 _cDal = new CruiseDAL.DAL(path);
                 _cDal.LogMessage(string.Format("Opened By FSCruiser ({0})", Constants.FSCRUISER_VERSION), "I");
-                this.CuttingUnits = this._cDal.Read<CuttingUnitVM>("CuttingUnit", null);
-                SaleDO sale = this._cDal.ReadSingleRow<SaleDO>("Sale", (string)null);
+                this.CuttingUnits = this._cDal.Read<CuttingUnitVM>((WhereClause)null);
+                SaleDO sale = this._cDal.ReadSingleRow<SaleDO>((WhereClause)null);
                 if (sale != null)
                 {
                     this.ViewController.EnableLogGrading = sale.LogGradingEnabled;
@@ -1510,8 +1511,9 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
                     {
                         t.Save(OnConflictOption.Fail);//fail on conflict, but donot cancel current transaction 
                     }
-                    catch (DatabaseExecutionException)
+                    catch (FMSC.ORM.SQLException)
                     {
+                        //TODO rethrow with meaningful exception, not this success crap 
                         success = false;
                     }
                     
@@ -1524,7 +1526,7 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
             }
             if (!success)
             {
-                throw new DatabaseExecutionException("not all trees were able to be saved");
+                throw new FMSC.ORM.SQLException("not all trees were able to be saved", null);
             }
             
         }

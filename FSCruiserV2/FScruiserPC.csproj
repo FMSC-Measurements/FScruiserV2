@@ -274,6 +274,10 @@
       <Project>{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}</Project>
       <Name>CruiseDAL_FF35</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CruiseDAL\FMSC.ORM\FMSC.ORM.Net35.csproj">
+      <Project>{0452719F-1CAA-4959-B00C-AB8B1C438571}</Project>
+      <Name>FMSC.ORM.Net35</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FMSC.Controls\FMSC.Controls\FMSC.Controls.VS08.csproj">
       <Project>{83CCFC7F-D667-4550-B335-B48C2F67A207}</Project>
       <Name>FMSC.Controls.VS08</Name>

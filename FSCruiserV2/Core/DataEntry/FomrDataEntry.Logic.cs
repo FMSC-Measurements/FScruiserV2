@@ -47,7 +47,7 @@ namespace FSCruiser.Core.DataEntry
         {
             this.Controller = controller;
             this.View = view;
-            this.Counts = this.Database.Read<CountTreeVM>("CountTree", null);
+            this.Counts = this.Database.Read<CountTreeVM>((string)null);
         }
 
 

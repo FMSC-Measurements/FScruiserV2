@@ -1,12 +1,13 @@
 ﻿using CruiseDAL.DataObjects;
 using CruiseDAL;
+using FMSC.ORM.Core;
 
 namespace FSCruiser.Core.Models
 {
     public class TreeVM : TreeDO
     {
         public TreeVM(DAL dal)
-            : base(dal)
+            : base((DatastoreRedux)dal)
         {
         }
 

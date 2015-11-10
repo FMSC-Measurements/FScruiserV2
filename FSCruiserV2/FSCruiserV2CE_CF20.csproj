@@ -64,6 +64,7 @@
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
+    <Compile Include="NetCF\NamedMutex.cs" />
     <Compile Include="NetCF\WinForms\DataEntry\ControlTreeDataGrid.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -341,6 +342,10 @@
     <ProjectReference Include="..\CruiseDAL\CruiseDAL\CruiseDAL_CF20.csproj">
       <Project>{DC8A4894-F4A8-4554-B475-2EBAD49AF148}</Project>
       <Name>CruiseDAL_CF20</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CruiseDAL\FMSC.ORM\FMSC.ORM.NetCF20.csproj">
+      <Project>{D346BFEA-85A0-4A5D-BD89-D07E073B065E}</Project>
+      <Name>FMSC.ORM.NetCF20</Name>
     </ProjectReference>
     <ProjectReference Include="..\FMSC.Controls\FMSC.Controls\FMSC.Controls_CF20.csproj">
       <Project>{66B57265-EED3-49D7-B3B7-68CDE1061085}</Project>

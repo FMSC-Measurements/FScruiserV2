@@ -158,7 +158,7 @@ namespace FSCruiser.Core.DataEntry
             {
                 Controller.SaveTrees(plot.Trees);
             }
-            catch (CruiseDAL.DatabaseExecutionException)
+            catch (FMSC.ORM.SQLException)
             {
                 if (!this.Controller.ViewController.AskYesNo("Can not save all trees in the plot, Would you like to continue?", "Continue?", MessageBoxIcon.Asterisk, true))
                 {

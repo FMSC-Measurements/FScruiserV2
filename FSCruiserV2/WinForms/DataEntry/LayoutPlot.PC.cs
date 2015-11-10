@@ -6,11 +6,14 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+
+using CruiseDAL;
 using CruiseDAL.DataObjects;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
+using FMSC.ORM.Core.SQL;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -62,11 +65,11 @@ namespace FSCruiser.WinForms.DataEntry
 
             if (_speciesColumn != null)
             {
-                _speciesColumn.DataSource = AppController._cDal.Read<TreeDefaultValueDO>("TreeDefaultValue", null);
+                _speciesColumn.DataSource = AppController._cDal.Read<TreeDefaultValueDO>((WhereClause)null);
             }
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = AppController._cDal.Read<SampleGroupVM>("SampleGroup", null);
+                _sgColumn.DataSource = AppController._cDal.Read<SampleGroupVM>((WhereClause)null);
             }
             if (_initialsColoumn != null)
             {

@@ -5,10 +5,12 @@ using System.Text;
 using System.Windows.Forms;
 
 using CruiseDAL.DataObjects;
+using CruiseDAL; 
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
+using FMSC.ORM.Core.SQL;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -88,11 +90,11 @@ namespace FSCruiser.WinForms.DataEntry
 
             if (_speciesColumn != null)
             {
-                _speciesColumn.DataSource = Controller._cDal.Read<TreeDefaultValueDO>("TreeDefaultValue", null);
+                _speciesColumn.DataSource = Controller._cDal.Read<TreeDefaultValueDO>((WhereClause)null);
             }
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = Controller._cDal.Read<SampleGroupVM>("SampleGroup", null);
+                _sgColumn.DataSource = Controller._cDal.Read<SampleGroupVM>((WhereClause)null);
             }
             if (_stratumColumn != null)
             {
