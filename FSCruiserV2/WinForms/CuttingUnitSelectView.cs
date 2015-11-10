@@ -14,7 +14,19 @@ namespace FSCruiser.WinForms
     public partial class CuttingUnitSelectView : UserControl
     {
         public IApplicationController Controller { get; set; }
-        public CuttingUnitVM SelectedUnit { get; set; }
+        public CuttingUnitVM SelectedUnit 
+        {
+            get
+            {
+                CuttingUnitVM unitVM = _BS_CuttingUnits.Current as CuttingUnitVM;
+                if (unitVM != null && unitVM.Code != null)
+                {
+                    return unitVM;
+                }
+                return null; 
+            }
+             
+        }
 
 
         public CuttingUnitSelectView()
@@ -29,25 +41,27 @@ namespace FSCruiser.WinForms
 
         public void OnCuttingUnitsChanged()
         {
-            this._cuttingUnitCB.DataSource = Controller.CuttingUnits;
-            this._cuttingUnitCB.Update();
+            this._BS_CuttingUnits.DataSource = Controller.CuttingUnits;
+            //this._cuttingUnitCB.Update();
         }
 
         private void _cuttingUnitCB_SelectedValueChanged(object sender, EventArgs e)
         {
-            CuttingUnitVM unit = _cuttingUnitCB.SelectedValue as CuttingUnitVM;
-            SelectedUnit = unit;
-
-            if (SelectedUnit != null)
+            var unit = SelectedUnit;
+            if (unit != null)
             {
-                SelectedUnit.Strata.Populate();
-                String[] stDes = new String[SelectedUnit.Strata.Count];
+                unit.Strata.Populate();
+                String[] stDes = new String[unit.Strata.Count];
 
-                for (int i = 0; i < SelectedUnit.Strata.Count; i++)
+                for (int i = 0; i < unit.Strata.Count; i++)
                 {
-                    stDes[i] = ApplicationController.GetStratumInfoShort(SelectedUnit.Strata[i]);
+                    stDes[i] = ApplicationController.GetStratumInfoShort(unit.Strata[i]);
                 }
                 this._strataLB.DataSource = stDes;
+            }
+            else
+            {
+                this._strataLB.DataSource = null;
             }
         }
 

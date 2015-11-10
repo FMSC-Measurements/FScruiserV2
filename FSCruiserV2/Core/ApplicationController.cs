@@ -308,7 +308,9 @@ namespace FSCruiser.Core
                 }
                 _cDal = new CruiseDAL.DAL(path);
                 _cDal.LogMessage(string.Format("Opened By FSCruiser ({0})", Constants.FSCRUISER_VERSION), "I");
-                this.CuttingUnits = this._cDal.Read<CuttingUnitVM>((WhereClause)null);
+                var units = this._cDal.Read<CuttingUnitVM>((WhereClause)null);
+                units.Insert(0, new CuttingUnitVM());
+                this.CuttingUnits = units;
                 SaleDO sale = this._cDal.ReadSingleRow<SaleDO>((WhereClause)null);
                 if (sale != null)
                 {

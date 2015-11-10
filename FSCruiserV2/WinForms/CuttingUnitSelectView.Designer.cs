@@ -34,8 +34,8 @@ namespace FSCruiser.WinForms
             this._strataLB = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
             this._cuttingUnitCB = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
             this._BS_CuttingUnits = new System.Windows.Forms.BindingSource(this.components);
+            this.label1 = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._BS_CuttingUnits)).BeginInit();
             this.SuspendLayout();
@@ -75,14 +75,19 @@ namespace FSCruiser.WinForms
             // 
             // _cuttingUnitCB
             // 
-            this._cuttingUnitCB.DisplayMember = "Code";
+            this._cuttingUnitCB.DataSource = this._BS_CuttingUnits;
             this._cuttingUnitCB.Dock = System.Windows.Forms.DockStyle.Top;
             this._cuttingUnitCB.FormatString = "[Code]";
+            this._cuttingUnitCB.FormattingEnabled = true;
             this._cuttingUnitCB.Location = new System.Drawing.Point(0, 13);
             this._cuttingUnitCB.Name = "_cuttingUnitCB";
             this._cuttingUnitCB.Size = new System.Drawing.Size(200, 21);
             this._cuttingUnitCB.TabIndex = 0;
             this._cuttingUnitCB.SelectedValueChanged += new System.EventHandler(this._cuttingUnitCB_SelectedValueChanged);
+            // 
+            // _BS_CuttingUnits
+            // 
+            this._BS_CuttingUnits.DataSource = typeof(FSCruiser.Core.Models.CuttingUnitVM);
             // 
             // label1
             // 
@@ -93,10 +98,6 @@ namespace FSCruiser.WinForms
             this.label1.Size = new System.Drawing.Size(200, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Select Cutting Unit";
-            // 
-            // _BS_CuttingUnits
-            // 
-            this._BS_CuttingUnits.DataSource = typeof(CuttingUnitVM);
             // 
             // CuttingUnitSelectView
             // 

@@ -94,7 +94,6 @@
             this._cuttingUnitSelectView.Dock = System.Windows.Forms.DockStyle.Left;
             this._cuttingUnitSelectView.Location = new System.Drawing.Point(0, 0);
             this._cuttingUnitSelectView.Name = "_cuttingUnitSelectView";
-            this._cuttingUnitSelectView.SelectedUnit = null;
             this._cuttingUnitSelectView.Size = new System.Drawing.Size(250, 436);
             this._cuttingUnitSelectView.TabIndex = 0;
             // 
