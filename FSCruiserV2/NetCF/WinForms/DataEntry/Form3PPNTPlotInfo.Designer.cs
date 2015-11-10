@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this._plotNumNUD = new System.Windows.Forms.NumericUpDown();
-            this._BS_plot = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -47,24 +46,27 @@
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
             this._getGPSMI = new System.Windows.Forms.MenuItem();
             this._cancelMI = new System.Windows.Forms.MenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this._BS_plot)).BeginInit();
+            this.label6 = new System.Windows.Forms.Label();
+            this._kz3ppnt_lbl = new System.Windows.Forms.Label();
+            this._BS_plot = new System.Windows.Forms.BindingSource(this.components);
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._BS_plot)).BeginInit();
             this.SuspendLayout();
             // 
             // _plotNumNUD
             // 
             this._plotNumNUD.DataBindings.Add(new System.Windows.Forms.Binding("Value", this._BS_plot, "PlotNumber", true));
             this._plotNumNUD.Dock = System.Windows.Forms.DockStyle.Left;
-            this._plotNumNUD.Location = new System.Drawing.Point(43, 0);
+            this._plotNumNUD.Location = new System.Drawing.Point(49, 0);
             this._plotNumNUD.Maximum = new decimal(new int[] {
             999,
             0,
             0,
             0});
             this._plotNumNUD.Name = "_plotNumNUD";
-            this._plotNumNUD.Size = new System.Drawing.Size(70, 22);
+            this._plotNumNUD.Size = new System.Drawing.Size(70, 24);
             this._plotNumNUD.TabIndex = 12;
             this._plotNumNUD.Value = new decimal(new int[] {
             1,
@@ -72,20 +74,18 @@
             0,
             0});
             // 
-            // _BS_plot
-            // 
-            this._BS_plot.DataSource = typeof(CruiseDAL.DataObjects.PlotDO);
-            // 
             // label1
             // 
             this.label1.Dock = System.Windows.Forms.DockStyle.Left;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(43, 24);
+            this.label1.Size = new System.Drawing.Size(49, 24);
             this.label1.Text = "Plot #:";
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this._kz3ppnt_lbl);
+            this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this._plotNumNUD);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -161,7 +161,7 @@
             this._volFactorTB.Enabled = false;
             this._volFactorTB.Location = new System.Drawing.Point(122, 9);
             this._volFactorTB.Name = "_volFactorTB";
-            this._volFactorTB.Size = new System.Drawing.Size(40, 21);
+            this._volFactorTB.Size = new System.Drawing.Size(40, 23);
             this._volFactorTB.TabIndex = 1;
             // 
             // label2
@@ -207,6 +207,26 @@
             this._cancelMI.Text = "Cancel";
             this._cancelMI.Click += new System.EventHandler(this._cancelButton_Click);
             // 
+            // label6
+            // 
+            this.label6.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label6.Location = new System.Drawing.Point(119, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(48, 24);
+            this.label6.Text = "     KZ:";
+            // 
+            // _kz3ppnt_lbl
+            // 
+            this._kz3ppnt_lbl.Dock = System.Windows.Forms.DockStyle.Left;
+            this._kz3ppnt_lbl.Location = new System.Drawing.Point(167, 0);
+            this._kz3ppnt_lbl.Name = "_kz3ppnt_lbl";
+            this._kz3ppnt_lbl.Size = new System.Drawing.Size(49, 24);
+            this._kz3ppnt_lbl.Text = "###";
+            // 
+            // _BS_plot
+            // 
+            this._BS_plot.DataSource = typeof(CruiseDAL.DataObjects.PlotDO);
+            // 
             // Form3PPNTPlotInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -220,10 +240,10 @@
             this.MinimizeBox = false;
             this.Name = "Form3PPNTPlotInfo";
             this.Text = "Plot";
-            ((System.ComponentModel.ISupportInitialize)(this._BS_plot)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this._BS_plot)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -248,5 +268,7 @@
         private System.Windows.Forms.MainMenu mainMenu1;
         private System.Windows.Forms.MenuItem _getGPSMI;
         private System.Windows.Forms.MenuItem _cancelMI;
+        private System.Windows.Forms.Label _kz3ppnt_lbl;
+        private System.Windows.Forms.Label label6;
     }
 }

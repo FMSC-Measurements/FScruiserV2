@@ -43,6 +43,8 @@
             this._volFactorTB = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this._kz_lbl = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this._cancelMI = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this._BS_Plot)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._plotNumNUD)).BeginInit();
@@ -189,6 +191,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this._kz_lbl);
+            this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this._plotNumNUD);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -197,12 +201,32 @@
             this.panel1.Size = new System.Drawing.Size(284, 24);
             this.panel1.TabIndex = 5;
             // 
+            // _kz_lbl
+            // 
+            this._kz_lbl.AutoSize = true;
+            this._kz_lbl.Location = new System.Drawing.Point(146, 2);
+            this._kz_lbl.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this._kz_lbl.Name = "_kz_lbl";
+            this._kz_lbl.Size = new System.Drawing.Size(28, 13);
+            this._kz_lbl.TabIndex = 15;
+            this._kz_lbl.Text = "###";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(119, 2);
+            this.label6.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(24, 13);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "KZ:";
+            // 
             // _cancelMI
             // 
             this._cancelMI.Index = -1;
             this._cancelMI.Text = "Cancel";
             // 
-            // FormPlotInfo3PPNT
+            // Form3PPNTPlotInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -211,7 +235,7 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "FormPlotInfo3PPNT";
+            this.Name = "Form3PPNTPlotInfo";
             this.Text = "FormPlotInfo3PPNT";
             ((System.ComponentModel.ISupportInitialize)(this._BS_Plot)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._plotNumNUD)).EndInit();
@@ -219,6 +243,7 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -241,5 +266,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.MenuItem _cancelMI;
+        private System.Windows.Forms.Label _kz_lbl;
+        private System.Windows.Forms.Label label6;
     }
 }

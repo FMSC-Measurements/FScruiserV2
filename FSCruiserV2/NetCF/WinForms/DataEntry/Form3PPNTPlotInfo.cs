@@ -98,6 +98,8 @@ namespace FSCruiser.WinForms.DataEntry
         {
             
             this._currentPlotInfo = plotInfo;
+
+            this._kz3ppnt_lbl.Text = plotInfo.Stratum.KZ3PPNT.ToString();
             this._BS_plot.DataSource = plotInfo;
 
             this.TreeCount = -1;

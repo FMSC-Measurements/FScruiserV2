@@ -81,6 +81,12 @@ namespace FSCruiser.WinForms.DataEntry
         }
         #endregion
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            this._kz_lbl.Text = CurrentPlotInfo.Stratum.KZ3PPNT.ToString();
+        }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
@@ -158,5 +164,7 @@ namespace FSCruiser.WinForms.DataEntry
             CalculateKPI();
             _blockTBClick = false;
         }
+
+      
     }
 }
