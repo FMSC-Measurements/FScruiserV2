@@ -45,6 +45,32 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public override float HiddenPrimary
+        {
+            get
+            {
+                if (base.HiddenPrimary == 0 && this.TreeDefaultValue != null)
+                {
+                    return this.TreeDefaultValue.HiddenPrimary;
+                }
+                else
+                {
+                    return base.HiddenPrimary;
+                }
+            }
+            set
+            {
+                if (this.TreeDefaultValue != null && value == base.HiddenPrimary)
+                {
+                    base.HiddenPrimary = 0;
+                }
+                else
+                {
+                    base.HiddenPrimary = value;
+                }
+            }
+        }
+
         public override StratumDO GetStratum()
         {
 

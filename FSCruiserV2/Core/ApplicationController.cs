@@ -776,7 +776,7 @@ namespace FSCruiser.Core
                 tree.Grade = tdv.TreeGrade;
                 tree.FormClass = tdv.FormClass;
                 tree.RecoverablePrimary = tdv.Recoverable;
-                tree.HiddenPrimary = tdv.HiddenPrimary;
+                //tree.HiddenPrimary = tdv.HiddenPrimary;//#367
             }
             else
             {
