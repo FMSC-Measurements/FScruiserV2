@@ -60,7 +60,7 @@ namespace FSCruiser.Core.Models
             }
             set
             {
-                if (this.TreeDefaultValue != null && value == base.HiddenPrimary)
+                if (!base.PropertyChangedEventsDisabled &&  this.TreeDefaultValue != null && value == base.HiddenPrimary)
                 {
                     base.HiddenPrimary = 0;
                 }
