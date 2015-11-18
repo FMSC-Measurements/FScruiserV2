@@ -45,29 +45,61 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        //public override float HiddenPrimary
+        //{
+        //    get
+        //    {
+        //        if (base.HiddenPrimary == 0.0F && this.TreeDefaultValue != null)
+        //        {
+        //            return this.TreeDefaultValue.HiddenPrimary;
+        //        }
+        //        else
+        //        {
+        //            return base.HiddenPrimary;
+        //        }
+        //    }
+        //    set
+        //    {
+        //        if (!base.PropertyChangedEventsDisabled &&  this.TreeDefaultValue != null && value == base.HiddenPrimary)
+        //        {
+        //            base.HiddenPrimary = 0;
+        //        }
+        //        else
+        //        {
+        //            base.HiddenPrimary = value;
+        //        }
+        //    }
+        //}
+
         public override float HiddenPrimary
         {
             get
             {
-                if (base.HiddenPrimary == 0 && this.TreeDefaultValue != null)
+                if (this.TreeDefaultValue != null && base.HiddenPrimary == 0.0F)
                 {
                     return this.TreeDefaultValue.HiddenPrimary;
                 }
-                else
-                {
-                    return base.HiddenPrimary;
-                }
+                return base.HiddenPrimary;
             }
             set
             {
-                if (!base.PropertyChangedEventsDisabled &&  this.TreeDefaultValue != null && value == base.HiddenPrimary)
-                {
-                    base.HiddenPrimary = 0;
-                }
-                else
+                if (this.PropertyChangedEventsDisabled)
                 {
                     base.HiddenPrimary = value;
                 }
+                if (this.TreeDefaultValue != null)
+                {
+                    if (this.TreeDefaultValue.HiddenPrimary == value)
+                    {
+                        base.HiddenPrimary = 0.0F;
+                    }
+                    else
+                    {
+                        base.HiddenPrimary = value;
+                        //base.NotifyPropertyChanged(CruiseDAL.Schema.TREE.HIDDENPRIMARY);
+                    }
+                }
+
             }
         }
 
@@ -107,46 +139,16 @@ namespace FSCruiser.Core.Models
 
         public bool LogCountDirty { get; set; }
 
-        //protected override void NotifyPropertyChanged(string name)
-        //{
-        //    base.NotifyPropertyChanged(name);
-        //    if (name == CruiseDAL.Schema.TREE.TREEDEFAULTVALUE_CN)
-        //    {
-        //        base.NotifyPropertyChanged(CruiseDAL.Schema.TREE.HIDDENPRIMARY);
-        //    }
-        //}
+        protected override void NotifyPropertyChanged(string name)
+        {
+            base.NotifyPropertyChanged(name);
+            if (name == CruiseDAL.Schema.TREE.TREEDEFAULTVALUE_CN)
+            {
+                base.NotifyPropertyChanged(CruiseDAL.Schema.TREE.HIDDENPRIMARY);
+            }
+        }
 
        
-        //public override float HiddenPrimary
-        //{
-        //    get
-        //    {
-        //        if (this.TreeDefaultValue != null && base.HiddenPrimary == 0.0F)
-        //        {
-        //            return this.TreeDefaultValue.HiddenPrimary;
-        //        }
-        //        return base.HiddenPrimary;
-        //    }
-        //    set
-        //    {
-        //        if (this.inWriteMode)
-        //        {
-        //            base.HiddenPrimary = value;
-        //        }
-        //        if (this.TreeDefaultValue != null)
-        //        {
-        //            if (this.TreeDefaultValue.HiddenPrimary == value)
-        //            {
-        //                base.HiddenPrimary = 0.0F;
-        //            }
-        //            else
-        //            {
-        //                base.HiddenPrimary = value;
-        //                base.NotifyPropertyChanged(CruiseDAL.Schema.TREE.HIDDENPRIMARY);
-        //            }
-        //        }
-                
-        //    }
-        //}
+
     }
 }
