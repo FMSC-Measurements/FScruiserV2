@@ -1,0 +1,55 @@
+
+Background:
+GIVEN active view is plotlayout 
+
+
+GIVEN tally bar is visable
+WHEN user hits "ESC"
+THEN tally bar is not visable //pass
+
+
+GIVEN tally bar is visable
+WHEN user clicks on the data grid
+THEN tally bar is not visable //pass
+
+
+GIVEN tally bar is not visable
+WHEN user presses 'ESC'
+THEN tally bar is visable //fail
+
+
+GIVEN tally bar is visable 
+AND 'x' is a valid species hotkey 
+AND next tree is a sample tree
+WHEN user presses 'x' 
+THEN one measure tree is added to current plot //pass
+
+
+GIVEN tally bar is visable 
+AND 'x' is a valid species hotkey 
+AND next tree is not a sample tree
+WHEN user presses 'x' 
+THEN one count tree is added to current plot //pass
+
+
+GIVEN current plot is a null plot 
+AND 'x' is a valid species hotkey
+WHEN user presses 'x' 
+THEN no tree is added to current plot 
+AND message is shown to user //pass
+
+
+GIVEN current plot is a null plot 
+WHEN user clicks the "Add Tree" button 
+THEN no tree is added to current plot 
+AND message is shown to user //pass
+
+
+GIVEN one or more trees has an error
+WHEN user clicks the add plot button
+THEN user is allerted that there are tree errors //pass
+
+
+GIVEN one or more trees has an error
+WHEN user changes plots
+THEN user is allerted that there are tree errors //pass
