@@ -196,11 +196,11 @@ namespace FSCruiser.WinForms.DataEntry
                     newTrees[i] = t;
                     t.Save();
                 }
-                this.Controller._cDal.EndTransaction();
+                this.Controller._cDal.CommitTransaction();
             }
             catch (Exception e)
             {
-                this.Controller._cDal.CancelTransaction();
+                this.Controller._cDal.RollbackTransaction();
                 throw e;
             }
 

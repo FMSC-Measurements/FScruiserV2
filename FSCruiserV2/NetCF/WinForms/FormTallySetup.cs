@@ -169,11 +169,11 @@ namespace FSCruiser.WinForms
                         }
 
                     }
-                    this.Controller._cDal.EndTransaction();
+                    this.Controller._cDal.CommitTransaction();
                 }
                 catch (Exception ex)
                 {
-                    this.Controller._cDal.CancelTransaction();
+                    this.Controller._cDal.RollbackTransaction();
                     this.Controller.HandleNonCriticalException(ex, "Some thing went wrong while saving");
                 }
                 finally

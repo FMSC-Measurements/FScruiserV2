@@ -18,7 +18,7 @@ using FMSC.ORM.Core.SQL;
 
 namespace FSCruiser.Core
 {
-    
+     
 
     public enum BackUpMethod { None = 0, LeaveUnit = 1, TimeInterval = 2 }
 
