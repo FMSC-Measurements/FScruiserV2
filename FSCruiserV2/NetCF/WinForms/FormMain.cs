@@ -139,7 +139,7 @@ namespace FSCruiser.WinForms
                 foreach (StratumDO st in unit.Strata)
                 {
                     Label stLBL = new Label();
-                    stLBL.Text = ApplicationController.GetStratumInfoShort(st);
+                    stLBL.Text = st.GetDescriptionShort();
                     if (_fontHeight == 0)
                     {
                         using (Graphics g = base.CreateGraphics())

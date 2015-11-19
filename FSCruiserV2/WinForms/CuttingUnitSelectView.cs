@@ -55,7 +55,8 @@ namespace FSCruiser.WinForms
 
                 for (int i = 0; i < unit.Strata.Count; i++)
                 {
-                    stDes[i] = ApplicationController.GetStratumInfoShort(unit.Strata[i]);
+                    var stratum = unit.Strata[i];
+                    stDes[i] = stratum.GetDescriptionShort();
                 }
                 this._strataLB.DataSource = stDes;
             }

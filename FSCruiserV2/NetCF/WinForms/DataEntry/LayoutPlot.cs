@@ -406,7 +406,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.Dock = DockStyle.Fill;
             this.Parent = parent;
             this._tallyListPanel.SuspendLayout();
-            this._mode = AppController.GetStrataDataEntryMode(stratum);
+            this._mode = stratum.GetDataEntryMode();
             this.ViewLogicController.DataEntryController.PopulateTallies(stratum, this._mode, AppController.CurrentUnit, this._tallyListPanel, this);
             if (stratum.Method == "3PPNT")
             {

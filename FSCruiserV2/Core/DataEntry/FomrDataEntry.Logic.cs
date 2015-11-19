@@ -152,8 +152,8 @@ namespace FSCruiser.Core.DataEntry
             //}
 
 
-            SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Sampler;            
-            DataEntryMode mode = Controller.GetStrataDataEntryMode(count.SampleGroup.Stratum);
+            SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Sampler;
+            DataEntryMode mode = count.SampleGroup.Stratum.GetDataEntryMode();
 
 
             if ((mode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP)//threeP sampling
@@ -173,7 +173,7 @@ namespace FSCruiser.Core.DataEntry
                 if (kpi == -1)  //user enterted sure to measure 
                 {
                     TreeVM tree;
-                    tree = Controller.CreateNewTreeEntry(count);
+                    tree = Controller.CurrentUnit.CreateNewTreeEntry(count);
                     tree.STM = "Y";
                     Controller.TrySaveTree(tree);
                     action.TreeRecord = tree;
@@ -214,9 +214,12 @@ namespace FSCruiser.Core.DataEntry
         private void OnSample(TallyAction action, CountTreeVM count, int kpi, bool isInsurance)
         {
             TreeVM tree;
-            tree = Controller.CreateNewTreeEntry(count, null, !isInsurance);
+            tree = Controller.CurrentUnit.CreateNewTreeEntry(count, null, !isInsurance);
             tree.KPI = kpi;
             tree.CountOrMeasure = (isInsurance) ? "I" : "M";
+
+            //TODO signal sample tree
+            //ask cruiser initials 
             this.Controller.TrySaveTree(tree);
             action.TreeRecord = tree;
 
@@ -229,14 +232,17 @@ namespace FSCruiser.Core.DataEntry
             {
                 this.Controller.ViewController.SignalInsuranceTree();
             }
+            throw new NotImplementedException();
         }
 
         private void OnSample(TallyAction action, CountTreeVM count, bool isInsurance)
         {
             TreeVM tree;
-            tree = Controller.CreateNewTreeEntry(count);
+            tree = Controller.CurrentUnit.CreateNewTreeEntry(count);
             action.TreeRecord = tree;
             tree.CountOrMeasure = (isInsurance) ? "I" : "M";
+            //TODO signal sample tree
+            //ask cruiser initials 
             this.Controller.TrySaveTree(tree);
 
             if (!isInsurance && this.AskEnterMeasureTreeData())
@@ -248,6 +254,7 @@ namespace FSCruiser.Core.DataEntry
             {
                 this.ViewController.SignalInsuranceTree();
             }
+            throw new NotImplementedException();
         }
 
 
@@ -266,7 +273,7 @@ namespace FSCruiser.Core.DataEntry
 
             SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Sampler;
             TreeVM tree = null;
-            DataEntryMode mode = Controller.GetStrataDataEntryMode(count.SampleGroup.Stratum);
+            DataEntryMode mode = count.SampleGroup.Stratum.GetDataEntryMode();
             if ((mode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP)
             {
                 int kpi = 0;
@@ -297,27 +304,27 @@ namespace FSCruiser.Core.DataEntry
                         if (item.IsInsuranceItem)
                         {
                             this.ViewController.SignalInsuranceTree();
-                            tree = Controller.CreateNewTreeEntry(count, plot, true);
+                            tree = Controller.CurrentUnit.CreateNewTreeEntry(count, plot, true);
                             tree.CountOrMeasure = "I";
                         }
                         else
                         {
                             this.ViewController.SignalMeasureTree(true);
-                            tree = Controller.CreateNewTreeEntry(count, plot, true);
+                            tree = Controller.CurrentUnit.CreateNewTreeEntry(count, plot, true);
                             //tree.CountOrMeasure = "M";
 
                         }
                     }
                     else
                     {
-                        tree = Controller.CreateNewTreeEntry(count, plot, false);
+                        tree = Controller.CurrentUnit.CreateNewTreeEntry(count, plot, false);
                         //tree.CountOrMeasure = "C";
                     }
                     tree.KPI = kpi;
                 }
                 else
                 {
-                    tree = Controller.CreateNewTreeEntry(count, plot, true);
+                    tree = Controller.CurrentUnit.CreateNewTreeEntry(count, plot, true);
                     tree.STM = "Y";
                 }
                 //tree.TreeNumber = CurrentPlotInfo.NextPlotTreeNum++;
@@ -332,19 +339,19 @@ namespace FSCruiser.Core.DataEntry
                 if (item != null && !item.IsInsuranceItem)
                 {
                     this.ViewController.SignalMeasureTree(true);
-                    tree = Controller.CreateNewTreeEntry(count, plot, true);
+                    tree = Controller.CurrentUnit.CreateNewTreeEntry(count, plot, true);
                     //tree.CountOrMeasure = "M";
 
                 }
                 else if (item != null && item.IsInsuranceItem)
                 {
                     this.ViewController.SignalInsuranceTree();
-                    tree = Controller.CreateNewTreeEntry(count, plot, true);
+                    tree = Controller.CurrentUnit.CreateNewTreeEntry(count, plot, true);
                     tree.CountOrMeasure = "I";
                 }
                 else
                 {
-                    tree = Controller.CreateNewTreeEntry(count, plot, false);
+                    tree = Controller.CurrentUnit.CreateNewTreeEntry(count, plot, false);
                 }
                 
 
@@ -553,7 +560,7 @@ namespace FSCruiser.Core.DataEntry
             if (tree == null) { return; }
             if (!tree.SampleGroup.TreeDefaultValues.Contains(tree.TreeDefaultValue))
             {
-                this.Controller.SetTreeTDV(tree, null);
+                tree.SetTreeTDV(null);
             }
             view.UpdateSpeciesColumn(tree);
             this.Controller.TrySaveTree(tree);
@@ -591,7 +598,7 @@ namespace FSCruiser.Core.DataEntry
         {
             if (tree == null) { return true; }
             //if (tree.TreeDefaultValue == tdv) { return true; }
-            this.Controller.SetTreeTDV(tree, tdv);
+            tree.SetTreeTDV(tdv);
             return this.Controller.TrySaveTree(tree);
         }
 
@@ -601,7 +608,7 @@ namespace FSCruiser.Core.DataEntry
 
             tree.Species = null;
             tree.SampleGroup = null;
-            this.Controller.SetTreeTDV(tree, null);
+            tree.SetTreeTDV(null);
             view.UpdateSampleGroupColumn(tree);
             view.UpdateSpeciesColumn(tree);
             this.Controller.TrySaveTree(tree);

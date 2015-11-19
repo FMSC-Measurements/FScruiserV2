@@ -30,6 +30,7 @@ namespace FSCruiser.WinForms
 
         private Dictionary<StratumDO, FormLogs> _logViews = new Dictionary<StratumDO, FormLogs>();
 
+        
 
         public ViewController()
         {

@@ -61,7 +61,7 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _initialState = null;
             }
-            this._plotStatsTB.Text = ApplicationController.GetPlotInfo(plotInfo);
+            this._plotStatsTB.Text = plotInfo.GetDescription();
             return this.ShowDialog();
         }
 

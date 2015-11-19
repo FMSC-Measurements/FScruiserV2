@@ -332,7 +332,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (!tree.SampleGroup.TreeDefaultValues.Contains(tree.TreeDefaultValue))
             {
-                this.AppController.SetTreeTDV(tree, null);
+                tree.SetTreeTDV(null);
             }
             return this.AppController.TrySaveTree(tree);
         }
@@ -344,7 +344,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (tree == null) { return true; }
             if (tree.TreeDefaultValue == tdv) { return true; }
-            this.AppController.SetTreeTDV(tree, tdv);
+            tree.SetTreeTDV(tdv);
             return this.AppController.TrySaveTree(tree);
         }
         #endregion 

@@ -16,6 +16,7 @@ namespace FSCruiser.Core
         
         IApplicationController ApplicationController { get; set; }
         bool EnableLogGrading { get; set; }
+        bool EnableCruiserSelectionPopup { get; set; }
 
         FormMain MainView { get; }
         FormNumPad NumPadDialog { get; }

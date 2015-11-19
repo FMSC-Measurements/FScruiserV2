@@ -101,6 +101,18 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public bool IsTreeNumberAvalible(long treeNumber)
+        {
+            foreach (TreeVM tree in this.Trees)
+            {
+                if (tree.TreeNumber == treeNumber)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public override string ToString()
         {
             return base.PlotNumber.ToString() + ((IsNull == true) ? "-Null" : string.Empty);

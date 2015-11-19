@@ -80,7 +80,7 @@ namespace FSCruiser.WinForms.DataEntry
                 strataButton.Height = 25;
                 strataButton.BackColor = System.Drawing.Color.FromArgb(0x2F, 0x4F, 0x4F); //Color.DarkSlateGray;// DarkGray;// Green;System.Drawing.Color.FromArgb(0x2F, 0x4F, 0x4F);
                 strataButton.ForeColor = Color.White;
-                strataButton.Text = ApplicationController.GetStratumInfoShort(stratum);
+                strataButton.Text = stratum.GetDescriptionShort();
                 if (stratum.Hotkey != null && stratum.Hotkey.Length > 0)
                 {
                     strataButton.Text += "[" + stratum.Hotkey.Substring(0, 1) + "]";

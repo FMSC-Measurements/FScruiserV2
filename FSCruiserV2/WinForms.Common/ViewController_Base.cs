@@ -52,6 +52,8 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
+        public bool EnableCruiserSelectionPopup { get; set; }
+
         public FormCruiserSelection CruiserSelectionView
         {
             get
@@ -183,7 +185,10 @@ namespace FSCruiser.WinForms.Common
 
         public void ShowCruiserSelection(TreeVM tree)
         {
-            this.CruiserSelectionView.ShowDialog(tree);
+            if (EnableCruiserSelectionPopup)
+            {
+                this.CruiserSelectionView.ShowDialog(tree);
+            }
         }
 
         public abstract System.Windows.Forms.DialogResult ShowEditSampleGroup(CruiseDAL.DataObjects.SampleGroupDO sg, bool allowEdit);

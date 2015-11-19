@@ -227,7 +227,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (!tree.SampleGroup.TreeDefaultValues.Contains(tree.TreeDefaultValue))
             {
-                this.Controller.SetTreeTDV(tree, null);
+                tree.SetTreeTDV(null);
             }
             return this.Controller.TrySaveTree(tree);
         }
@@ -239,7 +239,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (tree == null) { return true; }
             if (tree.TreeDefaultValue == tdv) { return true; }
-            this.Controller.SetTreeTDV(tree, tdv);
+            tree.SetTreeTDV(tdv);
             return this.Controller.TrySaveTree(tree);
         }
 

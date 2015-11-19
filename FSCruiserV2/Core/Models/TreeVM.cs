@@ -148,6 +148,35 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public void SetTreeTDV(TreeDefaultValueDO tdv)
+        {
+            //if (tdv == _newPopPlaceHolder && this.SampleGroup != null)
+            //{
+            //    tdv = ViewController.ShowAddPopulation(this.SampleGroup);
+            //}
+
+            this.TreeDefaultValue = tdv;
+            if (tdv != null)
+            {
+                this.Species = tdv.Species;
+
+                this.LiveDead = tdv.LiveDead;
+                this.Grade = tdv.TreeGrade;
+                this.FormClass = tdv.FormClass;
+                this.RecoverablePrimary = tdv.Recoverable;
+                //tree.HiddenPrimary = tdv.HiddenPrimary;//#367
+            }
+            else
+            {
+                this.Species = string.Empty;
+                this.LiveDead = string.Empty;
+                this.Grade = string.Empty;
+                this.FormClass = 0;
+                this.RecoverablePrimary = 0;
+                //this.HiddenPrimary = 0;
+            }
+        }
+
        
 
     }

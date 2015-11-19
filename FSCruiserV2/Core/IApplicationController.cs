@@ -21,15 +21,15 @@ namespace FSCruiser.Core
         StratumVM DefaultStratum { get; }
 
         
-        bool EnableCruiserSelectionPopup { get; set; }
+        //bool EnableCruiserSelectionPopup { get; set; }
         #endregion 
 
         #region ====================================================================
         //PlotVM AddPlot(StratumVM stratum);
         void AddTallyAction(TallyAction action);
-        TreeVM CreateNewTreeEntry(CountTreeVM count);
-        TreeVM CreateNewTreeEntry(CountTreeVM count, PlotVM plot, bool isMeasure);
-        TreeVM CreateNewTreeEntry(CuttingUnitDO unit, StratumVM stratum, SampleGroupVM sg, CruiseDAL.DataObjects.TreeDefaultValueDO tdv, PlotVM plot, bool isMeasure);
+        //TreeVM CreateNewTreeEntry(CountTreeVM count);
+        //TreeVM CreateNewTreeEntry(CountTreeVM count, PlotVM plot, bool isMeasure);
+        //TreeVM CreateNewTreeEntry(CuttingUnitDO unit, StratumVM stratum, SampleGroupVM sg, CruiseDAL.DataObjects.TreeDefaultValueDO tdv, PlotVM plot, bool isMeasure);
         //StratumInfo CreateStratumInfo(CruiseDAL.DataObjects.CuttingUnitDO unit, CruiseDAL.DataObjects.StratumDO stratum);
         SampleGroupDO CreateNewSampleGroup(StratumDO stratum);
         TreeDefaultValueDO CreateNewTreeDefaultValue(String pProd);
@@ -70,7 +70,7 @@ namespace FSCruiser.Core
         //void SaveCounts();
         bool TrySaveTree(TreeVM tree);
         void SaveTrees(System.Collections.Generic.ICollection<TreeVM> list);
-        void SetTreeTDV(TreeVM tree, TreeDefaultValueDO tdv);
+        //void SetTreeTDV(TreeVM tree, TreeDefaultValueDO tdv);
         bool EnsureTreeNumberAvalible(long start);
         bool EnsureTreeNumberAvalible(long start, PlotVM plot);
         void Untally(TallyAction action);

@@ -90,7 +90,7 @@ namespace FSCruiser.WinForms.DataEntry
         public DialogResult ShowDialog(TreeVM tree)
         {
             this._currentTree = tree;
-            this._treeDesLbl.Text = ApplicationController.GetLogLevelTreeDescription(tree);
+            this._treeDesLbl.Text = tree.GetLogLevelDescription();
 
             this._logs = new BindingList<LogDO>(Controller._cDal.Read<LogDO>("Log", "WHERE Log.Tree_CN = ? ORDER BY CAST (LogNumber AS NUMERIC) ", tree.Tree_CN));
             this._logNumIndex = Controller.GetLogNumerIndexStart(tree);

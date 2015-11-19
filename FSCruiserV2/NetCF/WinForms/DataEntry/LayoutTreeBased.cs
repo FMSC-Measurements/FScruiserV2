@@ -103,7 +103,7 @@ namespace FSCruiser.WinForms.DataEntry
                 strataButton.Height = 25;
                 strataButton.BackColor = System.Drawing.Color.FromArgb(0x2F, 0x4F, 0x4F); //Color.DarkSlateGray;// DarkGray;// Green;System.Drawing.Color.FromArgb(0x2F, 0x4F, 0x4F);
                 strataButton.ForeColor = Color.White;
-                strataButton.Text = ApplicationController.GetStratumInfoShort(stratum);
+                strataButton.Text = stratum.GetDescriptionShort();
                 if (stratum.Hotkey != null && stratum.Hotkey.Length > 0)
                 {
                     strataButton.Text += "[" + stratum.Hotkey.Substring(0, 1) + "]";
@@ -115,7 +115,7 @@ namespace FSCruiser.WinForms.DataEntry
                 strataButton.Parent = _leftContentPanel;
                 strataButton.Tag = stratum;
 
-                DataEntryMode mode = Controller.GetStrataDataEntryMode(stratum);
+                DataEntryMode mode = stratum.GetDataEntryMode();
                 this.DataEntryController.PopulateTallies(stratum, mode, unit, tallyContainer, this);
                 //AdjustPanelHeight(tallyContainer);
 
@@ -348,10 +348,13 @@ namespace FSCruiser.WinForms.DataEntry
             if (_viewLoading) { return; }
             Button button = (Button)sender;
             SubPop subPop = (SubPop)button.Tag;
-            TreeDO tree;
-            tree = Controller.CreateNewTreeEntry(Controller.CurrentUnit, subPop.SG.Stratum, subPop.SG, subPop.TDV, null, true);
+
+            var tree = Controller.CurrentUnit.CreateNewTreeEntry(subPop.SG.Stratum, subPop.SG, subPop.TDV, null, true);
 
             tree.TreeCount = 1;
+
+            this.Controller.ViewController.ShowCruiserSelection(tree);
+
             //tree.CountOrMeasure = "M";
             DataEntryForm.GotoTreePage();
             Controller.OnTally();

@@ -101,7 +101,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public DialogResult ShowDialog(CountTreeVM count)
         {
-            DataEntryMode stMode = this.Controller.GetStrataDataEntryMode(count.SampleGroup.Stratum);
+            DataEntryMode stMode = count.SampleGroup.Stratum.GetDataEntryMode();
             bool isPlot = ((stMode & DataEntryMode.Plot) == DataEntryMode.Plot);
             bool isThreep = ((stMode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP);
 

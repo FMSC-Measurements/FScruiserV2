@@ -49,6 +49,5 @@ namespace FSCruiser.Core.Models
                 this.TreeFieldNames = result.Split(',');
             }
         }
-
     }
 }

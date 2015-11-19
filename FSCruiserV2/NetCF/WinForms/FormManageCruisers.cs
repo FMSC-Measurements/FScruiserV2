@@ -33,7 +33,7 @@ namespace FSCruiser.WinForms
         protected override void OnLoad(EventArgs e)
         {
             this.UpdateCruiserList();
-            this._enableCruiserPopupCB.Checked = this.Controller.EnableCruiserSelectionPopup;
+            this._enableCruiserPopupCB.Checked = this.Controller.ViewController.EnableCruiserSelectionPopup;
             base.OnLoad(e);
             
         }
@@ -131,7 +131,7 @@ namespace FSCruiser.WinForms
 
         private void _enableCruiserPopupCB_CheckStateChanged(object sender, EventArgs e)
         {
-            this.Controller.EnableCruiserSelectionPopup = this._enableCruiserPopupCB.Checked;
+            this.Controller.ViewController.EnableCruiserSelectionPopup = this._enableCruiserPopupCB.Checked;
         }
 
         private void _initialsTB_KeyDown(object sender, KeyEventArgs e)

@@ -18,8 +18,7 @@ using FMSC.ORM.Core.SQL;
 
 namespace FSCruiser.Core
 {
-    [Flags]
-    public enum  DataEntryMode { None = 0, Tree = 1, Plot = 2, OneStagePlot = 4, ThreeP = 8, HundredPct = 16, Mixed = 32, Unknown = 64, TallyTree = 128};
+    
 
     public enum BackUpMethod { None = 0, LeaveUnit = 1, TimeInterval = 2 }
 
@@ -33,10 +32,10 @@ namespace FSCruiser.Core
         //public const string CRUISERS_FILENAME = "\\Cruisers.xml";
 
 
-        private readonly TreeDefaultValueDO _newPopPlaceHolder = new TreeDefaultValueDO()
-        {
-            Species = "<new>"
-        };
+        //private readonly TreeDefaultValueDO _newPopPlaceHolder = new TreeDefaultValueDO()
+        //{
+        //    Species = "<new>"
+        //};
 
 
         private int _talliesSinceLastSave = 0;
@@ -86,7 +85,7 @@ namespace FSCruiser.Core
         //public long UnitTreeNumIndex = 0;
         public BackUpMethod BackUpMethod { get; set; }
         
-        public bool EnableCruiserSelectionPopup { get; set; }
+        //public bool EnableCruiserSelectionPopup { get; set; }
 
         
 
@@ -116,7 +115,7 @@ namespace FSCruiser.Core
             viewController.ApplicationClosing +=new CancelEventHandler(OnApplicationClosing);
             this.ViewController = viewController;
 
-            TallyHistory = new BindingList<TallyAction>();
+            //TallyHistory = new BindingList<TallyAction>();
             this.LoadAppSettings();
             
         }
@@ -128,39 +127,7 @@ namespace FSCruiser.Core
         }
 
 
-        public bool OpenFile()
-        {
-            string fileName;
-            if (this.ViewController.ShowOpenCruiseFileDialog(out fileName) == DialogResult.OK)
-            {
-                return OpenFile(fileName);
-            }
-            return false;
-        }
-
-        private bool OpenFile(string fileName)
-        {
-            try
-            {
-                this.LoadDatabase(fileName);
-                return true;
-            }
-            catch (FMSC.ORM.ReadOnlyException ex)
-            {
-                this.HandleException(ex, "Unable to open file becaus it is read only", false, true);                
-                return false;
-            }
-            catch (FMSC.ORM.SQLException ex)
-            {
-                this.HandleException(ex, "Unable to open file : " + ex.GetType().Name, false, true);
-                return false;
-            }
-            catch (System.IO.IOException ex)
-            {
-                this.HandleException(ex, "Unable to open file : " + ex.GetType().Name, false, true);
-                return false;
-            }
-        }
+        
 
 
 
@@ -268,7 +235,7 @@ namespace FSCruiser.Core
         //}
 
 
-
+        #region exception handleing 
         public void HandleNonCriticalException(Exception ex, string optMessage)
         {
             if(optMessage == null)
@@ -296,8 +263,43 @@ namespace FSCruiser.Core
                 (isCritical) ? "Error" : "Non-Critical Error",
                 MessageBoxIcon.Asterisk);
         }
+        #endregion
 
-        public void LoadDatabase(String path)
+        public bool OpenFile()
+        {
+            string fileName;
+            if (this.ViewController.ShowOpenCruiseFileDialog(out fileName) == DialogResult.OK)
+            {
+                return OpenFile(fileName);
+            }
+            return false;
+        }
+
+        protected bool OpenFile(string fileName)
+        {
+            try
+            {
+                this.LoadDatabase(fileName);
+                return true;
+            }
+            catch (FMSC.ORM.ReadOnlyException ex)
+            {
+                this.HandleException(ex, "Unable to open file becaus it is read only", false, true);
+                return false;
+            }
+            catch (FMSC.ORM.SQLException ex)
+            {
+                this.HandleException(ex, "Unable to open file : " + ex.GetType().Name, false, true);
+                return false;
+            }
+            catch (System.IO.IOException ex)
+            {
+                this.HandleException(ex, "Unable to open file : " + ex.GetType().Name, false, true);
+                return false;
+            }
+        }
+
+        protected void LoadDatabase(String path)
         {
             try
             {
@@ -323,99 +325,87 @@ namespace FSCruiser.Core
             }
         }
 
-        public void InitializeSampleGroups(CuttingUnitDO unit)
-        {
-            //create a list of all samplegroups in the unit
-            this.SampleGroups = _cDal.Read<SampleGroupVM>("SampleGroup", @"JOIN Stratum ON SampleGroup.Stratum_CN = Stratum.Stratum_CN 
-                JOIN CuttingUnitStratum ON CuttingUnitStratum.Stratum_CN = Stratum.Stratum_CN
-                WHERE CuttingUnitStratum.CuttingUnit_CN = ?", unit.CuttingUnit_CN);
+        #region load CuttingUnit
 
-            //initialize sample selectors for all sampleGroups
-            foreach (SampleGroupVM sg in this.SampleGroups)
-            {
-                //DataEntryMode mode = GetStrataDataEntryMode(sg.Stratum);
-                sg.Sampler = this.MakeSampleSelecter(sg);
-            }
-        }
+//        [Obsolete]
+//        public void InitializeSampleGroups(CuttingUnitDO unit)
+//        {
+//            //create a list of all samplegroups in the unit
+//            this.SampleGroups = _cDal.Read<SampleGroupVM>("SampleGroup", @"JOIN Stratum ON SampleGroup.Stratum_CN = Stratum.Stratum_CN 
+//                JOIN CuttingUnitStratum ON CuttingUnitStratum.Stratum_CN = Stratum.Stratum_CN
+//                WHERE CuttingUnitStratum.CuttingUnit_CN = ?", unit.CuttingUnit_CN);
 
-        public void InitializeTallyHistory(CuttingUnitDO unit)
-        {
-            if (!String.IsNullOrEmpty(this.CurrentUnit.TallyHistory))
-            {
-                try
-                {
-                    foreach (TallyAction action in this.DeserializeTallyHistory(this.CurrentUnit.TallyHistory))
-                    {
-                        TallyHistory.Add(action);
-                    }
-                }
-                catch (Exception e)
-                {
-                    this.HandleNonCriticalException(e, "Unable to load tally history");
-                }
-            }
-        }
+//            //initialize sample selectors for all sampleGroups
+//            foreach (SampleGroupVM sg in this.SampleGroups)
+//            {
+//                //DataEntryMode mode = GetStrataDataEntryMode(sg.Stratum);
+//                sg.Sampler = this.MakeSampleSelecter(sg);
+//            }
+//        }
 
-        public void InitializeUnitTreeList()
-        {
-            //create a list of all trees in the unit
-            this.CurrentUnitTreeList = _cDal.Read<TreeVM>("Tree", "WHERE CuttingUnit_CN = ?", this.CurrentUnit.CuttingUnit_CN);
-            //this.InternalValiateTrees((ICollection<TreeVM>)this.CurrentUnitTreeList);
-            this.ValidateTreesAsync(this.CurrentUnitTreeList);
-        }
+//        [Obsolete]
+//        public void InitializeUnitTreeList()
+//        {
+//            //create a list of all trees in the unit
+//            this.CurrentUnitTreeList = _cDal.Read<TreeVM>("Tree", "WHERE CuttingUnit_CN = ?", this.CurrentUnit.CuttingUnit_CN);
+//            //this.InternalValiateTrees((ICollection<TreeVM>)this.CurrentUnitTreeList);
+//            this.ValidateTreesAsync(this.CurrentUnitTreeList);
+//        }
 
-        public void LoadCuttingUnitData()
-        {
+//        [Obsolete]
+//        public void LoadCuttingUnitData()
+//        {
 
-            InitializeSampleGroups(this.CurrentUnit);
-            InitializeUnitTreeNumIndex();
-            InitializeTallyHistory(this.CurrentUnit);
+//            InitializeSampleGroups(this.CurrentUnit);
+//            //InitializeUnitTreeNumIndex();
+//            InitializeTallyHistory(this.CurrentUnit);
 
-            InitializeUnitTreeList();
-            //create a list of just trees in tree based strata
-            List<TreeVM> nonPlotTrees = _cDal.Read<TreeVM>("Tree", @"JOIN Stratum ON Tree.Stratum_CN = Stratum.Stratum_CN WHERE Tree.CuttingUnit_CN = ? AND
-                        (Stratum.Method = '100' OR Stratum.Method = 'STR' OR Stratum.Method = '3P' OR Stratum.Method = 'S3P') ORDER BY TreeNumber", this.CurrentUnit.CuttingUnit_CN);
-            this._nonPlotTreeList = new BindingList<TreeVM>(nonPlotTrees);
+//            InitializeUnitTreeList();
+//            //create a list of just trees in tree based strata
+//            List<TreeVM> nonPlotTrees = _cDal.Read<TreeVM>("Tree", @"JOIN Stratum ON Tree.Stratum_CN = Stratum.Stratum_CN WHERE Tree.CuttingUnit_CN = ? AND
+//                        (Stratum.Method = '100' OR Stratum.Method = 'STR' OR Stratum.Method = '3P' OR Stratum.Method = 'S3P') ORDER BY TreeNumber", this.CurrentUnit.CuttingUnit_CN);
+//            this._nonPlotTreeList = new BindingList<TreeVM>(nonPlotTrees);
 
-            if (this._cDal.GetRowCount("CuttingUnitStratum", "WHERE CuttingUnit_CN = ?", this.CurrentUnit.CuttingUnit_CN) == 1)
-            {
-                this.DefaultStratum = this._cDal.ReadSingleRow<StratumVM>("Stratum", "JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ?",
-                    this.CurrentUnit.CuttingUnit_CN);
-            }
-            else
-            {
-                this.DefaultStratum = this._cDal.ReadSingleRow<StratumVM>("Stratum",
-                        "JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ? AND Method = ?",
-                        CruiseDAL.Schema.Constants.CruiseMethods.H_PCT,
-                        this.CurrentUnit.CuttingUnit_CN);
-            }
+//            if (this._cDal.GetRowCount("CuttingUnitStratum", "WHERE CuttingUnit_CN = ?", this.CurrentUnit.CuttingUnit_CN) == 1)
+//            {
+//                this.DefaultStratum = this._cDal.ReadSingleRow<StratumVM>("Stratum", "JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ?",
+//                    this.CurrentUnit.CuttingUnit_CN);
+//            }
+//            else
+//            {
+//                this.DefaultStratum = this._cDal.ReadSingleRow<StratumVM>("Stratum",
+//                        "JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ? AND Method = ?",
+//                        CruiseDAL.Schema.Constants.CruiseMethods.H_PCT,
+//                        this.CurrentUnit.CuttingUnit_CN);
+//            }
 
             
 
-            this.ViewController.HandleCuttingUnitDataLoaded();
+//            this.ViewController.HandleCuttingUnitDataLoaded();
 
-        }
+//        }
 
-        public void AsyncLoadCuttingUnitData()
-        {
-            if (this._loadCuttingUnitDataThread != null)
-            {
-                this._loadCuttingUnitDataThread.Abort();
-            }
-            this._loadCuttingUnitDataThread = new Thread(this.LoadCuttingUnitData);
-            this._loadCuttingUnitDataThread.IsBackground = true;
-            this._loadCuttingUnitDataThread.Priority = Constants.LOAD_CUTTINGUNITDATA_PRIORITY;
-            this._loadCuttingUnitDataThread.Start();
+//        [Obsolete]
+//        public void AsyncLoadCuttingUnitData()
+//        {
+//            if (this._loadCuttingUnitDataThread != null)
+//            {
+//                this._loadCuttingUnitDataThread.Abort();
+//            }
+//            this._loadCuttingUnitDataThread = new Thread(this.LoadCuttingUnitData);
+//            this._loadCuttingUnitDataThread.IsBackground = true;
+//            this._loadCuttingUnitDataThread.Priority = Constants.LOAD_CUTTINGUNITDATA_PRIORITY;
+//            this._loadCuttingUnitDataThread.Start();
 
-            // ThreadPool.QueueUserWorkItem((t) => { LoadCuttingUnitData(); });
-        }
+//            // ThreadPool.QueueUserWorkItem((t) => { LoadCuttingUnitData(); });
+//        }
 
         public void LoadCuttingUnit(CuttingUnitVM unit)
         {
             if (unit == this.CurrentUnit) { return; }//should be equivilant to referenceEquals
 
-            _talliesSinceLastSave = 0;
-            this.TallyHistory.Clear();
+            //_talliesSinceLastSave = 0;
+            //this.TallyHistory.Clear();
             this.CurrentUnit = unit;
 
             
@@ -426,7 +416,24 @@ namespace FSCruiser.Core
 
             //this.LoadCuttingUnitData();
         }
+        #endregion
 
+        public void OnLeavingCurrentUnit(System.ComponentModel.CancelEventArgs e)
+        {
+            if (!this.Save())
+            {
+                this.HandleNonCriticalException(null, "Something went wrong saving the data for this unit, check trees for errors and try again");
+                //MessageBox.Show("Something went wrong saving the data for this unit, check trees for errors and try again");
+                e.Cancel = true;
+            }
+            if (!e.Cancel && this.BackUpMethod == BackUpMethod.LeaveUnit)
+            {
+                this.PerformBackup(false);
+            }
+
+        }
+
+        #region Cruisers
         public CruiserVM[] GetCruiserList()
         {
             if(this._cruisers == null)
@@ -453,8 +460,9 @@ namespace FSCruiser.Core
         {
             this._cruisers.Remove(cruiser);
         }
+        #endregion
 
-        
+
 
 
         public TreeVM UserAddTree(TreeVM templateTree, StratumVM knownStratum, PlotVM knownPlot)
@@ -496,7 +504,9 @@ namespace FSCruiser.Core
                 }
             }
 
-            newTree = CreateNewTreeEntry(CurrentUnit, knownStratum, assumedSG, assumedTDV, knownPlot, true);
+            newTree = CurrentUnit.CreateNewTreeEntry(knownStratum, assumedSG, assumedTDV, knownPlot, true);
+
+            this.ViewController.ShowCruiserSelection(newTree);
 
             //if a 3P plot method set Count Measure to empty. 
             if(knownPlot != null 
@@ -585,65 +595,10 @@ namespace FSCruiser.Core
             }
         }
 
-        public void OnLeavingCurrentUnit(System.ComponentModel.CancelEventArgs e)
-        {
-            if (!this.Save())
-            {
-                this.HandleNonCriticalException(null, "Something went wrong saving the data for this unit, check trees for errors and try again");
-                //MessageBox.Show("Something went wrong saving the data for this unit, check trees for errors and try again");
-                e.Cancel = true;
-            }
-            if (!e.Cancel && this.BackUpMethod == BackUpMethod.LeaveUnit)
-            {
-                this.PerformBackup(false);
-            }
-
-        }
-
-        public void AddTallyAction(TallyAction action)
-        {
-            if (action.KPI != 0)
-            {
-                TreeEstimateDO te = new TreeEstimateDO(this._cDal);
-                te.KPI = action.KPI;
-                te.CountTree = action.Count;
-                action.TreeEstimate = te;
-                te.Save();
-            }
+        
 
 
-            if (TallyHistory.Count >= Constants.MAX_TALLY_HISTORY_SIZE)
-            {
-                //TallyAction a = TallyHistory[0];
-                TallyHistory.RemoveAt(0);
-            }
-            action.Time = DateTime.Now.ToString("hh:mm");
-            TallyHistory.Add(action);
-        }
-
-        public void Untally(TallyAction action)
-        {
-            if (action != null)
-            {
-                if (TallyHistory.Remove(action))
-                {
-                    action.Count.TreeCount--;
-                    //action.Sampler.Count -= 1;
-                    if (action.KPI > 0)
-                    {
-                        action.Count.SumKPI -= action.KPI;
-                        action.TreeEstimate.Delete();
-                    }
-
-                    if (action.TreeRecord != null)
-                    {
-                        DeleteTree(action.TreeRecord);
-                    }
-                }
-
-            }
-        }
-
+        #region tally setup
 
         public TreeDefaultValueDO CreateNewTreeDefaultValue(String pProd)
         {
@@ -691,103 +646,106 @@ namespace FSCruiser.Core
                 return null;
             }
         }
+        #endregion
+
+        //[Obsolete]
+        //public TreeVM CreateNewTreeEntry(CountTreeVM count)
+        //{
+        //    return CreateNewTreeEntry(count, null, true);
+        //}
+
+        //[Obsolete]
+        //public TreeVM CreateNewTreeEntry(CountTreeVM count, PlotVM plot, bool isMeasure)
+        //{
+        //    //count.Save();
+        //    return CreateNewTreeEntry(count.CuttingUnit, count.SampleGroup.Stratum, count.SampleGroup, count.TreeDefaultValue, plot, isMeasure);
+        //}
 
 
-        public TreeVM CreateNewTreeEntry(CountTreeVM count)
-        {
-            return CreateNewTreeEntry(count, null, true);
-        }
-
-        public TreeVM CreateNewTreeEntry(CountTreeVM count, PlotVM plot, bool isMeasure)
-        {
-            //count.Save();
-            return CreateNewTreeEntry(count.CuttingUnit, count.SampleGroup.Stratum, count.SampleGroup, count.TreeDefaultValue, plot, isMeasure);
-        }
-
-
-        public TreeVM CreateNewTreeEntry(CuttingUnitDO unit, StratumVM stratum, SampleGroupVM sg, TreeDefaultValueDO tdv, PlotVM plot, bool isMeasure)
-        {
+        //public TreeVM CreateNewTreeEntry(CuttingUnitDO unit, StratumVM stratum, SampleGroupVM sg, TreeDefaultValueDO tdv, PlotVM plot, bool isMeasure)
+        //{
             
 
-            TreeVM newTree = new TreeVM(this._cDal);
-            newTree.TreeCount = 0;
-            newTree.CountOrMeasure = (isMeasure) ? "M" : "C";
-            if (unit != null) { newTree.CuttingUnit = unit; }
-            else { newTree.CuttingUnit = this.CurrentUnit; }
-            if (sg != null)
-            {
-                newTree.SampleGroup = sg;
-                if (tdv == null)
-                {
-                    if (sg.TreeDefaultValues.IsPopulated == false) { sg.TreeDefaultValues.Populate(); }
-                    if (sg.TreeDefaultValues.Count == 1)
-                    {
-                        tdv = sg.TreeDefaultValues[0];
-                    }
-                }
-            }
-            if (stratum != null) { newTree.Stratum = stratum; }
-            if (tdv != null)
-            {
-                this.SetTreeTDV(newTree, tdv);
-            }
+        //    TreeVM newTree = new TreeVM(this._cDal);
+        //    newTree.TreeCount = 0;
+        //    newTree.CountOrMeasure = (isMeasure) ? "M" : "C";
+        //    if (unit != null) { newTree.CuttingUnit = unit; }
+        //    else { newTree.CuttingUnit = this.CurrentUnit; }
+        //    if (sg != null)
+        //    {
+        //        newTree.SampleGroup = sg;
+        //        if (tdv == null)
+        //        {
+        //            if (sg.TreeDefaultValues.IsPopulated == false) { sg.TreeDefaultValues.Populate(); }
+        //            if (sg.TreeDefaultValues.Count == 1)
+        //            {
+        //                tdv = sg.TreeDefaultValues[0];
+        //            }
+        //        }
+        //    }
+        //    if (stratum != null) { newTree.Stratum = stratum; }
+        //    if (tdv != null)
+        //    {
+        //        this.SetTreeTDV(newTree, tdv);
+        //    }
 
-            if (plot != null)
-            {
-                newTree.Plot = plot;
-                newTree.TreeNumber = plot.NextPlotTreeNum + 1;
-                newTree.TreeCount = 1;
-            }
-            else
-            {
-                newTree.TreeNumber = GetNextUnitTreeNumber();
-                this.CurrentUnitNonPlotTreeList.Add(newTree);
-            }
+        //    if (plot != null)
+        //    {
+        //        newTree.Plot = plot;
+        //        newTree.TreeNumber = plot.NextPlotTreeNum + 1;
+        //        newTree.TreeCount = 1;
+        //    }
+        //    else
+        //    {
+        //        newTree.TreeNumber = GetNextUnitTreeNumber();
+        //        this.CurrentUnitNonPlotTreeList.Add(newTree);
+        //    }
 
-            lock (((ICollection)this.CurrentUnitTreeList).SyncRoot)
-            {
-                this.CurrentUnitTreeList.Add(newTree);
-            }
+        //    lock (((ICollection)this.CurrentUnitTreeList).SyncRoot)
+        //    {
+        //        this.CurrentUnitTreeList.Add(newTree);
+        //    }
 
-            newTree.Validate();
-            //newTree.Save();
+        //    newTree.Validate();
+        //    //newTree.Save();
 
-            if (this.EnableCruiserSelectionPopup && isMeasure)
-            {
-                this.ViewController.ShowCruiserSelection(newTree);
-            }
+        //    if (this.EnableCruiserSelectionPopup && isMeasure)
+        //    {
+        //        this.ViewController.ShowCruiserSelection(newTree);
+        //    }
             
-            return newTree;
-        }
+        //    return newTree;
+        //}
 
-        public void SetTreeTDV(TreeVM tree, TreeDefaultValueDO tdv)
-        {
-            if (tdv == _newPopPlaceHolder && tree.SampleGroup != null)
-            {
-                tdv = ViewController.ShowAddPopulation(tree.SampleGroup);
-            }
+        //[Obsolete]
+        //public void SetTreeTDV(TreeVM tree, TreeDefaultValueDO tdv)
+        //{
+        //    if (tdv == _newPopPlaceHolder && tree.SampleGroup != null)
+        //    {
+        //        tdv = ViewController.ShowAddPopulation(tree.SampleGroup);
+        //    }
 
-            tree.TreeDefaultValue = tdv;
-            if (tdv != null)
-            {
-                tree.Species = tdv.Species;
+        //    tree.TreeDefaultValue = tdv;
+        //    if (tdv != null)
+        //    {
+        //        tree.Species = tdv.Species;
 
-                tree.LiveDead = tdv.LiveDead;
-                tree.Grade = tdv.TreeGrade;
-                tree.FormClass = tdv.FormClass;
-                tree.RecoverablePrimary = tdv.Recoverable;
-                //tree.HiddenPrimary = tdv.HiddenPrimary;//#367
-            }
-            else
-            {
-                tree.Species = string.Empty;
-                tree.LiveDead = string.Empty;
-                tree.Grade = string.Empty;
-                tree.FormClass = 0;
-                tree.RecoverablePrimary = 0;
-                tree.HiddenPrimary = 0;
-            }
-        }
+        //        tree.LiveDead = tdv.LiveDead;
+        //        tree.Grade = tdv.TreeGrade;
+        //        tree.FormClass = tdv.FormClass;
+        //        tree.RecoverablePrimary = tdv.Recoverable;
+        //        //tree.HiddenPrimary = tdv.HiddenPrimary;//#367
+        //    }
+        //    else
+        //    {
+        //        tree.Species = string.Empty;
+        //        tree.LiveDead = string.Empty;
+        //        tree.Grade = string.Empty;
+        //        tree.FormClass = 0;
+        //        tree.RecoverablePrimary = 0;
+        //        tree.HiddenPrimary = 0;
+        //    }
+        //}
 
         //public void SignalMeasureTree()
         //{
@@ -802,8 +760,8 @@ namespace FSCruiser.Core
         //}
 
 
-        private void InitializeUnitTreeNumIndex()
-        {
+        //private void InitializeUnitTreeNumIndex()
+        //{
             //long? value = (long?)_cDal.ExecuteScalar("Select Max(TreeNumber) FROM Tree WHERE CuttingUnit_CN = " + this.CurrentUnit.CuttingUnit_CN.ToString());
             //if (value.HasValue)
             //{
@@ -833,7 +791,7 @@ namespace FSCruiser.Core
             //{
             //    this.UnitTreeNumIndex = 0;
             //}
-        }
+        //}
 
         public int GetLogNumerIndexStart(TreeVM tree)
         {
@@ -849,6 +807,7 @@ namespace FSCruiser.Core
         }
 
 
+        [Obsolete]
         private long GetNextUnitTreeNumber()
         {
             if(this.CurrentUnitNonPlotTreeList == null || this.CurrentUnitNonPlotTreeList.Count == 0)
@@ -859,14 +818,7 @@ namespace FSCruiser.Core
             //return ++UnitTreeNumIndex;
         }
 
-        //private void ReleaseUnitTreeNumber(long treeNumber)
-        //{
-        //    //if (treeNumber == UnitTreeNumIndex)
-        //    //{
-        //    //    UnitTreeNumIndex = UnitTreeNumIndex - 1;
-        //    //}
-        //}
-
+        [Obsolete]
         public bool EnsureTreeNumberAvalible(long start)
         {
             //long highestTreeNum = 0;
@@ -888,6 +840,7 @@ namespace FSCruiser.Core
             return true;
         }
 
+        [Obsolete]
         public bool EnsureTreeNumberAvalible(long start, PlotVM plot)
         {
             long highestTreeNum = 0;
@@ -985,6 +938,7 @@ namespace FSCruiser.Core
         ////    }
         ////}
 
+        [Obsolete]
         public void DeleteTree(TreeVM tree)
         {
             //ReleaseUnitTreeNumber((int)tree.TreeNumber);
@@ -994,6 +948,7 @@ namespace FSCruiser.Core
             this.CurrentUnitNonPlotTreeList.Remove(tree);
         }
 
+        
         public void DeleteTree(TreeVM tree, PlotVM plot)
         {
             //if (tree.TreeNumber == plot.NextPlotTreeNum - 1)
@@ -1005,7 +960,6 @@ namespace FSCruiser.Core
             CurrentUnitTreeList.Remove(tree);
             plot.Trees.Remove(tree);
         }
-
 
         public void DeletePlot(PlotVM plot)
         {
@@ -1021,11 +975,11 @@ namespace FSCruiser.Core
                     //TreeDO.RecursiveDeleteTree(tree);
                 }
                 plot.Delete();
-                _cDal.EndTransaction();
+                _cDal.CommitTransaction();
             }
             catch (Exception e)
             {
-                _cDal.CancelTransaction();
+                _cDal.RollbackTransaction();
                 throw e;
             }
         }
@@ -1046,13 +1000,7 @@ namespace FSCruiser.Core
         //    return _treeValidatorLookup[tdv];
         //}
 
-        public String GetCuttingUnitDiscription(CuttingUnitDO unit)
-        {
-            return String.Format("{0} Area: {1}", unit.Description, unit.Area);
-        }
 
-
-       
 
         public DataEntryMode GetStrataDataEntryMode(StratumDO stratum)
         {
@@ -1095,7 +1043,6 @@ namespace FSCruiser.Core
             }
             
         }
-
 
         public CountTreeVM GetCountRecord(TreeDO tree)
         {
@@ -1183,8 +1130,6 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
             return _cDal.Read<SampleGroupVM>("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN);
         }
 
-
-
         public ICollection<TreeDefaultValueDO> GetTreeTDVList(TreeVM tree)
         {
             if (tree == null) { return Constants.EMPTY_SPECIES_LIST; }
@@ -1236,10 +1181,11 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
                 return tdvs; 
                 //return tree.SampleGroup.TreeDefaultValues;
             }
-            
+
 
         }
 
+        #region backup
         private string GetBackupFileName(string destDir, bool useTimeStamp)
         {
             string originalFileName = System.IO.Path.GetFileName(this._cDal.Path);
@@ -1273,29 +1219,51 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
                 this.ViewController.HideWait();
             }
         }
+        #endregion
 
-        public bool Save()
+
+        #region tally history
+        public void AddTallyAction(TallyAction action)
         {
-            this.ViewController.ShowWait();
+            if (action.KPI != 0)
+            {
+                TreeEstimateDO te = new TreeEstimateDO(this._cDal);
+                te.KPI = action.KPI;
+                te.CountTree = action.Count;
+                action.TreeEstimate = te;
+                te.Save();
+            }
 
-            try
+
+            if (TallyHistory.Count >= Constants.MAX_TALLY_HISTORY_SIZE)
             {
-                //this._cDal.BeginTransaction();//not doing transactions right now, need to do http://fmsc-projects.herokuapp.com/issues/526 first
-                this.SaveTallyHistory();
-                this.SaveTrees();
-                //this.SaveCounts();
-                this.SaveSampleGroups();
-                
-                return true;
+                //TallyAction a = TallyHistory[0];
+                TallyHistory.RemoveAt(0);
             }
-            catch (Exception)
+            action.Time = DateTime.Now.ToString("hh:mm");
+            TallyHistory.Add(action);
+        }
+
+        public void Untally(TallyAction action)
+        {
+            if (action != null)
             {
-                return false;
-            }
-            finally
-            {
-                //this._cDal.EndTransaction();
-                this.ViewController.HideWait();
+                if (TallyHistory.Remove(action))
+                {
+                    action.Count.TreeCount--;
+                    //action.Sampler.Count -= 1;
+                    if (action.KPI > 0)
+                    {
+                        action.Count.SumKPI -= action.KPI;
+                        action.TreeEstimate.Delete();
+                    }
+
+                    if (action.TreeRecord != null)
+                    {
+                        DeleteTree(action.TreeRecord);
+                    }
+                }
+
             }
         }
 
@@ -1316,12 +1284,21 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
             }
         }
 
-        protected void SaveSampleGroups()
+        public void InitializeTallyHistory(CuttingUnitDO unit)
         {
-            foreach (SampleGroupVM sg in this.SampleGroups)
+            if (!String.IsNullOrEmpty(this.CurrentUnit.TallyHistory))
             {
-                SerializeSamplerState(sg);
-                sg.Save();
+                try
+                {
+                    foreach (TallyAction action in this.DeserializeTallyHistory(this.CurrentUnit.TallyHistory))
+                    {
+                        TallyHistory.Add(action);
+                    }
+                }
+                catch (Exception e)
+                {
+                    this.HandleNonCriticalException(e, "Unable to load tally history");
+                }
             }
         }
 
@@ -1367,12 +1344,25 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
 
             return tallyHistory;
         }
+        #endregion
 
+
+        public void LogTreeCountEdit(CountTreeDO countTree, long oldValue, long newValue)
+        {
+            this._cDal.LogMessage(String.Format("Tree Count Edit: CT_CN={0}; PrevVal={1}; NewVal={2}", countTree.CountTree_CN, oldValue, newValue), "I");
+        }
+
+        public void LogSumKPIEdit(CountTreeDO countTree, long oldValue, long newValue)
+        {
+            this._cDal.LogMessage(String.Format("SumKPI Edit: CT_CN={0}; PrevVal={1}; NewVal={2}", countTree.CountTree_CN, oldValue, newValue), "I");
+        }
+
+        #region App Settings
         protected void SaveAppSettings()
         {
-            if ((this._cruisers == null || this._cruisers.Count == 0) 
-                && this._backupDir == null 
-                && this.BackUpMethod == BackUpMethod.None) 
+            if ((this._cruisers == null || this._cruisers.Count == 0)
+                && this._backupDir == null
+                && this.BackUpMethod == BackUpMethod.None)
             {
                 return;
             }
@@ -1384,7 +1374,7 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
                     serializer.Serialize(writer, new ApplicationSettings(this));
                 }
             }
-            catch( Exception e)
+            catch (Exception e)
             {
                 this.HandleNonCriticalException(e, "Unabel to save user settings");
             }
@@ -1402,16 +1392,6 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
             //}
         }
 
-        public void LogTreeCountEdit(CountTreeDO countTree, long oldValue, long newValue)
-        {
-            this._cDal.LogMessage(String.Format("Tree Count Edit: CT_CN={0}; PrevVal={1}; NewVal={2}", countTree.CountTree_CN, oldValue, newValue), "I");
-        }
-
-        public void LogSumKPIEdit(CountTreeDO countTree, long oldValue, long newValue)
-        {
-            this._cDal.LogMessage(String.Format("SumKPI Edit: CT_CN={0}; PrevVal={1}; NewVal={2}", countTree.CountTree_CN, oldValue, newValue), "I");
-        }
-
         protected void LoadAppSettings()
         {
             //see if old cruiser file exists, load, then remove it
@@ -1424,7 +1404,7 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
                     {
                         this._cruisers = (List<CruiserVM>)serializer.Deserialize(reader);
                     }
-                    this.EnableCruiserSelectionPopup = (this._cruisers != null && this._cruisers.Count > 0);
+                    this.ViewController.EnableCruiserSelectionPopup = (this._cruisers != null && this._cruisers.Count > 0);
                 }
                 catch (Exception e)
                 {
@@ -1448,16 +1428,18 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
                     this._cruisers = settings.Cruisers;
                     this._backupDir = settings.BackupDir;
                     this.BackUpMethod = settings.BackUpMethod;
-                    this.EnableCruiserSelectionPopup = (this._cruisers != null && this._cruisers.Count > 0);
+                    this.ViewController.EnableCruiserSelectionPopup = (this._cruisers != null && this._cruisers.Count > 0);
                 }
                 catch (Exception e)
                 {
                     this.HandleNonCriticalException(e, "Unable to load cruisers");
                 }
             }
-           
-        }
 
+        }
+        #endregion
+
+        #region save trees
         private void SaveTreesAsync()
         {
             if (this._saveTreesWorkerThread != null)
@@ -1520,7 +1502,7 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
                     }
                     
                 }
-                this._cDal.EndTransaction();
+                this._cDal.CommitTransaction();
 
                 //saving any tree data from previouly loaded unit
 
@@ -1530,18 +1512,11 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
             {
                 throw new FMSC.ORM.SQLException("not all trees were able to be saved", null);
             }
-            
+
         }
+        #endregion
 
-        //public void SaveCounts()
-        //{
-        //    foreach (CountTreeVM count in Counts)
-        //    {
-        //        //ApplicationController.SerializeCountSampleState(count);
-        //        count.Save();
-        //    }
-        //}
-
+        #region validate trees
         public bool ValidateTrees()
         {
             return ValidateTrees((ICollection<TreeVM>)CurrentUnitTreeList);
@@ -1561,41 +1536,41 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
                 //this._cDal.EndTransaction();
                 this.ViewController.HideWait();
             }
-            
+
         }
 
-        private void InternalValidateTrees()
-        {
-            this.InternalValidateTrees(this.CurrentUnitTreeList);
-        }
+        //private void InternalValidateTrees()
+        //{
+        //    this.InternalValidateTrees(this.CurrentUnitTreeList);
+        //}
 
-        private bool InternalValidateTrees(ICollection<TreeVM> list)
-        {
-            bool valid = true;
-            TreeVM[] a = new TreeVM[list.Count];
-            list.CopyTo(a, 0);
-            foreach (TreeVM tree in a)
-            {
-                if(tree.Stratum != null && tree.Stratum.TreeFieldNames != null)
-                {
-                    valid = tree.Validate(tree.Stratum.TreeFieldNames) && valid;
-                }
-                else
-                {
-                    valid = tree.Validate() && valid;
-                }
-                try
-                {
-                    tree.SaveErrors();
-                }
-                catch
-                {
-                    valid = false;
-                    //TODO should we do something if tree error unable to save
-                }
-            }
-            return valid;
-        }
+        //private bool InternalValidateTrees(ICollection<TreeVM> list)
+        //{
+        //    bool valid = true;
+        //    TreeVM[] a = new TreeVM[list.Count];
+        //    list.CopyTo(a, 0);
+        //    foreach (TreeVM tree in a)
+        //    {
+        //        if (tree.Stratum != null && tree.Stratum.TreeFieldNames != null)
+        //        {
+        //            valid = tree.Validate(tree.Stratum.TreeFieldNames) && valid;
+        //        }
+        //        else
+        //        {
+        //            valid = tree.Validate() && valid;
+        //        }
+        //        try
+        //        {
+        //            tree.SaveErrors();
+        //        }
+        //        catch
+        //        {
+        //            valid = false;
+        //            //TODO should we do something if tree error unable to save
+        //        }
+        //    }
+        //    return valid;
+        //}
 
         //private bool InternalValidateTrees(ICollection<TreeVM> trees, ICollection<string> fields)
         //{
@@ -1618,20 +1593,63 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
         //    return valid;
         //}
 
-        private void ValidateTreesAsync(ICollection<TreeVM> list)
+        //private void ValidateTreesAsync(ICollection<TreeVM> list)
+        //{
+        //    if (this._validateTreesWorkerThread != null)
+        //    {
+        //        this._validateTreesWorkerThread.Abort();
+        //    }
+        //    this._validateTreesWorkerThread = new Thread(this.InternalValidateTrees);
+        //    this._validateTreesWorkerThread.IsBackground = true;
+        //    this._validateTreesWorkerThread.Priority = ThreadPriority.BelowNormal;
+        //    this._validateTreesWorkerThread.Start();
+        //}
+        #endregion
+
+        public bool Save()
         {
-            if (this._validateTreesWorkerThread != null)
+            this.ViewController.ShowWait();
+
+            try
             {
-                this._validateTreesWorkerThread.Abort();
+                //this._cDal.BeginTransaction();//not doing transactions right now, need to do http://fmsc-projects.herokuapp.com/issues/526 first
+                this.SaveTallyHistory();
+                this.SaveTrees();
+                //this.SaveCounts();
+                this.SaveSampleGroups();
+
+                return true;
             }
-            this._validateTreesWorkerThread = new Thread(this.InternalValidateTrees);
-            this._validateTreesWorkerThread.IsBackground = true;
-            this._validateTreesWorkerThread.Priority = ThreadPriority.BelowNormal;
-            this._validateTreesWorkerThread.Start();
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                //this._cDal.EndTransaction();
+                this.ViewController.HideWait();
+            }
         }
 
-        
+        protected void SaveSampleGroups()
+        {
+            foreach (SampleGroupVM sg in this.SampleGroups)
+            {
+                SerializeSamplerState(sg);
+                sg.Save();
+            }
+        }
 
+        //public void SaveCounts()
+        //{
+        //    foreach (CountTreeVM count in Counts)
+        //    {
+        //        //ApplicationController.SerializeCountSampleState(count);
+        //        count.Save();
+        //    }
+        //}
+
+        
 
         private void OnApplicationClosing(object sender, CancelEventArgs e)
         {
@@ -1892,87 +1910,6 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
             return dir;
         }
 
-        public static string GetPlotInfo(PlotDO plot)
-        {
-            return "<Plot Stats Place Holder>";
-        }
-
-        public static string GetPlotInfoShort(PlotDO plot)
-        {
-            if (plot == null) { return string.Empty; }
-            StringBuilder sb = new StringBuilder();
-            if (plot.Stratum.BasalAreaFactor > 0.0)
-            {
-                sb.AppendFormat(null, "Stratum:{0} {1} BAF:{2}", plot.Stratum.Code, plot.Stratum.Method, plot.Stratum.BasalAreaFactor);
-            }
-            else
-            {
-                sb.AppendFormat(null, "Stratum:{0} {1} 1/{2} acre", plot.Stratum.Code, plot.Stratum.Method, plot.Stratum.FixedPlotSize);
-            }
-
-            if (plot.Stratum.Method == "3PPNT")
-            {
-                sb.AppendFormat(null, " KPI:{0}", plot.KPI);
-                if (plot.IsEmpty == true.ToString())
-                {
-                    sb.Append("-Count");
-                }
-                else
-                {
-                    sb.Append("-Measure");
-                }
-            }
-            return sb.ToString();
-        }
-
-        public static string GetStratumInfo(StratumDO stratum)
-        {
-            return "";
-        }
-
-        public static string GetStratumInfo(StratumDO stratum, CuttingUnitDO unit)
-        {
-            return "";
-        }
-
-        public static string GetStratumInfoShort(StratumDO stratum)
-        {
-            if (stratum == null) { return "NA"; }
-            if (stratum.Method.StartsWith("P"))
-            {
-                return string.Format("{0}-{1}- BAF: {2}", stratum.Code, stratum.Method, stratum.BasalAreaFactor);
-            }
-            else if (stratum.Method.StartsWith("F"))
-            {
-                return String.Format("{0}-{1}- Size: 1/{2}", stratum.Code, stratum.Method, stratum.FixedPlotSize);
-            }
-            return String.Format("{0}-{1} {2}", stratum.Code, stratum.Method, stratum.Description);
-        }
-
-
-        public static string GetSampleGroupDescription(SampleGroupDO sampleGroup)
-        {
-            return "";
-        }
-
-        public static string GetSampleGroupDescriptionShort(SampleGroupDO sampleGroup)
-        {
-            if (sampleGroup == null) { return "--"; }
-            string code = (string.IsNullOrEmpty(sampleGroup.Code)) ? "<blank>" : sampleGroup.Code;
-            return sampleGroup.Code + " " + sampleGroup.Description;
-        }
-
-        public static string GetLogLevelTreeDescription(TreeVM tree)
-        {
-            return String.Format("Tree:{0} Sp:{1} DBH:{2} Ht:{3} MrchHt:{4} Logs:{5}",
-                tree.TreeNumber,
-                tree.Species,
-                tree.DBH,
-                tree.TotalHeight,
-                tree.MerchHeightPrimary,
-                tree.LogCount);
-
-        }
         #endregion
 
 

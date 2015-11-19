@@ -22,9 +22,10 @@ namespace FSCruiser.Core
         {
             if (Tree == null) { throw new InvalidOperationException("Set Tree before calling HandleLoad"); }
 
-            this.View.TreeNumberText = "Tree #:" + this.Tree.TreeNumber;
-            this.View.StratumText = "Stratum: " + ApplicationController.GetStratumInfoShort(this.Tree.Stratum);
-            this.View.SampleGroupText = "Sg: " + ApplicationController.GetSampleGroupDescriptionShort(this.Tree.SampleGroup);
+            this.View.TreeNumberText = "Tree #:" + Tree.TreeNumber;
+            this.View.StratumText = "Stratum: " + Tree.Stratum.GetDescriptionShort();           
+            this.View.SampleGroupText = "Sg: " + Tree.SampleGroup.GetDescriptionShort();
+            
 
             _cruisers = _controller.GetCruiserList();
             this.View.UpdateCruiserList(_cruisers);
