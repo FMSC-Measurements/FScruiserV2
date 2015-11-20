@@ -273,6 +273,7 @@ namespace FSCruiser.Core.Models
         }
         #endregion
 
+        #region save methods
         public bool SaveFieldData()
         {
             try
@@ -318,6 +319,7 @@ namespace FSCruiser.Core.Models
                 sg.Save();
             }
         }
+        #endregion
 
         public override string ToString()
         {
