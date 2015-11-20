@@ -51,7 +51,7 @@ namespace FSCruiser.Core
         void ShowManageCruisers();
         DialogResult ShowOpenCruiseFileDialog(out string fileName);
         
-        void ShowDataEntry(CuttingUnitDO unit);
+        void ShowDataEntry(CuttingUnitVM unit);
         DialogResult ShowPlotInfo(PlotVM plotInfo, bool allowEdit);
         void ShowTallySettings(CountTreeVM count);
 

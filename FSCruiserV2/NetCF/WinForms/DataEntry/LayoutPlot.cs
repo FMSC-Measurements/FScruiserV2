@@ -853,7 +853,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_speciesColumn != null)
             {
-                _speciesColumn.DataSource = AppController.GetTreeTDVList(tree);
+                _speciesColumn.DataSource = tree.GetTDVList();
             }
         }
 

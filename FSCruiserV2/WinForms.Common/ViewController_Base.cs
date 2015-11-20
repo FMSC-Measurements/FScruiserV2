@@ -209,7 +209,7 @@ namespace FSCruiser.WinForms.Common
         public abstract System.Windows.Forms.DialogResult ShowOpenCruiseFileDialog(out string fileName);
 
 
-        public abstract void ShowDataEntry(CuttingUnitDO unit);
+        public abstract void ShowDataEntry(CuttingUnitVM unit);
        
 
         public DialogResult ShowPlotInfo(PlotVM plotInfo, bool allowEdit)

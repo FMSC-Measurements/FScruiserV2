@@ -26,7 +26,7 @@ namespace FSCruiser.Core
 
         #region ====================================================================
         //PlotVM AddPlot(StratumVM stratum);
-        void AddTallyAction(TallyAction action);
+        //void AddTallyAction(TallyAction action);
         //TreeVM CreateNewTreeEntry(CountTreeVM count);
         //TreeVM CreateNewTreeEntry(CountTreeVM count, PlotVM plot, bool isMeasure);
         //TreeVM CreateNewTreeEntry(CuttingUnitDO unit, StratumVM stratum, SampleGroupVM sg, CruiseDAL.DataObjects.TreeDefaultValueDO tdv, PlotVM plot, bool isMeasure);
@@ -56,10 +56,10 @@ namespace FSCruiser.Core
         void LogTreeCountEdit(CountTreeDO countTree, long oldValue, long newValue);
         void LogSumKPIEdit(CountTreeDO countTree, long oldValue, long newValue);
         void LoadCuttingUnit(CuttingUnitVM unit);
-        void LoadCuttingUnitData();
-        void AsyncLoadCuttingUnitData();
-        void LoadDatabase(string path);
-        FMSC.Sampling.SampleSelecter MakeSampleSelecter(SampleGroupVM sg);
+        //void LoadCuttingUnitData();
+        //void AsyncLoadCuttingUnitData();
+        //void LoadDatabase(string path);
+        //FMSC.Sampling.SampleSelecter MakeSampleSelecter(SampleGroupVM sg);
         void OnTally();
         void OnLeavingCurrentUnit(System.ComponentModel.CancelEventArgs e);
         void PerformBackup(string path);
@@ -68,22 +68,22 @@ namespace FSCruiser.Core
         void Run();
         bool Save();
         //void SaveCounts();
-        bool TrySaveTree(TreeVM tree);
-        void SaveTrees(System.Collections.Generic.ICollection<TreeVM> list);
+        //bool TrySaveTree(TreeVM tree);
+        //void SaveTrees(System.Collections.Generic.ICollection<TreeVM> list);
         //void SetTreeTDV(TreeVM tree, TreeDefaultValueDO tdv);
         bool EnsureTreeNumberAvalible(long start);
         bool EnsureTreeNumberAvalible(long start, PlotVM plot);
-        void Untally(TallyAction action);
+        //void Untally(TallyAction action);
         TreeVM UserAddTree(TreeVM templateTree, StratumVM knownStratum, PlotVM knownPlot);
-        bool ValidateTrees();
-        bool ValidateTrees(System.Collections.Generic.ICollection<TreeVM> list);
+        //bool ValidateTrees();
+        //bool ValidateTrees(System.Collections.Generic.ICollection<TreeVM> list);
         //bool ValidateTrees(System.Collections.Generic.ICollection<TreeVM> list, System.Collections.Generic.ICollection<String> fields);
 
         #endregion
 
         #region  UI methods ========================================================
 
-        int? GetKPI(int min, int max);
+        //int? GetKPI(int min, int max);
         //void ShowDataEntry(CruiseDAL.DataObjects.CuttingUnitDO unit);
         //void ShowMain();
         int ShowNumericValueInput(int? min, int? max, int? initialValue);
@@ -109,7 +109,7 @@ namespace FSCruiser.Core
 
 
         //int GetNextPlotNumber(CruiseDAL.DataObjects.CuttingUnitDO unit, CruiseDAL.DataObjects.StratumDO stratum);
-        DataEntryMode GetStrataDataEntryMode(CruiseDAL.DataObjects.StratumDO stratum);
+        //DataEntryMode GetStrataDataEntryMode(CruiseDAL.DataObjects.StratumDO stratum);
         DataEntryMode GetUnitDataEntryMode(CruiseDAL.DataObjects.CuttingUnitDO unit);
         #endregion
 

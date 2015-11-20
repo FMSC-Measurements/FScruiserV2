@@ -124,7 +124,7 @@ namespace FSCruiser.WinForms
 
         
 
-        public override void ShowDataEntry(CuttingUnitDO unit)
+        public override void ShowDataEntry(CuttingUnitVM unit)
         {
             lock (_dataEntrySyncLock)
             {

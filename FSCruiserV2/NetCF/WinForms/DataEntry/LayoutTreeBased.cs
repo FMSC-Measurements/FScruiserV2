@@ -427,7 +427,7 @@ namespace FSCruiser.WinForms.DataEntry
                 == DialogResult.No) { return; }
 
             TallyAction selectedAction = _BS_tallyHistory.Current as TallyAction;
-            Controller.Untally(selectedAction);
+            DataEntryController.Unit.TallyHistoryBuffer.Untally(selectedAction);
         }
 
         void strataButton_Click(object sender, EventArgs e)

@@ -127,9 +127,6 @@ namespace FSCruiser.Core
         }
 
 
-        
-
-
 
         public bool ShowLimitingDistanceDialog(StratumVM stratum, PlotVM plot, TreeVM optTree)
         {
@@ -148,9 +145,14 @@ namespace FSCruiser.Core
 
         public void ShowLogs(TreeVM tree)
         {
-            if (this.TrySaveTree(tree))
+            if (tree.TrySave())
             {
                 this.ViewController.ShowLogsView(tree.Stratum, tree);
+            }
+            else
+            {
+                ViewController.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
+                    ,null, MessageBoxIcon.Hand);
             }
         }
 
@@ -159,14 +161,7 @@ namespace FSCruiser.Core
         //    ViewController.MainView.Show();
         //}
 
-        /// <summary>
-        /// </summary>
-        /// <returns>KPI, value is -1 if STM</returns>
-        public int? GetKPI(int min, int max)
-        {
-            ViewController.ThreePNumPad.ShowDialog(min, max, null, true);
-            return ViewController.ThreePNumPad.UserEnteredValue;
-        }
+
 
         public int ShowNumericValueInput(int? min, int? max, int? initialValue)
         {
@@ -310,9 +305,13 @@ namespace FSCruiser.Core
                 }
                 _cDal = new CruiseDAL.DAL(path);
                 _cDal.LogMessage(string.Format("Opened By FSCruiser ({0})", Constants.FSCRUISER_VERSION), "I");
+                //read all cutting units
                 var units = this._cDal.Read<CuttingUnitVM>((WhereClause)null);
+                //HACK insert dummy unit for unit dropdown, this needs to be done by main form 
                 units.Insert(0, new CuttingUnitVM());
                 this.CuttingUnits = units;
+
+                //read the sale, to see if log grading is enabled
                 SaleDO sale = this._cDal.ReadSingleRow<SaleDO>((WhereClause)null);
                 if (sale != null)
                 {
@@ -1002,47 +1001,47 @@ namespace FSCruiser.Core
 
 
 
-        public DataEntryMode GetStrataDataEntryMode(StratumDO stratum)
-        {
-            switch (stratum.Method)
-            {
-                case "100":
-                    {
-                        return DataEntryMode.Tree | DataEntryMode.HundredPct;
-                    }
-                case "STR":
-                    {
-                        return DataEntryMode.Tree | DataEntryMode.TallyTree;
-                    }
-                case "3P":
-                    {
-                        return DataEntryMode.Tree | DataEntryMode.ThreeP | DataEntryMode.TallyTree;
-                    }
-                case "PNT":
-                case "FIX":
-                    {
-                        return DataEntryMode.Plot| DataEntryMode.OneStagePlot;
-                    }
-                case "FCM":
-                case "PCM":
-                    {
-                        return DataEntryMode.Plot;
-                    }
+        //public DataEntryMode GetStrataDataEntryMode(StratumDO stratum)
+        //{
+        //    switch (stratum.Method)
+        //    {
+        //        case "100":
+        //            {
+        //                return DataEntryMode.Tree | DataEntryMode.HundredPct;
+        //            }
+        //        case "STR":
+        //            {
+        //                return DataEntryMode.Tree | DataEntryMode.TallyTree;
+        //            }
+        //        case "3P":
+        //            {
+        //                return DataEntryMode.Tree | DataEntryMode.ThreeP | DataEntryMode.TallyTree;
+        //            }
+        //        case "PNT":
+        //        case "FIX":
+        //            {
+        //                return DataEntryMode.Plot| DataEntryMode.OneStagePlot;
+        //            }
+        //        case "FCM":
+        //        case "PCM":
+        //            {
+        //                return DataEntryMode.Plot;
+        //            }
                 
-                case "F3P":
-                case "P3P":
-                case "3PPNT":
-                    {
-                        return DataEntryMode.Plot | DataEntryMode.ThreeP;
-                    }
-                case "S3P":
-                default:
-                    {
-                        return DataEntryMode.HundredPct;//fall back on 100pct
-                    }
-            }
+        //        case "F3P":
+        //        case "P3P":
+        //        case "3PPNT":
+        //            {
+        //                return DataEntryMode.Plot | DataEntryMode.ThreeP;
+        //            }
+        //        case "S3P":
+        //        default:
+        //            {
+        //                return DataEntryMode.HundredPct;//fall back on 100pct
+        //            }
+        //    }
             
-        }
+        //}
 
         public CountTreeVM GetCountRecord(TreeDO tree)
         {
@@ -1223,127 +1222,127 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
 
 
         #region tally history
-        public void AddTallyAction(TallyAction action)
-        {
-            if (action.KPI != 0)
-            {
-                TreeEstimateDO te = new TreeEstimateDO(this._cDal);
-                te.KPI = action.KPI;
-                te.CountTree = action.Count;
-                action.TreeEstimate = te;
-                te.Save();
-            }
+        //public void AddTallyAction(TallyAction action)
+        //{
+        //    if (action.KPI != 0)
+        //    {
+        //        TreeEstimateDO te = new TreeEstimateDO(this._cDal);
+        //        te.KPI = action.KPI;
+        //        te.CountTree = action.Count;
+        //        action.TreeEstimate = te;
+        //        te.Save();
+        //    }
 
 
-            if (TallyHistory.Count >= Constants.MAX_TALLY_HISTORY_SIZE)
-            {
-                //TallyAction a = TallyHistory[0];
-                TallyHistory.RemoveAt(0);
-            }
-            action.Time = DateTime.Now.ToString("hh:mm");
-            TallyHistory.Add(action);
-        }
+        //    if (TallyHistory.Count >= Constants.MAX_TALLY_HISTORY_SIZE)
+        //    {
+        //        //TallyAction a = TallyHistory[0];
+        //        TallyHistory.RemoveAt(0);
+        //    }
+        //    action.Time = DateTime.Now.ToString("hh:mm");
+        //    TallyHistory.Add(action);
+        //}
 
-        public void Untally(TallyAction action)
-        {
-            if (action != null)
-            {
-                if (TallyHistory.Remove(action))
-                {
-                    action.Count.TreeCount--;
-                    //action.Sampler.Count -= 1;
-                    if (action.KPI > 0)
-                    {
-                        action.Count.SumKPI -= action.KPI;
-                        action.TreeEstimate.Delete();
-                    }
+        //public void Untally(TallyAction action)
+        //{
+        //    if (action != null)
+        //    {
+        //        if (TallyHistory.Remove(action))
+        //        {
+        //            action.Count.TreeCount--;
+        //            //action.Sampler.Count -= 1;
+        //            if (action.KPI > 0)
+        //            {
+        //                action.Count.SumKPI -= action.KPI;
+        //                action.TreeEstimate.Delete();
+        //            }
 
-                    if (action.TreeRecord != null)
-                    {
-                        DeleteTree(action.TreeRecord);
-                    }
-                }
+        //            if (action.TreeRecord != null)
+        //            {
+        //                DeleteTree(action.TreeRecord);
+        //            }
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
-        protected void SaveTallyHistory()
-        {
-            try
-            {
-                this.CurrentUnit.TallyHistory = this.SerializeTallyHistory(this.TallyHistory);
-                if (!String.IsNullOrEmpty(this.CurrentUnit.TallyHistory))
-                {
-                    this.CurrentUnit.Save();
-                }
-            }
-            catch(Exception e)
-            {
-                this.HandleException(e, "Unable to save tally history", false, true);
-                //this.HandleNonCriticalException(e, "Unable to save tally history");
-            }
-        }
+        //protected void SaveTallyHistory()
+        //{
+        //    try
+        //    {
+        //        this.CurrentUnit.TallyHistory = this.SerializeTallyHistory(this.TallyHistory);
+        //        if (!String.IsNullOrEmpty(this.CurrentUnit.TallyHistory))
+        //        {
+        //            this.CurrentUnit.Save();
+        //        }
+        //    }
+        //    catch(Exception e)
+        //    {
+        //        this.HandleException(e, "Unable to save tally history", false, true);
+        //        //this.HandleNonCriticalException(e, "Unable to save tally history");
+        //    }
+        //}
 
-        public void InitializeTallyHistory(CuttingUnitDO unit)
-        {
-            if (!String.IsNullOrEmpty(this.CurrentUnit.TallyHistory))
-            {
-                try
-                {
-                    foreach (TallyAction action in this.DeserializeTallyHistory(this.CurrentUnit.TallyHistory))
-                    {
-                        TallyHistory.Add(action);
-                    }
-                }
-                catch (Exception e)
-                {
-                    this.HandleNonCriticalException(e, "Unable to load tally history");
-                }
-            }
-        }
+        //public void InitializeTallyHistory(CuttingUnitDO unit)
+        //{
+        //    if (!String.IsNullOrEmpty(this.CurrentUnit.TallyHistory))
+        //    {
+        //        try
+        //        {
+        //            foreach (TallyAction action in this.DeserializeTallyHistory(this.CurrentUnit.TallyHistory))
+        //            {
+        //                TallyHistory.Add(action);
+        //            }
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            this.HandleNonCriticalException(e, "Unable to load tally history");
+        //        }
+        //    }
+        //}
 
-        protected string SerializeTallyHistory(IList<TallyAction> tallyHistory)
-        {
-            using(StringWriter writer = new StringWriter())
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(TallyAction[]));
-                TallyAction[] array = new TallyAction[tallyHistory.Count];
-                tallyHistory.CopyTo(array, 0);
-                serializer.Serialize(writer, array);
-                return writer.ToString();                
-            }            
-        }
+        //protected string SerializeTallyHistory(IList<TallyAction> tallyHistory)
+        //{
+        //    using(StringWriter writer = new StringWriter())
+        //    {
+        //        XmlSerializer serializer = new XmlSerializer(typeof(TallyAction[]));
+        //        TallyAction[] array = new TallyAction[tallyHistory.Count];
+        //        tallyHistory.CopyTo(array, 0);
+        //        serializer.Serialize(writer, array);
+        //        return writer.ToString();                
+        //    }            
+        //}
 
-        protected TallyAction[] DeserializeTallyHistory(string stuff)
-        {
-            TallyAction[] tallyHistory = null;
-            try
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(TallyAction[]));
-                using (StringReader reader = new StringReader(stuff))
-                {
-                    tallyHistory = (TallyAction[])serializer.Deserialize(reader);
-                }
-                int len = tallyHistory.Length;
-                if (len > Constants.MAX_TALLY_HISTORY_SIZE)
-                {
-                    TallyAction[] a = new TallyAction[Constants.MAX_TALLY_HISTORY_SIZE];
-                    Array.Copy(tallyHistory, len - Constants.MAX_TALLY_HISTORY_SIZE, a, 0, Constants.MAX_TALLY_HISTORY_SIZE);
-                    //tallyHistory.CopyTo(a, (len - this.MAX_TALLY_HISTORY_SIZE) - 2);
-                    tallyHistory = a;
-                }
-                foreach (TallyAction action in tallyHistory)
-                {
-                    action.PopulateData(_cDal);
-                }
-            }
-            catch
-            {
-                //do nothing
-            }
+        //protected TallyAction[] DeserializeTallyHistory(string stuff)
+        //{
+        //    TallyAction[] tallyHistory = null;
+        //    try
+        //    {
+        //        XmlSerializer serializer = new XmlSerializer(typeof(TallyAction[]));
+        //        using (StringReader reader = new StringReader(stuff))
+        //        {
+        //            tallyHistory = (TallyAction[])serializer.Deserialize(reader);
+        //        }
+        //        int len = tallyHistory.Length;
+        //        if (len > Constants.MAX_TALLY_HISTORY_SIZE)
+        //        {
+        //            TallyAction[] a = new TallyAction[Constants.MAX_TALLY_HISTORY_SIZE];
+        //            Array.Copy(tallyHistory, len - Constants.MAX_TALLY_HISTORY_SIZE, a, 0, Constants.MAX_TALLY_HISTORY_SIZE);
+        //            //tallyHistory.CopyTo(a, (len - this.MAX_TALLY_HISTORY_SIZE) - 2);
+        //            tallyHistory = a;
+        //        }
+        //        foreach (TallyAction action in tallyHistory)
+        //        {
+        //            action.PopulateData(_cDal);
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        //do nothing
+        //    }
 
-            return tallyHistory;
-        }
+        //    return tallyHistory;
+        //}
         #endregion
 
 
@@ -1517,27 +1516,27 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
         #endregion
 
         #region validate trees
-        public bool ValidateTrees()
-        {
-            return ValidateTrees((ICollection<TreeVM>)CurrentUnitTreeList);
-        }
+        //public bool ValidateTrees()
+        //{
+        //    return ValidateTrees((ICollection<TreeVM>)CurrentUnitTreeList);
+        //}
 
-        public bool ValidateTrees(ICollection<TreeVM> list)
-        {
-            this.ViewController.ShowWait();
-            try
-            {
-                //this._cDal.BeginTransaction();//TODO encapsulate in trasaction once trasaction tracking is done
-                bool valid = InternalValidateTrees(list);
-                return valid;
-            }
-            finally
-            {
-                //this._cDal.EndTransaction();
-                this.ViewController.HideWait();
-            }
+        //public bool ValidateTrees(ICollection<TreeVM> list)
+        //{
+        //    this.ViewController.ShowWait();
+        //    try
+        //    {
+        //        //this._cDal.BeginTransaction();//TODO encapsulate in trasaction once trasaction tracking is done
+        //        bool valid = InternalValidateTrees(list);
+        //        return valid;
+        //    }
+        //    finally
+        //    {
+        //        //this._cDal.EndTransaction();
+        //        this.ViewController.HideWait();
+        //    }
 
-        }
+        //}
 
         //private void InternalValidateTrees()
         //{
@@ -1612,13 +1611,13 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
 
             try
             {
-                //this._cDal.BeginTransaction();//not doing transactions right now, need to do http://fmsc-projects.herokuapp.com/issues/526 first
-                this.SaveTallyHistory();
-                this.SaveTrees();
-                //this.SaveCounts();
-                this.SaveSampleGroups();
+                ////this._cDal.BeginTransaction();//not doing transactions right now, need to do http://fmsc-projects.herokuapp.com/issues/526 first
+                //this.SaveTallyHistory();
+                //this.SaveTrees();
+                ////this.SaveCounts();
+                //this.SaveSampleGroups();
 
-                return true;
+                return this.CurrentUnit.SaveFieldData();
             }
             catch (Exception)
             {

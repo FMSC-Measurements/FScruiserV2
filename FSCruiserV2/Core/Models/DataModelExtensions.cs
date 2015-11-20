@@ -153,6 +153,61 @@ namespace FSCruiser.Core.Models
 
     public static class TreeExtensions
     {
+        public static ICollection<TreeDefaultValueDO> GetTDVList(this TreeVM tree)
+        {
+            if (tree == null) { return Constants.EMPTY_SPECIES_LIST; }
+            if (tree.Stratum == null)
+            {
+                //if (this.CurrentUnit.Strata.Count == 1)
+                //{
+                //    tree.Stratum = this.CurrentUnit.Strata[0];
+                //}
+                //else
+                //{
+                //    return Constants.EMPTY_SPECIES_LIST;
+                //}
+                return Constants.EMPTY_SPECIES_LIST;
+            }
+
+            if (tree.SampleGroup == null)
+            {
+                if (tree.DAL.GetRowCount("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN) == 1)
+                {
+                    tree.SampleGroup = tree.DAL.ReadSingleRow<SampleGroupVM>("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN);
+                }
+                if (tree.SampleGroup == null)
+                {
+                    return Constants.EMPTY_SPECIES_LIST;
+                }
+            }
+
+
+
+            //if (tree.SampleGroup.TreeDefaultValues.IsPopulated == false)
+            //{
+            //    tree.SampleGroup.TreeDefaultValues.Populate();
+            //}
+            List<TreeDefaultValueDO> tdvs = tree.DAL.Read<TreeDefaultValueDO>("TreeDefaultValue", "JOIN SampleGroupTreeDefaultValue USING (TreeDefaultValue_CN) WHERE SampleGroup_CN = ?", tree.SampleGroup_CN);
+
+            if (Constants.NEW_SPECIES_OPTION)
+            {
+                tdvs.Add(_newPopPlaceHolder);
+                return tdvs;
+                //int cnt = tdvs.Count + 1;
+                //TreeDefaultValueDO[] array = new TreeDefaultValueDO[cnt];
+                //tree.SampleGroup.TreeDefaultValues.CopyTo(array, 0);
+                //array[array.Length - 1] = _newPopPlaceHolder;
+                //return array;
+            }
+            else
+            {
+                return tdvs;
+                //return tree.SampleGroup.TreeDefaultValues;
+            }
+
+
+        }
+
         public static string GetLogLevelDescription(this TreeVM tree)
         {
             return String.Format("Tree:{0} Sp:{1} DBH:{2} Ht:{3} MrchHt:{4} Logs:{5}",

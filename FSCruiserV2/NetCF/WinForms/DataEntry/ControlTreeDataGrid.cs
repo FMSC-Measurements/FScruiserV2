@@ -412,7 +412,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_speciesColumn != null)
             {
-                _speciesColumn.DataSource = Controller.GetTreeTDVList(tree);
+                _speciesColumn.DataSource = tree.GetTDVList();
             }
         }
 

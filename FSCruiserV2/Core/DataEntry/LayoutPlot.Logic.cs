@@ -296,7 +296,7 @@ namespace FSCruiser.Core.DataEntry
 
             this.Controller.ViewController.ShowCruiserSelection(tree);
 
-            this.Controller.TrySaveTree(tree);
+            tree.TrySave();
             this.CurrentPlotTreeList.Add(tree);
             Controller.OnTally();
 

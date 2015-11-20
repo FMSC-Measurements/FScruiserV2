@@ -73,8 +73,8 @@ namespace FSCruiser.Core.Models
             }
 
 
-
-            this.ViewController.HandleCuttingUnitDataLoaded();
+            throw new NotImplementedException("need to notify UI when unit is done loading");
+            //this.ViewController.HandleCuttingUnitDataLoaded();
 
         }
 
@@ -101,80 +101,7 @@ namespace FSCruiser.Core.Models
             this.ValidateTreesAsync();
         }
 
-        #region validate trees
-        public bool ValidateTrees()
-        {
-            return ValidateTrees((ICollection<TreeVM>)TreeList);
-        }
-
-
-
-        private void InternalValidateTrees()
-        {
-            this.InternalValidateTrees(this.TreeList);
-        }
-
-        private bool InternalValidateTrees(ICollection<TreeVM> list)
-        {
-            bool valid = true;
-            TreeVM[] a = new TreeVM[list.Count];
-            list.CopyTo(a, 0);
-            foreach (TreeVM tree in a)
-            {
-                if (tree.Stratum != null && tree.Stratum.TreeFieldNames != null)
-                {
-                    valid = tree.Validate(tree.Stratum.TreeFieldNames) && valid;
-                }
-                else
-                {
-                    valid = tree.Validate() && valid;
-                }
-                try
-                {
-                    tree.SaveErrors();
-                }
-                catch
-                {
-                    valid = false;
-                    //TODO should we do something if tree error unable to save
-                }
-            }
-            return valid;
-        }
-
-        //private bool InternalValidateTrees(ICollection<TreeVM> trees, ICollection<string> fields)
-        //{
-        //    bool valid = true;
-        //    TreeVM[] a = new TreeVM[trees.Count];
-        //    trees.CopyTo(a, 0);
-        //    foreach (TreeDO tree in a)
-        //    {
-        //        valid = tree.Validate(fields) && valid;
-        //        try
-        //        {
-        //            tree.SaveErrors();
-        //        }
-        //        catch
-        //        {
-        //            valid = false;
-        //            //TODO should we do something if tree error unable to save
-        //        }
-        //    }
-        //    return valid;
-        //}
-
-        private void ValidateTreesAsync(ICollection<TreeVM> list)
-        {
-            if (this._validateTreesWorkerThread != null)
-            {
-                this._validateTreesWorkerThread.Abort();
-            }
-            this._validateTreesWorkerThread = new Thread(this.InternalValidateTrees);
-            this._validateTreesWorkerThread.IsBackground = true;
-            this._validateTreesWorkerThread.Priority = ThreadPriority.BelowNormal;
-            this._validateTreesWorkerThread.Start();
-        }
-        #endregion
+        
 
         
 
@@ -270,6 +197,20 @@ namespace FSCruiser.Core.Models
             //TreeDO.RecursiveDeleteTree(tree);
             TreeList.Remove(tree);
             this.NonPlotTrees.Remove(tree);
+        }
+        #endregion
+
+        #region validate trees
+        public bool ValidateTrees()
+        {
+            var worker = new TreeValidationWorker(this.TreeList);
+            return worker.ValidateTrees();
+        }
+
+        private void ValidateTreesAsync()
+        {
+            var worker = new TreeValidationWorker(this.TreeList);
+            worker.ValidateTreesAsync();
         }
         #endregion
 

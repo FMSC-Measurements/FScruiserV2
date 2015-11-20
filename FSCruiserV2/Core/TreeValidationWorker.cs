@@ -22,7 +22,7 @@ namespace FSCruiser.Core
             this._treesLocal = copy;
         }
 
-        private void ValidateTreesAsync()
+        public void ValidateTreesAsync()
         {
             Debug.Assert(_validateTreesWorkerThread == null);
 

@@ -120,12 +120,12 @@ namespace FSCruiser.WinForms.DataEntry
         //}
 
 
-        public FormDataEntry(IApplicationController controller, CuttingUnitDO unit) :this()
+        public FormDataEntry(IApplicationController controller, CuttingUnitVM unit) :this()
         {
             this.Controller = controller;
-            this.LogicController = new FormDataEntryLogic(this.Controller, this);
+            this.LogicController = new FormDataEntryLogic(unit, this.Controller, this);
             //this.Unit = unit;
-            DataEntryMode unitMode = Controller.GetUnitDataEntryMode(unit);
+            DataEntryMode unitMode = unit.GetDataEntryMode();
             this.SuspendLayout();
 
 

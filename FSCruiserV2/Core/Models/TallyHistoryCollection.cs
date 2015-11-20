@@ -14,9 +14,9 @@ namespace FSCruiser.Core.Models
         private ListChangedEventHandler onListChanged;
 
         private LinkedList<TallyAction> _tallyActions;
-        protected CuttingUnitDO _unit;
+        protected CuttingUnitVM _unit;
 
-        public TallyHistoryCollection(CuttingUnitDO unit)
+        public TallyHistoryCollection(CuttingUnitVM unit)
         {
             this._unit = unit;
         }

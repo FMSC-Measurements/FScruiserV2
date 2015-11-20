@@ -715,7 +715,8 @@ namespace FSCruiser.Core.DataEntry
         public void HandleViewLoading()
         {
             //TODO check to see if strata are loaded for this unit, otherwise display error message 
-            Controller.AsyncLoadCuttingUnitData();
+            //Controller.AsyncLoadCuttingUnitData();
+            this.Unit.AsyncLoadCuttingUnitData();
         }
 
         public void SaveCounts()

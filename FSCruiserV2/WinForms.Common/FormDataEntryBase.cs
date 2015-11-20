@@ -282,7 +282,9 @@ namespace FSCruiser.WinForms.Common
                     ((ITreeView)_previousLayout).EndEdit();
                     try
                     {
-                        this.Controller.SaveTrees(((ITreeView)_previousLayout).Trees);
+                        var worker = new SaveTreesWorker(LogicController.Database, ((ITreeView)_previousLayout).Trees);
+                        worker.SaveAll();
+                        //this.Controller.SaveTrees(((ITreeView)_previousLayout).Trees);
                     }
                     catch (Exception ex)
                     {

@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using CruiseDAL.DataObjects;
 
 namespace FSCruiser.WinForms
 {
@@ -55,7 +56,7 @@ namespace FSCruiser.WinForms
 
                 for (int i = 0; i < unit.Strata.Count; i++)
                 {
-                    var stratum = unit.Strata[i];
+                    StratumDO stratum = unit.Strata[i];
                     stDes[i] = stratum.GetDescriptionShort();
                 }
                 this._strataLB.DataSource = stDes;

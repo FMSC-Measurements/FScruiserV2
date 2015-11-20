@@ -229,7 +229,7 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 tree.SetTreeTDV(null);
             }
-            return this.Controller.TrySaveTree(tree);
+            return tree.TrySave();
         }
 
 
@@ -240,7 +240,7 @@ namespace FSCruiser.WinForms.DataEntry
             if (tree == null) { return true; }
             if (tree.TreeDefaultValue == tdv) { return true; }
             tree.SetTreeTDV(tdv);
-            return this.Controller.TrySaveTree(tree);
+            return tree.TrySave();
         }
 
         public void UpdateSampleGroupColumn(TreeVM tree)
