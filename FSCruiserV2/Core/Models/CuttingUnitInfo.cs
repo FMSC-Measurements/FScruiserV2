@@ -273,6 +273,40 @@ namespace FSCruiser.Core.Models
         }
         #endregion
 
+        public bool SaveFieldData()
+        {
+            try
+            {
+                //this._cDal.BeginTransaction();//not doing transactions right now, need to do http://fmsc-projects.herokuapp.com/issues/526 first
+                this.TallyHistoryBuffer.Save();
+                this.TrySaveTrees();
+                //this.SaveCounts();
+                this.SaveSampleGroups();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public void TrySaveTrees()
+        {
+            var worker = new SaveTreesWorker(this.TreeList);
+            worker.TrySaveAllAsync();
+        }
+
+
+        protected void SaveSampleGroups()
+        {
+            foreach (SampleGroupVM sg in this.SampleGroups)
+            {
+                sg.SerializeSamplerState();
+                sg.Save();
+            }
+        }
+
         public override string ToString()
         {
             return string.Format("{0}: {1}", base.Code, String.Format("{0} Area: {1}", base.Description, base.Area));
