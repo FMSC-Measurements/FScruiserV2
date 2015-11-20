@@ -1,6 +1,7 @@
 ﻿using CruiseDAL.DataObjects;
 using CruiseDAL;
 using FMSC.ORM.Core;
+using System;
 
 namespace FSCruiser.Core.Models
 {
@@ -177,7 +178,20 @@ namespace FSCruiser.Core.Models
             }
         }
 
-       
+        public bool TrySave()
+        {
+            try
+            {
+                this.Save();
+                return true;
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Fail(e.GetType().Name, e.Message);
+                //this.HandleNonCriticalException(e, "Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid");
+                return false;
+            }
+        }
 
     }
 }
