@@ -66,6 +66,7 @@
     <Compile Include="Core\Models\DataEntryMode.cs" />
     <Compile Include="Core\Models\DataModelExtensions.cs" />
     <Compile Include="Core\Models\TallyHistoryCollection.cs" />
+    <Compile Include="Core\SaveTreesWorker.cs" />
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
     <Compile Include="NetCF\NamedMutex.cs" />
