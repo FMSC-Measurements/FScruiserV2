@@ -133,6 +133,15 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <returns>KPI, value is -1 if STM</returns>
+        public int? GetKPI(int min, int max)
+        {
+            ViewController.ThreePNumPad.ShowDialog(min, max, null, true);
+            return ViewController.ThreePNumPad.UserEnteredValue;
+        }
+
 
         public void OnTally(CountTreeVM count)
         {
@@ -160,7 +169,7 @@ namespace FSCruiser.Core.DataEntry
             {
                 
                 int kpi = 0;
-                int? value = Controller.GetKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
+                int? value = GetKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
                 if (value == null)
                 {
                     this.ViewController.ShowMessage("No Value Entered", null, MessageBoxIcon.None);
@@ -277,7 +286,7 @@ namespace FSCruiser.Core.DataEntry
             if ((mode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP)
             {
                 int kpi = 0;
-                int? value = Controller.GetKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
+                int? value = GetKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
                 if (value == null)
                 {
                     this.ViewController.ShowMessage("No Value Entered", null, MessageBoxIcon.None);
