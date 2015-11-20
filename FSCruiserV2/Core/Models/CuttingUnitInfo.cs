@@ -291,9 +291,21 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public void SaveTrees()
+        {
+            var worker = new SaveTreesWorker(this.DAL, this.TreeList);
+            worker.SaveAll();
+        }
+
         public void TrySaveTrees()
         {
-            var worker = new SaveTreesWorker(this.TreeList);
+            var worker = new SaveTreesWorker(this.DAL, this.TreeList);
+            worker.TrySaveAll();
+        }
+
+        public void TrySaveTreesAsync()
+        {
+            var worker = new SaveTreesWorker(this.DAL, this.TreeList);
             worker.TrySaveAllAsync();
         }
 

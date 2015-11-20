@@ -156,7 +156,7 @@ namespace FSCruiser.Core.DataEntry
             this.EndEdit();
             try
             {
-                Controller.SaveTrees(plot.Trees);
+                plot.SaveTrees();
             }
             catch (FMSC.ORM.SQLException)
             {

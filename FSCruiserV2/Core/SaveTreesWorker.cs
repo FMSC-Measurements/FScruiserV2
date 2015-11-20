@@ -13,14 +13,14 @@ namespace FSCruiser.Core
     {
         TreeVM[] _trees;
         Thread _saveTreesWorkerThread;
-        //DAL _datastore;
+        DAL _datastore;
 
-        public SaveTreesWorker(ICollection<TreeVM> trees)
+        public SaveTreesWorker(DAL datastore, ICollection<TreeVM> trees)
         {
-            //Debug.Assert(ds != null);
+            Debug.Assert(datastore != null);
             Debug.Assert(trees != null);
 
-            //_datastore = ds;
+            _datastore = datastore;
 
             //create a local copy of tree collection
             TreeVM[] a = new TreeVM[trees.Count];
@@ -66,25 +66,6 @@ namespace FSCruiser.Core
             }
         }
 
-        //public bool TrySaveTree(TreeVM tree)
-        //{
-        //    try
-        //    {
-        //        tree.Save();
-        //        return true;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        this.HandleNonCriticalException(e, "Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid");
-        //        return false;
-        //    }
-        //}
-
-        //protected void SaveTrees()
-        //{
-        //    this.SaveTrees((ICollection<TreeVM>)CurrentUnitTreeList);
-        //}
-
         public void TrySaveAll()
         {
             bool success = true;
@@ -99,6 +80,24 @@ namespace FSCruiser.Core
                 throw new FMSC.ORM.SQLException("not all trees were able to be saved", null);
             }
 
+        }
+
+        public void SaveAll()
+        {
+            _datastore.BeginTransaction();
+            try
+            {
+                foreach (TreeVM tree in _trees)
+                {
+                    tree.Save();
+                }
+                _datastore.CommitTransaction();
+            }
+            catch
+            {
+                _datastore.RollbackTransaction();
+                throw;
+            }
         }
     }
 }

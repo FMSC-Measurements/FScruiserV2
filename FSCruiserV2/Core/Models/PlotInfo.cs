@@ -113,6 +113,26 @@ namespace FSCruiser.Core.Models
             return true;
         }
 
+
+
+        public void SaveTrees()
+        {
+            var worker = new SaveTreesWorker(this.DAL, this.Trees);
+            worker.SaveAll();
+        }
+
+        public void TrySaveTrees()
+        {
+            var worker = new SaveTreesWorker(this.DAL, this.Trees);
+            worker.TrySaveAll();
+        }
+
+        public void TrySaveTreesAsync()
+        {
+            var worker = new SaveTreesWorker(this.DAL, this.Trees);
+            worker.TrySaveAllAsync();
+        }
+
         public override string ToString()
         {
             return base.PlotNumber.ToString() + ((IsNull == true) ? "-Null" : string.Empty);
