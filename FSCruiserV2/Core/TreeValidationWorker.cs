@@ -4,53 +4,55 @@ using System.Collections.Generic;
 using System.Text;
 using FSCruiser.Core.Models;
 using System.Threading;
+using System.Diagnostics;
 
 namespace FSCruiser.Core
 {
     public class TreeValidationWorker
     {
         private Thread _validateTreesWorkerThread;
+        readonly TreeVM[] _treesLocal;
 
-
-        private void ValidateTreesAsync(ICollection<TreeVM> list)
+        public TreeValidationWorker(ICollection<TreeVM> trees)
         {
+            Debug.Assert(_treesLocal != null);
+
+            TreeVM[] copy = new TreeVM[trees.Count];
+            trees.CopyTo(copy, 0);
+            this._treesLocal = copy;
+        }
+
+        private void ValidateTreesAsync()
+        {
+            Debug.Assert(_validateTreesWorkerThread == null);
+
             if (this._validateTreesWorkerThread != null)
             {
                 this._validateTreesWorkerThread.Abort();
             }
-            this._validateTreesWorkerThread = new Thread(this.InternalValidateTrees);
+            this._validateTreesWorkerThread = new Thread(() => ValidateTrees());
             this._validateTreesWorkerThread.IsBackground = true;
             this._validateTreesWorkerThread.Priority = ThreadPriority.BelowNormal;
             this._validateTreesWorkerThread.Start();
         }
 
-        public bool ValidateTrees(ICollection<TreeVM> list)
-        {
-            this.ViewController.ShowWait();
-            try
-            {
-                //this._cDal.BeginTransaction();//TODO encapsulate in trasaction once trasaction tracking is done
-                bool valid = InternalValidateTrees(list);
-                return valid;
-            }
-            finally
-            {
-                //this._cDal.EndTransaction();
-                this.ViewController.HideWait();
-            }
-
-        }
-
-        private static bool InternalValidateTrees(ICollection<TreeVM> list)
+        public bool ValidateTrees()
         {
             bool valid = true;
-            TreeVM[] a = new TreeVM[list.Count];
-            list.CopyTo(a, 0);
-            foreach (TreeVM tree in a)
+
+            foreach (TreeVM tree in _treesLocal)
             {
-                if (tree.Stratum != null && tree.Stratum.TreeFieldNames != null)
+                string[] visableFields = null;
+                try
                 {
-                    valid = tree.Validate(tree.Stratum.TreeFieldNames) && valid;
+                    visableFields = tree.Stratum.TreeFieldNames;
+                }
+                catch
+                { }//ingnore exceptions
+
+                if (visableFields != null)
+                {
+                    valid = tree.Validate(visableFields) && valid;
                 }
                 else
                 {
@@ -68,6 +70,7 @@ namespace FSCruiser.Core
             }
             return valid;
         }
+
 
     }
 }

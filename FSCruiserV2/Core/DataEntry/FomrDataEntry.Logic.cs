@@ -807,7 +807,8 @@ namespace FSCruiser.Core.DataEntry
                 if (view != null && view.Trees != null)
                 {
                     view.EndEdit();
-                    if (!Controller.ValidateTrees(view.Trees))
+                    var worker = new TreeValidationWorker(view.Trees);
+                    if (!worker.ValidateTrees())
                     {
                         if (invalidViewIndex != -1)
                         {
