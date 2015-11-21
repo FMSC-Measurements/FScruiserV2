@@ -14,11 +14,11 @@ namespace FSCruiser.Core
         CruiseDAL.DAL _cDal { get; }
 
         System.Collections.Generic.List<CuttingUnitVM> CuttingUnits { get; }
-        CuttingUnitVM CurrentUnit { get; set; }
-        System.ComponentModel.BindingList<TallyAction> TallyHistory { get; }
-        System.Collections.Generic.List<TreeVM> CurrentUnitTreeList { get; }
-        System.ComponentModel.BindingList<TreeVM> CurrentUnitNonPlotTreeList { get; }
-        StratumVM DefaultStratum { get; }
+        //CuttingUnitVM CurrentUnit { get; set; }
+        //System.ComponentModel.BindingList<TallyAction> TallyHistory { get; }
+        //System.Collections.Generic.List<TreeVM> CurrentUnitTreeList { get; }
+        //System.ComponentModel.BindingList<TreeVM> CurrentUnitNonPlotTreeList { get; }
+        //StratumVM DefaultStratum { get; }
 
         
         //bool EnableCruiserSelectionPopup { get; set; }
@@ -38,8 +38,8 @@ namespace FSCruiser.Core
         void DeleteTree(TreeVM tree);
         void DeleteTree(TreeVM tree, PlotVM plot);
 
-        object GetTreeSGList(TreeVM tree);
-        System.Collections.Generic.ICollection<TreeDefaultValueDO> GetTreeTDVList(TreeVM tree);
+        //object GetTreeSGList(TreeVM tree);
+        //System.Collections.Generic.ICollection<TreeDefaultValueDO> GetTreeTDVList(TreeVM tree);
         System.Collections.Generic.IList<StratumVM> GetUnitPlotStrata();
         System.Collections.Generic.IList<StratumVM> GetUnitTreeBasedStrata();
         System.Collections.Generic.IList<StratumVM> GetUnitStrata();
@@ -110,7 +110,7 @@ namespace FSCruiser.Core
 
         //int GetNextPlotNumber(CruiseDAL.DataObjects.CuttingUnitDO unit, CruiseDAL.DataObjects.StratumDO stratum);
         //DataEntryMode GetStrataDataEntryMode(CruiseDAL.DataObjects.StratumDO stratum);
-        DataEntryMode GetUnitDataEntryMode(CruiseDAL.DataObjects.CuttingUnitDO unit);
+        //DataEntryMode GetUnitDataEntryMode(CruiseDAL.DataObjects.CuttingUnitDO unit);
         #endregion
 
         

@@ -26,7 +26,7 @@ namespace FSCruiser.Core.DataEntry
         public DAL Database { get { return this.Unit.DAL; } }
         public IViewController ViewController { get { return this.Controller.ViewController; } }
 
-
+        LoadCuttingUnitWorker _loadUnitWorker;
 
         public bool HotKeyenabled { get; set; }
         public Dictionary<char, int> StratumHotKeyLookup 
@@ -716,7 +716,15 @@ namespace FSCruiser.Core.DataEntry
         {
             //TODO check to see if strata are loaded for this unit, otherwise display error message 
             //Controller.AsyncLoadCuttingUnitData();
-            this.Unit.AsyncLoadCuttingUnitData();
+
+            this._loadUnitWorker = new LoadCuttingUnitWorker(this.Unit);
+            this._loadUnitWorker.DoneLoading += new EventHandler(_loadUnitWorker_DoneLoading);
+            this._loadUnitWorker.AsyncLoadCuttingUnitData();
+        }
+
+        void _loadUnitWorker_DoneLoading(object sender, EventArgs e)
+        {
+            this.View.HandleCuttingUnitDataLoaded();
         }
 
         public void SaveCounts()

@@ -41,7 +41,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                return this.Controller.CurrentUnitNonPlotTreeList;
+                return this.DataEntryController.Unit.NonPlotTrees;
             }
         }
 
@@ -79,7 +79,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.Controller = controller;
             this.DataEntryController = dataEntryController;
             DataGridAdjuster.InitializeGrid(this);
-            DataGridTableStyle tableStyle = DataGridAdjuster.InitializeTreeColumns(controller._cDal, this, this.Controller.CurrentUnit, null,this.Controller.ViewController.EnableLogGrading, this.LogsClicked);
+            DataGridTableStyle tableStyle = DataGridAdjuster.InitializeTreeColumns(controller._cDal, this, this.DataEntryController.Unit, null,this.Controller.ViewController.EnableLogGrading, this.LogsClicked);
 
             this.AllowUserToAddRows = false;//don't allow down arrow to add tree
             this.SIP = sip;
@@ -371,7 +371,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this.UserCanAddTrees == false) { return null; }
             TreeVM prevTree = null;
-            StratumVM assumedSt = Controller.DefaultStratum;
+            StratumVM assumedSt = DataEntryController.Unit.DefaultStratum;
             if (_BS_trees.Count > 0)
             {
                 prevTree = (TreeVM)_BS_trees[_BS_trees.Count - 1];
@@ -420,7 +420,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = Controller.GetTreeSGList(tree);
+                _sgColumn.DataSource = tree.GetSGList();
             }
         }
 
@@ -460,7 +460,7 @@ namespace FSCruiser.WinForms.DataEntry
         public void HandleLoad()
         {
             UpdateStratumColumn();
-            this._BS_trees.DataSource = Controller.CurrentUnitNonPlotTreeList;
+            this._BS_trees.DataSource = DataEntryController.Unit.NonPlotTrees;
             
             _viewLoading = false;
         }

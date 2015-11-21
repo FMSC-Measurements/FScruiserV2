@@ -407,7 +407,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.Parent = parent;
             this._tallyListPanel.SuspendLayout();
             this._mode = stratum.GetDataEntryMode();
-            this.ViewLogicController.DataEntryController.PopulateTallies(stratum, this._mode, AppController.CurrentUnit, this._tallyListPanel, this);
+            this.ViewLogicController.DataEntryController.PopulateTallies(stratum, this._mode, DataEntryController.Unit, this._tallyListPanel, this);
             if (stratum.Method == "3PPNT")
             {
                 this.IsGridExpanded = true;
@@ -861,7 +861,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = AppController.GetTreeSGList(tree);
+                _sgColumn.DataSource = tree.GetSGList();
             }
         }
 

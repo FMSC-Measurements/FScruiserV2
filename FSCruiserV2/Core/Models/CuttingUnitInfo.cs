@@ -12,15 +12,15 @@ namespace FSCruiser.Core.Models
         private int _talliesSinceLastSave = 0;
         
         private Thread _saveTreesWorkerThread;
-        private Thread _loadCuttingUnitDataThread;
+        
 
         public List<CountTreeDO> Counts { get; set; }
 
-        public StratumVM DefaultStratum { get; protected set; }
-        public List<SampleGroupVM> SampleGroups { get; protected set; }
+        public StratumVM DefaultStratum { get; set; }
+        public List<SampleGroupVM> SampleGroups { get; set; }
         public List<TreeVM> TreeList { get; set; }
         public IList<TreeVM> NonPlotTrees { get; set; }
-        public TallyHistoryCollection TallyHistoryBuffer { get; protected set; }
+        public TallyHistoryCollection TallyHistoryBuffer { get; set; }
 
 
 
@@ -28,82 +28,6 @@ namespace FSCruiser.Core.Models
             :base()
         {
         }
-
-
-        public void AsyncLoadCuttingUnitData()
-        {
-            if (this._loadCuttingUnitDataThread != null)
-            {
-                this._loadCuttingUnitDataThread.Abort();
-            }
-            this._loadCuttingUnitDataThread = new Thread(this.LoadData);
-            this._loadCuttingUnitDataThread.IsBackground = true;
-            this._loadCuttingUnitDataThread.Priority = Constants.LOAD_CUTTINGUNITDATA_PRIORITY;
-            this._loadCuttingUnitDataThread.Start();
-        }
-
-
-        public void LoadData()
-        {
-
-            InitializeSampleGroups();
-            //InitializeUnitTreeNumIndex();
-            TallyHistoryBuffer = new TallyHistoryCollection(this);
-            TallyHistoryBuffer.Initialize();
-
-
-            InitializeUnitTreeList();
-            //create a list of just trees in tree based strata
-            List<TreeVM> nonPlotTrees = DAL.Read<TreeVM>(@"JOIN Stratum ON Tree.Stratum_CN = Stratum.Stratum_CN WHERE Tree.CuttingUnit_CN = ? AND
-                        (Stratum.Method = '100' OR Stratum.Method = 'STR' OR Stratum.Method = '3P' OR Stratum.Method = 'S3P') ORDER BY TreeNumber", 
-                        (object)this.CuttingUnit_CN);
-            this.NonPlotTrees = new BindingList<TreeVM>(nonPlotTrees);
-
-            if (this.DAL.GetRowCount("CuttingUnitStratum", "WHERE CuttingUnit_CN = ?", this.CuttingUnit_CN) == 1)
-            {
-                this.DefaultStratum = this.DAL.ReadSingleRow<StratumVM>("JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ?",
-                        (object)this.CuttingUnit_CN);
-            }
-            else
-            {
-                this.DefaultStratum = this.DAL.ReadSingleRow<StratumVM>(
-                        "JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ? AND Method = ?",
-                        (object)CruiseDAL.Schema.Constants.CruiseMethods.H_PCT,
-                        (object)this.CuttingUnit_CN);
-            }
-
-
-            throw new NotImplementedException("need to notify UI when unit is done loading");
-            //this.ViewController.HandleCuttingUnitDataLoaded();
-
-        }
-
-        public void InitializeSampleGroups()
-        {
-            //create a list of all samplegroups in the unit
-            this.SampleGroups = DAL.Read<SampleGroupVM>("SampleGroup", @"JOIN Stratum ON SampleGroup.Stratum_CN = Stratum.Stratum_CN 
-                JOIN CuttingUnitStratum ON CuttingUnitStratum.Stratum_CN = Stratum.Stratum_CN
-                WHERE CuttingUnitStratum.CuttingUnit_CN = ?", this.CuttingUnit_CN);
-
-            //initialize sample selectors for all sampleGroups
-            foreach (SampleGroupVM sg in this.SampleGroups)
-            {
-                //DataEntryMode mode = GetStrataDataEntryMode(sg.Stratum);
-                sg.Sampler = sg.MakeSampleSelecter();
-            }
-        }
-
-        public void InitializeUnitTreeList()
-        {
-            //create a list of all trees in the unit
-            this.TreeList = DAL.Read<TreeVM>("WHERE CuttingUnit_CN = ?", (object)this.CuttingUnit_CN);
-            //this.InternalValiateTrees((ICollection<TreeVM>)this.CurrentUnitTreeList);
-            this.ValidateTreesAsync();
-        }
-
-        
-
-        
 
 
         #region Tree stuff
@@ -207,7 +131,7 @@ namespace FSCruiser.Core.Models
             return worker.ValidateTrees();
         }
 
-        private void ValidateTreesAsync()
+        public void ValidateTreesAsync()
         {
             var worker = new TreeValidationWorker(this.TreeList);
             worker.ValidateTreesAsync();

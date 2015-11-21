@@ -88,7 +88,7 @@ namespace FSCruiser.Core.Models
                 {
                     base.HiddenPrimary = value;
                 }
-                if (this.TreeDefaultValue != null)
+                else if (this.TreeDefaultValue != null)
                 {
                     if (this.TreeDefaultValue.HiddenPrimary == value)
                     {

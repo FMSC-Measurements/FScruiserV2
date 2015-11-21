@@ -63,6 +63,7 @@
     <Compile Include="Core\CountTreeExtensions.cs" />
     <Compile Include="Core\Exceptions.cs" />
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
+    <Compile Include="Core\LoadCuttingUnitWorker.cs" />
     <Compile Include="Core\Models\DataEntryMode.cs" />
     <Compile Include="Core\Models\DataModelExtensions.cs" />
     <Compile Include="Core\Models\TallyHistoryCollection.cs" />

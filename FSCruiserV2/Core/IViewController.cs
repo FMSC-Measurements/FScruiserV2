@@ -26,7 +26,7 @@ namespace FSCruiser.Core
         void BeginShowSplash();
         //FSCruiserV2.Forms.FormPlot GetPlotView(CruiseDAL.DataObjects.CuttingUnitDO unit);
         //FSCruiserV2.Forms.FormDataEntry GetTreeBasedView(CruiseDAL.DataObjects.CuttingUnitDO unit);
-        void HandleCuttingUnitDataLoaded();
+        //void HandleCuttingUnitDataLoaded();
         void HandleCruisersChanged();
 
         void SignalInvalidAction();

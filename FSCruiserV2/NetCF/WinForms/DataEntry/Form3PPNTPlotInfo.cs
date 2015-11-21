@@ -189,7 +189,7 @@ namespace FSCruiser.WinForms.DataEntry
                 this.Controller._cDal.BeginTransaction();
                 for (long i = 0; i < this.TreeCount; i++)
                 {
-                    TreeVM t = Controller.CurrentUnit.CreateNewTreeEntry(_currentPlotInfo.Stratum, null, null, this._currentPlotInfo, false);
+                    TreeVM t = _currentPlotInfo.CreateNewTreeEntry((SampleGroupVM)null, (TreeDefaultValueDO)null, false);
                     t.TreeCount = 1;
                     t.CountOrMeasure = "M";
                     t.TreeNumber = i + 1;

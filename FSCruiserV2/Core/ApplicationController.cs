@@ -1106,83 +1106,83 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", CurrentUnit.CuttingUnit_CN);
             return _cDal.Read<StratumVM>(CruiseDAL.Schema.STRATUM._NAME, "JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnitStratum.CuttingUnit_CN = ?", this.CurrentUnit.CuttingUnit_CN);
         }
 
-        public DataEntryMode GetUnitDataEntryMode(CuttingUnitDO unit)
-        {
-            //"SELECT goupe_concat(Method, ' ') FROM Stratum JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = {0} GROUP BY Stratum.Method;";
-            List<StratumVM> strata = unit.ReadStrata<StratumVM>();
-            DataEntryMode mode = DataEntryMode.Unknown;
-            foreach (StratumVM stratum in strata)
-            {
-                mode = mode | GetStrataDataEntryMode(stratum);
-            }
+        //public DataEntryMode GetUnitDataEntryMode(CuttingUnitDO unit)
+        //{
+        //    //"SELECT goupe_concat(Method, ' ') FROM Stratum JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = {0} GROUP BY Stratum.Method;";
+        //    List<StratumVM> strata = unit.ReadStrata<StratumVM>();
+        //    DataEntryMode mode = DataEntryMode.Unknown;
+        //    foreach (StratumVM stratum in strata)
+        //    {
+        //        mode = mode | GetStrataDataEntryMode(stratum);
+        //    }
 
-            return mode;
-        }
+        //    return mode;
+        //}
 
-        public object GetTreeSGList(TreeVM tree)
-        {
-            if (tree.Stratum == null)
-            {
-                return Constants.EMPTY_SG_LIST;
-            }
+        //public object GetTreeSGList(TreeVM tree)
+        //{
+        //    if (tree.Stratum == null)
+        //    {
+        //        return Constants.EMPTY_SG_LIST;
+        //    }
 
-            return _cDal.Read<SampleGroupVM>("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN);
-        }
+        //    return _cDal.Read<SampleGroupVM>("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN);
+        //}
 
-        public ICollection<TreeDefaultValueDO> GetTreeTDVList(TreeVM tree)
-        {
-            if (tree == null) { return Constants.EMPTY_SPECIES_LIST; }
-            if (tree.Stratum == null)
-            {
-                //if (this.CurrentUnit.Strata.Count == 1)
-                //{
-                //    tree.Stratum = this.CurrentUnit.Strata[0];
-                //}
-                //else
-                //{
-                //    return Constants.EMPTY_SPECIES_LIST;
-                //}
-                return Constants.EMPTY_SPECIES_LIST;
-            }
+        //public ICollection<TreeDefaultValueDO> GetTreeTDVList(TreeVM tree)
+        //{
+        //    if (tree == null) { return Constants.EMPTY_SPECIES_LIST; }
+        //    if (tree.Stratum == null)
+        //    {
+        //        //if (this.CurrentUnit.Strata.Count == 1)
+        //        //{
+        //        //    tree.Stratum = this.CurrentUnit.Strata[0];
+        //        //}
+        //        //else
+        //        //{
+        //        //    return Constants.EMPTY_SPECIES_LIST;
+        //        //}
+        //        return Constants.EMPTY_SPECIES_LIST;
+        //    }
 
-            if (tree.SampleGroup == null)
-            {
-                if (_cDal.GetRowCount("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN) == 1)
-                {
-                    tree.SampleGroup = _cDal.ReadSingleRow<SampleGroupVM>("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN);
-                }
-                if (tree.SampleGroup == null)
-                {
-                    return Constants.EMPTY_SPECIES_LIST;
-                }
-            }
+        //    if (tree.SampleGroup == null)
+        //    {
+        //        if (_cDal.GetRowCount("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN) == 1)
+        //        {
+        //            tree.SampleGroup = _cDal.ReadSingleRow<SampleGroupVM>("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN);
+        //        }
+        //        if (tree.SampleGroup == null)
+        //        {
+        //            return Constants.EMPTY_SPECIES_LIST;
+        //        }
+        //    }
 
             
 
-            //if (tree.SampleGroup.TreeDefaultValues.IsPopulated == false)
-            //{
-            //    tree.SampleGroup.TreeDefaultValues.Populate();
-            //}
-            List<TreeDefaultValueDO> tdvs = this._cDal.Read<TreeDefaultValueDO>("TreeDefaultValue", "JOIN SampleGroupTreeDefaultValue USING (TreeDefaultValue_CN) WHERE SampleGroup_CN = ?", tree.SampleGroup_CN);
+        //    //if (tree.SampleGroup.TreeDefaultValues.IsPopulated == false)
+        //    //{
+        //    //    tree.SampleGroup.TreeDefaultValues.Populate();
+        //    //}
+        //    List<TreeDefaultValueDO> tdvs = this._cDal.Read<TreeDefaultValueDO>("TreeDefaultValue", "JOIN SampleGroupTreeDefaultValue USING (TreeDefaultValue_CN) WHERE SampleGroup_CN = ?", tree.SampleGroup_CN);
 
-            if (Constants.NEW_SPECIES_OPTION)
-            {
-                tdvs.Add(_newPopPlaceHolder); 
-                return tdvs; 
-                //int cnt = tdvs.Count + 1;
-                //TreeDefaultValueDO[] array = new TreeDefaultValueDO[cnt];
-                //tree.SampleGroup.TreeDefaultValues.CopyTo(array, 0);
-                //array[array.Length - 1] = _newPopPlaceHolder;
-                //return array;
-            }
-            else
-            {
-                return tdvs; 
-                //return tree.SampleGroup.TreeDefaultValues;
-            }
+        //    if (Constants.NEW_SPECIES_OPTION)
+        //    {
+        //        tdvs.Add(_newPopPlaceHolder); 
+        //        return tdvs; 
+        //        //int cnt = tdvs.Count + 1;
+        //        //TreeDefaultValueDO[] array = new TreeDefaultValueDO[cnt];
+        //        //tree.SampleGroup.TreeDefaultValues.CopyTo(array, 0);
+        //        //array[array.Length - 1] = _newPopPlaceHolder;
+        //        //return array;
+        //    }
+        //    else
+        //    {
+        //        return tdvs; 
+        //        //return tree.SampleGroup.TreeDefaultValues;
+        //    }
 
 
-        }
+        //}
 
         #region backup
         private string GetBackupFileName(string destDir, bool useTimeStamp)

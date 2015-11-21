@@ -15,7 +15,7 @@ namespace FSCruiser.Core
 
         public TreeValidationWorker(ICollection<TreeVM> trees)
         {
-            Debug.Assert(_treesLocal != null);
+            Debug.Assert(trees != null);
 
             TreeVM[] copy = new TreeVM[trees.Count];
             trees.CopyTo(copy, 0);

@@ -137,16 +137,16 @@ namespace FSCruiser.WinForms.Common
 
 
 
-        public void HandleCuttingUnitDataLoaded()
-        {
-            lock (_dataEntrySyncLock)
-            {
-                if (_dataEntryView != null)
-                {
-                    _dataEntryView.HandleCuttingUnitDataLoaded();
-                }
-            }
-        }
+        //public void HandleCuttingUnitDataLoaded()
+        //{
+        //    lock (_dataEntrySyncLock)
+        //    {
+        //        if (_dataEntryView != null)
+        //        {
+        //            _dataEntryView.HandleCuttingUnitDataLoaded();
+        //        }
+        //    }
+        //}
 
         public void HandleCruisersChanged()
         {

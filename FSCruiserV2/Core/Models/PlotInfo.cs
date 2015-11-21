@@ -5,6 +5,7 @@ using CruiseDAL.DataObjects;
 using System.ComponentModel;
 using CruiseDAL;
 using CruiseDAL.Schema;
+using System.Diagnostics;
 
 namespace FSCruiser.Core.Models
 {
@@ -34,6 +35,18 @@ namespace FSCruiser.Core.Models
             set
             {
                 base.Stratum = value;
+            }
+        }
+
+        public new CuttingUnitVM CuttingUnit
+        {
+            get
+            {
+                return (CuttingUnitVM)base.CuttingUnit;
+            }
+            set
+            {
+                base.CuttingUnit = value;
             }
         }
 
@@ -79,6 +92,12 @@ namespace FSCruiser.Core.Models
             return DAL.ReadSingleRow<StratumVM>(STRATUM._NAME, this.Stratum_CN);
         }
 
+        public override CuttingUnitDO GetCuttingUnit()
+        {
+            if (DAL == null) { return null; }
+            return DAL.ReadSingleRow<CuttingUnitVM>(CUTTINGUNIT._NAME, this.CuttingUnit_CN);
+        }
+
 
         public void LoadData()
         {
@@ -113,7 +132,11 @@ namespace FSCruiser.Core.Models
             return true;
         }
 
-
+        public TreeVM CreateNewTreeEntry(SampleGroupVM sg, TreeDefaultValueDO tdv, bool isMeasure)
+        {
+            Debug.Assert(this.CuttingUnit != null);
+            return this.CuttingUnit.CreateNewTreeEntry(this.Stratum, sg, tdv, this, isMeasure);
+        }
 
         public void SaveTrees()
         {

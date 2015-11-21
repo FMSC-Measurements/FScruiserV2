@@ -62,7 +62,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.Controller = controller;
 
             this.SuspendLayout();
-            this.PopulateStrata(Controller.CurrentUnit);
+            this.PopulateStrata(dataEntryController.Unit);
 
             //if there is only one strata in the unit 
             //display the counts for that stratum
@@ -147,7 +147,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
            
 
-            _BS_tallyHistory.DataSource = Controller.TallyHistory;
+            _BS_tallyHistory.DataSource = DataEntryController.Unit.TallyHistoryBuffer;
             this._viewLoading = false;
         }
 
@@ -349,7 +349,7 @@ namespace FSCruiser.WinForms.DataEntry
             Button button = (Button)sender;
             SubPop subPop = (SubPop)button.Tag;
 
-            var tree = Controller.CurrentUnit.CreateNewTreeEntry(subPop.SG.Stratum, subPop.SG, subPop.TDV, null, true);
+            var tree = DataEntryController.Unit.CreateNewTreeEntry(subPop.SG.Stratum, subPop.SG, subPop.TDV, null, true);
 
             tree.TreeCount = 1;
 

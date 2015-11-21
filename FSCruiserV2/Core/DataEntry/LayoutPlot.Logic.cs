@@ -291,7 +291,7 @@ namespace FSCruiser.Core.DataEntry
         public void AddTree(SampleGroupVM sg, CruiseDAL.DataObjects.TreeDefaultValueDO tdv)
         {
             TreeVM tree;
-            tree = Controller.CurrentUnit.CreateNewTreeEntry(this.StratumInfo, sg, tdv, this.CurrentPlotInfo, true);
+            tree = DataEntryController.Unit.CreateNewTreeEntry(this.StratumInfo, sg, tdv, this.CurrentPlotInfo, true);
             tree.TreeCount = 1;
 
             this.Controller.ViewController.ShowCruiserSelection(tree);

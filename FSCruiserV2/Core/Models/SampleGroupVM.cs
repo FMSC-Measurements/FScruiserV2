@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CruiseDAL;
 using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
 using FMSC.Sampling;
@@ -183,12 +184,13 @@ namespace FSCruiser.Core.Models
                             ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).Frequency,
                             ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).ITreeFrequency), "I");
 
-
-                        this.ViewController.ShowMessage("Oops! Sample Frequency on sample group " +
-                            this.Code + " has been modified.\r\n If you are trying to change the sample freqency during a cruise, you should create a new sample group.",
-                            "Error", MessageBoxIcon.Exclamation);
-                        this.SamplingFrequency = ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).Frequency;
-                        this.InsuranceFrequency = ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).ITreeFrequency;
+                        throw new UserFacingException("Oops! Sample Frequency on sample group " +
+                            this.Code + " has been modified.\r\n If you are trying to change the sample freqency during a cruise, you should create a new sample group.", (Exception)null);
+                        //this.ViewController.ShowMessage("Oops! Sample Frequency on sample group " +
+                        //    this.Code + " has been modified.\r\n If you are trying to change the sample freqency during a cruise, you should create a new sample group.",
+                        //    "Error", MessageBoxIcon.Exclamation);
+                        //this.SamplingFrequency = ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).Frequency;
+                        //this.InsuranceFrequency = ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).ITreeFrequency;
                     }
 
                 }
