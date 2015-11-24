@@ -210,7 +210,12 @@ namespace FSCruiser.WinForms.Common
 
 
         public abstract void ShowDataEntry(CuttingUnitVM unit);
-       
+
+        //public int? ShowNumericValueInput(int? min, int? max, int? initialValue, bool acceptNullInput)
+        //{
+        //    this.NumPadDialog.ShowDialog(min, max, initialValue, acceptNullInput);
+        //    return this.NumPadDialog.UserEnteredValue;
+        //}
 
         public DialogResult ShowPlotInfo(PlotVM plotInfo, bool allowEdit)
         {

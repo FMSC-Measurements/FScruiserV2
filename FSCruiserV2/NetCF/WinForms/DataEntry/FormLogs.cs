@@ -92,8 +92,8 @@ namespace FSCruiser.WinForms.DataEntry
             this._currentTree = tree;
             this._treeDesLbl.Text = tree.GetLogLevelDescription();
 
-            this._logs = new BindingList<LogDO>(Controller._cDal.Read<LogDO>("Log", "WHERE Log.Tree_CN = ? ORDER BY CAST (LogNumber AS NUMERIC) ", tree.Tree_CN));
-            this._logNumIndex = Controller.GetLogNumerIndexStart(tree);
+            this._logs = new BindingList<LogDO>(tree.QueryLogs());
+            this._logNumIndex = tree.ReadHighestLogNumber();
             //if (_logs.Count == 0)
             //{
             //    _logNumIndex = 0;

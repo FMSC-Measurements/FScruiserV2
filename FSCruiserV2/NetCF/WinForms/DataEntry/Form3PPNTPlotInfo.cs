@@ -226,15 +226,14 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_blockTBClick == true) { return; }
             _blockTBClick = true;
-            //int? num = null;
-            //try
-            //{
-            //    num = Convert.ToInt32(_aveHtTB.Text);
-            //}
-            //catch
-            //{ }
 
-            this.AverageHgt = (int)(Controller.ShowNumericValueInput(0, 999, (this.AverageHgt <= 0) ? (int?)null : (int?)this.AverageHgt, true) ?? -1);
+            var viewController = this.Controller.ViewController;
+
+            int? initialValue = (this.AverageHgt <= 0) ? (int?)null : (int?)this.AverageHgt;
+            viewController.NumPadDialog.ShowDialog(0, 999, initialValue, true);
+            TreeCount = viewController.NumPadDialog.UserEnteredValue ?? -1;
+
+            //this.AverageHgt = (int)(Controller.ShowNumericValueInput(0, 999, (this.AverageHgt <= 0) ? (int?)null : (int?)this.AverageHgt, true) ?? -1);
             CalculateKPI();
             _blockTBClick = false;
         }
@@ -244,8 +243,12 @@ namespace FSCruiser.WinForms.DataEntry
             if (_blockTBClick == true) { return; }
             _blockTBClick = true;
 
+            var viewController = this.Controller.ViewController;
 
-            this.TreeCount = (int)(Controller.ShowNumericValueInput(0, 999, (this.TreeCount <= 0) ? (int?)null : (int?)this.TreeCount, true) ?? -1);
+            int? initialValue = (this.TreeCount <= 0) ? (int?)null : (int?)this.TreeCount;
+            viewController.NumPadDialog.ShowDialog(0, 999, initialValue, true);
+            TreeCount = viewController.NumPadDialog.UserEnteredValue ?? -1;
+            //this.TreeCount = (int)(Controller.ShowNumericValueInput(0, 999, (this.TreeCount <= 0) ? (int?)null : (int?)this.TreeCount, true) ?? -1);
             CalculateKPI();
             _blockTBClick = false;
         }

@@ -58,6 +58,40 @@ namespace FSCruiser.Core.DataEntry
             return this.ViewController.AskYesNo("Measure Tree\r\n Would you like to enter tree data now?", "Sample", MessageBoxIcon.Question, false);
         }
 
+        public void ShowLogs(TreeVM tree)
+        {
+            if (tree.TrySave())
+            {
+                this.ViewController.ShowLogsView(tree.Stratum, tree);
+            }
+            else
+            {
+                ViewController.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
+                    , null, MessageBoxIcon.Hand);
+            }
+        }
+
+        public bool ShowLimitingDistanceDialog(StratumVM stratum, PlotVM plot, TreeVM optTree)
+        {
+            string logMessage = String.Empty;
+            bool isVariableRadius = Array.IndexOf(CruiseDAL.Schema.Constants.CruiseMethods.VARIABLE_RADIUS_METHODS, stratum.Method) > -1;
+            float bafOrFixedPlotSize = (isVariableRadius) ? stratum.BasalAreaFactor : stratum.FixedPlotSize;
+            DialogResult dResult = ViewController.ShowLimitingDistanceDialog(bafOrFixedPlotSize, isVariableRadius, optTree, out logMessage);
+            if (dResult == DialogResult.OK)
+            {
+                plot.Remarks += logMessage;
+                return true;
+            }
+            return false;
+
+        }
+
+        public int? ShowNumericValueInput(int? min, int? max, int? initialValue, bool acceptNullInput)
+        {
+            ViewController.NumPadDialog.ShowDialog(min, max, initialValue, acceptNullInput);
+            return ViewController.NumPadDialog.UserEnteredValue;
+        }
+
         /// <summary>
         /// Creates a new plot using the plot info view and adds it to the given stratum's plot collection
         /// </summary>
@@ -545,7 +579,7 @@ namespace FSCruiser.Core.DataEntry
             }
             else if(doSample)
             {
-                CountTreeVM count = this.Controller.GetCountRecord(tree);
+                CountTreeVM count = tree.FindCountRecord();
                 if (count != null && count.SampleGroup.Sampler is ThreePSelecter)
                 {
                     ThreePItem item = (ThreePItem)count.SampleGroup.Sampler.NextItem();

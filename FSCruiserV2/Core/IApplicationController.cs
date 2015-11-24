@@ -34,16 +34,16 @@ namespace FSCruiser.Core
         SampleGroupDO CreateNewSampleGroup(StratumDO stratum);
         TreeDefaultValueDO CreateNewTreeDefaultValue(String pProd);
         
-        void DeletePlot(PlotVM plot);
-        void DeleteTree(TreeVM tree);
-        void DeleteTree(TreeVM tree, PlotVM plot);
+        //void DeletePlot(PlotVM plot);
+        //void DeleteTree(TreeVM tree);
+        //void DeleteTree(TreeVM tree, PlotVM plot);
 
         //object GetTreeSGList(TreeVM tree);
         //System.Collections.Generic.ICollection<TreeDefaultValueDO> GetTreeTDVList(TreeVM tree);
-        System.Collections.Generic.IList<StratumVM> GetUnitPlotStrata();
-        System.Collections.Generic.IList<StratumVM> GetUnitTreeBasedStrata();
-        System.Collections.Generic.IList<StratumVM> GetUnitStrata();
-        CountTreeVM GetCountRecord(TreeDO tree);
+        //System.Collections.Generic.IList<StratumVM> GetUnitPlotStrata();
+        //System.Collections.Generic.IList<StratumVM> GetUnitTreeBasedStrata();
+        //System.Collections.Generic.IList<StratumVM> GetUnitStrata();
+        //CountTreeVM GetCountRecord(TreeDO tree);
 
         void AddCruiser(string initials);
         void RemoveCruiser(CruiserVM cruiser);
@@ -51,7 +51,7 @@ namespace FSCruiser.Core
 
         bool OpenFile();
 
-        int GetLogNumerIndexStart(TreeVM tree);
+        //int GetLogNumerIndexStart(TreeVM tree);
         void HandleNonCriticalException(Exception ex, string optMessage);
         void LogTreeCountEdit(CountTreeDO countTree, long oldValue, long newValue);
         void LogSumKPIEdit(CountTreeDO countTree, long oldValue, long newValue);
@@ -71,10 +71,10 @@ namespace FSCruiser.Core
         //bool TrySaveTree(TreeVM tree);
         //void SaveTrees(System.Collections.Generic.ICollection<TreeVM> list);
         //void SetTreeTDV(TreeVM tree, TreeDefaultValueDO tdv);
-        bool EnsureTreeNumberAvalible(long start);
-        bool EnsureTreeNumberAvalible(long start, PlotVM plot);
+        //bool EnsureTreeNumberAvalible(long start);
+        //bool EnsureTreeNumberAvalible(long start, PlotVM plot);
         //void Untally(TallyAction action);
-        TreeVM UserAddTree(TreeVM templateTree, StratumVM knownStratum, PlotVM knownPlot);
+        //TreeVM UserAddTree(TreeVM templateTree, StratumVM knownStratum, PlotVM knownPlot);
         //bool ValidateTrees();
         //bool ValidateTrees(System.Collections.Generic.ICollection<TreeVM> list);
         //bool ValidateTrees(System.Collections.Generic.ICollection<TreeVM> list, System.Collections.Generic.ICollection<String> fields);
@@ -86,12 +86,12 @@ namespace FSCruiser.Core
         //int? GetKPI(int min, int max);
         //void ShowDataEntry(CruiseDAL.DataObjects.CuttingUnitDO unit);
         //void ShowMain();
-        int ShowNumericValueInput(int? min, int? max, int? initialValue);
-        int? ShowNumericValueInput(int? min, int? max, int? initialValue, bool acceptNullInput);
+        //int ShowNumericValueInput(int? min, int? max, int? initialValue);
+        //int? ShowNumericValueInput(int? min, int? max, int? initialValue, bool acceptNullInput);
         //System.Windows.Forms.DialogResult ShowPlotInfo(PlotInfo plotInfo, bool allowEdit);
         //void ShowTallySettings(CruiseDAL.DataObjects.CountTreeDO count);
-        bool ShowLimitingDistanceDialog(StratumVM stratum, PlotVM plot, TreeVM optTree);
-        void ShowLogs(TreeVM tree);
+        //bool ShowLimitingDistanceDialog(StratumVM stratum, PlotVM plot, TreeVM optTree);
+        //void ShowLogs(TreeVM tree);
         //void SignalInsuranceTree();
         //void SignalMeasureTree();
         #endregion

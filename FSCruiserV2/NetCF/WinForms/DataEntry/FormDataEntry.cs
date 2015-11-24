@@ -167,9 +167,21 @@ namespace FSCruiser.WinForms.DataEntry
 
             if ((unitMode & DataEntryMode.Plot) == DataEntryMode.Plot)
             {
-                _plotStrataInfo = Controller.GetUnitPlotStrata();
+                _plotStrataInfo = unit.GetPlotStrata();
+
                 foreach(StratumVM st in _plotStrataInfo)
                 {
+                    if (st.Method == "3PPNT")
+                    {
+                        if (st.KZ3PPNT <= 0)
+                        {
+                            MessageBox.Show("error 3PPNT missing KZ value, please return to Cruise System Manger and fix");
+                            continue;
+                        }
+                        st.SampleSelecter = new ThreePSelecter((int)st.KZ3PPNT, 1000000, 0);
+                    }
+                    st.LoadTreeFieldNames();
+
                     //load plots in stratum
                     st.Plots = controller._cDal.Read<PlotVM>("Plot", "WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber", st.Stratum_CN, LogicController.Unit.CuttingUnit_CN);
 

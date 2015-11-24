@@ -521,7 +521,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             //this.LogsView.ShowDialog(tree);
             //this.Controller.ViewController.ShowLogsView(this.StratumInfo, tree);
-            this.AppController.ShowLogs(tree);
+            this.DataEntryController.ShowLogs(tree);
         }
 
         public void HandleStratumLoaded(Control container)
@@ -853,7 +853,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_speciesColumn != null)
             {
-                _speciesColumn.DataSource = tree.GetTDVList();
+                _speciesColumn.DataSource = tree.ReadValidTDVs();
             }
         }
 
@@ -861,7 +861,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = tree.GetSGList();
+                _sgColumn.DataSource = tree.ReadValidSampleGroups();
             }
         }
 
@@ -911,7 +911,7 @@ namespace FSCruiser.WinForms.DataEntry
                 }
             }
 
-            this.ViewLogicController.Controller.ShowLimitingDistanceDialog(this.ViewLogicController.StratumInfo, this.ViewLogicController.CurrentPlotInfo, tree);
+            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.StratumInfo, this.ViewLogicController.CurrentPlotInfo, tree);
         }
 
 

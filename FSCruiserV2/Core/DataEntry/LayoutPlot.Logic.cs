@@ -230,7 +230,7 @@ namespace FSCruiser.Core.DataEntry
             if (this.Controller.ViewController.AskYesNo("Are you sure you want to delete this plot?", "", MessageBoxIcon.Question, true))
             {
                 this._disableCheckPlot = true;
-                Controller.DeletePlot(CurrentPlotInfo);
+                CurrentPlotInfo.Delete();
                 _BS_Plots.Remove(CurrentPlotInfo);
                 this._disableCheckPlot = false; 
             }
@@ -252,7 +252,7 @@ namespace FSCruiser.Core.DataEntry
                 {
                     //this._BS_Trees.Remove(curTree);
                     //Controller.DeleteTree(curTree);
-                    Controller.DeleteTree(curTree, this.CurrentPlotInfo);
+                    this.CurrentPlotInfo.DeleteTree(curTree);
                 }
             }
             else
@@ -265,7 +265,8 @@ namespace FSCruiser.Core.DataEntry
         {
             try
             {
-                if (!this.Controller.EnsureTreeNumberAvalible(newTreeNumber, this.CurrentPlotInfo))
+
+                if (!this.CurrentPlotInfo.IsTreeNumberAvalible(newTreeNumber))
                 {
                     cancel = true;
                     return;
@@ -325,7 +326,11 @@ namespace FSCruiser.Core.DataEntry
                 prevTree = (TreeVM)_BS_Trees[_BS_Trees.Count - 1];
             }
 
-            return Controller.UserAddTree(prevTree, this.StratumInfo, this.CurrentPlotInfo);
+            var newTree = this.CurrentPlotInfo.UserAddTree(prevTree, this.DataEntryController.ViewController);
+            DataEntryController.Controller.OnTally();
+            return newTree;
+
+            //return Controller.UserAddTree(prevTree, this.StratumInfo, this.CurrentPlotInfo);
         }
 
         public TreeVM UserAddTree()

@@ -98,6 +98,32 @@ namespace FSCruiser.Core.Models
             return DAL.ReadSingleRow<CuttingUnitVM>(CUTTINGUNIT._NAME, this.CuttingUnit_CN);
         }
 
+        public override void Delete()
+        {
+            Debug.Assert(this.CuttingUnit != null);
+
+            try
+            {
+                this.DAL.BeginTransaction();
+
+                foreach (TreeVM tree in this.Trees)
+                {
+                    tree.Delete();
+                    Debug.Assert(this.CuttingUnit.TreeList.Contains(tree));
+                    this.CuttingUnit.TreeList.Remove(tree);
+
+                    //TreeDO.RecursiveDeleteTree(tree);
+                }
+                base.Delete();
+                this.DAL.CommitTransaction();
+            }
+            catch (Exception e)
+            {
+                this.DAL.RollbackTransaction();
+                throw;
+            }
+        }
+
 
         public void LoadData()
         {
@@ -132,10 +158,66 @@ namespace FSCruiser.Core.Models
             return true;
         }
 
+        public TreeVM UserAddTree(TreeVM templateTree, IViewController viewController)
+        {
+            TreeVM newTree;
+            SampleGroupVM assumedSG = templateTree.SampleGroup;;
+            TreeDefaultValueDO assumedTDV = templateTree.TreeDefaultValue;
+
+            //extrapolate sample group
+            if (assumedSG == null)//if we have a stratum but no sample group, pick the first one
+            {
+                List<SampleGroupVM> samplegroups = this.DAL.Read<SampleGroupVM>("SampleGroup", "WHERE Stratum_CN = ?", 
+                    this.Stratum.Stratum_CN);
+                if (samplegroups.Count == 1)
+                {
+                    assumedSG = samplegroups[0];
+                }
+            }
+
+            newTree = this.CreateNewTreeEntry(assumedSG, assumedTDV, true);
+
+            viewController.ShowCruiserSelection(newTree);
+
+            //if a 3P plot method set Count Measure to empty. 
+            if (Array.IndexOf(CruiseDAL.Schema.Constants.CruiseMethods.THREE_P_METHODS, 
+                this.Stratum.Method) >= 0)
+            {
+                newTree.CountOrMeasure = string.Empty;
+            }
+
+            newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied 
+            newTree.TrySave();
+
+            //this.OnTally();
+
+            return newTree;
+
+        }
+
+        public TreeVM CreateNewTreeEntry(CountTreeVM count, bool isMeasure)
+        {
+            return this.CuttingUnit.CreateNewTreeEntry(this.Stratum, count.SampleGroup, count.TreeDefaultValue, this, isMeasure);
+        }
+
         public TreeVM CreateNewTreeEntry(SampleGroupVM sg, TreeDefaultValueDO tdv, bool isMeasure)
         {
             Debug.Assert(this.CuttingUnit != null);
-            return this.CuttingUnit.CreateNewTreeEntry(this.Stratum, sg, tdv, this, isMeasure);
+            var newTree = this.CuttingUnit.CreateNewTreeEntry(this.Stratum, sg, tdv, this, isMeasure);
+
+            newTree.Plot = this;
+            newTree.TreeNumber = this.NextPlotTreeNum + 1;
+            newTree.TreeCount = 1;
+
+            return newTree;
+        }
+
+        public void DeleteTree(TreeVM tree)
+        {
+            tree.Delete();
+            //TreeDO.RecursiveDeleteTree(tree);
+            this.CuttingUnit.TreeList.Remove(tree);
+            this.Trees.Remove(tree);
         }
 
         public void SaveTrees()

@@ -56,6 +56,53 @@ namespace FSCruiser.Core.Models
         }
         #endregion
 
+        public TreeVM UserAddTree(TreeVM templateTree, StratumVM knownStratum, IViewController viewController)
+        {
+            TreeVM newTree;
+            SampleGroupVM assumedSG = null;
+            TreeDefaultValueDO assumedTDV = null;
+
+            //extrapolate stratum 
+            if (knownStratum == null && this.DefaultStratum != null)//default stratum is going to be our first choice
+            {
+                knownStratum = this.DefaultStratum;
+            }
+            else if (knownStratum == null && templateTree != null)//if no default stratum try to use stratum/samplegroup from previous tree in view
+            {
+                assumedSG = templateTree.SampleGroup;
+                assumedTDV = templateTree.TreeDefaultValue;
+                if (assumedSG != null)
+                {
+                    knownStratum = assumedSG.Stratum;
+                }
+                else
+                {
+                    knownStratum = templateTree.Stratum;
+                }
+            }
+
+            //extrapolate sample group
+            if (knownStratum != null && assumedSG == null)//if we have a stratum but no sample group, pick the first one
+            {
+                List<SampleGroupVM> samplegroups = DAL.Read<SampleGroupVM>("SampleGroup", "WHERE Stratum_CN = ?", knownStratum.Stratum_CN);
+                if (samplegroups.Count == 1)
+                {
+                    assumedSG = samplegroups[0];
+                }
+            }
+
+            newTree = this.CreateNewTreeEntry(knownStratum, assumedSG, assumedTDV, (PlotVM)null, true);
+
+            viewController.ShowCruiserSelection(newTree);
+
+            newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied 
+            newTree.TrySave();
+
+            //this.OnTally();
+
+            return newTree;
+        }
+
         public TreeVM CreateNewTreeEntry(CountTreeVM count)
         {
             return CreateNewTreeEntry(count, null, true);
@@ -157,6 +204,15 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        protected void SaveSampleGroups()
+        {
+            foreach (SampleGroupVM sg in this.SampleGroups)
+            {
+                sg.SerializeSamplerState();
+                sg.Save();
+            }
+        }
+
         public void SaveTrees()
         {
             var worker = new SaveTreesWorker(this.DAL, this.TreeList);
@@ -175,15 +231,6 @@ namespace FSCruiser.Core.Models
             worker.TrySaveAllAsync();
         }
 
-
-        protected void SaveSampleGroups()
-        {
-            foreach (SampleGroupVM sg in this.SampleGroups)
-            {
-                sg.SerializeSamplerState();
-                sg.Save();
-            }
-        }
         #endregion
 
         public override string ToString()

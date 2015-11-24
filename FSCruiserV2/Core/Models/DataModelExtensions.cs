@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.DataObjects;
+using System.Diagnostics;
 
 namespace FSCruiser.Core.Models
 {
@@ -24,6 +25,33 @@ namespace FSCruiser.Core.Models
             }
 
             return mode;
+        }
+
+        public static IList<StratumVM> GetTreeBasedStrata(this CuttingUnitDO unit)
+        {
+            Debug.Assert(unit != null);
+            Debug.Assert(unit.DAL != null);
+
+            IList<StratumVM> list = unit.DAL.Read<StratumVM>("Stratum",
+@"JOIN CuttingUnitStratum USING (Stratum_CN) 
+WHERE CuttingUnitStratum.CuttingUnit_CN = ? 
+AND Method IN ( '100', 'STR', '3P', 'S3P')", unit.CuttingUnit_CN);
+
+            foreach (StratumVM s in list)
+            {
+                s.LoadTreeFieldNames();
+            }
+            return list;
+        }
+
+        public static IList<StratumVM> GetPlotStrata(this CuttingUnitDO unit)
+        {
+            IList<StratumVM> list = unit.DAL.Read<StratumVM>("Stratum",
+@"JOIN CuttingUnitStratum USING (Stratum_CN) 
+WHERE CuttingUnitStratum.CuttingUnit_CN = ? 
+AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", unit.CuttingUnit_CN);
+            
+            return list;
         }
     }
 
@@ -153,7 +181,40 @@ namespace FSCruiser.Core.Models
 
     public static class TreeExtensions
     {
-        public static object GetSGList(this TreeVM tree)
+        public static CountTreeVM FindCountRecord(this TreeDO tree)
+        {
+            return tree.DAL.ReadSingleRow<CountTreeVM>(CruiseDAL.Schema.COUNTTREE._NAME,
+                "WHERE SampleGroup_CN = ? AND CuttingUnit_CN = ? AND (TreeDefaultValue_CN = ? or ifnull(TreeDefaultValue_CN, 0) = 0)"
+                ,tree.SampleGroup_CN
+                ,tree.CuttingUnit_CN
+                ,tree.TreeDefaultValue_CN);
+        }
+
+        public static int ReadHighestLogNumber(this TreeDO tree)
+        {
+            long? value = (long?)tree.DAL.ExecuteScalar(
+                String.Format("SELECT MAX(CAST(LogNumber AS NUMERIC)) FROM Log WHERE Tree_CN = {0};"
+                , tree.Tree_CN));
+            if (value.HasValue)
+            {
+                return (int)value.Value;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public static IList<LogDO> QueryLogs(this TreeDO tree) 
+        {
+            return tree.DAL.Query<LogDO>("WHERE Log.Tree_CN = ? ORDER BY CAST (LogNumber AS NUMERIC) "
+                ,(object)tree.Tree_CN);
+
+            //return tree.DAL.Read<LogDO>("WHERE Log.Tree_CN = ? ORDER BY CAST (LogNumber AS NUMERIC) "
+            //    ,(object)tree.Tree_CN);
+        }
+
+        public static object ReadValidSampleGroups(this TreeVM tree)
         {
             if (tree.Stratum == null)
             {
@@ -163,7 +224,7 @@ namespace FSCruiser.Core.Models
             return tree.DAL.Read<SampleGroupVM>("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN);
         }
 
-        public static ICollection<TreeDefaultValueDO> GetTDVList(this TreeVM tree)
+        public static ICollection<TreeDefaultValueDO> ReadValidTDVs(this TreeVM tree)
         {
             if (tree == null) { return Constants.EMPTY_SPECIES_LIST; }
             if (tree.Stratum == null)

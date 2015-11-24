@@ -253,7 +253,8 @@ namespace FSCruiser.WinForms.DataEntry
         {
             try
             {
-                if (!this.Controller.EnsureTreeNumberAvalible(newTreeNumber))
+
+                if (!this.DataEntryController.Unit.IsTreeNumberAvalible(newTreeNumber))
                 {
                     cancel = true;
                     return;
@@ -364,7 +365,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             TreeVM tree = this._BS_trees[e.RowNumber] as TreeVM;
             if (tree == null) { return; }
-            this.Controller.ShowLogs(tree);
+            this.DataEntryController.ShowLogs(tree);
         }
 
         private TreeVM GetNewTree()
@@ -378,7 +379,13 @@ namespace FSCruiser.WinForms.DataEntry
                 assumedSt = prevTree.Stratum;
             }
 
-            return Controller.UserAddTree(prevTree, assumedSt, null);
+            var newTree = this.DataEntryController.Unit.UserAddTree(prevTree
+                , assumedSt
+                , this.DataEntryController.ViewController);
+            this.DataEntryController.Controller.OnTally();
+            return newTree;
+
+            //return Controller.UserAddTree(prevTree, assumedSt, null);
         }
 
         public TreeVM UserAddTree()
@@ -412,7 +419,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_speciesColumn != null)
             {
-                _speciesColumn.DataSource = tree.GetTDVList();
+                _speciesColumn.DataSource = tree.ReadValidTDVs();
             }
         }
 
@@ -420,7 +427,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = tree.GetSGList();
+                _sgColumn.DataSource = tree.ReadValidSampleGroups();
             }
         }
 
@@ -428,7 +435,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_stratumColumn != null)
             {
-                _stratumColumn.DataSource = Controller.GetUnitTreeBasedStrata();
+                _stratumColumn.DataSource = DataEntryController.Unit.GetTreeBasedStrata();
             }
         }
         protected override void Dispose(bool disposing)
@@ -511,7 +518,8 @@ namespace FSCruiser.WinForms.DataEntry
                     MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button2))
                 {
-                    Controller.DeleteTree(curTree);
+                    curTree.Delete();
+                    //Controller.DeleteTree(curTree);
                 }
             }
             

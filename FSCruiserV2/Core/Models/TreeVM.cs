@@ -119,11 +119,11 @@ namespace FSCruiser.Core.Models
 
         
 
-        public override PlotDO GetPlot()
-        {
-            if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<PlotVM>(CruiseDAL.Schema.PLOT._NAME, this.Plot_CN);
-        }
+        //public override PlotDO GetPlot()
+        //{
+        //    if (DAL == null) { return null; }
+        //    return DAL.ReadSingleRow<PlotVM>(CruiseDAL.Schema.PLOT._NAME, this.Plot_CN);
+        //}
 
         private int cachedLogCount = -1;
         public int LogCount

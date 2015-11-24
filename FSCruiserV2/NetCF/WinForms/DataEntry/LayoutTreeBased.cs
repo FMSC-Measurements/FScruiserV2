@@ -80,7 +80,7 @@ namespace FSCruiser.WinForms.DataEntry
         private void PopulateStrata(CuttingUnitVM unit)
         {
             //unit.Strata.Populate();
-            Strata = Controller.GetUnitTreeBasedStrata();
+            Strata = DataEntryController.Unit.GetTreeBasedStrata();
             foreach (StratumVM stratum in this.Strata)
             {
                 if (stratum.Method == CruiseDAL.Schema.Constants.CruiseMethods.H_PCT) { continue; }
