@@ -13,7 +13,7 @@ namespace FSCruiser.Core.Models
     {
         private ListChangedEventHandler onListChanged;
 
-        private LinkedList<TallyAction> _tallyActions;
+        //private LinkedList<TallyAction> _tallyActions = new LinkedList<TallyAction>();
         protected CuttingUnitVM _unit;
 
         public TallyHistoryCollection(CuttingUnitVM unit)
@@ -29,7 +29,7 @@ namespace FSCruiser.Core.Models
                 {
                     foreach (TallyAction action in this.DeserializeTallyHistory(_unit.TallyHistory))
                     {
-                        _tallyActions.AddLast(action);
+                        base.AddLast(action);
                     }
                 }
                 catch (Exception e)
@@ -73,12 +73,12 @@ namespace FSCruiser.Core.Models
             }
 
 
-            if (_tallyActions.Count >= Constants.MAX_TALLY_HISTORY_SIZE)
+            if (base.Count >= Constants.MAX_TALLY_HISTORY_SIZE)
             {
-                _tallyActions.RemoveFirst();
+                base.RemoveFirst();
             }
             action.Time = DateTime.Now.ToString("hh:mm");
-            _tallyActions.AddLast(action);
+            base.AddLast(action);
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         }
 
@@ -86,7 +86,7 @@ namespace FSCruiser.Core.Models
         {
             if (action != null)
             {
-                if (_tallyActions.Remove(action))
+                if (base.Remove(action))
                 {
                     action.Count.TreeCount--;
                     //action.Sampler.Count -= 1;
@@ -111,8 +111,8 @@ namespace FSCruiser.Core.Models
             using (StringWriter writer = new StringWriter())
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(TallyAction[]));
-                TallyAction[] array = new TallyAction[_tallyActions.Count];
-                _tallyActions.CopyTo(array, 0);
+                TallyAction[] array = new TallyAction[base.Count];
+                base.CopyTo(array, 0);
                 serializer.Serialize(writer, array);
                 return writer.ToString();
             }
