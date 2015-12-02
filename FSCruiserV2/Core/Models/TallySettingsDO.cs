@@ -12,6 +12,7 @@ namespace FSCruiser.Core.Models
     /// <summary>
     /// What is the purpose of this class? It is a place holder of sorts. I figure that the CountTree table needs to be broken up into seperate data/settings tables
     /// </summary>
+    /// TODO this class probably doen't need to inharet from DataObject
     [SQLEntity(SourceName = "CountTree")]
     public class TallySettingsDO : DataObject
     {
@@ -36,21 +37,10 @@ namespace FSCruiser.Core.Models
         public long? Tally_CN { get; set; }
 
 
-
-
-        //public override RowValidator Validator
-        //{
-        //    get { throw new NotImplementedException(); }
-        //}
-
-        //protected override bool DoValidate()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         public override void SetValues(DataObject obj)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
+            //throw new NotImplementedException();
         }
     }
 }

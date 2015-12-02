@@ -52,7 +52,7 @@ namespace FSCruiser.Core
             _unit.TallyHistoryBuffer.Initialize();
 
 
-            InitializeUnitTreeList();
+            InitializeNonPlotTrees();
             //create a list of just trees in tree based strata
             List<TreeVM> nonPlotTrees = _unit.DAL.Read<TreeVM>(@"JOIN Stratum ON Tree.Stratum_CN = Stratum.Stratum_CN WHERE Tree.CuttingUnit_CN = ? AND
                         (Stratum.Method = '100' OR Stratum.Method = 'STR' OR Stratum.Method = '3P' OR Stratum.Method = 'S3P') ORDER BY TreeNumber",
@@ -92,11 +92,13 @@ namespace FSCruiser.Core
             }
         }
 
-        public void InitializeUnitTreeList()
+        public void InitializeNonPlotTrees()
         {
-            //create a list of all trees in the unit
-            _unit.TreeList = _unit.DAL.Read<TreeVM>("WHERE CuttingUnit_CN = ?", (object)_unit.CuttingUnit_CN);
-            //this.InternalValiateTrees((ICollection<TreeVM>)this.CurrentUnitTreeList);
+            //create a list of just trees in tree based strata
+            List<TreeVM> nonPlotTrees = _unit.DAL.Read<TreeVM>(@"JOIN Stratum ON Tree.Stratum_CN = Stratum.Stratum_CN WHERE Tree.CuttingUnit_CN = ? AND
+                        (Stratum.Method = '100' OR Stratum.Method = 'STR' OR Stratum.Method = '3P' OR Stratum.Method = 'S3P') ORDER BY TreeNumber",
+                        (object)_unit.CuttingUnit_CN);
+            _unit.NonPlotTrees = new BindingList<TreeVM>(nonPlotTrees);
             _unit.ValidateTreesAsync();
         }
     }

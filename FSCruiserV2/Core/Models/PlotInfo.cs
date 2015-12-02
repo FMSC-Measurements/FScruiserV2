@@ -109,9 +109,7 @@ namespace FSCruiser.Core.Models
                 foreach (TreeVM tree in this.Trees)
                 {
                     tree.Delete();
-                    Debug.Assert(this.CuttingUnit.TreeList.Contains(tree));
-                    this.CuttingUnit.TreeList.Remove(tree);
-
+                    
                     //TreeDO.RecursiveDeleteTree(tree);
                 }
                 base.Delete();
@@ -188,8 +186,8 @@ namespace FSCruiser.Core.Models
 
             newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied 
             newTree.TrySave();
+            this.AddTree(newTree);
 
-            //this.OnTally();
 
             return newTree;
 
@@ -197,13 +195,13 @@ namespace FSCruiser.Core.Models
 
         public TreeVM CreateNewTreeEntry(CountTreeVM count, bool isMeasure)
         {
-            return this.CuttingUnit.CreateNewTreeEntry(this.Stratum, count.SampleGroup, count.TreeDefaultValue, this, isMeasure);
+            return this.CreateNewTreeEntry(count.SampleGroup, count.TreeDefaultValue, isMeasure);
         }
 
         public TreeVM CreateNewTreeEntry(SampleGroupVM sg, TreeDefaultValueDO tdv, bool isMeasure)
         {
             Debug.Assert(this.CuttingUnit != null);
-            var newTree = this.CuttingUnit.CreateNewTreeEntry(this.Stratum, sg, tdv, this, isMeasure);
+            var newTree = this.CuttingUnit.CreateNewTreeEntryInternal(this.Stratum, sg, tdv, isMeasure);
 
             newTree.Plot = this;
             newTree.TreeNumber = this.NextPlotTreeNum + 1;
@@ -212,11 +210,19 @@ namespace FSCruiser.Core.Models
             return newTree;
         }
 
+        public void AddTree(TreeVM tree)
+        {
+            lock (((System.Collections.ICollection)Trees).SyncRoot)
+            {
+                this.Trees.Add(tree);
+            }
+        }
+
         public void DeleteTree(TreeVM tree)
         {
             tree.Delete();
             //TreeDO.RecursiveDeleteTree(tree);
-            this.CuttingUnit.TreeList.Remove(tree);
+            //this.CuttingUnit.TreeList.Remove(tree);
             this.Trees.Remove(tree);
         }
 

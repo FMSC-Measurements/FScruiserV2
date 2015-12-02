@@ -220,6 +220,7 @@ namespace FSCruiser.Core.DataEntry
                     tree = Unit.CreateNewTreeEntry(count);
                     tree.STM = "Y";
                     tree.TrySave();
+                    Unit.AddNonPlotTree(tree);
                     action.TreeRecord = tree;
                 }
                 else
@@ -258,13 +259,15 @@ namespace FSCruiser.Core.DataEntry
         private void OnSample(TallyAction action, CountTreeVM count, int kpi, bool isInsurance)
         {
             TreeVM tree;
-            tree = Unit.CreateNewTreeEntry(count, null, !isInsurance);
+            tree = Unit.CreateNewTreeEntry(count, !isInsurance);
             tree.KPI = kpi;
             tree.CountOrMeasure = (isInsurance) ? "I" : "M";
 
             //TODO signal sample tree
             //ask cruiser initials 
             tree.TrySave();
+            Unit.AddNonPlotTree(tree);
+
             action.TreeRecord = tree;
 
             if (!isInsurance && this.AskEnterMeasureTreeData())
@@ -276,7 +279,6 @@ namespace FSCruiser.Core.DataEntry
             {
                 this.ViewController.SignalInsuranceTree();
             }
-            throw new NotImplementedException();
         }
 
         private void OnSample(TallyAction action, CountTreeVM count, bool isInsurance)
@@ -289,6 +291,8 @@ namespace FSCruiser.Core.DataEntry
             //ask cruiser initials 
             tree.TrySave();
 
+            Unit.AddNonPlotTree(tree);
+
             if (!isInsurance && this.AskEnterMeasureTreeData())
             {
                 this.View.GotoTreePage();
@@ -298,12 +302,13 @@ namespace FSCruiser.Core.DataEntry
             {
                 this.ViewController.SignalInsuranceTree();
             }
-            throw new NotImplementedException();
         }
 
 
         public void OnTally(CountTreeVM count, PlotVM plot, ITreeView treeView)
         {
+            System.Diagnostics.Debug.Assert(plot != null);
+
             SampleGroupDO sg = count.SampleGroup;
             //if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
             //{
@@ -348,30 +353,29 @@ namespace FSCruiser.Core.DataEntry
                         if (item.IsInsuranceItem)
                         {
                             this.ViewController.SignalInsuranceTree();
-                            tree = Unit.CreateNewTreeEntry(count, plot, true);
+                            tree = plot.CreateNewTreeEntry(count, true);
                             tree.CountOrMeasure = "I";
                         }
                         else
                         {
                             this.ViewController.SignalMeasureTree(true);
-                            tree = Unit.CreateNewTreeEntry(count, plot, true);
+                            tree = plot.CreateNewTreeEntry(count, true);
                             //tree.CountOrMeasure = "M";
 
                         }
                     }
                     else
                     {
-                        tree = Unit.CreateNewTreeEntry(count, plot, false);
+                        tree = plot.CreateNewTreeEntry(count, false);
                         //tree.CountOrMeasure = "C";
                     }
                     tree.KPI = kpi;
                 }
                 else
                 {
-                    tree = Unit.CreateNewTreeEntry(count, plot, true);
+                    tree = plot.CreateNewTreeEntry(count, true);
                     tree.STM = "Y";
                 }
-                //tree.TreeNumber = CurrentPlotInfo.NextPlotTreeNum++;
 
             }
             else
@@ -383,19 +387,19 @@ namespace FSCruiser.Core.DataEntry
                 if (item != null && !item.IsInsuranceItem)
                 {
                     this.ViewController.SignalMeasureTree(true);
-                    tree = Unit.CreateNewTreeEntry(count, plot, true);
+                    tree = plot.CreateNewTreeEntry(count, true);
                     //tree.CountOrMeasure = "M";
 
                 }
                 else if (item != null && item.IsInsuranceItem)
                 {
                     this.ViewController.SignalInsuranceTree();
-                    tree = Unit.CreateNewTreeEntry(count, plot, true);
+                    tree = plot.CreateNewTreeEntry(count, true);
                     tree.CountOrMeasure = "I";
                 }
                 else
                 {
-                    tree = Unit.CreateNewTreeEntry(count, plot, false);
+                    tree = plot.CreateNewTreeEntry(count, false);
                 }
                 
 
@@ -403,12 +407,15 @@ namespace FSCruiser.Core.DataEntry
 
             tree.TreeCount = 1;
             tree.TrySave();
-            treeView.Trees.Add(tree);
+
+            plot.AddTree(tree);
+
+            //treeView.Trees.Add(tree);
             treeView.MoveLast();
             //this._dataGrid.CurrentColumnIndex = this._dataGrid.HomeColumnIndex;
 
             //count.TreeCount++;//TODO double check the rules for tree counts on plots 
-            this.Controller.OnTally();
+            //this.Controller.OnTally();
 
         }
 

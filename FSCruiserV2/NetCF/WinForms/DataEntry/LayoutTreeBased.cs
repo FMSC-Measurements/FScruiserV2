@@ -349,15 +349,13 @@ namespace FSCruiser.WinForms.DataEntry
             Button button = (Button)sender;
             SubPop subPop = (SubPop)button.Tag;
 
-            var tree = DataEntryController.Unit.CreateNewTreeEntry(subPop.SG.Stratum, subPop.SG, subPop.TDV, null, true);
-
+            var tree = DataEntryController.Unit.CreateNewTreeEntry(subPop.SG.Stratum, subPop.SG, subPop.TDV, true);
             tree.TreeCount = 1;
 
             this.Controller.ViewController.ShowCruiserSelection(tree);
 
-            //tree.CountOrMeasure = "M";
+            DataEntryController.Unit.AddNonPlotTree(tree);
             DataEntryForm.GotoTreePage();
-            Controller.OnTally();
         }
 
         public bool HandleHotKeyFirst(char key)

@@ -9,7 +9,8 @@ namespace FSCruiser.Core.Models
 {
     public class CuttingUnitVM : CuttingUnitDO
     {
-        private int _talliesSinceLastSave = 0;
+        protected const int TREE_SAVE_INTERVAL = 10;
+        private int _treesAddedSinceLastSave = 0;
         
         private Thread _saveTreesWorkerThread;
         
@@ -18,7 +19,7 @@ namespace FSCruiser.Core.Models
 
         public StratumVM DefaultStratum { get; set; }
         public List<SampleGroupVM> SampleGroups { get; set; }
-        public List<TreeVM> TreeList { get; set; }
+        //public List<TreeVM> TreeList { get; set; }
         public IList<TreeVM> NonPlotTrees { get; set; }
         public TallyHistoryCollection TallyHistoryBuffer { get; set; }
 
@@ -91,34 +92,40 @@ namespace FSCruiser.Core.Models
                 }
             }
 
-            newTree = this.CreateNewTreeEntry(knownStratum, assumedSG, assumedTDV, (PlotVM)null, true);
+            newTree = this.CreateNewTreeEntry(knownStratum, assumedSG, assumedTDV, true);
+            newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied 
 
             viewController.ShowCruiserSelection(newTree);
 
-            newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied 
             newTree.TrySave();
-
-            //this.OnTally();
+            this.AddNonPlotTree(newTree);
 
             return newTree;
         }
 
         public TreeVM CreateNewTreeEntry(CountTreeVM count)
         {
-            return CreateNewTreeEntry(count, null, true);
+            return CreateNewTreeEntry(count, true);
         }
 
-        public TreeVM CreateNewTreeEntry(CountTreeVM count, PlotVM plot, bool isMeasure)
+        public TreeVM CreateNewTreeEntry(CountTreeVM count, bool isMeasure)
         {
-            return CreateNewTreeEntry(count.SampleGroup.Stratum, count.SampleGroup, count.TreeDefaultValue, plot, isMeasure);
+            return CreateNewTreeEntry(count.SampleGroup.Stratum, count.SampleGroup, count.TreeDefaultValue, isMeasure);
         }
 
-        public TreeVM CreateNewTreeEntry(StratumVM stratum, SampleGroupVM sg, TreeDefaultValueDO tdv, PlotVM plot, bool isMeasure)
+        public TreeVM CreateNewTreeEntry(StratumVM stratum, SampleGroupVM sg, TreeDefaultValueDO tdv, bool isMeasure)
+        {
+            var tree = CreateNewTreeEntryInternal(stratum, sg, tdv, isMeasure);
+            tree.TreeNumber = GetNextNonPlotTreeNumber();
+            return tree;
+        }
+
+        internal TreeVM CreateNewTreeEntryInternal(StratumVM stratum, SampleGroupVM sg, TreeDefaultValueDO tdv, bool isMeasure)
         {
             TreeVM newTree = new TreeVM(this.DAL);
             newTree.TreeCount = 0;
             newTree.CountOrMeasure = (isMeasure) ? "M" : "C";
-            newTree.CuttingUnit = this; 
+            newTree.CuttingUnit = this;
 
             if (sg != null)
             {
@@ -138,35 +145,32 @@ namespace FSCruiser.Core.Models
                 newTree.SetTreeTDV(tdv);
             }
 
-            if (plot != null)
-            {
-                newTree.Plot = plot;
-                newTree.TreeNumber = plot.NextPlotTreeNum + 1;
-                newTree.TreeCount = 1;
-            }
-            else
-            {
-                newTree.TreeNumber = GetNextNonPlotTreeNumber();
-                this.NonPlotTrees.Add(newTree);
-            }
-
-            lock (((System.Collections.ICollection)this.TreeList).SyncRoot)
-            {
-                this.TreeList.Add(newTree);
-            }
-
             newTree.Validate();
             //newTree.Save();
 
             return newTree;
         }
 
+        public void AddNonPlotTree(TreeVM tree)
+        {
+            lock (((System.Collections.ICollection)this.NonPlotTrees).SyncRoot)
+            {
+                this.NonPlotTrees.Add(tree);
+            }
+            _treesAddedSinceLastSave++;
+            if (_treesAddedSinceLastSave >= TREE_SAVE_INTERVAL)
+            {
+                this.TrySaveTreesAsync();
+            }
+        }
+
+
         public void DeleteTree(TreeVM tree)
         {
             //ReleaseUnitTreeNumber((int)tree.TreeNumber);
             tree.Delete();
             //TreeDO.RecursiveDeleteTree(tree);
-            TreeList.Remove(tree);
+            //TreeList.Remove(tree);
             this.NonPlotTrees.Remove(tree);
         }
         #endregion
@@ -174,13 +178,13 @@ namespace FSCruiser.Core.Models
         #region validate trees
         public bool ValidateTrees()
         {
-            var worker = new TreeValidationWorker(this.TreeList);
+            var worker = new TreeValidationWorker(this.NonPlotTrees);
             return worker.ValidateTrees();
         }
 
         public void ValidateTreesAsync()
         {
-            var worker = new TreeValidationWorker(this.TreeList);
+            var worker = new TreeValidationWorker(this.NonPlotTrees);
             worker.ValidateTreesAsync();
         }
         #endregion
@@ -215,20 +219,24 @@ namespace FSCruiser.Core.Models
 
         public void SaveTrees()
         {
-            var worker = new SaveTreesWorker(this.DAL, this.TreeList);
+            
+            var worker = new SaveTreesWorker(this.DAL, this.NonPlotTrees);
             worker.SaveAll();
+            _treesAddedSinceLastSave = 0;
         }
 
         public void TrySaveTrees()
         {
-            var worker = new SaveTreesWorker(this.DAL, this.TreeList);
+            var worker = new SaveTreesWorker(this.DAL, this.NonPlotTrees);
             worker.TrySaveAll();
+            _treesAddedSinceLastSave = 0;
         }
 
         public void TrySaveTreesAsync()
         {
-            var worker = new SaveTreesWorker(this.DAL, this.TreeList);
+            var worker = new SaveTreesWorker(this.DAL, this.NonPlotTrees);
             worker.TrySaveAllAsync();
+            _treesAddedSinceLastSave = 0;
         }
 
         #endregion

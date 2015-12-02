@@ -16,10 +16,12 @@ namespace FSCruiser.Core
         public TreeValidationWorker(ICollection<TreeVM> trees)
         {
             Debug.Assert(trees != null);
-
-            TreeVM[] copy = new TreeVM[trees.Count];
-            trees.CopyTo(copy, 0);
-            this._treesLocal = copy;
+            lock (((System.Collections.ICollection)trees).SyncRoot)
+            {
+                TreeVM[] copy = new TreeVM[trees.Count];
+                trees.CopyTo(copy, 0);
+                this._treesLocal = copy;
+            }
         }
 
         public void ValidateTreesAsync()

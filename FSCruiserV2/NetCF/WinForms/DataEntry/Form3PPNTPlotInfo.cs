@@ -204,9 +204,10 @@ namespace FSCruiser.WinForms.DataEntry
                 throw e;
             }
 
-            foreach (TreeVM t in newTrees)
+            foreach (TreeVM tree in newTrees)
             {
-                this._currentPlotInfo.Trees.Add(t);
+                this._currentPlotInfo.AddTree(tree);
+                //this._currentPlotInfo.Trees.Add(tree);
             }
         }
 

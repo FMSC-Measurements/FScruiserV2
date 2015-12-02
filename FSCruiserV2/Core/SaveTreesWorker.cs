@@ -7,6 +7,7 @@ using FSCruiser.Core.Models;
 using System.Diagnostics;
 using CruiseDAL;
 
+
 namespace FSCruiser.Core
 {
     class SaveTreesWorker
@@ -21,11 +22,13 @@ namespace FSCruiser.Core
             Debug.Assert(trees != null);
 
             _datastore = datastore;
-
-            //create a local copy of tree collection
-            TreeVM[] a = new TreeVM[trees.Count];
-            trees.CopyTo(a, 0);
-            _trees = a;
+            lock (((System.Collections.ICollection)trees).SyncRoot)
+            {
+                //create a local copy of tree collection
+                TreeVM[] a = new TreeVM[trees.Count];
+                trees.CopyTo(a, 0);
+                _trees = a;
+            }
         }
 
         //private void SaveTreesAsync()
