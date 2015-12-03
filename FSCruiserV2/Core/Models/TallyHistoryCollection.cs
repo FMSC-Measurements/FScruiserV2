@@ -9,15 +9,19 @@ using System.ComponentModel;
 
 namespace FSCruiser.Core.Models
 {
-    public class TallyHistoryCollection : LinkedList<TallyAction>, System.ComponentModel.IBindingList
+    public class TallyHistoryCollection : List<TallyAction>, System.ComponentModel.IBindingList
     {
+        private object syncLock = new object();
         private ListChangedEventHandler onListChanged;
 
         //private LinkedList<TallyAction> _tallyActions = new LinkedList<TallyAction>();
         protected CuttingUnitVM _unit;
 
-        public TallyHistoryCollection(CuttingUnitVM unit)
+        public int MaxSize { get; protected set; }
+
+        public TallyHistoryCollection(CuttingUnitVM unit, int maxSize)
         {
+            this.MaxSize = maxSize;
             this._unit = unit;
         }
 
@@ -25,18 +29,46 @@ namespace FSCruiser.Core.Models
         {
             if (!String.IsNullOrEmpty(_unit.TallyHistory))
             {
-                try
+                foreach (TallyAction action in this.DeserializeTallyHistory(_unit.TallyHistory))
                 {
-                    foreach (TallyAction action in this.DeserializeTallyHistory(_unit.TallyHistory))
-                    {
-                        base.AddLast(action);
-                    }
+                    Add(action);
                 }
-                catch (Exception e)
-                {
-                    throw new TallyHistoryPersistanceException("Unable to load tally history", e);
+            }
+        }
 
-                    //this.HandleNonCriticalException(e, "Unable to load tally history");
+
+
+        public new void Add(TallyAction action)
+        {
+            if (action.KPI != 0)
+            {
+                TreeEstimateDO te = new TreeEstimateDO(_unit.DAL);
+                te.KPI = action.KPI;
+                te.CountTree = action.Count;
+                action.TreeEstimate = te;
+                te.Save();
+            }
+            action.Time = DateTime.Now.ToString("hh:mm");
+
+            lock (syncLock)
+            {
+                base.Add(action);
+                if (base.Count > MaxSize)
+                {
+
+                    while (base.Count > MaxSize)
+                    {
+                        try
+                        {
+                            base.RemoveAt(0);
+                        }
+                        catch { }//do nothing
+                    }
+                    OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+                }
+                else
+                {
+                    OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, base.Count - 1));
                 }
             }
         }
@@ -61,33 +93,17 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public void AddTallyAction(TallyAction action)
+        
+
+        public new bool Remove(TallyAction action)
         {
-            if (action.KPI != 0)
+            lock (syncLock)
             {
-                TreeEstimateDO te = new TreeEstimateDO(_unit.DAL);
-                te.KPI = action.KPI;
-                te.CountTree = action.Count;
-                action.TreeEstimate = te;
-                te.Save();
-            }
 
-
-            if (base.Count >= Constants.MAX_TALLY_HISTORY_SIZE)
-            {
-                base.RemoveFirst();
-            }
-            action.Time = DateTime.Now.ToString("hh:mm");
-            base.AddLast(action);
-            OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
-        }
-
-        public void Untally(TallyAction action)
-        {
-            if (action != null)
-            {
-                if (base.Remove(action))
+                int itemIndex = base.IndexOf(action);
+                if (itemIndex != -1)
                 {
+                    base.RemoveAt(itemIndex);
                     action.Count.TreeCount--;
                     //action.Sampler.Count -= 1;
                     if (action.KPI > 0)
@@ -100,11 +116,61 @@ namespace FSCruiser.Core.Models
                     {
                         _unit.DeleteTree(action.TreeRecord);
                     }
-                    OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, base.Count)); 
+                    OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, itemIndex));
+                    return true;
                 }
-
+                else
+                {
+                    return false;
+                }
             }
         }
+
+        //public void AddTallyAction(TallyAction action)
+        //{
+        //    if (action.KPI != 0)
+        //    {
+        //        TreeEstimateDO te = new TreeEstimateDO(_unit.DAL);
+        //        te.KPI = action.KPI;
+        //        te.CountTree = action.Count;
+        //        action.TreeEstimate = te;
+        //        te.Save();
+        //    }
+        //    action.Time = DateTime.Now.ToString("hh:mm");
+        //    Add(action);
+
+
+        //    OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+        //}
+
+        //public void Untally(TallyAction action)
+        //{
+        //    if (action == null){return;}
+
+        //    lock (syncLock)
+        //    {
+        //        int itemIndex = base.IndexOf(action);
+        //        if (itemIndex != -1)
+        //        {
+        //            base.RemoveAt(itemIndex);
+        //            action.Count.TreeCount--;
+        //            //action.Sampler.Count -= 1;
+        //            if (action.KPI > 0)
+        //            {
+        //                action.Count.SumKPI -= action.KPI;
+        //                action.TreeEstimate.Delete();
+        //            }
+
+        //            if (action.TreeRecord != null)
+        //            {
+        //                _unit.DeleteTree(action.TreeRecord);
+        //            }
+        //            OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, itemIndex));
+        //        }
+        //    }
+
+
+        //}
 
         protected string SerializeTallyHistory()
         {
@@ -141,9 +207,11 @@ namespace FSCruiser.Core.Models
                     action.PopulateData(_unit.DAL);
                 }
             }
-            catch
+            catch(Exception e)
             {
-                //do nothing
+                throw new TallyHistoryPersistanceException("Unable to load tally history", e);
+
+                //this.HandleNonCriticalException(e, "Unable to load tally history");
             }
 
             return tallyHistory;
@@ -250,69 +318,5 @@ namespace FSCruiser.Core.Models
         #endregion
         #endregion
 
-        #region IList Members
-
-        int System.Collections.IList.Add(object value)
-        {
-            if (value is TallyAction == false) return -1;
-            base.AddLast(value as TallyAction);
-            return base.Count;
-        }
-
-        void System.Collections.IList.Clear()
-        {
-            base.Clear();
-        }
-
-        bool System.Collections.IList.Contains(object value)
-        {
-            return base.Contains(value as TallyAction);
-        }
-
-        bool System.Collections.IList.IsFixedSize
-        {
-            get { return false; ; }
-        }
-
-        bool System.Collections.IList.IsReadOnly
-        {
-            get { return true; }
-        }
-
-        void System.Collections.IList.Remove(object value)
-        {
-            base.Remove(value as TallyAction);
-        }
-
-        #region unsupported IList Members
-        int System.Collections.IList.IndexOf(object value)
-        {
-            throw new NotSupportedException();
-        }
-
-        void System.Collections.IList.Insert(int index, object value)
-        {
-            throw new NotSupportedException();
-        }
-
-        void System.Collections.IList.RemoveAt(int index)
-        {
-            throw new NotSupportedException();
-        }
-
-        object System.Collections.IList.this[int index]
-        {
-            get
-            {
-                throw new NotSupportedException();
-            }
-            set
-            {
-                throw new NotSupportedException();
-            }
-        }
-        #endregion
-
-        #endregion
     }
 }

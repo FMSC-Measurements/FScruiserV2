@@ -249,7 +249,7 @@ namespace FSCruiser.Core.DataEntry
             }
 
             count.TreeCount++;
-            Unit.TallyHistoryBuffer.AddTallyAction(action);
+            Unit.TallyHistoryBuffer.Add(action);
             //this._BS_tallyHistory.MoveLast();
             Controller.OnTally();
 

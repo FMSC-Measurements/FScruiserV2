@@ -48,7 +48,7 @@ namespace FSCruiser.Core
 
             InitializeSampleGroups();
             //InitializeUnitTreeNumIndex();
-            _unit.TallyHistoryBuffer = new TallyHistoryCollection(_unit);
+            _unit.TallyHistoryBuffer = new TallyHistoryCollection(_unit, Constants.MAX_TALLY_HISTORY_SIZE);
             _unit.TallyHistoryBuffer.Initialize();
 
 
