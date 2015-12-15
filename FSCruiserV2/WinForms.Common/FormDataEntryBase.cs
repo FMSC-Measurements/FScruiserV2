@@ -83,10 +83,13 @@ namespace FSCruiser.WinForms.Common
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-            //if (e.Handled) { return; }
+            if (e.Handled) { return; }
 
-            //char key = (char)e.KeyValue;
-
+            char key = (char)e.KeyValue;
+            if (e.KeyCode == Keys.Escape)
+            {
+                e.Handled = true;
+            }
             //if (this._pageContainer != null)
             //{
             //    if (e.KeyCode == Keys.Escape &&

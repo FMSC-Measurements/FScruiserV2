@@ -15,7 +15,7 @@ THEN tally bar is not visable //pass
 
 GIVEN tally bar is not visable
 WHEN user presses 'ESC'
-THEN tally bar is visable //fail
+THEN tally bar is visable //pass
 
 
 GIVEN tally bar is visable 

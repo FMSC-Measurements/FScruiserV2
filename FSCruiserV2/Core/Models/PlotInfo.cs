@@ -89,13 +89,13 @@ namespace FSCruiser.Core.Models
         public override StratumDO GetStratum()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<StratumVM>(STRATUM._NAME, this.Stratum_CN);
+            return DAL.ReadSingleRow<StratumVM>(this.Stratum_CN);
         }
 
         public override CuttingUnitDO GetCuttingUnit()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<CuttingUnitVM>(CUTTINGUNIT._NAME, this.CuttingUnit_CN);
+            return DAL.ReadSingleRow<CuttingUnitVM>(this.CuttingUnit_CN);
         }
 
         public override void Delete()
@@ -127,7 +127,10 @@ namespace FSCruiser.Core.Models
         {
             if (!_isDataLoaded)
             {
-                List<TreeVM> tList = base.DAL.Read<TreeVM>("Tree", "WHERE Stratum_CN = ? AND CuttingUnit_CN = ? AND Plot_CN = ? ORDER BY TreeNumber", base.Stratum.Stratum_CN, base.CuttingUnit.CuttingUnit_CN, base.Plot_CN);
+                List<TreeVM> tList = base.DAL.Read<TreeVM>("WHERE Stratum_CN = ? AND CuttingUnit_CN = ? AND Plot_CN = ? ORDER BY TreeNumber"
+                    , base.Stratum.Stratum_CN
+                    , base.CuttingUnit.CuttingUnit_CN
+                    , base.Plot_CN);
                 this._trees = new BindingList<TreeVM>(tList);
 
                 //long? value = base.DAL.ExecuteScalar(String.Format("Select MAX(TreeNumber) FROM Tree WHERE Plot_CN = {0}", base.Plot_CN)) as long?;
@@ -165,7 +168,7 @@ namespace FSCruiser.Core.Models
             //extrapolate sample group
             if (assumedSG == null)//if we have a stratum but no sample group, pick the first one
             {
-                List<SampleGroupVM> samplegroups = this.DAL.Read<SampleGroupVM>("SampleGroup", "WHERE Stratum_CN = ?", 
+                List<SampleGroupVM> samplegroups = this.DAL.Read<SampleGroupVM>("WHERE Stratum_CN = ?", 
                     this.Stratum.Stratum_CN);
                 if (samplegroups.Count == 1)
                 {

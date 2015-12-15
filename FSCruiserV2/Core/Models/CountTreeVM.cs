@@ -32,7 +32,7 @@ namespace FSCruiser.Core.Models
         public override SampleGroupDO GetSampleGroup()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<SampleGroupVM>(SAMPLEGROUP._NAME, this.SampleGroup_CN);
+            return DAL.ReadSingleRow<SampleGroupVM>(this.SampleGroup_CN);
         }
 
         public long GetCountsFromTrees()

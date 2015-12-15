@@ -33,7 +33,7 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public PlotVM CurrentPlotInfo
+        public PlotVM CurrentPlot
         {
             get
             {
@@ -93,7 +93,7 @@ namespace FSCruiser.Core.DataEntry
 
         public bool CheckCurrentPlot()
         {
-            return this.CheckPlot(this.CurrentPlotInfo);
+            return this.CheckPlot(this.CurrentPlot);
         }
 
         public bool CheckPlot(PlotVM pInfo)
@@ -133,7 +133,7 @@ namespace FSCruiser.Core.DataEntry
         public bool EnsurePlotSelected()
         {
             if (this.View.ViewLoading) { return false; }
-            if (this.CurrentPlotInfo == null)
+            if (this.CurrentPlot == null)
             {
                 this.View.ShowNoPlotSelectedMessage();
                 return false;
@@ -143,7 +143,7 @@ namespace FSCruiser.Core.DataEntry
 
         public bool EnsureCurrentPlotNotEmpty()
         {
-            if (this.CurrentPlotInfo.IsNull)
+            if (this.CurrentPlot.IsNull)
             {
                 this.View.ShowNullPlotMessage();
                 return false;
@@ -172,32 +172,32 @@ namespace FSCruiser.Core.DataEntry
 
         public bool SavePlotTrees()
         {
-            if (this.CurrentPlotInfo == null) { return false; }
-            return this.SavePlotTrees(this.CurrentPlotInfo);
+            if (this.CurrentPlot == null) { return false; }
+            return this.SavePlotTrees(this.CurrentPlot);
         }
 
         public void UpdateCurrentPlot()
         {
             if (View.ViewLoading) { return; }
             this.EndEdit();
-            if (CurrentPlotInfo != null)
+            if (CurrentPlot != null)
             {
-                CurrentPlotInfo.LoadData();
-                this._BS_Trees.DataSource = CurrentPlotInfo.Trees;
+                CurrentPlot.LoadData();
+                this._BS_Trees.DataSource = CurrentPlot.Trees;
             }
             else
             {
                 this._BS_Trees.DataSource = new TreeVM[0];
             }
-            this.View.RefreshTreeView(this.CurrentPlotInfo);
+            this.View.RefreshTreeView(this.CurrentPlot);
 
         }
 
 
         public void HandleAddPlot()
         {
-            if (this.CurrentPlotInfo != null 
-                &&(!this.SavePlotTrees(this.CurrentPlotInfo) || !this.CheckCurrentPlot()))
+            if (this.CurrentPlot != null 
+                &&(!this.SavePlotTrees(this.CurrentPlot) || !this.CheckCurrentPlot()))
             {
                 return;
             }
@@ -221,7 +221,7 @@ namespace FSCruiser.Core.DataEntry
 
         public void HandleDeletePlot()
         {            
-            if (CurrentPlotInfo == null)
+            if (CurrentPlot == null)
             {
                 this.View.ShowNoPlotSelectedMessage();
                 return;
@@ -230,8 +230,8 @@ namespace FSCruiser.Core.DataEntry
             if (this.Controller.ViewController.AskYesNo("Are you sure you want to delete this plot?", "", MessageBoxIcon.Question, true))
             {
                 this._disableCheckPlot = true;
-                CurrentPlotInfo.Delete();
-                _BS_Plots.Remove(CurrentPlotInfo);
+                CurrentPlot.Delete();
+                _BS_Plots.Remove(CurrentPlot);
                 this._disableCheckPlot = false; 
             }
         }
@@ -252,7 +252,7 @@ namespace FSCruiser.Core.DataEntry
                 {
                     //this._BS_Trees.Remove(curTree);
                     //Controller.DeleteTree(curTree);
-                    this.CurrentPlotInfo.DeleteTree(curTree);
+                    this.CurrentPlot.DeleteTree(curTree);
                 }
             }
             else
@@ -266,7 +266,7 @@ namespace FSCruiser.Core.DataEntry
             try
             {
 
-                if (!this.CurrentPlotInfo.IsTreeNumberAvalible(newTreeNumber))
+                if (!this.CurrentPlot.IsTreeNumberAvalible(newTreeNumber))
                 {
                     cancel = true;
                     return;
@@ -284,7 +284,7 @@ namespace FSCruiser.Core.DataEntry
         {
             if (!this.EnsureCurrentPlotWorkable()) { return; }
 
-            this.DataEntryController.OnTally(count, this.CurrentPlotInfo, this.View);
+            this.DataEntryController.OnTally(count, this.CurrentPlot, this.View);
             this.SelectLastTree();
         }
 
@@ -292,13 +292,13 @@ namespace FSCruiser.Core.DataEntry
         public void AddTree(SampleGroupVM sg, CruiseDAL.DataObjects.TreeDefaultValueDO tdv)
         {
             TreeVM tree;
-            tree = this.CurrentPlotInfo.CreateNewTreeEntry(sg, tdv, true);
+            tree = this.CurrentPlot.CreateNewTreeEntry(sg, tdv, true);
             tree.TreeCount = 1;
 
             this.Controller.ViewController.ShowCruiserSelection(tree);
 
             tree.TrySave();
-            this.CurrentPlotInfo.AddTree(tree);
+            this.CurrentPlot.AddTree(tree);
 
             this.SelectLastTree();
         }
@@ -325,8 +325,8 @@ namespace FSCruiser.Core.DataEntry
                 prevTree = (TreeVM)_BS_Trees[_BS_Trees.Count - 1];
             }
 
-            var newTree = this.CurrentPlotInfo.UserAddTree(prevTree, this.DataEntryController.ViewController);
-            DataEntryController.Controller.OnTally();
+            var newTree = this.CurrentPlot.UserAddTree(prevTree, this.DataEntryController.ViewController);
+            //DataEntryController.Controller.OnTally();
             return newTree;
 
             //return Controller.UserAddTree(prevTree, this.StratumInfo, this.CurrentPlotInfo);
@@ -374,14 +374,14 @@ namespace FSCruiser.Core.DataEntry
 
         public void ShowCurrentPlotInfo()
         {
-            if (CurrentPlotInfo == null)
+            if (CurrentPlot == null)
             {
                 this.View.ShowNoPlotSelectedMessage();
                 return;
             }
-            if (Controller.ViewController.ShowPlotInfo(CurrentPlotInfo, false) == DialogResult.OK)
+            if (Controller.ViewController.ShowPlotInfo(CurrentPlot, false) == DialogResult.OK)
             {
-                CurrentPlotInfo.Save();
+                CurrentPlot.Save();
                 this._BS_Plots.ResetCurrentItem();
                 this.UpdateCurrentPlot();
             }
@@ -399,15 +399,15 @@ namespace FSCruiser.Core.DataEntry
         #region event handlers 
         private void _BS_Plots_CurrentChanged(object sender, EventArgs e)
         {
-            if (!_disableCheckPlot && _prevPlot != null && _prevPlot != CurrentPlotInfo)
+            if (!_disableCheckPlot && _prevPlot != null && _prevPlot != CurrentPlot)
             {
                 if (!this.CheckPlot(_prevPlot) && !this.SavePlotTrees(_prevPlot))
                 {
-                    this.CurrentPlotInfo = _prevPlot;
+                    this.CurrentPlot = _prevPlot;
                 }
             }
             this.UpdateCurrentPlot();
-            _prevPlot = CurrentPlotInfo;
+            _prevPlot = CurrentPlot;
         }
 
         private void _BS_Trees_CurrentChanged(object sender, EventArgs e)

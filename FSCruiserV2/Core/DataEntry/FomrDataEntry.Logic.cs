@@ -251,7 +251,7 @@ namespace FSCruiser.Core.DataEntry
             count.TreeCount++;
             Unit.TallyHistoryBuffer.Add(action);
             //this._BS_tallyHistory.MoveLast();
-            Controller.OnTally();
+            //Controller.OnTally();
 
         }
 
@@ -444,14 +444,15 @@ namespace FSCruiser.Core.DataEntry
                 }
                 else
                 {
-                    List<SampleGroupVM> sgList = this.Database.Read<SampleGroupVM>("SampleGroup", "WHERE Stratum_CN = ?", stratum.Stratum_CN);
+                    List<SampleGroupVM> sgList = this.Database.Read<SampleGroupVM>("WHERE Stratum_CN = ?"
+                        , stratum.Stratum_CN);
                     view.MakeSGList(sgList, container);
                 }
             }
             else
             {
                 List<CountTreeVM> counts = new List<CountTreeVM>();
-                List<TallySettingsDO> tallySettings = this.Database.Read<TallySettingsDO>("CountTree",
+                List<TallySettingsDO> tallySettings = this.Database.Read<TallySettingsDO>(
                     @"JOIN SampleGroup USING (SampleGroup_CN) 
                     WHERE SampleGroup.Stratum_CN = ? 
                     GROUP BY CountTree.SampleGroup_CN, CountTree.TreeDefaultValue_CN, CountTree.Tally_CN",
@@ -459,7 +460,10 @@ namespace FSCruiser.Core.DataEntry
 
                 foreach (TallySettingsDO ts in tallySettings)
                 {
-                    CountTreeVM count = this.Database.ReadSingleRow<CountTreeVM>("CountTree", "WHERE CuttingUnit_CN = ? AND SampleGroup_CN = ? AND Tally_CN = ?", this.Unit.CuttingUnit_CN, ts.SampleGroup_CN, ts.Tally_CN);
+                    CountTreeVM count = this.Database.ReadSingleRow<CountTreeVM>("WHERE CuttingUnit_CN = ? AND SampleGroup_CN = ? AND Tally_CN = ?"
+                        , this.Unit.CuttingUnit_CN
+                        , ts.SampleGroup_CN
+                        , ts.Tally_CN);
                     if (count == null)
                     {
                         count = new CountTreeVM(this.Database);
@@ -513,7 +517,7 @@ namespace FSCruiser.Core.DataEntry
 
         public bool ProcessHotKey(char key, ITallyView view)
         {
-            //if tally view is active but blocking hotkeys, jump out
+            //if tally view is active but not accepting hotkeys, jump out
             if (view != null && view.HotKeyEnabled == false)
             {
                 return false;
@@ -781,39 +785,12 @@ namespace FSCruiser.Core.DataEntry
 
         public void HandleViewClosing(CancelEventArgs e)
         {
-            
-            //bool haveAskedToContinue = false;
-            //for (int i = 0; i < this.View.Layouts.Count; i++)
-            //{
-            //    ITreeView view = this.View.Layouts[i] as ITreeView;
-            //    if (view != null && view.Trees != null)
-            //    {
-            //        view.EndEdit();
-            //        if (!Controller.ValidateTrees(view.Trees))
-            //        {
-            //            //if a view fails tree validation the user is alearted.
-            //            //if they decide not to continue they are taken to the tree view containing the invalid trees
-            //            //if (MessageBox.Show("Error(s) found on tree records Would you like to continue", "Continue?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.No)
-            //            if (!haveAskedToContinue && this.Controller.ViewController.AskYesNo("Error(s) found on tree records Would you like to continue", "Continue?", MessageBoxIcon.Question, true) == false)
-            //            {
-            //                e.Cancel = true;
-            //                this.View.GoToPageIndex(i);
-            //                return;
-            //            }
-            //            else
-            //            {
-            //                haveAskedToContinue = true;// do not keep asking the same question
-            //            }
-            //        }
-            //    }
-            //}
-
 
             //Go through all the tree views and validate 
             //if a tree view has invalid trees lets ask the user if they want to continue
             int viewIndex;
             if (!this.ValidateTreeViews(out viewIndex)
-                && this.ViewController.AskYesNo("Error(s) found on tree records Would you like to continue", "Continue?", MessageBoxIcon.Question, true) == false)
+                && this.ViewController.AskYesNo("Error(s) found on tree records. Would you like to continue", "Continue?", MessageBoxIcon.Question, true) == false)
             {
                 e.Cancel = true;
                 this.View.GoToPageIndex(viewIndex);
@@ -843,7 +820,7 @@ namespace FSCruiser.Core.DataEntry
         }
 
         /// <summary>
-        /// performs validation on each tree view and retruns ture if validation passes
+        /// performs validation on each tree view and returns ture if validation passes
         /// </summary>
         /// <param name="invalidViewIndex">index to first invalid view</param>
         /// <returns></returns>

@@ -10,9 +10,7 @@ namespace FSCruiser.Core.Models
     public class CuttingUnitVM : CuttingUnitDO
     {
         protected const int TREE_SAVE_INTERVAL = 10;
-        private int _treesAddedSinceLastSave = 0;
-        
-        private Thread _saveTreesWorkerThread;
+        private int _treesAddedSinceLastSave = 0;        
         
 
         public List<CountTreeDO> Counts { get; set; }
@@ -85,7 +83,7 @@ namespace FSCruiser.Core.Models
             //extrapolate sample group
             if (knownStratum != null && assumedSG == null)//if we have a stratum but no sample group, pick the first one
             {
-                List<SampleGroupVM> samplegroups = DAL.Read<SampleGroupVM>("SampleGroup", "WHERE Stratum_CN = ?", knownStratum.Stratum_CN);
+                List<SampleGroupVM> samplegroups = DAL.Read<SampleGroupVM>("WHERE Stratum_CN = ?", (object)knownStratum.Stratum_CN);
                 if (samplegroups.Count == 1)
                 {
                     assumedSG = samplegroups[0];

@@ -31,7 +31,7 @@ namespace FSCruiser.Core.Models
         public override StratumDO GetStratum()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<StratumVM>(STRATUM._NAME, this.Stratum_CN);
+            return DAL.ReadSingleRow<StratumVM>(this.Stratum_CN);
         }
 
         public SampleSelecter Sampler

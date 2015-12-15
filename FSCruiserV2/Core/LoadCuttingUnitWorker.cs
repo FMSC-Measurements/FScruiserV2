@@ -80,9 +80,9 @@ namespace FSCruiser.Core
         public void InitializeSampleGroups()
         {
             //create a list of all samplegroups in the unit
-            _unit.SampleGroups = _unit.DAL.Read<SampleGroupVM>("SampleGroup", @"JOIN Stratum ON SampleGroup.Stratum_CN = Stratum.Stratum_CN 
+            _unit.SampleGroups = _unit.DAL.Read<SampleGroupVM>(@"JOIN Stratum ON SampleGroup.Stratum_CN = Stratum.Stratum_CN 
                 JOIN CuttingUnitStratum ON CuttingUnitStratum.Stratum_CN = Stratum.Stratum_CN
-                WHERE CuttingUnitStratum.CuttingUnit_CN = ?", _unit.CuttingUnit_CN);
+                WHERE CuttingUnitStratum.CuttingUnit_CN = ?", (object)_unit.CuttingUnit_CN);
 
             //initialize sample selectors for all sampleGroups
             foreach (SampleGroupVM sg in _unit.SampleGroups)

@@ -76,15 +76,15 @@ namespace FSCruiser.Core.Models
         {
             if (this._countCN != 0L)
             {
-                this.Count = dal.ReadSingleRow<CountTreeVM>("CountTree", this._countCN);
+                this.Count = dal.ReadSingleRow<CountTreeVM>(this._countCN);
             }
             if (this._treeCN != 0L)
             {
-                this.TreeRecord = dal.ReadSingleRow<TreeVM>("Tree", this._treeCN);
+                this.TreeRecord = dal.ReadSingleRow<TreeVM>(this._treeCN);
             }
             if (this._treeEstCN != 0L)
             {
-                this.TreeEstimate = dal.ReadSingleRow<TreeEstimateDO>(CruiseDAL.Schema.TREEESTIMATE._NAME, this._treeEstCN);
+                this.TreeEstimate = dal.ReadSingleRow<TreeEstimateDO>(this._treeEstCN);
             }
         }
 

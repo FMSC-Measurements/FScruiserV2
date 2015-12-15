@@ -60,7 +60,7 @@ namespace FSCruiser.Core
         //void AsyncLoadCuttingUnitData();
         //void LoadDatabase(string path);
         //FMSC.Sampling.SampleSelecter MakeSampleSelecter(SampleGroupVM sg);
-        void OnTally();
+        //void OnTally();
         void OnLeavingCurrentUnit(System.ComponentModel.CancelEventArgs e);
         void PerformBackup(string path);
         void PerformBackup(bool incluedTimeStamp);

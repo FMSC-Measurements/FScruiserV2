@@ -183,7 +183,9 @@ namespace FSCruiser.WinForms.DataEntry
                     st.LoadTreeFieldNames();
 
                     //load plots in stratum
-                    st.Plots = controller._cDal.Read<PlotVM>("Plot", "WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber", st.Stratum_CN, LogicController.Unit.CuttingUnit_CN);
+                    st.Plots = controller._cDal.Read<PlotVM>("WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber"
+                        , st.Stratum_CN
+                        , LogicController.Unit.CuttingUnit_CN);
 
                     if (_pageContainer != null)
                     {

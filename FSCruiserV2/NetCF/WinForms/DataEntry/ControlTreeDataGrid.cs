@@ -382,7 +382,7 @@ namespace FSCruiser.WinForms.DataEntry
             var newTree = this.DataEntryController.Unit.UserAddTree(prevTree
                 , assumedSt
                 , this.DataEntryController.ViewController);
-            this.DataEntryController.Controller.OnTally();
+            //this.DataEntryController.Controller.OnTally();
             return newTree;
 
             //return Controller.UserAddTree(prevTree, assumedSt, null);

@@ -341,17 +341,17 @@ namespace FSCruiser.Core
         }
         #endregion
 
-        public void OnTally()
-        {
-            _talliesSinceLastSave++;
+        //public void OnTally()
+        //{
+        //    _talliesSinceLastSave++;
 
-            if (_talliesSinceLastSave >= Constants.SAVE_INTERVAL)
-            {
-                _talliesSinceLastSave = 0;
-                this.CurrentUnit.TrySaveTreesAsync();
-                //this.SaveTreesAsync();
-            }
-        }
+        //    if (_talliesSinceLastSave >= Constants.SAVE_INTERVAL)
+        //    {
+        //        _talliesSinceLastSave = 0;
+        //        this.CurrentUnit.TrySaveTreesAsync();
+        //        //this.SaveTreesAsync();
+        //    }
+        //}
 
 
         public void LogTreeCountEdit(CountTreeDO countTree, long oldValue, long newValue)

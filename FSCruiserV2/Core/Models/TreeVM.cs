@@ -108,13 +108,13 @@ namespace FSCruiser.Core.Models
         {
 
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<StratumVM>(CruiseDAL.Schema.STRATUM._NAME, this.Stratum_CN);
+            return DAL.ReadSingleRow<StratumVM>(this.Stratum_CN);
         }
 
         public override SampleGroupDO GetSampleGroup()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<SampleGroupVM>(CruiseDAL.Schema.SAMPLEGROUP._NAME, this.SampleGroup_CN);
+            return DAL.ReadSingleRow<SampleGroupVM>(this.SampleGroup_CN);
         }
 
         

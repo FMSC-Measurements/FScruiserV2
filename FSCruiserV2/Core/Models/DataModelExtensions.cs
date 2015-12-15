@@ -32,10 +32,10 @@ namespace FSCruiser.Core.Models
             Debug.Assert(unit != null);
             Debug.Assert(unit.DAL != null);
 
-            IList<StratumVM> list = unit.DAL.Read<StratumVM>("Stratum",
+            IList<StratumVM> list = unit.DAL.Read<StratumVM>(
 @"JOIN CuttingUnitStratum USING (Stratum_CN) 
 WHERE CuttingUnitStratum.CuttingUnit_CN = ? 
-AND Method IN ( '100', 'STR', '3P', 'S3P')", unit.CuttingUnit_CN);
+AND Method IN ( '100', 'STR', '3P', 'S3P')", (object)unit.CuttingUnit_CN);
 
             foreach (StratumVM s in list)
             {
@@ -46,10 +46,10 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", unit.CuttingUnit_CN);
 
         public static IList<StratumVM> GetPlotStrata(this CuttingUnitDO unit)
         {
-            IList<StratumVM> list = unit.DAL.Read<StratumVM>("Stratum",
+            IList<StratumVM> list = unit.DAL.Read<StratumVM>(
 @"JOIN CuttingUnitStratum USING (Stratum_CN) 
 WHERE CuttingUnitStratum.CuttingUnit_CN = ? 
-AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", unit.CuttingUnit_CN);
+AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", (object)unit.CuttingUnit_CN);
             
             return list;
         }
@@ -131,8 +131,8 @@ AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", uni
 
         public static string GetDescription(this PlotDO plot)
         {
-            throw new NotImplementedException();
-            //return "<Plot Stats Place Holder>";
+            //throw new NotImplementedException();
+            return "<Plot Stats Place Holder>";
         }
 
         public static string GetDescriptionShort(this PlotDO plot)
@@ -183,8 +183,7 @@ AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", uni
     {
         public static CountTreeVM FindCountRecord(this TreeDO tree)
         {
-            return tree.DAL.ReadSingleRow<CountTreeVM>(CruiseDAL.Schema.COUNTTREE._NAME,
-                "WHERE SampleGroup_CN = ? AND CuttingUnit_CN = ? AND (TreeDefaultValue_CN = ? or ifnull(TreeDefaultValue_CN, 0) = 0)"
+            return tree.DAL.ReadSingleRow<CountTreeVM>("WHERE SampleGroup_CN = ? AND CuttingUnit_CN = ? AND (TreeDefaultValue_CN = ? OR ifnull(TreeDefaultValue_CN, 0) = 0)"
                 ,tree.SampleGroup_CN
                 ,tree.CuttingUnit_CN
                 ,tree.TreeDefaultValue_CN);
@@ -221,7 +220,8 @@ AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", uni
                 return Constants.EMPTY_SG_LIST;
             }
 
-            return tree.DAL.Read<SampleGroupVM>("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN);
+            return tree.DAL.Read<SampleGroupVM>("WHERE Stratum_CN = ?"
+                , tree.Stratum_CN);
         }
 
         public static ICollection<TreeDefaultValueDO> ReadValidTDVs(this TreeVM tree)
@@ -244,7 +244,8 @@ AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", uni
             {
                 if (tree.DAL.GetRowCount("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN) == 1)
                 {
-                    tree.SampleGroup = tree.DAL.ReadSingleRow<SampleGroupVM>("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN);
+                    tree.SampleGroup = tree.DAL.ReadSingleRow<SampleGroupVM>("WHERE Stratum_CN = ?"
+                        , (object)tree.Stratum_CN);
                 }
                 if (tree.SampleGroup == null)
                 {
@@ -258,7 +259,8 @@ AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", uni
             //{
             //    tree.SampleGroup.TreeDefaultValues.Populate();
             //}
-            List<TreeDefaultValueDO> tdvs = tree.DAL.Read<TreeDefaultValueDO>("TreeDefaultValue", "JOIN SampleGroupTreeDefaultValue USING (TreeDefaultValue_CN) WHERE SampleGroup_CN = ?", tree.SampleGroup_CN);
+            List<TreeDefaultValueDO> tdvs = tree.DAL.Read<TreeDefaultValueDO>("JOIN SampleGroupTreeDefaultValue USING (TreeDefaultValue_CN) WHERE SampleGroup_CN = ?"
+                , tree.SampleGroup_CN);
 
             if (Constants.NEW_SPECIES_OPTION)
             {

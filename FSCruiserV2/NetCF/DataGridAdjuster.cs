@@ -109,7 +109,7 @@ namespace FSCruiser.WinForms
             grid.ErrorColor = Color.Red;
             grid.BackColor = Color.White; // background color of the actual grid cells
             grid.BackgroundColor = Color.Black; // background color of the control, but outside the grid.
-            grid.HeaderBackColor = Color.Black;
+            grid.HeaderBackColor = Color.DarkGray;
             grid.HeaderForeColor = Color.White;
             grid.SelectionBackColor = Color.Yellow;
             grid.SelectionForeColor = Color.Black;
@@ -151,7 +151,8 @@ namespace FSCruiser.WinForms
 
         public static DataGridTableStyle InitializeLogColumns(DAL dal, EditableDataGrid grid, long stratum_CN)
         {
-            List<LogFieldSetupDO> fieldSetups = dal.Read<LogFieldSetupDO>("LogFieldSetup", "WHERE Stratum_CN = ? ORDER BY FieldOrder", stratum_CN);
+            List<LogFieldSetupDO> fieldSetups = dal.Read<LogFieldSetupDO>("WHERE Stratum_CN = ? ORDER BY FieldOrder"
+                , (object)stratum_CN);
 
             DataGridTableStyle tblStyle = new DataGridTableStyle();
             tblStyle.MappingName = "LogDO";
@@ -224,13 +225,14 @@ namespace FSCruiser.WinForms
         public static List<TreeFieldSetupDO> GetTreeFieldSetupByStratum(DAL dal, long stratum_cn)
         {
             //   return base.DAL.Read<TreeFieldSetupDO>(TREEFIELDSETUP._NAME, TREEFIELDSETUP.STRATUM_CN + " = ?", new string[] { stratum_cn });
-            return dal.Read<TreeFieldSetupDO>(CruiseDAL.Schema.TREEFIELDSETUP._NAME, "WHERE " + CruiseDAL.Schema.TREEFIELDSETUP.STRATUM_CN + " = ?  ORDER BY " + CruiseDAL.Schema.TREEFIELDSETUP.FIELDORDER, stratum_cn);
+            return dal.Read<TreeFieldSetupDO>("WHERE Stratum_CN = ?  ORDER BY FieldOrder"
+                , stratum_cn);
 
         }
 
         public static List<TreeFieldSetupDO> GetTreeFieldSetupByUnit(DAL dal, long unit_cn)
         {
-            return dal.Read<TreeFieldSetupDO>(CruiseDAL.Schema.TREEFIELDSETUP._NAME,
+            return dal.Read<TreeFieldSetupDO>(
                     @"JOIN CuttingUnitStratum 
                     ON TreeFieldSetup.Stratum_CN = CuttingUnitStratum.Stratum_CN 
                     WHERE CuttingUnitStratum.CuttingUnit_CN = ?  

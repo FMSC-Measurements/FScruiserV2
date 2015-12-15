@@ -618,12 +618,14 @@ namespace FSCruiser.WinForms.DataEntry
         public bool HandleEscKey()
         {
             if (_viewLoading) { return false; }
-            if (!this.IsGridExpanded)
-            {
-                this.IsGridExpanded = true;
-                return true;
-            }
-            return false;
+            IsGridExpanded = !IsGridExpanded;
+            return true;
+            //if (!this.IsGridExpanded)
+            //{
+            //    this.IsGridExpanded = true;
+            //    return true;
+            //}
+            //return false;
             
         }
 
@@ -893,7 +895,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void ShowLimitingDistanceDialog()
         {
-            if (this.ViewLogicController.CurrentPlotInfo == null)
+            if (this.ViewLogicController.CurrentPlot == null)
             {
                 ShowNoPlotSelectedMessage();
                 return;
@@ -911,7 +913,7 @@ namespace FSCruiser.WinForms.DataEntry
                 }
             }
 
-            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.StratumInfo, this.ViewLogicController.CurrentPlotInfo, tree);
+            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.StratumInfo, this.ViewLogicController.CurrentPlot, tree);
         }
 
 

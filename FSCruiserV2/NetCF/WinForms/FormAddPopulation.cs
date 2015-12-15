@@ -96,7 +96,7 @@ namespace FSCruiser.WinForms
             if (this.SampleGroup == null)
             {
                 this._populationSelectPanel.Enabled = true;
-                this._strataCB.DataSource = this.Controller._cDal.Read<StType>("Stratum", null, null);
+                this._strataCB.DataSource = this.Controller._cDal.Read<StType>((string)null);
             }
             else
             {
@@ -207,7 +207,8 @@ namespace FSCruiser.WinForms
             Cursor.Current = Cursors.WaitCursor;
             if (newStratum != null)
             {
-                List<SGType> list = this.Controller._cDal.Read<SGType>("SampleGroup", "WHERE Stratum_CN = ?", newStratum.Stratum_CN);
+                List<SGType> list = this.Controller._cDal.Read<SGType>("WHERE Stratum_CN = ?"
+                    , newStratum.Stratum_CN);
                 foreach (SGType sg in list)
                 {
                     sg.TallyMethod = sg.GetSampleGroupTallyMode();
@@ -242,7 +243,8 @@ namespace FSCruiser.WinForms
 
             if (sg != null)
             {
-                List<TreeDefaultValueDO> treeDefaults = this.Controller._cDal.Read<TreeDefaultValueDO>("TreeDefaultValue", "WHERE PrimaryProduct = ?", sg.PrimaryProduct);
+                List<TreeDefaultValueDO> treeDefaults = this.Controller._cDal.Read<TreeDefaultValueDO>("WHERE PrimaryProduct = ?"
+                    , (object)sg.PrimaryProduct);
                 foreach (TreeDefaultValueDO tdv in treeDefaults)
                 {
                     CheckBox cb = new CheckBox();
