@@ -11,7 +11,7 @@ namespace FSCruiser.Core.ViewInterfaces
         IDataEntryPage FocusedLayout { get; }
         List<IDataEntryPage> Layouts { get; }
         FormDataEntryLogic LogicController { get; }
-        IList<StratumVM> PlotStrata { get; }
+        //IList<StratumVM> PlotStrata { get; }
 
         //public bool HotKeyEnabled { get; }
 
