@@ -215,7 +215,7 @@ AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", (ob
 
         public static object ReadValidSampleGroups(this TreeVM tree)
         {
-            if (tree.Stratum == null)
+            if (tree == null || tree.Stratum == null)
             {
                 return Constants.EMPTY_SG_LIST;
             }
@@ -226,19 +226,9 @@ AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", (ob
 
         public static ICollection<TreeDefaultValueDO> ReadValidTDVs(this TreeVM tree)
         {
-            if (tree == null) { return Constants.EMPTY_SPECIES_LIST; }
-            if (tree.Stratum == null)
-            {
-                //if (this.CurrentUnit.Strata.Count == 1)
-                //{
-                //    tree.Stratum = this.CurrentUnit.Strata[0];
-                //}
-                //else
-                //{
-                //    return Constants.EMPTY_SPECIES_LIST;
-                //}
-                return Constants.EMPTY_SPECIES_LIST;
-            }
+            if (tree == null || tree.Stratum == null) 
+            { return Constants.EMPTY_SPECIES_LIST; }
+
 
             if (tree.SampleGroup == null)
             {
@@ -254,25 +244,23 @@ AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", (ob
             }
 
 
-
-            //if (tree.SampleGroup.TreeDefaultValues.IsPopulated == false)
-            //{
-            //    tree.SampleGroup.TreeDefaultValues.Populate();
-            //}
             List<TreeDefaultValueDO> tdvs = tree.DAL.Read<TreeDefaultValueDO>("JOIN SampleGroupTreeDefaultValue USING (TreeDefaultValue_CN) WHERE SampleGroup_CN = ?"
                 , tree.SampleGroup_CN);
 
-            if (Constants.NEW_SPECIES_OPTION)
-            {
-                throw new NotImplementedException();
-                //tdvs.Add(_newPopPlaceHolder);
-                //return tdvs;
-            }
-            else
-            {
-                return tdvs;
-                //return tree.SampleGroup.TreeDefaultValues;
-            }
+
+            return tdvs;
+
+            //if (Constants.NEW_SPECIES_OPTION)
+            //{
+            //    throw new NotImplementedException();
+            //    //tdvs.Add(_newPopPlaceHolder);
+            //    //return tdvs;
+            //}
+            //else
+            //{
+            //    return tdvs;
+            //    //return tree.SampleGroup.TreeDefaultValues;
+            //}
 
 
         }
