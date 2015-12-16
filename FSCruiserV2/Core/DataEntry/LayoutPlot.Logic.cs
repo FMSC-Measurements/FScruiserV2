@@ -182,7 +182,7 @@ namespace FSCruiser.Core.DataEntry
             this.EndEdit();
             if (CurrentPlot != null)
             {
-                CurrentPlot.LoadData();
+                CurrentPlot.PopulateTreeData();
                 this._BS_Trees.DataSource = CurrentPlot.Trees;
             }
             else
@@ -303,21 +303,39 @@ namespace FSCruiser.Core.DataEntry
             this.SelectLastTree();
         }
 
-        protected TreeVM GetNewTree()
+        //protected TreeVM GetNewTree()
+        //{
+
+        //    if (!this.EnsureCurrentPlotWorkable())// if no plot is selected cancel action
+        //    {
+        //        return null;
+        //    }
+
+        //    if (this.UserCanAddTrees == false) { return null; }
+
+        //    //adding trees can be allowed in some cases for 3PPNT
+        //    //if (this.StratumInfo.Stratum.Method == "3PPNT")// if this is a 3PPNT stratum users aren't allowed to manualy enter trees
+        //    //{
+        //    //    return null;
+        //    //}
+
+        //    TreeVM prevTree = null;
+        //    if (_BS_Trees.Count > 0)
+        //    {
+        //        prevTree = (TreeVM)_BS_Trees[_BS_Trees.Count - 1];
+        //    }
+
+        //    var newTree = this.CurrentPlot.UserAddTree(prevTree, this.DataEntryController.ViewController);
+        //    //DataEntryController.Controller.OnTally();
+        //    return newTree;
+
+        //    //return Controller.UserAddTree(prevTree, this.StratumInfo, this.CurrentPlotInfo);
+        //}
+
+        public TreeVM UserAddTree()
         {
-
-            if (!this.EnsureCurrentPlotWorkable())// if no plot is selected cancel action
-            {
-                return null;
-            }
-
-            if (this.UserCanAddTrees == false) { return null; }
-
-            //adding trees can be allowed in some cases for 3PPNT
-            //if (this.StratumInfo.Stratum.Method == "3PPNT")// if this is a 3PPNT stratum users aren't allowed to manualy enter trees
-            //{
-            //    return null;
-            //}
+            if (!this.EnsureCurrentPlotWorkable()) { return null; }
+            if (!this.UserCanAddTrees) { return null; }
 
             TreeVM prevTree = null;
             if (_BS_Trees.Count > 0)
@@ -326,23 +344,13 @@ namespace FSCruiser.Core.DataEntry
             }
 
             var newTree = this.CurrentPlot.UserAddTree(prevTree, this.DataEntryController.ViewController);
-            //DataEntryController.Controller.OnTally();
-            return newTree;
 
-            //return Controller.UserAddTree(prevTree, this.StratumInfo, this.CurrentPlotInfo);
-        }
-
-        public TreeVM UserAddTree()
-        {
-            if (!this.EnsureCurrentPlotWorkable()) { return null; }
-
-            TreeVM t = this.GetNewTree();
-            if (t != null)
+            if (newTree != null)
             {
-                this._BS_Trees.Add(t);
                 this.SelectLastTree();
             }
-            return t;
+
+            return newTree;
         }
 
         public void SelectFirstPlot()
