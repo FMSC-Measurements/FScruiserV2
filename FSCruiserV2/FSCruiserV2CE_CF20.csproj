@@ -67,11 +67,13 @@
     <Compile Include="Core\Models\DataEntryMode.cs" />
     <Compile Include="Core\Models\DataModelExtensions.cs" />
     <Compile Include="Core\Models\ITreeContaningModel.cs" />
+    <Compile Include="Core\Models\PlotStratum.cs" />
     <Compile Include="Core\Models\TallyHistoryCollection.cs" />
     <Compile Include="Core\SaveTreesWorker.cs" />
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
     <Compile Include="NetCF\NamedMutex.cs" />
+    <Compile Include="NetCF\System\Action.cs" />
     <Compile Include="NetCF\WinForms\DataEntry\ControlTreeDataGrid.cs">
       <SubType>Component</SubType>
     </Compile>

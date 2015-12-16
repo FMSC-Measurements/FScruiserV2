@@ -30,27 +30,18 @@ namespace FSCruiser.WinForms.Common
         public IApplicationController Controller { get; protected set; }
         public FormDataEntryLogic LogicController { get; protected set; }
 
-        public IList<StratumVM> PlotStrata
-        {
-            get
-            {
-                return _plotStrataInfo;
-            }
-        }
+        //public IList<StratumVM> PlotStrata
+        //{
+        //    get
+        //    {
+        //        return _plotStrataInfo;
+        //    }
+        //}
 
 
         protected FormDataEntryBase():base() 
         {
         }
-
-        //public FormDataEntryBase(IApplicationController controller, CruiseDAL.DataObjects.CuttingUnitDO unit): this()
-        //{
-        //    this.Controller = controller;
-        //    this._logicController = new FormDataEntryLogic(this.Controller, this);
-        //    //this.Unit = unit;
-        //    //DataEntryMode unitMode = Controller.GetUnitDataEntryMode(unit);
-        //    //this.SuspendLayout();
-        //}
 
         protected virtual TabControl MakePageContainer()
         {
@@ -86,37 +77,20 @@ namespace FSCruiser.WinForms.Common
             if (e.Handled) { return; }
 
             char key = (char)e.KeyValue;
+
+            // HACK when the escape key is pressed on some controls 
+            // the device will make a invalid key press sound if OnKeyDown is not handled
+            // we handle the key press in OnKeyUp
             if (e.KeyCode == Keys.Escape)
             {
                 e.Handled = true;
-            }
-            //if (this._pageContainer != null)
-            //{
-            //    if (e.KeyCode == Keys.Escape &&
-            //    this._pageContainer.SelectedIndex == this._pageContainer.TabPages.IndexOf(_treePage))
-            //    {
-            //        this.GoToTallyPage();
-            //        e.Handled = true;
-            //        return;
-            //    }
-            //    else
-            //    {
-            //        e.Handled = _logicController.HandleHotKey(key);
-            //    }
-            //}
-            //else
-            //{
-            //    ITallyView view = this.FocusedLayout as ITallyView;
-            //    if (view == null) { return; }
-            //    view.HandleKeyDown(key);
-            //}           
+            }         
         }
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
             base.OnKeyUp(e);
             if (e.Handled) { return; }
-
 
             switch(e.KeyData)
             {
@@ -132,27 +106,6 @@ namespace FSCruiser.WinForms.Common
                         break;
                     }
             }
-
-            //if (this._pageContainer != null)
-            //{
-            //    if (e.KeyCode == Keys.Escape &&
-            //    this._pageContainer.SelectedIndex == this._pageContainer.TabPages.IndexOf(_treePage))
-            //    {
-            //        this.GoToTallyPage();
-            //        e.Handled = true;
-            //        return;
-            //    }
-            //    else
-            //    {
-            //        e.Handled = this.LogicController.HandleHotKey(key);
-            //    }
-            //}
-            //else
-            //{
-            //    ITallyView view = this.FocusedLayout as ITallyView;
-            //    if (view == null) { return; }
-            //    view.HandleHotKeyFirst(key);
-            //}
         }
 
 
@@ -186,35 +139,30 @@ namespace FSCruiser.WinForms.Common
         }
 
 
-        protected void InternalHandleCuttingUnitDataLoaded()
-        {
-            foreach (IDataEntryPage c in this._layouts)
-            {
-                ITreeView tv = c as ITreeView;
-                if (tv != null)
-                {
-                    tv.HandleLoad();
-                }
-            }
-
-            if (this._tallyPage != null)
-            {
-                this._tallyLayout.HandleLoad();
-            }
-
-            // Turn off the waitcursor that was turned on in FormMain.button1_Click()
-            Cursor.Current = Cursors.Default;
-        }
-
         public void HandleCuttingUnitDataLoaded()
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new HandleCruiseDataLoadedEventHandler(this.InternalHandleCuttingUnitDataLoaded));
+                this.Invoke(new Action(this.HandleCuttingUnitDataLoaded));
             }
             else
             {
-                this.InternalHandleCuttingUnitDataLoaded();
+                foreach (IDataEntryPage c in this._layouts)
+                {
+                    ITreeView tv = c as ITreeView;
+                    if (tv != null)
+                    {
+                        tv.HandleLoad();
+                    }
+                }
+
+                if (this._tallyPage != null)
+                {
+                    this._tallyLayout.HandleLoad();
+                }
+
+                // Turn off the waitcursor that was turned on in FormMain.button1_Click()
+                Cursor.Current = Cursors.Default;
             }
         }
 
@@ -280,18 +228,23 @@ namespace FSCruiser.WinForms.Common
         {
             if (_previousLayout != null)
             {
-                if (_previousLayout is ITreeView)
+                ITreeView treeView = _previousLayout as ITreeView;
+                if (treeView != null)
                 {
-                    ((ITreeView)_previousLayout).EndEdit();
-                    try
+                    
+                    treeView.EndEdit();
+                    if (treeView.Trees != null)
                     {
-                        var worker = new SaveTreesWorker(LogicController.Database, ((ITreeView)_previousLayout).Trees);
-                        worker.SaveAll();
-                        //this.Controller.SaveTrees(((ITreeView)_previousLayout).Trees);
-                    }
-                    catch (Exception ex)
-                    {
-                        this.Controller.HandleNonCriticalException(ex, "Unable to compleate last tree save");
+                        try
+                        {
+                            var worker = new SaveTreesWorker(LogicController.Database, treeView.Trees);
+                            worker.SaveAll();
+                            //this.Controller.SaveTrees(((ITreeView)_previousLayout).Trees);
+                        }
+                        catch (Exception ex)
+                        {
+                            this.Controller.HandleNonCriticalException(ex, "Unable to compleate last tree save");
+                        }
                     }
                 }
                 if (_previousLayout is ITallyView)

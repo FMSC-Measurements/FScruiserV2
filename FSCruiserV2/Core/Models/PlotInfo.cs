@@ -11,7 +11,7 @@ namespace FSCruiser.Core.Models
 {
     public class PlotVM : PlotDO
     {
-        private bool _isDataLoaded = false;
+        private bool _isTreeDataPopulated = false;
         private BindingList<TreeVM> _trees;
 
         public PlotVM() 
@@ -74,6 +74,7 @@ namespace FSCruiser.Core.Models
                 return this.Trees[this.Trees.Count - 1].TreeNumber;
             }
         }
+
         public bool IsNull
         {
             get
@@ -102,30 +103,32 @@ namespace FSCruiser.Core.Models
         {
             Debug.Assert(this.CuttingUnit != null);
 
-            try
+            lock (DAL.TransactionSyncLock)
             {
                 this.DAL.BeginTransaction();
-
-                foreach (TreeVM tree in this.Trees)
+                try
                 {
-                    tree.Delete();
-                    
-                    //TreeDO.RecursiveDeleteTree(tree);
+                    foreach (TreeVM tree in this.Trees)
+                    {
+                        tree.Delete();
+
+                        //TreeDO.RecursiveDeleteTree(tree);
+                    }
+                    base.Delete();
+                    this.DAL.CommitTransaction();
                 }
-                base.Delete();
-                this.DAL.CommitTransaction();
-            }
-            catch (Exception e)
-            {
-                this.DAL.RollbackTransaction();
-                throw;
+                catch (Exception)
+                {
+                    this.DAL.RollbackTransaction();
+                    throw;
+                }
             }
         }
 
 
-        public void LoadData()
+        public void PopulateTreeData()
         {
-            if (!_isDataLoaded)
+            if (!_isTreeDataPopulated)
             {
                 List<TreeVM> tList = base.DAL.Read<TreeVM>("WHERE Stratum_CN = ? AND CuttingUnit_CN = ? AND Plot_CN = ? ORDER BY TreeNumber"
                     , base.Stratum.Stratum_CN
@@ -135,15 +138,15 @@ namespace FSCruiser.Core.Models
 
                 //long? value = base.DAL.ExecuteScalar(String.Format("Select MAX(TreeNumber) FROM Tree WHERE Plot_CN = {0}", base.Plot_CN)) as long?;
                 //this.NextPlotTreeNum = (value.HasValue) ? (int)value.Value : 0;
-                _isDataLoaded = true;
+                _isTreeDataPopulated = true;
             }
         }
 
-        public void CheckDataState()//TODO perhaps there needs to be a better way to control the _isDataLoaded state
+        public void CheckDataState()//TODO perhaps there needs to be a better way to control the _isTreeDataPopulated state
         {
             if (this.Trees.Count > 0)
             {
-                this._isDataLoaded = true;
+                this._isTreeDataPopulated = true;
             }
         }
 
@@ -162,8 +165,14 @@ namespace FSCruiser.Core.Models
         public TreeVM UserAddTree(TreeVM templateTree, IViewController viewController)
         {
             TreeVM newTree;
-            SampleGroupVM assumedSG = templateTree.SampleGroup;;
-            TreeDefaultValueDO assumedTDV = templateTree.TreeDefaultValue;
+            SampleGroupVM assumedSG = null;
+            TreeDefaultValueDO assumedTDV = null;
+
+            if (templateTree != null)
+            {
+                assumedSG = templateTree.SampleGroup; ;
+                assumedTDV = templateTree.TreeDefaultValue;
+            }
 
             //extrapolate sample group
             if (assumedSG == null)//if we have a stratum but no sample group, pick the first one

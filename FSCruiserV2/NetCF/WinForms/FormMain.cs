@@ -73,12 +73,14 @@ namespace FSCruiser.WinForms
         private void OpenButton_Click(object sender, EventArgs e)
         {
             bool success = this.Controller.OpenFile();
-            
-            this._cuttingUnitCB.Enabled = success;
-            this._fileNameTB.Text = (success) ? Controller._cDal.Path : String.Empty;
             if (success)
             {
-                this._BS_cuttingUnits.DataSource = Controller.CuttingUnits;
+                this._cuttingUnitCB.Enabled = success;
+                this._fileNameTB.Text = (success) ? Controller._cDal.Path : String.Empty;
+                if (success)
+                {
+                    this._BS_cuttingUnits.DataSource = Controller.CuttingUnits;
+                }
             }
         }
 

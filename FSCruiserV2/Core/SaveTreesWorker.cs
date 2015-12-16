@@ -87,19 +87,22 @@ namespace FSCruiser.Core
 
         public void SaveAll()
         {
-            _datastore.BeginTransaction();
-            try
+            lock (_datastore.TransactionSyncLock)
             {
-                foreach (TreeVM tree in _trees)
+                _datastore.BeginTransaction();
+                try
                 {
-                    tree.Save();
+                    foreach (TreeVM tree in _trees)
+                    {
+                        tree.Save();
+                    }
+                    _datastore.CommitTransaction();
                 }
-                _datastore.CommitTransaction();
-            }
-            catch
-            {
-                _datastore.RollbackTransaction();
-                throw;
+                catch
+                {
+                    _datastore.RollbackTransaction();
+                    throw;
+                }
             }
         }
     }

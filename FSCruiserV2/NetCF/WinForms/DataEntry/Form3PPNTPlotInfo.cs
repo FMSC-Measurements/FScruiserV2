@@ -184,24 +184,28 @@ namespace FSCruiser.WinForms.DataEntry
         private void CreateTrees()
         {
             TreeVM[] newTrees = new TreeVM[this.TreeCount];
-            try
+            lock (_currentPlotInfo.DAL.TransactionSyncLock)
             {
-                this.Controller._cDal.BeginTransaction();
-                for (long i = 0; i < this.TreeCount; i++)
+                _currentPlotInfo.DAL.BeginTransaction();
+                try
                 {
-                    TreeVM t = _currentPlotInfo.CreateNewTreeEntry((SampleGroupVM)null, (TreeDefaultValueDO)null, false);
-                    t.TreeCount = 1;
-                    t.CountOrMeasure = "M";
-                    t.TreeNumber = i + 1;
-                    newTrees[i] = t;
-                    t.Save();
+
+                    for (long i = 0; i < this.TreeCount; i++)
+                    {
+                        TreeVM t = _currentPlotInfo.CreateNewTreeEntry((SampleGroupVM)null, (TreeDefaultValueDO)null, false);
+                        t.TreeCount = 1;
+                        t.CountOrMeasure = "M";
+                        t.TreeNumber = i + 1;
+                        newTrees[i] = t;
+                        t.Save();
+                    }
+                    _currentPlotInfo.DAL.CommitTransaction();
                 }
-                this.Controller._cDal.CommitTransaction();
-            }
-            catch (Exception e)
-            {
-                this.Controller._cDal.RollbackTransaction();
-                throw e;
+                catch (Exception e)
+                {
+                    _currentPlotInfo.DAL.RollbackTransaction();
+                    throw e;
+                }
             }
 
             foreach (TreeVM tree in newTrees)
