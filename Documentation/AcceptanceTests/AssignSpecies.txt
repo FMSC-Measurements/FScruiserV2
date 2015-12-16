@@ -1,0 +1,54 @@
+Feature: assign species
+	when a user edits the species on a tree 
+	they are given a selecion of valid species to chose from
+	if a tree doesn't have a sampleGroup but the straum selected has only one sampleGroup
+	then the sampleGroup is automaticly selected
+	
+Background:
+GIVEN the following units exist:
+	|code	|
+	|01		|
+AND the following strata exist
+	|code	|unit	|method	|
+	|01		|01		|STR	|
+	|02		|01		|STR	|
+
+AND the following sampleGroups exist
+	|code	|stratum	|TreeDefaults	|
+	|01		|01			|204 & 015		|
+	|02		|01			|108 & 122		|
+	|03		|02			|017 & 070		|
+AND the folling trees exist
+	|tree#	|stratum	|sampleGroup	|treeDefault	|
+	|1		|01			|01				|null			|
+	|2		|01			|null			|null			|
+	|3		|01			|02				|null			|
+	|4		|02			|03				|null			|
+	|5		|02			|null			|null			|
+	
+GIVEN tree 1 is selected
+WHEN user opens species selecion
+THEN user sees 204 & 015 // pass
+
+GIVEN tree 2 is selected
+WHEN user opens species selecion
+THEN user sees no entries // pass
+
+GIVEN tree 3 is selected
+WHEN user opens species selecion
+THEN user sees 108 & 122 // pass
+
+GIVEN tree 4 is selected
+WHEN user opens species selecion
+THEN user sees 017 & 070 // pass
+
+GIVEN tree 5 is selected
+WHEN user opens species selecion
+THEN user sees 017 & 070	//pass
+AND tree 5's sampleGroup is 03 //pass
+
+
+
+
+
+	
