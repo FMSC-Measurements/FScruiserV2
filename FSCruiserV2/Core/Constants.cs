@@ -15,7 +15,7 @@ namespace FSCruiser.Core
         public const string APP_SETTINGS_PATH = "\\Settings.xml";
 
         public const string BACKUP_PREFIX = "BACK_";
-        public const string BACKUP_TIME_FORMAT = "_yyyy_MM_dd__HH_mm";
+        public const string BACKUP_TIME_FORMAT = "(yyyy_MM_dd__HH_mm)";
 
         public const bool ALLOW_STR_SYSTEMATIC = true;
         public const int MAX_TALLY_HISTORY_SIZE = 20;

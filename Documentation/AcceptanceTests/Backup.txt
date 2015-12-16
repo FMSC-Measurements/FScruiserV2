@@ -1,0 +1,68 @@
+Feature: fileBackup
+	allow the user the option to manualy back up 
+	or automaticly back up cruise files when they leave a unit
+	
+Background:
+GIVEN the fallowing files exist:
+	|fileName				|Directory		|
+	|BackupTest.cruise		|\BackupTest	|
+	|BackupTest1.CRUISE		|\BackupTest	|
+	|BackupTest.m.cruise	|\BackupTest	|
+	|BackupTest.1.cruise	|\BackupTest	|
+	|Backedup2.cruise		|\BackupTest	|
+	|BACK_Backedup2.cruise	|\BackupTest	|
+	
+	
+GIVEN no file is open
+WHEN the user performs a manual backup
+THEN the message "No file open" is displayed // pass
+
+WHEN file "BACK_Backedup2.cruise" is open
+THEN the message "The file you have opened is marked as a backup\r\n Its recomended you don't modify your backup files" is displayed // pass 
+	
+GIVEN file "BackupTest.cruise" is open
+AND the directory "\BackupTest" doesn't contain "BACK_BackupTest(????_??_??__??_??).cruise"
+WHEN the user performs a manual backup
+THEN the directory "\BackupTest" contains "BACK_BackupTest(????_??_??__??_??).cruise" // pass
+
+GIVEN file "BackupTest.CRUISE" is open
+AND the directory "\BackupTest" doesn't contain "BACK_BackupTest1(????_??_??__??_??).CRUISE"
+WHEN the user performs a manual backup
+THEN the directory "\BackupTest" contains "BACK_BackupTest1(????_??_??__??_??).CRUISE" // pass
+
+GIVEN file "BackupTest.m.cruise" is open
+AND the directory "\BackupTest" doesn't contain "BACK_BackupTest(????_??_??__??_??).m.cruise"
+WHEN the user performs a manual backup
+THEN the directory "\BackupTest" contains "BACK_BackupTest(????_??_??__??_??).m.cruise"
+
+GIVEN file "BackupTest.1.cruise" is open
+AND the directory "\BackupTest" doesn't contain "BACK_BackupTest(????_??_??__??_??).1.cruise"
+WHEN the user performs a manual backup
+THEN the directory "\BackupTest" contains "BACK_BackupTest(????_??_??__??_??).1.cruise"
+
+GIVEN file "BackupTest.cruise" is open
+the directory "\BackupTest" doesn't contain "BACK_BackupTest.cruise"
+AND auto backup is enabled
+AND the user is in a unit
+WHEN the user leaves a unit
+THEN the directory "\BackupTest" contains "BACK_BackupTest.CRUISE"
+
+GIVEN file "BackupTest2.cruise" is open
+WHEN the user performs a manual backup
+THEN the directory "\BackupTest" contains "BACK_BackupTest2.cruise" 
+
+GIVEN file "BACK_BackupTest2.cruise" is open
+WHEN the user performs a manual backup
+THEN the directory "\BackupTest" contains "BACK_BackupTest2(????_??_??__??_??).cruise"
+AND the directory "\BackupTest" doesn't contain "BACK_BACK_BackupTest2(????_??_??__??_??).cruise"
+
+GIVEN file "BACK_BackupTest2.cruise" is open
+the directory "\BackupTest" doesn't contain "BACK_BackupTest2.cruise"
+AND auto backup is enabled
+AND the user is in a unit
+WHEN the user leaves a unit
+THEN the directory "\BackupTest" contains "BACK_BackupTest2.CRUISE" // fail (can not overwrite open file)
+
+
+
+

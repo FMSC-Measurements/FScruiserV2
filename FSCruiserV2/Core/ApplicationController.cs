@@ -29,6 +29,7 @@ namespace FSCruiser.Core
         private int _talliesSinceLastSave = 0;
         
         private List<CruiserVM> _cruisers;
+        private bool _allowBackup; 
         private string _backupDir;
         public string BackupDir 
         {
@@ -148,11 +149,20 @@ namespace FSCruiser.Core
             return false;
         }
 
-        protected bool OpenFile(string fileName)
+        protected bool OpenFile(string path)
         {
             try
             {
-                this.LoadDatabase(fileName);
+                this.LoadDatabase(path);
+
+                var fileName = Path.GetFileName(path);
+                if (fileName.StartsWith("BACK_"))
+                {
+                    _allowBackup = false;
+                    this.ViewController.ShowMessage("The file you have opened is marked as a backup\r\n" +
+                        "Its recomended you don't modify your backup files", "Warning", MessageBoxIcon.Hand);
+                }
+
                 return true;
             }
             catch (FMSC.ORM.ReadOnlyException ex)
@@ -306,16 +316,39 @@ namespace FSCruiser.Core
         #endregion
 
         #region backup
-        private string GetBackupFileName(string destDir, bool useTimeStamp)
+
+        private string GetBackupFileName(string backupDir, bool useTimeStamp)
         {
             string originalFileName = System.IO.Path.GetFileName(this._cDal.Path);
-            String backupFileName = Constants.BACKUP_PREFIX + originalFileName;
-            if (useTimeStamp)
-            {
-                backupFileName.Insert(backupFileName.IndexOf('.'), DateTime.Now.ToString(Constants.BACKUP_TIME_FORMAT));
-            }
-            return destDir + "\\" + backupFileName;
+
+            //regex disected
+            //prefix (optional): "BACK_"
+            //core: one or more characters that extends until the time or postfix is found
+            //time (optional): time stamp  
+            //postfix: file extention and optional component indicator
+
+            System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(
+                @"(?<prefix>" + Constants.BACKUP_PREFIX + @")*" 
+                + @"(?<core>.+?)" 
+                + @"(?<time>\(\d{4}_\d{2}_\d{2}__\d{2}_\d{2}\))?" 
+                + @"(?<postfix>(?:[.](?:[m]|\d+))?(?:[\.](?:cruise|cut)))"
+                , System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            string backupFileName = regex.Replace(originalFileName, 
+                (m) => {
+                    var result = Constants.BACKUP_PREFIX + m.Groups["core"].Value;
+                    if(useTimeStamp)
+                    {
+                        result += DateTime.Now.ToString(Constants.BACKUP_TIME_FORMAT);
+                    }
+                    result += m.Groups["postfix"];
+                    return result;
+                }
+            );
+
+            return backupDir + "\\" + backupFileName;
         }
+
 
         public void PerformBackup(bool useTS)
         {
@@ -324,10 +357,16 @@ namespace FSCruiser.Core
 
         public void PerformBackup(string path)
         {
+            if (!_allowBackup)
+            {
+                ViewController.ShowMessage("Back up not allowed", "Warning", MessageBoxIcon.Asterisk);
+                return;
+            }
+
             try
             {
                 this.ViewController.ShowWait();
-                this._cDal.CopyTo(path);
+                this._cDal.CopyTo(path, true);
             }
             catch (Exception e)
             {
