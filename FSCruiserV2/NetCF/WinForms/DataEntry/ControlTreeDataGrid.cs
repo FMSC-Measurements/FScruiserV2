@@ -518,7 +518,8 @@ namespace FSCruiser.WinForms.DataEntry
                     MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button2))
                 {
-                    curTree.Delete();
+                    DataEntryController.Unit.DeleteTree(curTree);
+                    //curTree.Delete();
                     //Controller.DeleteTree(curTree);
                 }
             }
