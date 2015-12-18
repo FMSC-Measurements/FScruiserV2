@@ -1,23 +1,23 @@
 Feature: assign plot numbers
-	when there are multiple plot strata in a unit
-	and one stratum is ahead of the others in numbering plots
-	new plots in strata that are behind will be given the current highest plot number in the unit
-	and new plots in the strata that is ahead will be given the highest plot number in the unit + 1
+    when there are multiple plot strata in a unit
+    and one stratum is ahead of the others in numbering plots
+    new plots in strata that are behind will be given the current highest plot number in the unit
+    and new plots in the strata that is ahead will be given the highest plot number in the unit + 1
 
 Background:
 GIVEN the following units exist:
-	|code	|
-	|01 	|
-	|02		|
+    |code   |
+    |01     |
+    |02     |
 AND the following strata exist
-	|code	|unit	|method	|
-	|01		|01	& 02|PCM	|
-	|02		|01	& 02|PCM	|
+    |code   |unit   |method |
+    |01     |01 & 02|PCM    |
+    |02     |01 & 02|PCM    |
 AND the following plots exist
-	|unit	|stratum|Plot#	|
-	|01		|01		|1		|
-	|01		|01		|2		|
-	
+    |unit   |stratum|Plot#  |
+    |01     |01     |1      |
+    |01     |01     |2      |
+    
 GIVEN unit 01 is the current unit
 AND stratum 02 is the current stratum
 WHEN the user adds a new plots

@@ -1,27 +1,27 @@
 Feature: sample tree tally
-	users can tally trees using the sample tree method, using various configurations, such as:
-	using systmatic sampling or block sampling (the default), tally by sample group or tally by species
-	
+    users can tally trees using the sample tree method, using various configurations, such as:
+    using systmatic sampling or block sampling (the default), tally by sample group or tally by species
+    
 Background:
 GIVEN the following cutting units exist
-	|code	|
-	|01		|
-	|02		|
+    |code   |
+    |01     |
+    |02     |
 AND the following strata exist
-	|code	|units		|method	|HotKey	|
-	|01		|01	& 02	|STR	|1		|
+    |code   |units      |method |HotKey |
+    |01     |01 & 02    |STR    |1      |
 AND the following sample groups exist
-	|code	|stratum	|sampling freq	|insurance freq	|species	|Tally mode	|systmatic sampling	|
-	|01		|01			|5				|0				|204		|by Sg		|false				|
-	|02		|01			|5				|5				|015 & 108	|by Sp		|false				|
-	|03		|01			|5				|0				|122		|by Sg		|true				|
+    |code   |stratum    |sampling freq  |insurance freq |species    |Tally mode |systmatic sampling |
+    |01     |01         |5              |0              |204        |by Sg      |false              |
+    |02     |01         |5              |5              |015 & 108  |by Sp      |false              |
+    |03     |01         |5              |0              |122        |by Sg      |true               |
 AND the follinw tallys are setup
-	|sample group	|species	|hotkey	|discription	|
-	|01				|			|A		|01				|
-	|02				|015		|B		|015			|
-	|02				|108		|C		|108			|
-	|03				|122		|D		|03				|
-	
+    |sample group   |species    |hotkey |discription    |
+    |01             |           |A      |01             |
+    |02             |015        |B      |015            |
+    |02             |108        |C      |108            |
+    |03             |122        |D      |03             |
+    
 WHEN user enters data entry for unit 01
 THEN the data entry form has the fallowing tabs : Tree, Tally
 

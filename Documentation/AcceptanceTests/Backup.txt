@@ -1,25 +1,25 @@
 Feature: fileBackup
-	allow the user the option to manualy back up 
-	or automaticly back up cruise files when they leave a unit
-	
+    allow the user the option to manualy back up 
+    or automaticly back up cruise files when they leave a unit
+    
 Background:
 GIVEN the fallowing files exist:
-	|fileName				|Directory		|
-	|BackupTest.cruise		|\TestBackup	|
-	|BackupTest1.CRUISE		|\TestBackup	|
-	|BackupTest.m.cruise	|\TestBackup	|
-	|BackupTest.1.cruise	|\TestBackup	|
-	|Backedup2.cruise		|\TestBackup	|
-	|BACK_Backedup2.cruise	|\TestBackup	|
-	
-	
+    |fileName               |Directory      |
+    |BackupTest.cruise      |\TestBackup    |
+    |BackupTest1.CRUISE     |\TestBackup    |
+    |BackupTest.m.cruise    |\TestBackup    |
+    |BackupTest.1.cruise    |\TestBackup    |
+    |Backedup2.cruise       |\TestBackup    |
+    |BACK_Backedup2.cruise  |\TestBackup    |
+    
+    
 GIVEN no file is open
 WHEN the user performs a manual backup
 THEN the message "No file open" is displayed // pass
 
 WHEN file "BACK_Backedup2.cruise" is open
 THEN the message "The file you have opened is marked as a backup\r\n Its recomended you don't modify your backup files" is displayed // pass 
-	
+    
 GIVEN file "BackupTest.cruise" is open
 AND the directory "\TestBackup" doesn't contain "BACK_BackupTest(????_??_??__??_??).cruise"
 WHEN the user performs a manual backup
