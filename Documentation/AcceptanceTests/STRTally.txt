@@ -1,0 +1,76 @@
+Feature: sample tree tally
+	users can tally trees using the sample tree method, using various configurations, such as:
+	using systmatic sampling or block sampling (the default), tally by sample group or tally by species
+	
+Background:
+GIVEN the following cutting units exist
+	|code	|
+	|01		|
+	|02		|
+AND the following strata exist
+	|code	|units		|method	|HotKey	|
+	|01		|01	& 02	|STR	|1		|
+AND the following sample groups exist
+	|code	|stratum	|sampling freq	|insurance freq	|species	|Tally mode	|systmatic sampling	|
+	|01		|01			|5				|0				|204		|by Sg		|false				|
+	|02		|01			|5				|5				|015 & 108	|by Sp		|false				|
+	|03		|01			|5				|0				|122		|by Sg		|true				|
+AND the follinw tallys are setup
+	|sample group	|species	|hotkey	|discription	|
+	|01				|			|A		|01				|
+	|02				|015		|B		|015			|
+	|02				|108		|C		|108			|
+	|03				|122		|D		|03				|
+	
+WHEN user enters data entry for unit 01
+THEN the data entry form has the fallowing tabs : Tree, Tally
+
+GIVEN the user is in unit 1 
+THEN the tally page displays stratum 01 with hotkey "1"
+AND stratum 01 has contains the fallowing tally entrys : 01, 015, 108
+
+
+GIVEN the user is in unit 1 
+AND the user is in the tally page
+WHEN the user hit the "A"
+THEN the number on the tally button for the 01 tally increases by 1
+AND "01 01" is added to the tally history list
+AND the Count from Tally table in the Tally information screen for tally 01 is increased by 1
+
+
+GIVEN the user has enabled the cruiser selection pop up
+WHEN the user gets a measure tree
+THEN the device beeps
+AND the message "Measure Tree" is displayed
+FOLLOWED BY the cruiser selection pop up is displayed
+FOLLOWED BY the message "Would you like to enter tree data now?"
+
+
+GIVEN the user has disabled the cruiser selection pop up
+WHEN the user gets a measure tree
+THEN the device beeps
+AND the message "Measure Tree" is displayed
+FOLLOWED BY the message "Would you like to enter tree data now?"
+
+
+GIVEN the user has enabled the cruiser selection pop up
+WHEN the user gets a insurance tree sample
+THEN the device beeps
+AND the message "Insurance Tree" is displayed
+FOLLOWED BY the cruiser selection pop up is displayed
+FOLLOWED BY an entry is added to the tally history ending with "I"
+
+
+GIVEN the user has disabled the cruiser selection pop up
+WHEN the user gets a insurance tree sample
+THEN the device beeps
+AND the message "Insurance Tree" is displayed
+FOLLOWED BY an entry is added to the tally history ending with "I"
+
+
+GIVEN tally 03 has had 3 tallies since its last measure tally while in unit 01
+AND the user is now in unit 02
+WHEN the user tallies 03 twice 
+THEN the second tally results in a measure tree
+
+

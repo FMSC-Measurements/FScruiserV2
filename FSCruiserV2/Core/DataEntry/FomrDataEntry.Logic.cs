@@ -54,8 +54,7 @@ namespace FSCruiser.Core.DataEntry
 
         protected bool AskEnterMeasureTreeData()
         {
-            this.ViewController.SignalMeasureTree(false);
-            return this.ViewController.AskYesNo("Measure Tree\r\n Would you like to enter tree data now?", "Sample", MessageBoxIcon.Question, false);
+            return this.ViewController.AskYesNo("Would you like to enter tree data now?", "Sample", MessageBoxIcon.Question, false);
         }
 
         public void ShowLogs(TreeVM tree)
@@ -250,47 +249,54 @@ namespace FSCruiser.Core.DataEntry
 
             count.TreeCount++;
             Unit.TallyHistoryBuffer.Add(action);
-            //this._BS_tallyHistory.MoveLast();
-            //Controller.OnTally();
-
         }
-
 
         private void OnSample(TallyAction action, CountTreeVM count, int kpi, bool isInsurance)
         {
-            TreeVM tree;
-            tree = Unit.CreateNewTreeEntry(count, !isInsurance);
+            TreeVM tree = Unit.CreateNewTreeEntry(count, !isInsurance);
             tree.KPI = kpi;
             tree.CountOrMeasure = (isInsurance) ? "I" : "M";
 
-            //TODO signal sample tree
-            //ask cruiser initials 
+            if (!isInsurance)
+            {
+                this.ViewController.SignalMeasureTree(true);
+            }
+            else
+            {
+                this.ViewController.SignalInsuranceTree();
+            }
+
+            this.ViewController.ShowCruiserSelection(tree);
+
             tree.TrySave();
             Unit.AddNonPlotTree(tree);
-
-            action.TreeRecord = tree;
 
             if (!isInsurance && this.AskEnterMeasureTreeData())
             {
                 this.View.GotoTreePage();
                 this.View.TreeViewMoveLast();
-            }
-            else if(isInsurance)
-            {
-                this.ViewController.SignalInsuranceTree();
             }
         }
 
         private void OnSample(TallyAction action, CountTreeVM count, bool isInsurance)
         {
-            TreeVM tree;
-            tree = Unit.CreateNewTreeEntry(count);
-            action.TreeRecord = tree;
+            TreeVM tree = Unit.CreateNewTreeEntry(count);     
             tree.CountOrMeasure = (isInsurance) ? "I" : "M";
-            //TODO signal sample tree
-            //ask cruiser initials 
-            tree.TrySave();
 
+            action.TreeRecord = tree;
+
+            if(!isInsurance)
+            {
+                this.ViewController.SignalMeasureTree(true);
+            }
+            else
+            {
+                this.ViewController.SignalInsuranceTree();
+            }
+
+            this.ViewController.ShowCruiserSelection(tree);
+
+            tree.TrySave();
             Unit.AddNonPlotTree(tree);
 
             if (!isInsurance && this.AskEnterMeasureTreeData())
@@ -298,12 +304,7 @@ namespace FSCruiser.Core.DataEntry
                 this.View.GotoTreePage();
                 this.View.TreeViewMoveLast();
             }
-            else if (isInsurance)
-            {
-                this.ViewController.SignalInsuranceTree();
-            }
         }
-
 
         public void OnTally(CountTreeVM count, PlotVM plot, ITreeView treeView)
         {
@@ -430,6 +431,32 @@ namespace FSCruiser.Core.DataEntry
         {
             return "Unit: " + this.Unit.Code + ", " + this.Unit.Description;
         }
+
+//        public IList<StratumInfo> GetUnitPlotStrata()
+//        {
+//            CuttingUnitDO unit = this.Controller.CurrentUnit;
+//            IList<StratumInfo> list = this.Controller._cDal.Read<StratumInfo>("Stratum",
+//@"JOIN CuttingUnitStratum USING (Stratum_CN) 
+//WHERE CuttingUnitStratum.CuttingUnit_CN = ? 
+//AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', 'P3PNT')", unit.CuttingUnit_CN);
+//            foreach (StratumInfo s in list)
+//            {
+//                if (s.Plots == null)
+//                {
+//                    s.Plots = this.Controller._cDal.Read<PlotInfo>("Plot", "WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber", s.Stratum_CN, unit.CuttingUnit_CN);
+//                }
+//                if (s.Method == "3PPNT")
+//                {
+//                    if (s.KZ3PPNT <= 0)
+//                    {
+//                        MessageBox.Show("error 3PPNT missing KZ value, please return to Cruise System Manger and fix");
+//                        return null;
+//                    }
+//                    s.SampleSelecter = new FMSC.Sampling.ThreePSelecter((int)s.KZ3PPNT, 1000000, 0);
+//                }
+//            }
+//            return list;
+//        }
 
         public void PopulateTallies(StratumVM stratum, DataEntryMode stratumMode, CuttingUnitVM unit, Panel container, ITallyView view)
         {
@@ -695,31 +722,7 @@ namespace FSCruiser.Core.DataEntry
             cancel = false;
         }
 
-//        public IList<StratumInfo> GetUnitPlotStrata()
-//        {
-//            CuttingUnitDO unit = this.Controller.CurrentUnit;
-//            IList<StratumInfo> list = this.Controller._cDal.Read<StratumInfo>("Stratum",
-//@"JOIN CuttingUnitStratum USING (Stratum_CN) 
-//WHERE CuttingUnitStratum.CuttingUnit_CN = ? 
-//AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', 'P3PNT')", unit.CuttingUnit_CN);
-//            foreach (StratumInfo s in list)
-//            {
-//                if (s.Plots == null)
-//                {
-//                    s.Plots = this.Controller._cDal.Read<PlotInfo>("Plot", "WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber", s.Stratum_CN, unit.CuttingUnit_CN);
-//                }
-//                if (s.Method == "3PPNT")
-//                {
-//                    if (s.KZ3PPNT <= 0)
-//                    {
-//                        MessageBox.Show("error 3PPNT missing KZ value, please return to Cruise System Manger and fix");
-//                        return null;
-//                    }
-//                    s.SampleSelecter = new FMSC.Sampling.ThreePSelecter((int)s.KZ3PPNT, 1000000, 0);
-//                }
-//            }
-//            return list;
-//        }
+
 
         public void HandleAddTreeClick()
         {

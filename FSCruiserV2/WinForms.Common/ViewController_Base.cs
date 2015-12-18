@@ -281,6 +281,8 @@ namespace FSCruiser.WinForms.Common
 
         public abstract void SignalInsuranceTree();
 
+        
+
 
         public void ShowWait()
         {
