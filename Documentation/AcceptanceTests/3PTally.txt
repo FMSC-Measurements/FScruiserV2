@@ -6,18 +6,25 @@ GIVEN the following cutting units exist
     |code   |
     |01     |
 AND the following strata exist
-    |code   |units      |method |HotKey |
-    |01     |01         |3P     |1      |
+    |code   |units      |method |HotKey |Plot Size/BAF  |    
+    |01     |01         |3P     |1      |               |
+    |02     |01         |F3P    |2      |10             |
+    |03     |01         |P3P    |3      |30             |
 AND the following sample groups exist
     |code   |stratum    |KZ             |insurance freq |species    |Tally mode |MinKPI |MaxKPI |
-    |01     |01         |100            |0              |204        |by Sp      |       |       |
-    |02     |01         |100            |5              |015 & 108  |by Sp      |       |       |
-AND the follinw tallys are setup
+    |01     |01         |333            |2              |204        |by Sp      |10     |30     |
+    |02     |02         |333            |               |           |by Sp      |       |       |
+    |03     |03         |333            |               |           |by Sp      |       |       |
+
+AND the folling tallys are setup
     |sample group   |species    |hotkey |discription    |
     |01             |204        |A      |204            |
     |02             |015        |B      |015            |
-    |02             |108        |C      |108            |
-
+    |03             |108        |C      |108            |
+    
+WHEN the user enters the data entry screen
+THEN the data entry screen contains the folling tabs: Trees, Tally, 02F3P[2], 03-P3P[3]
+    
 WHEN the user tallys a tree
 THEN the three p number pad is displayed
 
@@ -26,50 +33,48 @@ AND the three p number pad is displayed
 WHEN the user doesn't enter a number 
 AND clicks accept
 THEN the message "No Value Entered" is displayed
-
-GIVEN the user has tallyed a tree
-AND the three p number pad is displayed
-WHEN the user doesn't enter a number 
-AND clicks accept
-THEN the message "No Value Entered" is displayed
+AND the three p number pad is closed                //should we have a cancel button instead?
+AND the device squaks                               //fail
 AND nothing is added to the tally history
 
-GIVEN the user has tallyed a tree
+GIVEN the user has tallyed 204
 AND the three p number pad is displayed
-WHEN the user doesn't enter a number 
+WHEN the user enters 9 
 AND clicks accept
-THEN the message "No Value Entered" is displayed
-AND nothing is added to the tally history
+THEN the message "Must be Greater or Equal to 10" is displayed
+AND the device squaks                               //fail
+
+GIVEN the user has tallyed 204
+AND the three p number pad is displayed
+WHEN the user enters 31 
+AND clicks accept
+THEN the message "Must be Less or Equal to 30" is displayed
+AND the device squaks                               //fail
+
 
 GIVEN the user has tallyed a tree
 AND the three p number pad is displayed
 WHEN the user clicks STM 
 AND clicks accept
 THEN a entry is added to the tally history ending with M
-AND a tree record has been added  with a KPI value of 0
+AND a tree record has been added  with a KPI = 0, STM = Y
 
 
-GIVEN the user has tallyed a tree
-AND the three p number pad is displayed
-AND entering the KPI value of 50 will not generate a sample
-WHEN the user enters the value 50
-AND clicks accept
-THEN a entry is added to the tally history ending with "[50]"
-AND the sum KPI value in the Tally infomation has been increased by 50
+GIVEN has enter a KPI of <x>
+WHEN the user doent get a insurance tree or a measure tree
+THEN a entry is added to the tally history ending with "[<x>]"
+AND the sum KPI value in the Tally infomation has been increased by <x>
 
 GIVEN the user has enabled the cruiser selection popup
-AND the user has tallyed a tree
-AND the three p number pad is displayed
-AND entering the KPI value of 50 will generate a sample
-WHEN the user enters the value 50
-AND clicks accept
+AND has enter a KPI of <x>
+WHEN the user gets a measure tree
 THEN the device beeps
 AND the message "Measure Tree" is displayed
 FOLLOWED BY the cruiser selection screen
 FOLLOWED BY the message "Would you like to enter tree data now?"
-AND the sup KPI value in the Tally infomation has been increased by 50
-AND a entry is added to the tally history ending with "[50]"
-AND a tree record has been added  with a KPI value of 50
+AND the sup KPI value in the Tally infomation has been increased by <x>
+AND a entry is added to the tally history ending with "[<x>]"
+AND a tree record has been added  with a KPI = <x>, STM = N
 
 GIVEN the user has added a tree using the Add Tree button 
 AND given it the sample group value of 01 
