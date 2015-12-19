@@ -1,0 +1,63 @@
+Feature: limiting distance calculator
+    users can use the limiting distance calculator to help determin if trees are out or in, 
+    when doing plot cruiseing 
+    
+Background:
+
+GIVEN the following strata exist:
+    |code   |method |plot size/baf  |
+    |01     |FIX    |10             |
+    |02     |PCM    |30             |
+    |03     |PNT    |35             |
+    |04     |STR    |               |
+    
+WHEN the user enters the data entry screen
+THEN the data entry screen contains the folling tabs: Trees, Tally, 01-FIX[], 02-PCM[], 03-PNT[]
+
+GIVEN the user is on the Trees tab
+WHEN the user clicks on Menu
+THEN Limiting Distance is disabled
+
+GIVEN the user is on the Tally tab
+WHEN the user clicks on Menu
+THEN Limiting Distance is disabled
+
+GIVEN the user is in a plot tab
+AND no plot is selected
+WHEN the user opens the limiting distance screen
+THEN the message "No Plot Selected" is displayed
+
+GIVEN the user is on the 01-FIX tab
+AND a plot is selected
+WHEN the user opens the limiting distance screen
+THEN the limiting distance screen has a text box with the label FPS
+AND the FPS text box shows the value 10
+
+GIVEN the user is on the 02-PCM tab
+AND a plot is selected
+WHEN the user opens the limiting distance screen
+THEN the limiting distance screen has a text box with the label BAF
+AND the BAF text box shows the value 30
+
+GIVEN the user is in a plot tab
+AND a plot is selected
+AND the limiting distance screen is open 
+AND the limiting distance has been calculated
+WHEN the user clicks OK 
+THEN the Remarks value for the current plot contains a entry showing the result of the limiting distance calculation
+
+
+// i think this feature was removed intentionaly 
+// see FormLimitingDistance.cs: 318
+GIVEN the user is in a plot tab
+AND the DBH field of a tree is selected
+AND the DBH value of the current tree is <x>
+AND the limiting distance screen is open
+AND the calculated limiting distance shows that the tree is in
+WHEN the use clicks OK
+THEN the DBH of the current tree is changed to <x> //fails
+
+
+
+
+    
