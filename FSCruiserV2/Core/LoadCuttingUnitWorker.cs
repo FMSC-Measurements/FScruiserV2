@@ -53,11 +53,11 @@ namespace FSCruiser.Core
 
 
             InitializeNonPlotTrees();
-            //create a list of just trees in tree based strata
-            List<TreeVM> nonPlotTrees = _unit.DAL.Read<TreeVM>(@"JOIN Stratum ON Tree.Stratum_CN = Stratum.Stratum_CN WHERE Tree.CuttingUnit_CN = ? AND
-                        (Stratum.Method = '100' OR Stratum.Method = 'STR' OR Stratum.Method = '3P' OR Stratum.Method = 'S3P') ORDER BY TreeNumber",
-                        (object)_unit.CuttingUnit_CN);
-            _unit.NonPlotTrees = new BindingList<TreeVM>(nonPlotTrees);
+//            //create a list of just trees in tree based strata
+//            List<TreeVM> nonPlotTrees = _unit.DAL.Read<TreeVM>(@"JOIN Stratum ON Tree.Stratum_CN = Stratum.Stratum_CN WHERE Tree.CuttingUnit_CN = ? AND
+//                        (Stratum.Method = '100' OR Stratum.Method = 'STR' OR Stratum.Method = '3P' OR Stratum.Method = 'S3P') ORDER BY TreeNumber",
+//                        (object)_unit.CuttingUnit_CN);
+//            _unit.NonPlotTrees = new BindingList<TreeVM>(nonPlotTrees);
 
             if (_unit.DAL.GetRowCount("CuttingUnitStratum", "WHERE CuttingUnit_CN = ?", _unit.CuttingUnit_CN) == 1)
             {
