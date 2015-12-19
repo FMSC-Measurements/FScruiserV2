@@ -162,6 +162,10 @@ namespace FSCruiser.Core
                     this.ViewController.ShowMessage("The file you have opened is marked as a backup\r\n" +
                         "Its recomended you don't modify your backup files", "Warning", MessageBoxIcon.Hand);
                 }
+                else
+                {
+                    _allowBackup = true;
+                }
 
                 return true;
             }

@@ -53,15 +53,14 @@ THEN the directory "\TestBackup" contains "BACK_BackupTest2.cruise"
 
 GIVEN file "BACK_BackupTest2.cruise" is open
 WHEN the user performs a manual backup
-THEN the directory "\TestBackup" contains "BACK_BackupTest2(????_??_??__??_??).cruise"
-AND the directory "\TestBackup" doesn't contain "BACK_BACK_BackupTest2(????_??_??__??_??).cruise"
+THEN the message "Backup not allowed" is displayed
 
 GIVEN file "BACK_BackupTest2.cruise" is open
 the directory "\TestBackup" doesn't contain "BACK_BackupTest2.cruise"
 AND auto backup is enabled
 AND the user is in a unit
 WHEN the user leaves a unit
-THEN the directory "\TestBackup" contains "BACK_BackupTest2.CRUISE" // fail (can not overwrite open file)
+THEN the message "Backup not allowed" is displayed
 
 
 
