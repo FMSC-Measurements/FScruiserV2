@@ -91,90 +91,90 @@ namespace FSCruiser.Core.DataEntry
             return ViewController.NumPadDialog.UserEnteredValue;
         }
 
-        /// <summary>
-        /// Creates a new plot using the plot info view and adds it to the given stratum's plot collection
-        /// </summary>
-        /// <param name="stratum">stratum to create plot in</param>
-        /// <returns>reference to newly created plot</returns>
-        public PlotVM AddPlot(StratumVM stratum)
-        {
-            PlotVM newPlot = new PlotVM(this.Database);
-            newPlot.CuttingUnit = this.Unit;
-            newPlot.Stratum = stratum;
-            newPlot.PlotNumber = this.GetNextPlotNumber(stratum);
+        ///// <summary>
+        ///// Creates a new plot using the plot info view and adds it to the given stratum's plot collection
+        ///// </summary>
+        ///// <param name="stratum">stratum to create plot in</param>
+        ///// <returns>reference to newly created plot</returns>
+        //public PlotVM AddPlot(PlotStratum stratum)
+        //{
+        //    PlotVM newPlot = new PlotVM(this.Database);
+        //    newPlot.CuttingUnit = this.Unit;
+        //    newPlot.Stratum = stratum;
+        //    newPlot.PlotNumber = stratum.GetNextPlotNumber(this.Unit.CuttingUnit_CN.Value);
 
-            //PlotInfo plotInfo = new PlotInfo(newPlot, stratum);
-            //newPlot.NextPlotTreeNum = 1;
-            if (this.ViewController.ShowPlotInfo(newPlot, true) == DialogResult.OK)
-            {
-                foreach (PlotVM pi in stratum.Plots)
-                {
-                    if (pi.PlotNumber == newPlot.PlotNumber)
-                    {
-                        MessageBox.Show(String.Format("Plot Number {0} Already Exists", newPlot.PlotNumber));
-                        return this.AddPlot(stratum);
-                    }
-                }
+        //    //PlotInfo plotInfo = new PlotInfo(newPlot, stratum);
+        //    //newPlot.NextPlotTreeNum = 1;
+        //    if (this.ViewController.ShowPlotInfo(newPlot, true) == DialogResult.OK)
+        //    {
+        //        foreach (PlotVM pi in stratum.Plots)
+        //        {
+        //            if (pi.PlotNumber == newPlot.PlotNumber)
+        //            {
+        //                MessageBox.Show(String.Format("Plot Number {0} Already Exists", newPlot.PlotNumber));
+        //                return this.AddPlot(stratum);
+        //            }
+        //        }
 
 
-                newPlot.Save();
-                stratum.Plots.Add(newPlot);
-                newPlot.CheckDataState();
+        //        newPlot.Save();
+        //        stratum.Plots.Add(newPlot);
+        //        newPlot.CheckDataState();
 
-                if (!String.IsNullOrEmpty(newPlot.IsEmpty) && String.Compare(newPlot.IsEmpty.Trim(), "True", true) == 0)
-                {
-                    return this.AddPlot(stratum) ?? newPlot;//add plot may return null, in that case return most recently created plot
-                }
-                else if (newPlot.Stratum.Method == "3PPNT" && newPlot.Trees.Count == 0)
-                {
-                    return this.AddPlot(stratum) ?? newPlot;//add plot may return null, in that case return most recently created plot
-                }
-                return newPlot;
-            }
-            return null;
-        }
+        //        if (!String.IsNullOrEmpty(newPlot.IsEmpty) && String.Compare(newPlot.IsEmpty.Trim(), "True", true) == 0)
+        //        {
+        //            return this.AddPlot(stratum) ?? newPlot;//add plot may return null, in that case return most recently created plot
+        //        }
+        //        else if (newPlot.Stratum.Method == "3PPNT" && newPlot.Trees.Count == 0)
+        //        {
+        //            return this.AddPlot(stratum) ?? newPlot;//add plot may return null, in that case return most recently created plot
+        //        }
+        //        return newPlot;
+        //    }
+        //    return null;
+        //}
 
-        public int GetNextPlotNumber(StratumDO stratum)
-        {
-            try
-            {
-                int highestInUnit = 0;
-                int highestInStratum = 0;
+        //public int GetNextPlotNumber(StratumDO stratum)
+        //{
+        //    try
+        //    {
+        //        int highestInUnit = 0;
+        //        int highestInStratum = 0;
 
-                {
-                    string query = string.Format("Select Max(PlotNumber) FROM Plot WHERE CuttingUnit_CN = {0}", this.Unit.CuttingUnit_CN);
-                    long? result = Database.ExecuteScalar(query) as long?;
-                    highestInUnit = (result != null) ? (int)result.Value : 0;
-                }
+        //        {
+        //            string query = string.Format("Select Max(PlotNumber) FROM Plot WHERE CuttingUnit_CN = {0}", this.Unit.CuttingUnit_CN);
+        //            long? result = Database.ExecuteScalar(query) as long?;
+        //            highestInUnit = (result != null) ? (int)result.Value : 0;
+        //        }
        
-                {
-                    string query = string.Format("Select Max(PlotNumber) FROM Plot WHERE CuttingUnit_CN = {0} AND Stratum_CN = {1}", this.Unit.CuttingUnit_CN, stratum.Stratum_CN);
-                    long? result = Database.ExecuteScalar(query) as long?;
-                    highestInStratum = (result != null) ? (int)result.Value : 0;
-                }
+        //        {
+        //            string query = string.Format("Select Max(PlotNumber) FROM Plot WHERE CuttingUnit_CN = {0} AND Stratum_CN = {1}", this.Unit.CuttingUnit_CN, stratum.Stratum_CN);
+        //            long? result = Database.ExecuteScalar(query) as long?;
+        //            highestInStratum = (result != null) ? (int)result.Value : 0;
+        //        }
 
 
-                if (highestInUnit > highestInStratum && highestInUnit > 0)
-                {
-                    return highestInUnit;
-                }
-                return highestInUnit + 1;
-            }
-            catch (Exception e)
-            {
-                Logger.Log.E("Unable to establish next plot number", e);
-                return 0;
-            }
-        }
+        //        if (highestInUnit > highestInStratum && highestInUnit > 0)
+        //        {
+        //            return highestInUnit;
+        //        }
+        //        return highestInUnit + 1;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Logger.Log.E("Unable to establish next plot number", e);
+        //        return 0;
+        //    }
+        //}
 
-        /// <summary>
-        /// </summary>
-        /// <returns>KPI, value is -1 if STM</returns>
-        public int? GetKPI(int min, int max)
-        {
-            ViewController.ThreePNumPad.ShowDialog(min, max, null, true);
-            return ViewController.ThreePNumPad.UserEnteredValue;
-        }
+        ///// <summary>
+        ///// </summary>
+        ///// <returns>KPI, value is -1 if STM</returns>
+        //public int? GetKPI(int min, int max)
+        //{
+        //    ViewController.ThreePNumPad.ShowDialog(min, max, null, true);
+        //    return ViewController.ThreePNumPad.UserEnteredValue;
+        //}
 
 
         public void OnTally(CountTreeVM count)
@@ -203,7 +203,7 @@ namespace FSCruiser.Core.DataEntry
             {
                 
                 int kpi = 0;
-                int? value = GetKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
+                int? value = ViewController.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
                 if (value == null)
                 {
                     this.ViewController.ShowMessage("No Value Entered", null, MessageBoxIcon.None);
@@ -327,7 +327,7 @@ namespace FSCruiser.Core.DataEntry
             if ((mode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP)
             {
                 int kpi = 0;
-                int? value = GetKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
+                int? value = ViewController.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
                 if (value == null)
                 {
                     this.ViewController.ShowMessage("No Value Entered", null, MessageBoxIcon.None);

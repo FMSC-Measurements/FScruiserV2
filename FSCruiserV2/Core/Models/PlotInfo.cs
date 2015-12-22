@@ -12,7 +12,7 @@ namespace FSCruiser.Core.Models
     public class PlotVM : PlotDO
     {
         private bool _isTreeDataPopulated = false;
-        private BindingList<TreeVM> _trees;
+        private IList<TreeVM> _trees;
 
         public PlotVM() 
             : base()
@@ -51,7 +51,7 @@ namespace FSCruiser.Core.Models
         }
 
 
-        public BindingList<TreeVM> Trees
+        public IList<TreeVM> Trees
         {
             get
             {
@@ -135,6 +135,7 @@ namespace FSCruiser.Core.Models
                     , base.CuttingUnit.CuttingUnit_CN
                     , base.Plot_CN);
                 this._trees = new BindingList<TreeVM>(tList);
+                //this._trees = tList;
 
                 //long? value = base.DAL.ExecuteScalar(String.Format("Select MAX(TreeNumber) FROM Tree WHERE Plot_CN = {0}", base.Plot_CN)) as long?;
                 //this.NextPlotTreeNum = (value.HasValue) ? (int)value.Value : 0;

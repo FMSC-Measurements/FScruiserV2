@@ -24,7 +24,7 @@ namespace FSCruiser.WinForms.Common
         protected TabPage _treePage;
         protected ControlTreeDataGrid _treeView;
 
-        protected IList<StratumVM> _plotStrataInfo;
+        //protected IList<StratumVM> _plotStrataInfo;
 
 
         public IApplicationController Controller { get; protected set; }

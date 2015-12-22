@@ -128,13 +128,17 @@ namespace FSCruiser.WinForms.DataEntry
             DataEntryMode unitMode = unit.GetDataEntryMode();
             this.SuspendLayout();
 
+            this._pageContainer = MakePageContainer();
 
-            //if the unit contains Tree based methods or multiple plot strata then we need a tab control
-            if ((unitMode & DataEntryMode.Tree) == DataEntryMode.Tree ||
-                ((unitMode & DataEntryMode.Plot) == DataEntryMode.Plot && unit.Strata.Count > 1))
-            {
-                this._pageContainer = MakePageContainer();
-            }
+
+            ////if the unit contains Tree based methods or multiple plot strata then we need a tab control
+            //if ((unitMode & DataEntryMode.Tree) == DataEntryMode.Tree ||
+            //    ((unitMode & DataEntryMode.Plot) == DataEntryMode.Plot && unit.Strata.Count > 1))
+            //{
+            //    this._pageContainer = MakePageContainer();
+            //}
+
+
 
             //do we have any tree based strata in the unit
             if ((unitMode & DataEntryMode.Tree) == DataEntryMode.Tree)
@@ -167,9 +171,9 @@ namespace FSCruiser.WinForms.DataEntry
 
             if ((unitMode & DataEntryMode.Plot) == DataEntryMode.Plot)
             {
-                _plotStrataInfo = unit.GetPlotStrata();
+                var plotStrata = unit.GetPlotStrata();
 
-                foreach(StratumVM st in _plotStrataInfo)
+                foreach (PlotStratum st in plotStrata)
                 {
                     if (st.Method == "3PPNT")
                     {
@@ -182,10 +186,7 @@ namespace FSCruiser.WinForms.DataEntry
                     }
                     st.LoadTreeFieldNames();
 
-                    //load plots in stratum
-                    st.Plots = controller._cDal.Read<PlotVM>("WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber"
-                        , st.Stratum_CN
-                        , LogicController.Unit.CuttingUnit_CN);
+                    st.PopulatePlots(unit.CuttingUnit_CN.GetValueOrDefault());
 
                     if (_pageContainer != null)
                     {
@@ -199,7 +200,6 @@ namespace FSCruiser.WinForms.DataEntry
 
                         int pageIndex = _pageContainer.TabPages.IndexOf(page);
                         this.LogicController.AddStratumHotKey(st.Hotkey, pageIndex);
-
                     }
                     else
                     {
@@ -216,31 +216,6 @@ namespace FSCruiser.WinForms.DataEntry
                 this.Controls.Add(this._pageContainer);
                 this._pageContainer.ResumeLayout(false);
             }
-            //DataGridAdjuster.InitializeGrid(this.editableDataGrid1);
-            //DataGridTableStyle tableStyle = DataGridAdjuster.InitializeTreeColumns(this.Controller._cDal, this.editableDataGrid1,unit, null, LogsClicked);
-            //this.editableDataGrid1.SIP = this.SIP;
-
-            //_speciesColumn = tableStyle.GridColumnStyles["Species"] as EditableComboBoxColumn;
-            //_sgColumn = tableStyle.GridColumnStyles["SampleGroup"] as EditableComboBoxColumn;
-            //_stratumColumn = tableStyle.GridColumnStyles["Stratum"] as EditableComboBoxColumn;
-
-            //if (_speciesColumn != null)
-            //{
-            //    _speciesColumn.SelectedValueChanged += new EventHandler(SelectedSpeciesChanged);
-            //}
-
-            //if (_sgColumn != null)
-            //{
-            //    _sgColumn.SelectedValueChanged += new EventHandler(SelectedSampleGroupChanged);
-            //}
-
-            //if (_stratumColumn != null)
-            //{
-            //    _stratumColumn.DataSource = unit.Strata;
-            //    _stratumColumn.SelectedValueChanged += new EventHandler(SelectedStratumChanged);
-
-            //}
-
 
 
             // Set the form title (Text) with current cutting unit and description.

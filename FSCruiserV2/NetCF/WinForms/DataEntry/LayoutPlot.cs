@@ -298,7 +298,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                return this.ViewLogicController.StratumInfo.HotKeyLookup;
+                return this.ViewLogicController.Stratum.HotKeyLookup;
             }
              
         }
@@ -347,14 +347,14 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, StratumVM stratum, InputPanel sip)
+        public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, PlotStratum stratum, InputPanel sip)
         {
             //this.HotKeyLookup = new Dictionary<char, CountTreeDO>();
 
             //this.DataEntryController = dataEntryController;
             //this.StratumInfo = stInfo;
             //this.Controller = controller;
-            this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController);
+            this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController, dataEntryController.ViewController);
             InitializeComponent();
 
 
@@ -913,7 +913,7 @@ namespace FSCruiser.WinForms.DataEntry
                 }
             }
 
-            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.StratumInfo, this.ViewLogicController.CurrentPlot, tree);
+            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot, tree);
         }
 
 

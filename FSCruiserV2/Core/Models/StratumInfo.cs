@@ -11,10 +11,6 @@ namespace FSCruiser.Core.Models
     {
         private Dictionary<char, CountTreeVM> _hotKeyLookup;
 
-        public StratumVM()
-            : base()
-        { }
-
 
         /// <summary>
         /// for 3ppnt 
@@ -24,7 +20,7 @@ namespace FSCruiser.Core.Models
         public string[] TreeFieldNames { get; set; }
 
         //public StratumDO Stratum { get; set; }
-        public List<PlotVM> Plots { get; set; }
+        //public List<PlotVM> Plots { get; set; }
         //public List<CountTreeDO> Counts { get; set; }
         
         public Dictionary<char, CountTreeVM> HotKeyLookup 
@@ -38,6 +34,7 @@ namespace FSCruiser.Core.Models
                 return _hotKeyLookup;
             }
         }
+
         public Control TallyContainer { get; set; }
 
         public void LoadTreeFieldNames()

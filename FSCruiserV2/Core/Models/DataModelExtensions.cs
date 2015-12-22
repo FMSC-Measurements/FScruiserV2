@@ -44,9 +44,9 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", (object)unit.CuttingUnit_CN);
             return list;
         }
 
-        public static IList<StratumVM> GetPlotStrata(this CuttingUnitDO unit)
+        public static IList<PlotStratum> GetPlotStrata(this CuttingUnitDO unit)
         {
-            IList<StratumVM> list = unit.DAL.Read<StratumVM>(
+            IList<PlotStratum> list = unit.DAL.Read<PlotStratum>(
 @"JOIN CuttingUnitStratum USING (Stratum_CN) 
 WHERE CuttingUnitStratum.CuttingUnit_CN = ? 
 AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", (object)unit.CuttingUnit_CN);

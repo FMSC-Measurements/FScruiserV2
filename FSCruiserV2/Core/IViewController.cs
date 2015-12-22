@@ -59,6 +59,7 @@ namespace FSCruiser.Core
         bool AskYesNo(String message, String caption, MessageBoxIcon icon);
         bool AskYesNo(String message, String caption, MessageBoxIcon icon, bool defaultNo);
         bool AskCancel(String message, String caption, MessageBoxIcon icon, bool defaultCancel);
+        int? AskKPI(int min, int max);
 
         void SignalMeasureTree(bool showMessage);
         void SignalInsuranceTree();
