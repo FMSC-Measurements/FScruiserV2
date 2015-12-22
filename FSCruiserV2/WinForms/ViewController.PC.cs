@@ -40,7 +40,7 @@ namespace FSCruiser.WinForms
             throw new NotImplementedException();
         }
 
-        public override void ShowDataEntry(CruiseDAL.DataObjects.CuttingUnitDO unit)
+        public override void ShowDataEntry(CuttingUnitVM unit)
         {
             _dataEntryView = null;
 

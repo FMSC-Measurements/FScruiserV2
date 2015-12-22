@@ -24,11 +24,11 @@ namespace FSCruiser.WinForms.DataEntry
             InitializeComponent();
         }
 
-        public FormDataEntry(IApplicationController controller, CuttingUnitDO unit)
+        public FormDataEntry(IApplicationController controller, CuttingUnitVM unit)
         {
             base.Controller = controller;
             this.InitializeComponent();
-            base.LogicController = new FormDataEntryLogic(this.Controller, this);
+            base.LogicController = new FormDataEntryLogic(unit, this.Controller, this);
 
             this.InitLayout(unit);
         }
@@ -48,7 +48,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void InitLayout(CuttingUnitDO unit)
         {
-            DataEntryMode unitMode = Controller.GetUnitDataEntryMode(unit);
+            DataEntryMode unitMode = unit.GetDataEntryMode();
             this.SuspendLayout();
 
             _layouts = new List<IDataEntryPage>();
@@ -91,10 +91,12 @@ namespace FSCruiser.WinForms.DataEntry
 
             if ((unitMode & DataEntryMode.Plot) == DataEntryMode.Plot)
             {
-                _plotStrataInfo = Controller.GetUnitPlotStrata();
-                foreach (StratumVM st in _plotStrataInfo)
+                var plotStrata = unit.GetPlotStrata();
+                foreach (PlotStratum st in plotStrata)
                 {
-                    st.Plots = this.Controller._cDal.Read<PlotVM>("Plot", "WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber", st.Stratum_CN, Controller.CurrentUnit.CuttingUnit_CN);
+                    //st.Plots = this.Controller._cDal.Read<PlotVM>("Plot", "WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber", st.Stratum_CN, Controller.CurrentUnit.CuttingUnit_CN);
+
+                    st.PopulatePlots(unit.CuttingUnit_CN.GetValueOrDefault());
 
                     if (_pageContainer != null)
                     {

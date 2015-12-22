@@ -43,9 +43,9 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
 
-        public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, StratumVM stratum)
+        public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, PlotStratum stratum)
         {
-            this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController);
+            this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController, dataEntryController.ViewController);
             this.Dock = DockStyle.Fill;            
             InitializeComponent();
             
@@ -96,7 +96,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                return this.ViewLogicController.StratumInfo.HotKeyLookup;
+                return this.ViewLogicController.Stratum.HotKeyLookup;
             }
 
         }
@@ -297,13 +297,13 @@ namespace FSCruiser.WinForms.DataEntry
         protected void UpdateSampleGroupColumn(TreeVM tree, DataGridViewComboBoxCell cell)
         {
             if (cell == null) { return; }
-            cell.DataSource = AppController.GetTreeSGList(tree);
+            cell.DataSource = tree.ReadValidSampleGroups();
         }
 
         protected void UpdateSpeciesColumn(TreeVM tree, DataGridViewComboBoxCell cell)
         {
             if (cell == null) { return; }
-            cell.DataSource = AppController.GetTreeTDVList(tree);
+            cell.DataSource = tree.ReadValidTDVs();
         }
 
         protected bool ProcessSampleGroupChanging(TreeVM tree, SampleGroupVM newSG)
@@ -370,13 +370,14 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void ShowLimitingDistanceDialog()
         {
-            if (this.ViewLogicController.CurrentPlotInfo == null)
+            if (this.ViewLogicController.CurrentPlot == null)
             {
                 ShowNoPlotSelectedMessage();
                 return;
             }
 
-            this.ViewLogicController.Controller.ShowLimitingDistanceDialog(this.ViewLogicController.StratumInfo, this.ViewLogicController.CurrentPlotInfo, null);
+
+            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot, null);
         }
 
         public void RefreshTreeView(PlotVM currentPlot)

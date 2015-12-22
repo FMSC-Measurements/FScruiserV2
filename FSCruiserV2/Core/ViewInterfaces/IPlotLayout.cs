@@ -10,6 +10,7 @@ namespace FSCruiser.Core.ViewInterfaces
         #region properties
         LayoutPlotLogic ViewLogicController { get; set; }
 
+        //PlotVM CurrentPlot { get; set; }
         #endregion
 
         

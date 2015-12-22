@@ -58,7 +58,7 @@ namespace FSCruiser.WinForms.DataEntry
         private void PopulateStrata(CuttingUnitVM unit)
         {
             //unit.Strata.Populate();
-            Strata = Controller.GetUnitTreeBasedStrata();
+            Strata = unit.GetTreeBasedStrata();
             foreach (StratumVM stratum in this.Strata)
             {
                 //if ((Controller.GetStrataDataEntryMode(stratum) & DataEntryMode.Plot) 
@@ -92,7 +92,7 @@ namespace FSCruiser.WinForms.DataEntry
                 strataButton.Parent = _leftContentPanel;
                 strataButton.Tag = stratum;
 
-                DataEntryMode mode = Controller.GetStrataDataEntryMode(stratum);
+                DataEntryMode mode = stratum.GetDataEntryMode();
                 this.DataEntryController.PopulateTallies(stratum, mode, unit, tallyContainer, this);
                 //AdjustPanelHeight(tallyContainer);
 
@@ -202,7 +202,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void HandleLoad()
         {
-            this.PopulateStrata(Controller.CurrentUnit);
+            this.PopulateStrata(this.DataEntryController.Unit);
 
             //if there is only one strata in the unit 
             //display the counts for that stratum
@@ -211,7 +211,7 @@ namespace FSCruiser.WinForms.DataEntry
                 this.DisplayTallyPanel(this.Strata[0]);
             }
 
-            this._BS_tallyHistory.DataSource = Controller.TallyHistory;
+            this._BS_tallyHistory.DataSource = this.DataEntryController.Unit.TallyHistory;
             this._viewLoading = false;
         }
 

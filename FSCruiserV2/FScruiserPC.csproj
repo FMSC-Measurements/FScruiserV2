@@ -66,20 +66,29 @@
     <Compile Include="Core\CountTreeExtensions.cs" />
     <Compile Include="Core\DataEntry\FomrDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
+    <Compile Include="Core\Exceptions.cs" />
     <Compile Include="Core\FormCruiserSelection.Logic.cs" />
     <Compile Include="Core\IApplicationController.cs" />
     <Compile Include="Core\IViewController.cs" />
+    <Compile Include="Core\LoadCuttingUnitWorker.cs" />
     <Compile Include="Core\Models\CountTreeVM.cs" />
     <Compile Include="Core\Models\CruiserVM.cs" />
     <Compile Include="Core\Models\CuttingUnitInfo.cs" />
+    <Compile Include="Core\Models\DataEntryMode.cs" />
+    <Compile Include="Core\Models\DataModelExtensions.cs" />
+    <Compile Include="Core\Models\ITreeContaningModel.cs" />
     <Compile Include="Core\Models\PlotInfo.cs" />
+    <Compile Include="Core\Models\PlotStratum.cs" />
     <Compile Include="Core\Models\SampleGroupVM.cs" />
     <Compile Include="Core\Models\StratumInfo.cs" />
     <Compile Include="Core\Models\SubPopInfo.cs" />
     <Compile Include="Core\Models\TallyAction.cs" />
+    <Compile Include="Core\Models\TallyHistoryCollection.cs" />
     <Compile Include="Core\Models\TallySettingsDO.cs" />
     <Compile Include="Core\Models\TreeVM.cs" />
     <Compile Include="Core\ApplicationSettings.cs" />
+    <Compile Include="Core\SaveTreesWorker.cs" />
+    <Compile Include="Core\TreeValidationWorker.cs" />
     <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
     <Compile Include="Core\ViewInterfaces\IDataEntryPage.cs" />
     <Compile Include="Core\ViewInterfaces\IDataEntryView.cs" />
@@ -251,6 +260,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Core\FSCruiser.Core.cd" />
+    <None Include="Core\Models\FMSC.Core.Models.cd" />
     <None Include="Core\ViewInterfaces\FSCruiser.Core.ViewInterfaces.cd" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.TreeDO.datasource" />
@@ -314,6 +324,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="FMSC_Logo.jpg" />
     <Content Include="fscruiser.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

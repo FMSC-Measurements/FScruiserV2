@@ -41,7 +41,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                return DataGridAdjuster.GetTreeFieldNames(this.Controller._cDal, this.Controller.CurrentUnit, null);
+                return DataGridAdjuster.GetTreeFieldNames(this.Controller._cDal, this.DataEntryController.Unit, null);
             }
         }
 
@@ -49,7 +49,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                return this.Controller.CurrentUnitNonPlotTreeList;
+                return this.DataEntryController.Unit.NonPlotTrees;
             }
         }
 
@@ -79,7 +79,7 @@ namespace FSCruiser.WinForms.DataEntry
             //this._BS_TreeSampleGroups.DataSource = typeof(SampleGroupDO);
             //((System.ComponentModel.ISupportInitialize)this._BS_TreeSampleGroups).EndInit();
 
-            DataGridViewColumn[] columns = DataGridAdjuster.MakeTreeColumns(controller._cDal, controller.CurrentUnit, null, this.Controller.ViewController.EnableLogGrading);
+            DataGridViewColumn[] columns = DataGridAdjuster.MakeTreeColumns(controller._cDal, DataEntryController.Unit, null, this.Controller.ViewController.EnableLogGrading);
             base.Columns.AddRange(columns);
 
             _speciesColumn = base.Columns["Species"] as DataGridViewComboBoxColumn;
@@ -98,7 +98,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_stratumColumn != null)
             {
-                _stratumColumn.DataSource = Controller.GetUnitTreeBasedStrata();
+                _stratumColumn.DataSource = DataEntryController.Unit.GetTreeBasedStrata();
             }
             if (_initialsColoumn != null)
             {
@@ -256,13 +256,13 @@ namespace FSCruiser.WinForms.DataEntry
         protected void UpdateSampleGroupColumn(TreeVM tree, DataGridViewComboBoxCell cell)
         {
             if (cell == null) { return; }
-            cell.DataSource = Controller.GetTreeSGList(tree);
+            cell.DataSource = tree.ReadValidSampleGroups();
         }
 
         protected void UpdateSpeciesColumn(TreeVM tree, DataGridViewComboBoxCell cell)
         {
             if (cell == null) { return; }
-            cell.DataSource = Controller.GetTreeTDVList(tree);
+            cell.DataSource = tree.ReadValidTDVs();
         }
 
         //private void UpdateSampleGroupColumn(TreeVM tree, DataGridViewComboBoxEditingControl editControl)
@@ -306,7 +306,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void HandleLoad()
         {
-            this._BS_trees.DataSource = Controller.CurrentUnitNonPlotTreeList;
+            this._BS_trees.DataSource = DataEntryController.Unit.NonPlotTrees;
 
             _viewLoading = false;
         }
@@ -350,7 +350,7 @@ namespace FSCruiser.WinForms.DataEntry
                     MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button2))
                 {
-                    Controller.DeleteTree(curTree);
+                    DataEntryController.Unit.DeleteTree(curTree);
                 }
             }
         }
@@ -389,14 +389,14 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this.UserCanAddTrees == false) { return null; }
             TreeVM prevTree = null;
-            StratumVM assumedSt = Controller.DefaultStratum;
+            StratumVM assumedSt = DataEntryController.Unit.DefaultStratum;
             if (_BS_trees.Count > 0)
             {
                 prevTree = (TreeVM)_BS_trees[_BS_trees.Count - 1];
                 assumedSt = prevTree.Stratum;
             }
 
-            return Controller.UserAddTree(prevTree, assumedSt, null);
+            return DataEntryController.Unit.UserAddTree(prevTree, assumedSt, null);
         }
 
         #endregion
