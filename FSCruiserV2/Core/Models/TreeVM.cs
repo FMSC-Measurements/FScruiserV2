@@ -17,11 +17,6 @@ namespace FSCruiser.Core.Models
         {
         }
 
-        public TreeVM(TreeDO tree)
-            : base(tree)
-        {
-        }
-
         public new SampleGroupVM SampleGroup
         {
             get
@@ -46,63 +41,37 @@ namespace FSCruiser.Core.Models
             }
         }
 
+
         //public override float HiddenPrimary
         //{
         //    get
         //    {
-        //        if (base.HiddenPrimary == 0.0F && this.TreeDefaultValue != null)
+        //        if (this.TreeDefaultValue != null && base.HiddenPrimary == 0.0F)
         //        {
         //            return this.TreeDefaultValue.HiddenPrimary;
         //        }
-        //        else
-        //        {
-        //            return base.HiddenPrimary;
-        //        }
+        //        return base.HiddenPrimary;
         //    }
         //    set
         //    {
-        //        if (!base.PropertyChangedEventsDisabled &&  this.TreeDefaultValue != null && value == base.HiddenPrimary)
-        //        {
-        //            base.HiddenPrimary = 0;
-        //        }
-        //        else
+        //        if (this.PropertyChangedEventsDisabled)
         //        {
         //            base.HiddenPrimary = value;
         //        }
+        //        else if (this.TreeDefaultValue != null)
+        //        {
+        //            if (this.TreeDefaultValue.HiddenPrimary == value)
+        //            {
+        //                base.HiddenPrimary = 0.0F;
+        //            }
+        //            else
+        //            {
+        //                base.HiddenPrimary = value;
+        //                //base.NotifyPropertyChanged(CruiseDAL.Schema.TREE.HIDDENPRIMARY);
+        //            }
+        //        }
         //    }
         //}
-
-        public override float HiddenPrimary
-        {
-            get
-            {
-                if (this.TreeDefaultValue != null && base.HiddenPrimary == 0.0F)
-                {
-                    return this.TreeDefaultValue.HiddenPrimary;
-                }
-                return base.HiddenPrimary;
-            }
-            set
-            {
-                if (this.PropertyChangedEventsDisabled)
-                {
-                    base.HiddenPrimary = value;
-                }
-                else if (this.TreeDefaultValue != null)
-                {
-                    if (this.TreeDefaultValue.HiddenPrimary == value)
-                    {
-                        base.HiddenPrimary = 0.0F;
-                    }
-                    else
-                    {
-                        base.HiddenPrimary = value;
-                        //base.NotifyPropertyChanged(CruiseDAL.Schema.TREE.HIDDENPRIMARY);
-                    }
-                }
-
-            }
-        }
 
         public override StratumDO GetStratum()
         {
