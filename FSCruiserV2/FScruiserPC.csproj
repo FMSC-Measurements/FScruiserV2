@@ -98,18 +98,18 @@
     <Compile Include="Core\ViewInterfaces\IPlotLayout.cs" />
     <Compile Include="Core\ViewInterfaces\ITallyView.cs" />
     <Compile Include="Core\ViewInterfaces\ITreeView.cs" />
+    <Compile Include="WinForms.Common\FormCruiserSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FormCruiserSelection.Designer.cs">
+      <DependentUpon>FormCruiserSelection.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms.Common\FormDataEntryBase.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinForms.Common\ViewController_Base.cs" />
     <Compile Include="WinForms\DataEntry\ControlTreeDataGrid.PC.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="WinForms\CruiserSelectionView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms\CruiserSelectionView.Designer.cs">
-      <DependentUpon>CruiserSelectionView.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms\CuttingUnitSelectView.cs">
       <SubType>UserControl</SubType>
@@ -190,12 +190,11 @@
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="WinForms\ViewController.PC.cs" />
     <Compile Include="Properties\AssemblyInfo.PC.cs" />
+    <EmbeddedResource Include="WinForms.Common\FormCruiserSelection.resx">
+      <DependentUpon>FormCruiserSelection.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormDataEntryBase.resx">
       <DependentUpon>FormDataEntryBase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\CruiserSelectionView.resx">
-      <DependentUpon>CruiserSelectionView.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\CuttingUnitSelectView.resx">
       <DependentUpon>CuttingUnitSelectView.cs</DependentUpon>

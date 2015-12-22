@@ -77,6 +77,7 @@ namespace FSCruiser.Core.DataEntry
             this.Stratum = stratum;
             this.View = view;
             this.DataEntryController = dataEntryController;
+            this.ViewController = viewController;
 
 
             this._BS_Plots = new BindingSource();

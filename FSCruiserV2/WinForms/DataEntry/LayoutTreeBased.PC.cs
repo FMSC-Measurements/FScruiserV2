@@ -211,7 +211,7 @@ namespace FSCruiser.WinForms.DataEntry
                 this.DisplayTallyPanel(this.Strata[0]);
             }
 
-            this._BS_tallyHistory.DataSource = this.DataEntryController.Unit.TallyHistory;
+            this._BS_tallyHistory.DataSource = this.DataEntryController.Unit.TallyHistoryBuffer;
             this._viewLoading = false;
         }
 

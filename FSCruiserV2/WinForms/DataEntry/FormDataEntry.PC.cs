@@ -69,7 +69,8 @@ namespace FSCruiser.WinForms.DataEntry
 
                 _treeView = new ControlTreeDataGrid(this.Controller, this.LogicController);
                 _treeView.Dock = DockStyle.Fill;
-                _treeView.AllowUserToAddRows = true;
+
+                _treeView.UserCanAddTrees = true;
 
                 _treePage.Controls.Add(_treeView);
                 this._pageContainer.TabPages.Add(_treePage);

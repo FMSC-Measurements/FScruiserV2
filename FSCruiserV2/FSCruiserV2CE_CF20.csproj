@@ -26,7 +26,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WindowsCE CF20 PocketPC Mobile</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NetCF NetCF20</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -110,12 +110,6 @@
     <Compile Include="NetCF\WinForms\FormCruiseInfo.Designer.cs">
       <DependentUpon>FormCruiseInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="NetCF\WinForms\FormCruiserSelection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NetCF\WinForms\FormCruiserSelection.designer.cs">
-      <DependentUpon>FormCruiserSelection.cs</DependentUpon>
-    </Compile>
     <Compile Include="Core\FormCruiserSelection.Logic.cs" />
     <Compile Include="NetCF\WinForms\DataEntry\FormDataEntry.cs">
       <SubType>Form</SubType>
@@ -124,6 +118,12 @@
       <DependentUpon>FormDataEntry.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\TreeValidationWorker.cs" />
+    <Compile Include="WinForms.Common\FormCruiserSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FormCruiserSelection.Designer.cs">
+      <DependentUpon>FormCruiserSelection.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms.Common\FormDataEntryBase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -301,7 +301,7 @@
       <DependentUpon>FormBackupUtility.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NetCF\WinForms\FormCruiserSelection.resx">
+    <EmbeddedResource Include="WinForms.Common\FormCruiserSelection.resx">
       <DependentUpon>FormCruiserSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

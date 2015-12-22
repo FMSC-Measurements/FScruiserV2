@@ -16,6 +16,7 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public class ControlTreeDataGrid : DataGridView, ITreeView
     {
+        bool _userCanAddTrees;
         private bool _viewLoading = true;
         private BindingSource _BS_trees;
         private DataGridViewComboBoxColumn _speciesColumn;
@@ -286,15 +287,18 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region ITreeView Members
 
+        
         public bool UserCanAddTrees
         {
             get
             {
-                return this.AllowUserToAddRows;
+                return _userCanAddTrees;
+                //return this.AllowUserToAddRows;
             }
             set
             {
-                this.AllowUserToAddRows = value;
+                _userCanAddTrees = value;
+                //this.AllowUserToAddRows = value;
             }
         }
 
@@ -396,7 +400,7 @@ namespace FSCruiser.WinForms.DataEntry
                 assumedSt = prevTree.Stratum;
             }
 
-            return DataEntryController.Unit.UserAddTree(prevTree, assumedSt, null);
+            return DataEntryController.Unit.UserAddTree(prevTree, assumedSt, DataEntryController.ViewController);
         }
 
         #endregion

@@ -17,7 +17,7 @@ namespace FSCruiser.WinForms
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-#if PocketPC
+#if NetCF
         [MTAThread]
 #else
         [STAThread]
