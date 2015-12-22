@@ -3,7 +3,7 @@
   <Class Name="FSCruiser.Core.ApplicationController" BaseTypeListCollapsed="true">
     <Position X="4.5" Y="0.5" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>AqHCXZNYOChlSGgSFEAJuAkESQnUAlUAg4kLjFAggKY=</HashCode>
+      <HashCode>ACCASZAQACBAQCgCAAAIKAkACQAQAEEAQAgCCEAgAAI=</HashCode>
       <FileName>Core\ApplicationController.cs</FileName>
     </TypeIdentifier>
     <Lollipop Orientation="Left" Position="0.279" Collapsed="true" />
@@ -46,21 +46,21 @@
   <Class Name="FSCruiser.Core.DataEntry.FormDataEntryLogic" Collapsed="true">
     <Position X="9" Y="4.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QoAIIAAICUAIggACYQgAAGQUoIIBAwAACBBEIEAAAAA=</HashCode>
+      <HashCode>QoAIIAQICUAIggACYQgAAGQUooIBAwAAiRBEIEAAAAA=</HashCode>
       <FileName>Core\DataEntry\FomrDataEntry.Logic.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="FSCruiser.Core.IApplicationController">
     <Position X="0.5" Y="0.5" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>AqHCGZBYMAggACgCEAAIoAEAQQjQAkEAgYECjEAggKI=</HashCode>
+      <HashCode>AACACZAQAAAAACgCAAAIIAEAAQAAAEEAAAACAEAgAAI=</HashCode>
       <FileName>Core\IApplicationController.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FSCruiser.Core.IViewController" Collapsed="true">
     <Position X="9" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AMACACgIAIQUQBCAAAAABAAAUUACAgQEAAAQAAQBhEI=</HashCode>
+      <HashCode>AMACACgIAIQUQBCAAAAABAAAUEACAgQEAAEQAAQBhEI=</HashCode>
       <FileName>Core\IViewController.cs</FileName>
     </TypeIdentifier>
   </Interface>

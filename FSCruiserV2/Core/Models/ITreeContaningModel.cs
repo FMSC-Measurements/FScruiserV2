@@ -22,8 +22,6 @@ namespace FSCruiser.Core.Models
 
         bool IsTreeNumberAvalible(long treeNumber);
 
-        ICollection<StratumVM> GetStrata();
-
         void DeleteTree(TreeVM tree);
 
         bool ValidateTrees();
