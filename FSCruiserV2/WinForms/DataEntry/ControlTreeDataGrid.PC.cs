@@ -62,7 +62,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.Controller = controller;
             this.DataEntryController = dataEntryController;
 
-            
+            this.CellClick += new DataGridViewCellEventHandler(ControlTreeDataGrid_CellClick);
 
             this._BS_trees = new BindingSource();
             ((System.ComponentModel.ISupportInitialize)this._BS_trees).BeginInit();
@@ -88,6 +88,8 @@ namespace FSCruiser.WinForms.DataEntry
             _stratumColumn = base.Columns["Stratum"] as DataGridViewComboBoxColumn;
             _treeNumberColumn = base.Columns["TreeNumber"] as DataGridViewTextBoxColumn;
             _initialsColoumn = base.Columns["Initials"] as DataGridViewComboBoxColumn;
+            _errorMessageColumn = base.Columns["Error"] as DataGridViewTextBoxColumn;
+            _logsColumn = base.Columns["Logs"] as DataGridViewButtonColumn;
 
             if (_speciesColumn != null)
             {
@@ -104,6 +106,19 @@ namespace FSCruiser.WinForms.DataEntry
             if (_initialsColoumn != null)
             {
                 _initialsColoumn.DataSource = this.Controller.GetCruiserList();
+            }
+            
+        }
+
+        void ControlTreeDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (_logsColumn != null && e.ColumnIndex == _logsColumn.Index)
+            {
+                TreeVM curTree = this.Trees[e.RowIndex] as TreeVM;
+                if (curTree != null)
+                {
+                    this.DataEntryController.ShowLogs(curTree);
+                }
             }
         }
 
@@ -371,7 +386,13 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void MoveHomeField()
         {
-            this.CurrentCell = this[0, this.CurrentCellAddress.Y];
+            if (this.CurrentCellAddress.Y == -1) { return; }
+            try
+            {
+                this.CurrentCell = this[0, this.CurrentCellAddress.Y];
+            }
+            catch
+            { }
         }
 
         public TreeVM UserAddTree()
@@ -382,8 +403,8 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 //t.TreeCount = 1; //for pc dont set tree count to 1
                 //this._BS_trees.Add(t);
-                this._BS_trees.MoveLast();
-                base.CurrentCell = base[this.HomeColumnIndex, base.CurrentRow.Index];
+                this.MoveLast();
+                this.MoveHomeField();
             }
             return t;
 

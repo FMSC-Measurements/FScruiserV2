@@ -317,9 +317,9 @@ namespace FSCruiser.WinForms.DataEntry
             set { this.ViewLogicController.UserCanAddTrees = value; }
         }
 
-        private bool _isGridExpanded = false;
         private ImageList _imageList;
-    
+        private bool _isGridExpanded = false;
+        
         public bool IsGridExpanded
         {
             get

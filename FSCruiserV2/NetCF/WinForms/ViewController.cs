@@ -28,7 +28,7 @@ namespace FSCruiser.WinForms
         }
         #endregion
 
-        private Dictionary<StratumDO, FormLogs> _logViews = new Dictionary<StratumDO, FormLogs>();
+        //private Dictionary<StratumDO, FormLogs> _logViews = new Dictionary<StratumDO, FormLogs>();
 
         
 
@@ -37,17 +37,17 @@ namespace FSCruiser.WinForms
             //this.PlatformType = //TODO implement ability to identify platform type
         }
 
-        public FormLogs GetLogsView(StratumDO stratum)
-        {
-            if (_logViews.ContainsKey(stratum))
-            {
-                return _logViews[stratum];
-            }
-            FormLogs logView = new FormLogs(this.ApplicationController, stratum.Stratum_CN.Value);
-            _logViews.Add(stratum, logView);
+        //public FormLogs GetLogsView(StratumDO stratum)
+        //{
+        //    if (_logViews.ContainsKey(stratum))
+        //    {
+        //        return _logViews[stratum];
+        //    }
+        //    FormLogs logView = new FormLogs(this.ApplicationController, stratum.Stratum_CN.Value);
+        //    _logViews.Add(stratum, logView);
 
-            return logView;
-        }             
+        //    return logView;
+        //}             
 
 
 
@@ -65,14 +65,14 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public override void ShowLogsView(StratumDO stratum, TreeVM tree)
-        {
-            if (stratum == null)
-            {
-                MessageBox.Show("Invalid Action. Stratum not set.");
-            }
-            this.GetLogsView(stratum).ShowDialog(tree);
-        }
+        //public override void ShowLogsView(StratumDO stratum, TreeVM tree)
+        //{
+        //    if (stratum == null)
+        //    {
+        //        MessageBox.Show("Invalid Action. Stratum not set.");
+        //    }
+        //    this.GetLogsView(stratum).ShowDialog(tree);
+        //}
 
         public override void ShowManageCruisers()
         {

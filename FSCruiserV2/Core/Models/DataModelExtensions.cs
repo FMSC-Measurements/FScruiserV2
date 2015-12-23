@@ -206,8 +206,8 @@ AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", (ob
 
         public static IList<LogDO> QueryLogs(this TreeDO tree) 
         {
-            return tree.DAL.Query<LogDO>("WHERE Log.Tree_CN = ? ORDER BY CAST (LogNumber AS NUMERIC) "
-                ,(object)tree.Tree_CN);
+            return tree.DAL.Query<LogDO>(new FMSC.ORM.Core.SQL.WhereClause("Log.Tree_CN = ? ORDER BY CAST (LogNumber AS NUMERIC)")
+                ,tree.Tree_CN);
 
             //return tree.DAL.Read<LogDO>("WHERE Log.Tree_CN = ? ORDER BY CAST (LogNumber AS NUMERIC) "
             //    ,(object)tree.Tree_CN);

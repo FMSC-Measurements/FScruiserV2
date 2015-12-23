@@ -26,7 +26,7 @@ namespace FSCruiser.Core
     {
         
 
-        private int _talliesSinceLastSave = 0;
+        //private int _talliesSinceLastSave = 0;
         
         private List<CruiserVM> _cruisers;
         private bool _allowBackup; 

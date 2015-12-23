@@ -16,7 +16,9 @@ namespace FSCruiser.WinForms.Common
 {
     public abstract class WinFormsViewControllerBase : IViewController
     {
-        private static Thread _splashThread; 
+        private static Thread _splashThread;
+
+        private Dictionary<StratumDO, FormLogs> _logViews = new Dictionary<StratumDO, FormLogs>();
 
         protected object _dataEntrySyncLock = new object();
         private FormMain _main;
@@ -134,7 +136,17 @@ namespace FSCruiser.WinForms.Common
         }
 
 
+        public FormLogs GetLogsView(StratumDO stratum)
+        {
+            if (_logViews.ContainsKey(stratum))
+            {
+                return _logViews[stratum];
+            }
+            FormLogs logView = new FormLogs(this.ApplicationController, stratum.Stratum_CN.Value);
+            _logViews.Add(stratum, logView);
 
+            return logView;
+        }   
 
 
         //public void HandleCuttingUnitDataLoaded()
@@ -200,7 +212,14 @@ namespace FSCruiser.WinForms.Common
         public abstract System.Windows.Forms.DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage);
 
 
-        public abstract void ShowLogsView(CruiseDAL.DataObjects.StratumDO stratum, TreeVM tree);
+        public void ShowLogsView(StratumDO stratum, TreeVM tree)
+        {
+            if (stratum == null)
+            {
+                MessageBox.Show("Invalid Action. Stratum not set.");
+            }
+            this.GetLogsView(stratum).ShowDialog(tree);
+        }
 
 
         public abstract void ShowManageCruisers();

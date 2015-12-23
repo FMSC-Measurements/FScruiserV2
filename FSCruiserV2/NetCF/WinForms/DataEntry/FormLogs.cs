@@ -114,6 +114,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.Focus();
             tree.LogCountDirty = true;
             return this.ShowDialog();
+
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -141,10 +142,12 @@ namespace FSCruiser.WinForms.DataEntry
                 //this._currentTree.Save();//tree is saved before entering log screen. 
                 foreach (LogDO log in this._logs)
                 {
-                    log.Tree = this._currentTree;
-                    log.Save();
+                    //log.Tree = this._currentTree;
+                    this.Controller._cDal.Save(log
+                        , FMSC.ORM.Core.SQL.OnConflictOption.Fail
+                        , false);
                 }
-                this.Controller._cDal.Save(this._logs);
+                //this.Controller._cDal.Save(this._logs);
             }
             catch(Exception)
             {
@@ -166,7 +169,7 @@ namespace FSCruiser.WinForms.DataEntry
         private LogDO AddLogRec()
         {
             LogDO newLog = new LogDO(this.Controller._cDal);
-            //newLog.Tree_CN = _currentTree.Tree_CN;
+            newLog.Tree_CN = _currentTree.Tree_CN;
             newLog.LogNumber = (++_logNumIndex).ToString();
 
             this._logs.Add(newLog);

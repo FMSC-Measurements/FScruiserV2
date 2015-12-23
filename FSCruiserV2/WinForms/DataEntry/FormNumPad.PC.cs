@@ -12,6 +12,10 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormNumPad : Form, INumPad
     {
+        private int? _minValue;
+        private int? _maxValue;
+        private bool _canReturnNull = false;
+
         public FormNumPad()
         {
             InitializeComponent();
@@ -21,23 +25,46 @@ namespace FSCruiser.WinForms.DataEntry
 
         public DialogResult ShowDialog(int? initialValue, bool canReturnNull)
         {
-            throw new NotImplementedException();
+            return this.ShowDialog(null, null, initialValue, canReturnNull);
         }
 
         public DialogResult ShowDialog(int? min, int? max, int? initialValue, bool canReturnNull)
         {
-            throw new NotImplementedException();
+            if (min != null && min > 0 && min < max)
+            {
+                this._minValue = min;
+            }
+            else
+            {
+                min = null;
+            }
+            if (max != null && max > 0 && max > min)
+            {
+                this._maxValue = max;
+            }
+            else
+            {
+                this._maxValue = null;
+            }
+            this.UserEnteredValue = initialValue;
+            this._canReturnNull = canReturnNull;
+            return this.ShowDialog();
         }
 
-        public int? UserEnteredValue
+        public virtual int? UserEnteredValue
         {
             get
             {
-                throw new NotImplementedException();
+                if (String.IsNullOrEmpty(_outputView.Text))
+                {
+                    return null;
+                }
+
+                return Convert.ToInt32(_outputView.Text);
             }
             set
             {
-                throw new NotImplementedException();
+                _outputView.Text = (value != null) ? value.Value.ToString() : String.Empty;
             }
         }
 

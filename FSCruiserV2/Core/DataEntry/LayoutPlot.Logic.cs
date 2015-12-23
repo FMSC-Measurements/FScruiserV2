@@ -21,7 +21,7 @@ namespace FSCruiser.Core.DataEntry
 
         public IPlotLayout View { get; set; }
         public IApplicationController Controller { get { return this.DataEntryController.Controller; } }
-        IViewController ViewController { get; set; } 
+        public IViewController ViewController { get; set; } 
         public FormDataEntryLogic DataEntryController { get; protected set; }
 
         public bool UserCanAddTrees { get; set; }
