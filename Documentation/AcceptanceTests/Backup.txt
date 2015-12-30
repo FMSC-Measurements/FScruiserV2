@@ -12,55 +12,57 @@ GIVEN the fallowing files exist:
     |Backedup2.cruise       |\TestBackup    |
     |BACK_Backedup2.cruise  |\TestBackup    |
     
+Scenario: user trys to backup when no file is open
+    GIVEN no file is open
+    WHEN the user performs a manual backup
+    THEN the message "No file open" is displayed // pass
+
+Scenario: user opens a backup file
+    WHEN file "BACK_Backedup2.cruise" is open
+    THEN the message "The file you have opened is marked as a backup\r\n Its recomended you don't modify your backup files" is displayed // pass 
+
+Scenario Outline: manual backup of a file    
+    GIVEN file <fileName> is open
+    AND the directory "\TestBackup" doesn't contain <resultPattern>
+    WHEN the user performs a manual backup
+    THEN the directory "\TestBackup" contains <resultPattern> 
+
+    Examples:
+    |fileName               |resultPattern                                  |
+    |BackupTest.cruise      |"BACK_BackupTest(????_??_??__??_??).cruise"    |    
+    |BackupTest1.CRUISE     |"BACK_BackupTest1(????_??_??__??_??).CRUISE"   |    
+    |BackupTest.m.cruise    |"BACK_BackupTest(????_??_??__??_??).m.cruise"  |
+    |BackupTest.1.cruise    |"BACK_BackupTest(????_??_??__??_??).1.cruise"  |
     
-GIVEN no file is open
-WHEN the user performs a manual backup
-THEN the message "No file open" is displayed // pass
 
-WHEN file "BACK_Backedup2.cruise" is open
-THEN the message "The file you have opened is marked as a backup\r\n Its recomended you don't modify your backup files" is displayed // pass 
-    
-GIVEN file "BackupTest.cruise" is open
-AND the directory "\TestBackup" doesn't contain "BACK_BackupTest(????_??_??__??_??).cruise"
-WHEN the user performs a manual backup
-THEN the directory "\TestBackup" contains "BACK_BackupTest(????_??_??__??_??).cruise" // pass
+Scenario Outline: automatic backup
+    GIVEN file <fileName> is open
+    AND auto backup is enabled
+    AND the user is in a unit
+    WHEN the user leaves a unit
+    THEN the directory "\TestBackup" contains <result>
 
-GIVEN file "BackupTest.CRUISE" is open
-AND the directory "\TestBackup" doesn't contain "BACK_BackupTest1(????_??_??__??_??).CRUISE"
-WHEN the user performs a manual backup
-THEN the directory "\TestBackup" contains "BACK_BackupTest1(????_??_??__??_??).CRUISE" // pass
+    Examples:
+    |fileName               |result                         |
+    |BackupTest.cruise      |"BACK_BackupTest.cruise"       |    
+    |BackupTest1.CRUISE     |"BACK_BackupTest1.CRUISE"      |    
+    |BackupTest.m.cruise    |"BACK_BackupTest.m.cruise"     |
+    |BackupTest.1.cruise    |"BACK_BackupTest.1.cruise"     |
+    |BackupTest2.cruise     |"BACK_BackupTest2.cruise"      | // special case: back file already exist   
 
-GIVEN file "BackupTest.m.cruise" is open
-AND the directory "\TestBackup" doesn't contain "BACK_BackupTest(????_??_??__??_??).m.cruise"
-WHEN the user performs a manual backup
-THEN the directory "\TestBackup" contains "BACK_BackupTest(????_??_??__??_??).m.cruise"
 
-GIVEN file "BackupTest.1.cruise" is open
-AND the directory "\TestBackup" doesn't contain "BACK_BackupTest(????_??_??__??_??).1.cruise"
-WHEN the user performs a manual backup
-THEN the directory "\TestBackup" contains "BACK_BackupTest(????_??_??__??_??).1.cruise"
+Scenario: disallow manual back up of a backup
+    GIVEN file "BACK_BackupTest2.cruise" is open
+    WHEN the user performs a manual backup
+    THEN the message "Backup not allowed" is displayed
 
-GIVEN file "BackupTest.cruise" is open
-the directory "\TestBackup" doesn't contain "BACK_BackupTest.cruise"
-AND auto backup is enabled
-AND the user is in a unit
-WHEN the user leaves a unit
-THEN the directory "\TestBackup" contains "BACK_BackupTest.CRUISE"
-
-GIVEN file "BackupTest2.cruise" is open
-WHEN the user performs a manual backup
-THEN the directory "\TestBackup" contains "BACK_BackupTest2.cruise" 
-
-GIVEN file "BACK_BackupTest2.cruise" is open
-WHEN the user performs a manual backup
-THEN the message "Backup not allowed" is displayed
-
-GIVEN file "BACK_BackupTest2.cruise" is open
-the directory "\TestBackup" doesn't contain "BACK_BackupTest2.cruise"
-AND auto backup is enabled
-AND the user is in a unit
-WHEN the user leaves a unit
-THEN the message "Backup not allowed" is displayed
+Scenario: disallow automatic backup of a backup
+    GIVEN file "BACK_BackupTest2.cruise" is open
+    the directory "\TestBackup" doesn't contain "BACK_BackupTest2.cruise"
+    AND auto backup is enabled
+    AND the user is in a unit
+    WHEN the user leaves a unit
+    THEN the message "Backup not allowed" is displayed
 
 
 

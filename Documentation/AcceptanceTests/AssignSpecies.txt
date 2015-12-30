@@ -26,13 +26,10 @@ AND the folling trees exist
     |4      |02         |03             |null           |
     |5      |02         |null           |null           |
     
-GIVEN tree 1 is selected
-WHEN user opens species selecion
-THEN user sees 204 & 015 // pass
-
-GIVEN tree 2 is selected
-WHEN user opens species selecion
-THEN user sees no entries // pass
+Senario: select species when tree has sampleGroup
+    GIVEN tree 1 is selected
+    WHEN user opens species selecion
+    THEN user sees 204 & 015 // pass
 
 GIVEN tree 3 is selected
 WHEN user opens species selecion
@@ -42,10 +39,17 @@ GIVEN tree 4 is selected
 WHEN user opens species selecion
 THEN user sees 017 & 070 // pass
 
-GIVEN tree 5 is selected
-WHEN user opens species selecion
-THEN user sees 017 & 070    //pass
-AND tree 5's sampleGroup is 03 //pass
+Senario: select species when sampleGroup hasn't been selected
+    GIVEN tree 2 is selected
+    WHEN user opens species selecion
+    THEN user sees no entries // pass
+
+
+Senario: select species when sampleGroup hasn't been selected, but stratum has only one sampleGroup
+    GIVEN tree 5 is selected
+    WHEN user opens species selecion
+    THEN user sees 017 & 070    //pass
+    AND tree 5's sampleGroup is 03 //pass
 
 
 

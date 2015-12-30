@@ -18,15 +18,17 @@ AND the following plots exist
     |01     |01     |1      |
     |01     |01     |2      |
     
-GIVEN unit 01 is the current unit
-AND stratum 02 is the current stratum
-WHEN the user adds a new plots
-THEN the new plot is given plot number 2 // pass
+Senario: when one stratum is behind in plot number, keep in step with highest plot number
+    GIVEN unit 01 is the current unit
+    AND stratum 02 is the current stratum
+    WHEN the user adds a new plots
+    THEN the new plot is given plot number 2 // pass
 
-GIVEN unit 01 is the current unit
-AND stratum 01 is the current stratum
-WHEN the user adds a new plots
-THEN the new plot is given plot number 3 // pass
+Senario: when stratum has the highest plot number in unit, assign next plot number
+    GIVEN unit 01 is the current unit
+    AND stratum 01 is the current stratum
+    WHEN the user adds a new plots
+    THEN the new plot is given plot number 3 // pass
 
 
 

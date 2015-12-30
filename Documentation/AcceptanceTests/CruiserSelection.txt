@@ -1,0 +1,29 @@
+Feature: cruiser initials selection
+    to speed up data entry, user can enter the initials of the cruisers before hand. 
+    when a tree is mesured they can quickly select a cruiser from the pre-defined list.
+
+Senario: first time setup of cruisers
+    GIVEN in the application directory the file Settings.xml doesn't exist
+    WHEN the user adds a cruiser with the initials "A"
+    AND exist the program
+    THEN in the application directory the file Settings.xml exists
+    AND when the program is restarted the cruisers list contains A
+    
+Senario: cruiser popup shows when a measure tree is tallyed 
+    GIVEN the cruiser select list contains at least one entry
+    AND show cruiser selection popup is enabled
+    WHEN a measure tree is tallyed 
+    THEN the cruiser selection popup shows
+    
+Senario: cruiser popup shows when a insurance tree is tallyed 
+    GIVEN the cruiser select list contains at least one entry
+    AND show cruiser selection popup is enabled
+    WHEN a insurance tree is tallyed 
+    THEN the cruiser selection popup shows
+    
+Senario: cruiser popup doesn't show when disabled
+    GIVEN the cruiser select list contains at least one entry
+    AND show cruiser selection popup is enabled
+    WHEN a measure tree is tallyed 
+    THEN the cruiser selection popup doesn't show
+    
