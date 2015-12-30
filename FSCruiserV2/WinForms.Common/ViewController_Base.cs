@@ -54,7 +54,7 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-        public bool EnableCruiserSelectionPopup { get; set; }
+        //public bool EnableCruiserSelectionPopup { get; set; }
 
         public FormCruiserSelection CruiserSelectionView
         {
@@ -197,7 +197,7 @@ namespace FSCruiser.WinForms.Common
 
         public void ShowCruiserSelection(TreeVM tree)
         {
-            if (EnableCruiserSelectionPopup)
+            if (this.ApplicationController.Settings.EnableCruiserPopup)
             {
                 this.CruiserSelectionView.ShowDialog(tree);
             }

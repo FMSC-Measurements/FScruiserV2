@@ -28,40 +28,12 @@ namespace FSCruiser.Core
 
         //private int _talliesSinceLastSave = 0;
         
-        private List<CruiserVM> _cruisers;
+        //private List<CruiserVM> _cruisers;
         private bool _allowBackup; 
-        private string _backupDir;
-        public string BackupDir 
-        {
-            get
-            {
-                if (_backupDir == null)
-                {
-                    if (this._cDal == null)
-                    {
-                        return "\\";//TODO change to non platform spacific default directroy 
-                    }
-                    else
-                    {
-                        return System.IO.Path.GetDirectoryName(this._cDal.Path);
-                    }
-                }
-                return _backupDir;
-            }
-            set
-            {
-                if (!String.IsNullOrEmpty(value) && Directory.Exists(value))
-                {
-                    this._backupDir = value;
-                }
-                else
-                {
-                    this._backupDir = null;
-                }
-            }
-        }
+        
 
-        public List<CruiserVM> Cruisers { get { return _cruisers; } }
+        public ApplicationSettings Settings { get; set; }
+        //public List<CruiserVM> Cruisers { get { return _cruisers; } }
         public CruiseDAL.DAL _cDal { get; set; }
         public List<CuttingUnitVM> CuttingUnits { get; protected set; }
 
@@ -72,7 +44,7 @@ namespace FSCruiser.Core
 
 
         //public long UnitTreeNumIndex = 0;
-        public BackUpMethod BackUpMethod { get; set; }
+        //public BackUpMethod BackUpMethod { get; set; }
         
         
 
@@ -240,34 +212,34 @@ namespace FSCruiser.Core
 
         
 
-        #region Cruisers
-        public CruiserVM[] GetCruiserList()
-        {
-            if(this._cruisers == null)
-            {
-                return new CruiserVM[0];
-            }
-            else
-            {
-                return this._cruisers.ToArray();
-            }
+        //#region Cruisers
+        //public CruiserVM[] GetCruiserList()
+        //{
+        //    if(this._cruisers == null)
+        //    {
+        //        return new CruiserVM[0];
+        //    }
+        //    else
+        //    {
+        //        return this._cruisers.ToArray();
+        //    }
 
-        }
+        //}
 
-        public void AddCruiser(string initials)
-        {
-            if (this._cruisers == null)
-            {
-                this._cruisers = new List<CruiserVM>();
-            }
-            this._cruisers.Add(new CruiserVM(initials));
-        }
+        //public void AddCruiser(string initials)
+        //{
+        //    if (this._cruisers == null)
+        //    {
+        //        this._cruisers = new List<CruiserVM>();
+        //    }
+        //    this._cruisers.Add(new CruiserVM(initials));
+        //}
 
-        public void RemoveCruiser(CruiserVM cruiser)
-        {
-            this._cruisers.Remove(cruiser);
-        }
-        #endregion
+        //public void RemoveCruiser(CruiserVM cruiser)
+        //{
+        //    this._cruisers.Remove(cruiser);
+        //}
+        //#endregion
 
         #region tally setup
 
@@ -356,7 +328,20 @@ namespace FSCruiser.Core
 
         public void PerformBackup(bool useTS)
         {
-            this.PerformBackup(this.GetBackupFileName(this.BackupDir, useTS));
+            var backupDir = this.Settings.BackupDir;
+            if (String.IsNullOrEmpty(backupDir))
+            {
+                if (this._cDal == null)
+                {
+                    backupDir = "\\";//TODO change to non platform spacific default directroy 
+                }
+                else
+                {
+                    backupDir = System.IO.Path.GetDirectoryName(this._cDal.Path);
+                }
+            }
+
+            this.PerformBackup(this.GetBackupFileName(backupDir, useTS));
         }
 
         public void PerformBackup(string path)
@@ -410,9 +395,7 @@ namespace FSCruiser.Core
         #region App Settings
         protected void SaveAppSettings()
         {
-            if ((this._cruisers == null || this._cruisers.Count == 0)
-                && this._backupDir == null
-                && this.BackUpMethod == BackUpMethod.None)
+            if (this.Settings == null)
             {
                 return;
             }
@@ -421,69 +404,42 @@ namespace FSCruiser.Core
                 XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
                 using (StreamWriter writer = new StreamWriter(GetExecutionDirectory() + Constants.APP_SETTINGS_PATH))
                 {
-                    serializer.Serialize(writer, new ApplicationSettings(this));
+                    serializer.Serialize(writer, this.Settings);
                 }
             }
             catch (Exception e)
             {
                 this.HandleNonCriticalException(e, "Unabel to save user settings");
             }
-            //try
-            //{
-            //    XmlSerializer serializer = new XmlSerializer(typeof(List<CruiserVM>));
-            //    using (StreamWriter writer = new StreamWriter(GetExecutionDirectory() + Constants.CRUISERS_FILENAME))
-            //    {
-            //        serializer.Serialize(writer, _cruisers);
-            //    }
-            //}
-            //catch( Exception e)
-            //{
-            //    this.HandleNonCriticalException(e, "List of Cruisers didn't save");
-            //}
         }
 
         protected void LoadAppSettings()
         {
-            //see if old cruiser file exists, load, then remove it
-            if (File.Exists(GetExecutionDirectory() + Constants.CRUISERS_FILENAME) == true)
+            if (File.Exists(GetExecutionDirectory() + Constants.APP_SETTINGS_PATH) == true)
             {
                 try
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(List<CruiserVM>));
-                    using (StreamReader reader = new StreamReader(GetExecutionDirectory() + Constants.CRUISERS_FILENAME))
-                    {
-                        this._cruisers = (List<CruiserVM>)serializer.Deserialize(reader);
-                    }
-                    this.ViewController.EnableCruiserSelectionPopup = (this._cruisers != null && this._cruisers.Count > 0);
-                }
-                catch (Exception e)
-                {
-                    this.HandleNonCriticalException(e, "Unable to load cruisers");
-                }
-                finally
-                {
-                    File.Delete(GetExecutionDirectory() + Constants.CRUISERS_FILENAME);
-                }
-            }
-            else if (File.Exists(GetExecutionDirectory() + Constants.APP_SETTINGS_PATH) == true)
-            {
-                try
-                {
-                    ApplicationSettings settings;
                     XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
                     using (StreamReader reader = new StreamReader(GetExecutionDirectory() + Constants.APP_SETTINGS_PATH))
                     {
-                        settings = (ApplicationSettings)serializer.Deserialize(reader);
+                        this.Settings = (ApplicationSettings)serializer.Deserialize(reader);
                     }
-                    this._cruisers = settings.Cruisers;
-                    this._backupDir = settings.BackupDir;
-                    this.BackUpMethod = settings.BackUpMethod;
-                    this.ViewController.EnableCruiserSelectionPopup = (this._cruisers != null && this._cruisers.Count > 0);
+                    
+
+                    //this._cruisers = settings.Cruisers;
+                    //this._backupDir = settings.BackupDir;
+                    //this.BackUpMethod = settings.BackUpMethod;
+                    //this.ViewController.EnableCruiserSelectionPopup = (this._cruisers != null && this._cruisers.Count > 0);
                 }
                 catch (Exception e)
                 {
-                    this.HandleNonCriticalException(e, "Unable to load cruisers");
+                    this.HandleNonCriticalException(e, "Fail to load application settings");
                 }
+            }
+
+            if (this.Settings == null)
+            {
+                this.Settings = new ApplicationSettings();
             }
 
         }
@@ -507,7 +463,7 @@ namespace FSCruiser.Core
                 //MessageBox.Show("Something went wrong saving the data for this unit, check trees for errors and try again");
                 e.Cancel = true;
             }
-            if (!e.Cancel && this.BackUpMethod == BackUpMethod.LeaveUnit)
+            if (!e.Cancel && this.Settings.BackUpMethod == BackUpMethod.LeaveUnit)
             {
                 this.PerformBackup(false);
             }

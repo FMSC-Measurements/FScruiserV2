@@ -8,9 +8,10 @@ namespace FSCruiser.Core
     {
         #region Properties =========================================================
         IViewController ViewController { get; }
-        String BackupDir { get; set; }
-        BackUpMethod BackUpMethod { get; set; }
-        System.Collections.Generic.List<CruiserVM> Cruisers { get; }
+
+        ApplicationSettings Settings { get; }
+
+        //System.Collections.Generic.List<CruiserVM> Cruisers { get; }
         CruiseDAL.DAL _cDal { get; }
 
         System.Collections.Generic.List<CuttingUnitVM> CuttingUnits { get; }
@@ -45,9 +46,9 @@ namespace FSCruiser.Core
         //System.Collections.Generic.IList<StratumVM> GetUnitStrata();
         //CountTreeVM GetCountRecord(TreeDO tree);
 
-        void AddCruiser(string initials);
-        void RemoveCruiser(CruiserVM cruiser);
-        CruiserVM[] GetCruiserList();
+        //void AddCruiser(string initials);
+        //void RemoveCruiser(CruiserVM cruiser);
+        //CruiserVM[] GetCruiserList();
 
         bool OpenFile();
 

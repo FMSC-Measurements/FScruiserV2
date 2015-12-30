@@ -27,7 +27,7 @@ namespace FSCruiser.Core
             this.View.SampleGroupText = "Sg: " + Tree.SampleGroup.GetDescriptionShort();
             
 
-            _cruisers = _controller.GetCruiserList();
+            _cruisers = _controller.Settings.Cruisers.ToArray();
             this.View.UpdateCruiserList(_cruisers);
         }
 

@@ -77,7 +77,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_initialsColoumn != null)
             {
-                _initialsColoumn.DataSource = this.AppController.GetCruiserList();
+                _initialsColoumn.DataSource = this.AppController.Settings.Cruisers.ToArray();
             }
 
 
@@ -260,7 +260,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this._initialsColoumn != null)
             {
-                this._initialsColoumn.DataSource = this.AppController.GetCruiserList();
+                this._initialsColoumn.DataSource = this.AppController.Settings.Cruisers.ToArray();
             }
         }
 
