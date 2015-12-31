@@ -299,7 +299,7 @@ namespace FSCruiser.WinForms
 
         }
 
-        public static DataGridTableStyle InitializeTreeColumns(DAL dal, EditableDataGrid grid, CuttingUnitDO unit, StratumVM stratum, bool enableLogs, ButtonCellClickEventHandler logClick)
+        public static DataGridTableStyle InitializeTreeColumns(DAL dal, EditableDataGrid grid, CuttingUnitDO unit, StratumVM stratum, bool enableLogs)
         {
             // Query TreeFieldSetup table for field info based on Stratum_CN        
             // This function selects FieldOrder > 0 and sorts on it.
@@ -437,17 +437,11 @@ namespace FSCruiser.WinForms
                 
             }
 
-            
-
-            if (logClick != null)
-            {
-                DataGridButtonColumn logsCol = new DataGridButtonColumn();
-                logsCol.Click += logClick;
-                logsCol.HeaderText = "Logs";
-                logsCol.MappingName = "LogCount";
-                logsCol.Width = (enableLogs) ? Constants.LOG_COLUMN_WIDTH : -1;
-                tblStyle.GridColumnStyles.Add(logsCol);
-            }
+            DataGridButtonColumn logsCol = new DataGridButtonColumn();
+            logsCol.HeaderText = "Logs";
+            logsCol.MappingName = "LogCount";
+            logsCol.Width = (enableLogs) ? Constants.LOG_COLUMN_WIDTH : -1;
+            tblStyle.GridColumnStyles.Add(logsCol);
 
             tblStyle.GridColumnStyles.Add(MakeErrorColumn(screenWidth));
             // Add the newly created DataGridTableStyle to the grid. 

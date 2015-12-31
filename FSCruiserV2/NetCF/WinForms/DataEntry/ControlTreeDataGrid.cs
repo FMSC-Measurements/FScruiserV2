@@ -79,7 +79,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.Controller = controller;
             this.DataEntryController = dataEntryController;
             DataGridAdjuster.InitializeGrid(this);
-            DataGridTableStyle tableStyle = DataGridAdjuster.InitializeTreeColumns(controller._cDal, this, this.DataEntryController.Unit, null,this.Controller.ViewController.EnableLogGrading, this.LogsClicked);
+            DataGridTableStyle tableStyle = DataGridAdjuster.InitializeTreeColumns(controller._cDal, this, this.DataEntryController.Unit, null,this.Controller.ViewController.EnableLogGrading);
 
             this.AllowUserToAddRows = false;//don't allow down arrow to add tree
             this.SIP = sip;
@@ -127,6 +127,11 @@ namespace FSCruiser.WinForms.DataEntry
             //{
             //    _kpiColumn.CellEditBeginning += new CellEditEventHandler(_kpiColumn_CellEditBeginning);
             //}
+
+            if (_logsColumn != null)
+            {
+                _logsColumn.Click += this.LogsClicked;
+            }
 
             if (_initialsColoumn != null)
             {
@@ -484,12 +489,10 @@ namespace FSCruiser.WinForms.DataEntry
             if ((_logsColumn.Width > 0) == this.Controller.ViewController.EnableLogGrading) { return; }
             if (this.Controller.ViewController.EnableLogGrading)
             {
-                _logsColumn.Click += this.LogsClicked;
                 _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
             }
             else
             {
-                _logsColumn.Click -= this.LogsClicked;
                 _logsColumn.Width = -1;
             }
         }
