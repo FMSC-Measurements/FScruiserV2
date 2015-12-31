@@ -544,12 +544,12 @@ namespace FSCruiser.Core.DataEntry
 
         public bool ProcessHotKey(char key, ITallyView view)
         {
-            //if tally view is active but not accepting hotkeys, jump out
-            if (view != null && view.HotKeyEnabled == false)
+            //if no tally view or not accepting hotkeys, jump out
+            if (view == null || view.HotKeyEnabled == false)
             {
                 return false;
             }
-            else if (view != null && view.HandleHotKeyFirst(key))//pass off to tally view to handle
+            else if (view.HandleHotKeyFirst(key))//pass off to tally view to handle
             {
                 return true; //if handled return
             }
@@ -560,7 +560,7 @@ namespace FSCruiser.Core.DataEntry
                 this.View.GoToPageIndex(this.StratumHotKeyLookup[key]);
                 return true;
             }
-            else if (view != null)//not a stratum hotkey 
+            else//not a stratum hotkey 
             {
                 if (view.HotKeyLookup != null && view.HotKeyLookup.ContainsKey(key))//maybe a tally hotkey
                 {
@@ -573,10 +573,6 @@ namespace FSCruiser.Core.DataEntry
                     this.ViewController.SignalInvalidAction();
                     return true;
                 }
-            }
-            else//not a stratum hotkey, give up
-            {
-                return false;
             }
         }
 
