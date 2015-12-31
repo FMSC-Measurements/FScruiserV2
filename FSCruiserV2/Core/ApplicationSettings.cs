@@ -17,6 +17,9 @@ namespace FSCruiser.Core
         }
 
         [XmlAttribute]
+        public bool BackUpToCurrentDir { get; set; }
+
+        [XmlAttribute]
         public string BackupDir 
         {
             get { return _backupDir; }

@@ -29,7 +29,7 @@ namespace FSCruiser.Core
         //private int _talliesSinceLastSave = 0;
         
         //private List<CruiserVM> _cruisers;
-        private bool _allowBackup; 
+        //private bool _allowBackup; 
         
 
         public ApplicationSettings Settings { get; set; }
@@ -127,17 +127,17 @@ namespace FSCruiser.Core
             {
                 this.LoadDatabase(path);
 
-                var fileName = Path.GetFileName(path);
-                if (fileName.StartsWith("BACK_"))
-                {
-                    _allowBackup = false;
-                    this.ViewController.ShowMessage("The file you have opened is marked as a backup\r\n" +
-                        "Its recomended you don't modify your backup files", "Warning", MessageBoxIcon.Hand);
-                }
-                else
-                {
-                    _allowBackup = true;
-                }
+                //var fileName = Path.GetFileName(path);
+                //if (fileName.StartsWith("BACK_"))
+                //{
+                //    _allowBackup = false;
+                //    this.ViewController.ShowMessage("The file you have opened is marked as a backup\r\n" +
+                //        "Its recomended you don't modify your backup files", "Warning", MessageBoxIcon.Hand);
+                //}
+                //else
+                //{
+                //    _allowBackup = true;
+                //}
 
                 return true;
             }
@@ -293,9 +293,10 @@ namespace FSCruiser.Core
 
         #region backup
 
-        private string GetBackupFileName(string backupDir, bool useTimeStamp)
+        private string GetBackupFileName(string backupDir, bool addTimeStamp)
         {
             string originalFileName = System.IO.Path.GetFileName(this._cDal.Path);
+            
 
             //regex disected
             //prefix (optional): "BACK_"
@@ -304,20 +305,27 @@ namespace FSCruiser.Core
             //postfix: file extention and optional component indicator
 
             System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(
-                @"(?<prefix>" + Constants.BACKUP_PREFIX + @")*" 
+                @"(?<prefix>BACK_)*"
                 + @"(?<core>.+?)" 
-                + @"(?<time>\(\d{4}_\d{2}_\d{2}__\d{2}_\d{2}\))?" 
-                + @"(?<postfix>(?:[.](?:[m]|\d+))?(?:[\.](?:cruise|cut)))"
+                //+ @"(?<time>\(\d{4}_\d{2}_\d{2}__\d{2}_\d{2}\))?" 
+                + @"(?<compID>[.](?:[m]|\d+))?"
+                + @"(?<ext>[\.](?:cruise))"
                 , System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            if (!regex.IsMatch(originalFileName))
+            {
+                return null;
+            }
 
             string backupFileName = regex.Replace(originalFileName, 
                 (m) => {
                     var result = Constants.BACKUP_PREFIX + m.Groups["core"].Value;
-                    if(useTimeStamp)
+                    if(addTimeStamp)
                     {
                         result += DateTime.Now.ToString(Constants.BACKUP_TIME_FORMAT);
                     }
-                    result += m.Groups["postfix"];
+                    result += (m.Groups["compID"] != null) ? m.Groups["compID"].Value : String.Empty;
+                    result += ".back-cruise";
                     return result;
                 }
             );
@@ -328,17 +336,14 @@ namespace FSCruiser.Core
 
         public void PerformBackup(bool useTS)
         {
-            var backupDir = this.Settings.BackupDir;
-            if (String.IsNullOrEmpty(backupDir))
+            string backupDir;
+            if (Settings.BackUpToCurrentDir || String.IsNullOrEmpty(Settings.BackupDir))
             {
-                if (this._cDal == null)
-                {
-                    backupDir = "\\";//TODO change to non platform spacific default directroy 
-                }
-                else
-                {
-                    backupDir = System.IO.Path.GetDirectoryName(this._cDal.Path);
-                }
+                backupDir = System.IO.Path.GetDirectoryName(this._cDal.Path);
+            }
+            else
+            {
+                backupDir = Settings.BackupDir;
             }
 
             this.PerformBackup(this.GetBackupFileName(backupDir, useTS));
@@ -346,14 +351,19 @@ namespace FSCruiser.Core
 
         public void PerformBackup(string path)
         {
-            if (!_allowBackup)
-            {
-                ViewController.ShowMessage("Back up not allowed", "Warning", MessageBoxIcon.Asterisk);
-                return;
-            }
-
+            //if (!_allowBackup)
+            //{
+            //    ViewController.ShowMessage("Back up not allowed", "Warning", MessageBoxIcon.Asterisk);
+            //    return;
+            //}
+            
             try
             {
+                if (path == null)
+                {
+                    throw new ArgumentException("Invalid Backup file path", "path");
+                }
+
                 this.ViewController.ShowWait();
                 this._cDal.CopyTo(path, true);
             }
@@ -402,7 +412,8 @@ namespace FSCruiser.Core
             try
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
-                using (StreamWriter writer = new StreamWriter(GetExecutionDirectory() + Constants.APP_SETTINGS_PATH))
+                var path = GetExecutionDirectory() + Constants.APP_SETTINGS_PATH;
+                using (StreamWriter writer = new StreamWriter(path))
                 {
                     serializer.Serialize(writer, this.Settings);
                 }
@@ -500,6 +511,11 @@ namespace FSCruiser.Core
         public static string GetExecutionDirectory()
         {
             string name = Assembly.GetCallingAssembly().GetName().CodeBase;
+            //clean up path, in FF name is a URI
+            if (name.StartsWith(@"file:///"))
+            {
+                name = name.Replace("file:///", string.Empty);
+            }
             string dir = System.IO.Path.GetDirectoryName(name);
             return dir;
         }
