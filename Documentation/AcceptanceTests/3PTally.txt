@@ -13,14 +13,16 @@ AND the following strata exist
 AND the following sample groups exist
     |code   |stratum    |KZ             |insurance freq |species    |Tally mode |MinKPI |MaxKPI |
     |01     |01         |333            |2              |204        |by Sp      |10     |30     |
-    |02     |02         |333            |               |           |by Sp      |       |       |
-    |03     |03         |333            |               |           |by Sp      |       |       |
+    |02     |01         |333            |               |015&108    |by Sp      |       |       |
+    |03     |02         |333            |               |122        |by Sp      |       |       |
+    |04     |03         |333            |               |017        |by Sp      |       |       |
 
 AND the folling tallys are setup
     |sample group   |species    |hotkey |discription    |
     |01             |204        |A      |204            |
     |02             |015        |B      |015            |
-    |03             |108        |C      |108            |
+    |03             |108        |C      |122            |
+    |04             |108        |D      |017            |
     
 
 WHEN the user enters the data entry screen
