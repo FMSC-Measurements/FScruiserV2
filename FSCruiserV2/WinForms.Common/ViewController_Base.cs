@@ -236,13 +236,16 @@ namespace FSCruiser.WinForms.Common
         //    return this.NumPadDialog.UserEnteredValue;
         //}
 
-        public DialogResult ShowPlotInfo(PlotVM plotInfo, bool allowEdit)
+        public DialogResult ShowPlotInfo( PlotVM plotInfo, bool is3PPNT, bool allowEdit)
         {
             if (plotInfo == null) { return DialogResult.None; }
+
+            
+
             IPlotInfoDialog view = null;
             try
             {
-                if (plotInfo.Stratum.Method == "3PPNT" && allowEdit)
+                if (is3PPNT && allowEdit)
                 {
                     view = new Form3PPNTPlotInfo(this.ApplicationController);
                 }
@@ -258,6 +261,7 @@ namespace FSCruiser.WinForms.Common
                 ((Form)view).Dispose();
             }
         }
+
 
         public void ShowTallySettings(CountTreeVM count)
         {

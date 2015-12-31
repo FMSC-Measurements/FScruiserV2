@@ -236,7 +236,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             int? initialValue = (this.AverageHgt <= 0) ? (int?)null : (int?)this.AverageHgt;
             viewController.NumPadDialog.ShowDialog(0, 999, initialValue, true);
-            TreeCount = viewController.NumPadDialog.UserEnteredValue ?? -1;
+            AverageHgt = viewController.NumPadDialog.UserEnteredValue ?? -1;
 
             //this.AverageHgt = (int)(Controller.ShowNumericValueInput(0, 999, (this.AverageHgt <= 0) ? (int?)null : (int?)this.AverageHgt, true) ?? -1);
             CalculateKPI();

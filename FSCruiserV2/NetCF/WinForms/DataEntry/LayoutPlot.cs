@@ -328,6 +328,10 @@ namespace FSCruiser.WinForms.DataEntry
             }
             set
             {
+                if (this.ViewLogicController.Is3PPNT)
+                {
+                    value = true;
+                }
                 if (value == _isGridExpanded) { return; }
                 if (value == true)
                 {
@@ -384,7 +388,7 @@ namespace FSCruiser.WinForms.DataEntry
             
             //Setup DataGrid
             DataGridAdjuster.InitializeGrid(this._dataGrid);
-            _tableStyle = DataGridAdjuster.InitializeTreeColumns(this.AppController._cDal, this._dataGrid, null, stratum, this.AppController.ViewController.EnableLogGrading, this.LogsClicked);
+            _tableStyle = DataGridAdjuster.InitializeTreeColumns(this.AppController._cDal, this._dataGrid, null, stratum, this.AppController.ViewController.EnableLogGrading);
             this._dataGrid.SIP = sip;
             this._dataGrid.CellValidating += new EditableDataGridCellValidatingEventHandler(_dataGrid_CellValidating);
             this._dataGrid.CellValueChanged += new EditableDataGridCellValueChangedEventHandler(this._dataGrid_CellValueChanged);
@@ -400,6 +404,10 @@ namespace FSCruiser.WinForms.DataEntry
             _logsColumn = _tableStyle.GridColumnStyles["LogCount"] as DataGridButtonColumn;
             _kpiColumn = _tableStyle.GridColumnStyles["KPI"] as EditableTextBoxColumn;
 
+            if (_logsColumn != null)
+            {
+                _logsColumn.Click += this.LogsClicked;
+            }
 
             HandleCruisersChanged();
 
@@ -536,12 +544,10 @@ namespace FSCruiser.WinForms.DataEntry
             if ((_logsColumn.Width > 0) == this.AppController.ViewController.EnableLogGrading) { return; }
             if (this.AppController.ViewController.EnableLogGrading)
             {
-                _logsColumn.Click += this.LogsClicked;
                 _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
             }
             else
             {
-                _logsColumn.Click -= this.LogsClicked;
                 _logsColumn.Width = -1;
             }
         }

@@ -26,6 +26,14 @@ namespace FSCruiser.Core.DataEntry
 
         public bool UserCanAddTrees { get; set; }
 
+        public bool Is3PPNT
+        {
+            get
+            {
+                return this.Stratum.Method == CruiseDAL.Schema.Constants.CruiseMethods.THREEPPNT;
+            }
+        }
+
         public PlotStratum Stratum { get; set; }
 
         public IList<PlotVM> Plots 
@@ -239,7 +247,7 @@ namespace FSCruiser.Core.DataEntry
 
             //PlotInfo plotInfo = new PlotInfo(newPlot, stratum);
             //newPlot.NextPlotTreeNum = 1;
-            if (this.ViewController.ShowPlotInfo(newPlot, true) == DialogResult.OK)
+            if (this.ViewController.ShowPlotInfo(newPlot, Is3PPNT, true) == DialogResult.OK)
             {
                 foreach (PlotVM pi in this.Stratum.Plots)
                 {
@@ -259,7 +267,7 @@ namespace FSCruiser.Core.DataEntry
                 {
                     return this.AddPlot() ?? newPlot;//add plot may return null, in that case return most recently created plot
                 }
-                else if (newPlot.Stratum.Method == "3PPNT" && newPlot.Trees.Count == 0)
+                else if (Is3PPNT && newPlot.Trees.Count == 0)
                 {
                     return this.AddPlot() ?? newPlot;//add plot may return null, in that case return most recently created plot
                 }
@@ -542,7 +550,8 @@ namespace FSCruiser.Core.DataEntry
                 this.View.ShowNoPlotSelectedMessage();
                 return;
             }
-            if (Controller.ViewController.ShowPlotInfo(CurrentPlot, false) == DialogResult.OK)
+
+            if (Controller.ViewController.ShowPlotInfo(CurrentPlot, Is3PPNT, false) == DialogResult.OK)
             {
                 CurrentPlot.Save();
                 this._BS_Plots.ResetCurrentItem();
