@@ -17,8 +17,8 @@ namespace FSCruiser.WinForms.DataEntry
         private Panel _visableTallyPanel;
         private bool _viewLoading = true;
 
-        public IApplicationController Controller { get; protected set; }
-        public FormDataEntryLogic DataEntryController { get; protected set; }
+        public IApplicationController Controller                { get; protected set; }
+        public FormDataEntryLogic DataEntryController           { get; protected set; }
         public Dictionary<char, CountTreeVM> HotKeyLookup 
         {
             get
@@ -30,9 +30,11 @@ namespace FSCruiser.WinForms.DataEntry
                 return null;
             }
         }
-        public Dictionary<char, StratumVM> StrataHotKeyLookup { get; protected set; }
-        public IList<StratumVM> Strata { get; protected set; }
-        public StratumVM SelectedStratum { get; protected set; }
+        public Dictionary<char, StratumVM> StrataHotKeyLookup   { get; protected set; }
+        public Dictionary<StratumVM, Panel> StrataViews         { get; protected set; }
+
+        public IList<StratumVM> Strata                          { get; protected set; }
+        public StratumVM SelectedStratum                        { get; protected set; }
         public bool HotKeyEnabled 
         {
             get { return true; }
@@ -56,13 +58,15 @@ namespace FSCruiser.WinForms.DataEntry
             InitializeComponent();
         }
 
-        public LayoutTreeBased(IApplicationController controller, FormDataEntryLogic dataEntryController): this()
+        public LayoutTreeBased(IApplicationController controller
+            , FormDataEntryLogic dataEntryController): this()
         {
             this.DataEntryController = dataEntryController;
             this.Controller = controller;
 
             this.SuspendLayout();
-            this.PopulateStrata(dataEntryController.Unit);
+            Strata = dataEntryController.Unit.TreeStrata;
+            this.PopulateStrata();
 
             //if there is only one strata in the unit 
             //display the counts for that stratum
@@ -76,11 +80,32 @@ namespace FSCruiser.WinForms.DataEntry
             
         }
 
-
-        private void PopulateStrata(CuttingUnitVM unit)
+        public void SaveCounts()
         {
-            //unit.Strata.Populate();
-            Strata = DataEntryController.Unit.GetTreeBasedStrata();
+            foreach (StratumVM stratum in Strata)
+            {
+                stratum.SaveCounts();
+            }
+        }
+
+        public bool TrySaveCounts()
+        {
+            bool success = true;
+            foreach (StratumVM stratum in Strata)
+            {
+                if (!stratum.TrySaveCounts())
+                {
+                    System.Diagnostics.Debug.Fail("unable to save St:" 
+                        + stratum.Code + " counts");
+                    success = false;
+                }
+            }
+            return success;
+        }
+
+
+        private void PopulateStrata()
+        {
             foreach (StratumVM stratum in this.Strata)
             {
                 if (stratum.Method == CruiseDAL.Schema.Constants.CruiseMethods.H_PCT) { continue; }
@@ -90,7 +115,7 @@ namespace FSCruiser.WinForms.DataEntry
                 Button strataButton = new Button();
                 Panel tallyContainer = new Panel();
                 //StratumInfo stratumInfo = new StratumInfo(stratum);
-                stratum.TallyContainer = tallyContainer;
+                //stratum.TallyContainer = tallyContainer;
                 //Strata.Add(stratumInfo);
                 //tallyContainer.SuspendLayout();
                 //strataButton.SuspendLayout();
@@ -115,8 +140,15 @@ namespace FSCruiser.WinForms.DataEntry
                 strataButton.Parent = _leftContentPanel;
                 strataButton.Tag = stratum;
 
+                StrataViews.Add(stratum, tallyContainer);
+
                 DataEntryMode mode = stratum.GetDataEntryMode();
-                this.DataEntryController.PopulateTallies(stratum, mode, unit, tallyContainer, this);
+                this.DataEntryController.PopulateTallies(stratum
+                    , mode
+                    , DataEntryController.Unit
+                    , tallyContainer
+                    , this);
+
                 //AdjustPanelHeight(tallyContainer);
 
                 if (string.IsNullOrEmpty(stratum.Hotkey) == false)
@@ -145,53 +177,42 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void HandleLoad()
         {
-           
-
             _BS_tallyHistory.DataSource = DataEntryController.Unit.TallyHistoryBuffer;
             this._viewLoading = false;
         }
 
         private void DisplayTallyPanel(StratumVM stratumInfo)
         {
-            Panel tallyContainer = (Panel)stratumInfo.TallyContainer;
+            System.Diagnostics.Debug.Assert(StrataViews.ContainsKey(stratumInfo));
+            if (!StrataViews.ContainsKey(stratumInfo)) { return; }
 
-            if (_visableTallyPanel != null && _visableTallyPanel == tallyContainer && tallyContainer.Visible == true)
+            Panel tallyContainer = StrataViews[stratumInfo];
+
+            // if strata is already displayed 
+            if (_visableTallyPanel != null 
+                && _visableTallyPanel == tallyContainer 
+                && tallyContainer.Visible == true)
             {
-                tallyContainer.Visible = false;
+                // toggle off visability
+                _visableTallyPanel.Visible = false;
                 this.SelectedStratum = null; 
                 _visableTallyPanel = null;
                 return;
             }
-            else if (_visableTallyPanel != null && _visableTallyPanel != tallyContainer)
+            else if (_visableTallyPanel != null
+                && _visableTallyPanel != tallyContainer)
             {
+                // hide current stratum
                 _visableTallyPanel.Visible = false;
-
+            }
+            
+            this.SelectedStratum = stratumInfo;
+            _visableTallyPanel = tallyContainer;
+            if (_visableTallyPanel != null)
+            {
+                _visableTallyPanel.Visible = true;
             }
 
-            if (tallyContainer == _visableTallyPanel) { return; }
-            _visableTallyPanel = tallyContainer;
-            //HotKeyLookup.Clear();
-            //foreach (Control c in tallyContainer.Controls)
-            //{
-            //    TallyRow row = c as TallyRow;
-            //    if (row != null)
-            //    {
-            //        CountTreeDO count = (CountTreeDO)row.Tag;
-            //        char hotkey = count.Tally.Hotkey[0];
-            //        HotKeyLookup.Add(hotkey, count);
-            //    }
-            //}
-            //if (tallyContainer.Controls.Count == 0)
-            //{
-            //    StratumDO stratum = (StratumDO)tallyContainer.Tag;
-            //    tallyContainer.SuspendLayout();
-            //    PopulateTallies(tallyContainer, Unit, stratum);
-            
-            //AdjustPanelHeight(tallyContainer);
-            //    tallyContainer.ResumeLayout(true);
-            //}
-            this.SelectedStratum = stratumInfo;
-            tallyContainer.Visible = true;
         }
 
         public void HandleStratumLoaded(Control container)

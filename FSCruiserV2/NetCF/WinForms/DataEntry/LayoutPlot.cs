@@ -426,6 +426,22 @@ namespace FSCruiser.WinForms.DataEntry
             
         }
 
+        public void SaveCounts()
+        {
+            this.ViewLogicController.SaveCounts();
+        }
+
+        public bool TrySaveCounts()
+        {
+            if (!this.ViewLogicController.TrySaveCounts())
+            {
+                MessageBox.Show("Stratum:" + this.ViewLogicController.Stratum.Code
+                    + " Unable to save Counts");
+                return false;
+            }
+            return true;
+        }
+
         //protected void RefreshColumnReferences()
         //{
         //    _speciesColumn = _tableStyle.GridColumnStyles["TreeDefaultValue"] as EditableComboBoxColumn;

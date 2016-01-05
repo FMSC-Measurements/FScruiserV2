@@ -568,6 +568,17 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
+        public void SaveCounts()
+        {
+            this.Stratum.SaveCounts();
+        }
+
+        public bool TrySaveCounts()
+        {
+            return this.Stratum.TrySaveCounts();
+        }
+
+
         #region event handlers 
         private void _BS_Plots_CurrentChanged(object sender, EventArgs e)
         {

@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.DataObjects;
@@ -14,18 +14,18 @@ namespace FSCruiser.Core.Models
         //    return String.Format("{0} Area: {1}", unit.Description, unit.Area);
         //}
 
-        public static DataEntryMode GetDataEntryMode(this CuttingUnitDO unit)
-        {
-            //"SELECT goupe_concat(Method, ' ') FROM Stratum JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = {0} GROUP BY Stratum.Method;";
-            List<StratumVM> strata = unit.ReadStrata<StratumVM>();
-            DataEntryMode mode = DataEntryMode.Unknown;
-            foreach (StratumVM stratum in strata)
-            {
-                mode = mode | stratum.GetDataEntryMode();
-            }
+        //public static DataEntryMode GetDataEntryMode(this CuttingUnitDO unit)
+        //{
+        //    //"SELECT goupe_concat(Method, ' ') FROM Stratum JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = {0} GROUP BY Stratum.Method;";
+        //    List<StratumVM> strata = unit.ReadStrata<StratumVM>();
+        //    DataEntryMode mode = DataEntryMode.Unknown;
+        //    foreach (StratumVM stratum in strata)
+        //    {
+        //        mode = mode | stratum.GetDataEntryMode();
+        //    }
 
-            return mode;
-        }
+        //    return mode;
+        //}
 
         public static IList<StratumVM> GetTreeBasedStrata(this CuttingUnitDO unit)
         {
@@ -46,10 +46,16 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", (object)unit.CuttingUnit_CN);
 
         public static IList<PlotStratum> GetPlotStrata(this CuttingUnitDO unit)
         {
-            IList<PlotStratum> list = unit.DAL.Read<PlotStratum>(
-@"JOIN CuttingUnitStratum USING (Stratum_CN) 
-WHERE CuttingUnitStratum.CuttingUnit_CN = ? 
-AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", (object)unit.CuttingUnit_CN);
+            var list = unit.DAL.From<PlotStratum>()
+                .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
+                .Where("CUST.CuttingUnit_CN = ? "
+                + "AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')")
+                .Query(unit.CuttingUnit_CN).ToList();
+
+//            IList<PlotStratum> list = unit.DAL.Query<PlotStratum>(
+//@"JOIN CuttingUnitStratum USING (Stratum_CN) 
+//WHERE CuttingUnitStratum.CuttingUnit_CN = ? 
+//AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", (object)unit.CuttingUnit_CN);
             
             return list;
         }

@@ -21,7 +21,7 @@ namespace FSCruiser.Core.DataEntry
         public IDataEntryView View { get; set; }
 
         public CuttingUnitVM Unit { get; set; }
-        public List<CountTreeVM> Counts { get; protected set; }
+        //public List<CountTreeVM> Counts { get; protected set; }
 
         public DAL Database { get { return this.Unit.DAL; } }
         public IViewController ViewController { get { return this.Controller.ViewController; } }
@@ -43,12 +43,14 @@ namespace FSCruiser.Core.DataEntry
 
         //public IDataEntryPage FocusedLayout { get; set; }
 
-        public FormDataEntryLogic(CuttingUnitVM unit, IApplicationController controller, IDataEntryView view)
+        public FormDataEntryLogic(CuttingUnitVM unit
+            , IApplicationController controller
+            , IDataEntryView view)
         {
             this.Unit = unit;
             this.Controller = controller;
             this.View = view;
-            this.Counts = this.Database.Read<CountTreeVM>((string)null);
+            //this.Counts = this.Database.Read<CountTreeVM>((string)null);
         }
 
 
@@ -460,8 +462,6 @@ namespace FSCruiser.Core.DataEntry
 
         public void PopulateTallies(StratumVM stratum, DataEntryMode stratumMode, CuttingUnitVM unit, Panel container, ITallyView view)
         {
-            //StratumDO stratum = stratumInfo.Stratum;
-
             if ((stratumMode & DataEntryMode.OneStagePlot) == DataEntryMode.OneStagePlot)
             {
                 if (stratum.Method == "3PPNT")
@@ -478,7 +478,7 @@ namespace FSCruiser.Core.DataEntry
             }
             else
             {
-                List<CountTreeVM> counts = new List<CountTreeVM>();
+                var counts = new List<CountTreeVM>();
                 List<TallySettingsDO> tallySettings = this.Database.Read<TallySettingsDO>(
                     @"JOIN SampleGroup USING (SampleGroup_CN) 
                     WHERE SampleGroup.Stratum_CN = ? 
@@ -500,26 +500,17 @@ namespace FSCruiser.Core.DataEntry
                         count.Tally_CN = ts.Tally_CN;
 
                         count.Save();
-                        this.Counts.Add(count);
+                        //this.Unit.Counts.Add(count);
                     }
                     counts.Add(count);
                 }
 
+                
+
                 //List<CountTreeVM> counts = _cDal.Read<CountTreeVM>(CruiseDAL.Schema.COUNTTREE._NAME, "JOIN SampleGroup WHERE CountTree.SampleGroup_CN = SampleGroup.SampleGroup_CN AND CuttingUnit_CN = ? AND SampleGroup.Stratum_CN = ?", unit.CuttingUnit_CN, stratum.Stratum_CN);
                 //Counts.AddRange(counts);
-
-                stratum.HotKeyLookup.Clear();
-                foreach (CountTreeVM count in counts)
-                {
-                    try
-                    {
-                        char hotkey = count.Tally.Hotkey[0];
-                        hotkey = char.ToUpper(hotkey);
-                        stratum.HotKeyLookup.Add(hotkey, count);
-                    }
-                    catch
-                    { }
-                }
+                stratum.Counts = counts;
+                stratum.PopulateHotKeyLookup();
 
                 MakeCountTallyRowHadler f = new MakeCountTallyRowHadler(view.MakeTallyRow);
                 System.Threading.ThreadPool.QueueUserWorkItem((t) =>
@@ -771,13 +762,13 @@ namespace FSCruiser.Core.DataEntry
             this.View.HandleCuttingUnitDataLoaded();
         }
 
-        public void SaveCounts()
-        {
-                foreach (CountTreeVM count in Counts)
-                {
-                    count.Save();
-                }
-        }
+        //public void SaveCounts()
+        //{
+        //    foreach (CountTreeVM count in Counts)
+        //    {
+        //        count.Save();
+        //    }
+        //}
 
 
         
@@ -806,15 +797,13 @@ namespace FSCruiser.Core.DataEntry
                 }
             }
 
-            try
-            {
-                this.SaveCounts();
-            }
-            catch (Exception)
+            if (!Unit.TrySaveCounts())
             {
                 e.Cancel = true;
-                this.ViewController.ShowMessage("Something went wrong while saving the tally count for this unit",null, MessageBoxIcon.Asterisk);
+                this.ViewController.ShowMessage("Something went wrong while saving the tally count for this unit", null, MessageBoxIcon.Asterisk);
             }
+
+            
             this.Controller.OnLeavingCurrentUnit(e);
         }
 

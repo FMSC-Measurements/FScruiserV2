@@ -13,7 +13,10 @@ namespace FSCruiser.Core.Models
         private int _treesAddedSinceLastSave = 0;        
         
 
-        public List<CountTreeDO> Counts { get; set; }
+        //public List<CountTreeVM> Counts { get; set; }
+
+        public IList<PlotStratum> PlotStrata { get; set; }
+        public IList<StratumVM> TreeStrata { get; set; }
 
         public StratumVM DefaultStratum { get; set; }
         public List<SampleGroupVM> SampleGroups { get; set; }
@@ -55,7 +58,9 @@ namespace FSCruiser.Core.Models
         }
         #endregion
 
-        public TreeVM UserAddTree(TreeVM templateTree, StratumVM knownStratum, IViewController viewController)
+        public TreeVM UserAddTree(TreeVM templateTree
+            , StratumVM knownStratum
+            , IViewController viewController)
         {
             TreeVM newTree;
             SampleGroupVM assumedSG = null;
@@ -90,7 +95,8 @@ namespace FSCruiser.Core.Models
                 }
             }
 
-            newTree = this.CreateNewTreeEntry(knownStratum, assumedSG, assumedTDV, true);
+            newTree = this.CreateNewTreeEntry(knownStratum
+                , assumedSG, assumedTDV, true);
             newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied 
 
             viewController.ShowCruiserSelection(newTree);
@@ -111,14 +117,20 @@ namespace FSCruiser.Core.Models
             return CreateNewTreeEntry(count.SampleGroup.Stratum, count.SampleGroup, count.TreeDefaultValue, isMeasure);
         }
 
-        public TreeVM CreateNewTreeEntry(StratumVM stratum, SampleGroupVM sg, TreeDefaultValueDO tdv, bool isMeasure)
+        public TreeVM CreateNewTreeEntry(StratumVM stratum
+            , SampleGroupVM sg
+            , TreeDefaultValueDO tdv
+            , bool isMeasure)
         {
             var tree = CreateNewTreeEntryInternal(stratum, sg, tdv, isMeasure);
             tree.TreeNumber = GetNextNonPlotTreeNumber();
             return tree;
         }
 
-        internal TreeVM CreateNewTreeEntryInternal(StratumVM stratum, SampleGroupVM sg, TreeDefaultValueDO tdv, bool isMeasure)
+        internal TreeVM CreateNewTreeEntryInternal(StratumVM stratum
+            , SampleGroupVM sg
+            , TreeDefaultValueDO tdv
+            , bool isMeasure)
         {
             TreeVM newTree = new TreeVM(this.DAL);
             newTree.TreeCount = 0;
@@ -130,7 +142,10 @@ namespace FSCruiser.Core.Models
                 newTree.SampleGroup = sg;
                 if (tdv == null)
                 {
-                    if (sg.TreeDefaultValues.IsPopulated == false) { sg.TreeDefaultValues.Populate(); }
+                    if (sg.TreeDefaultValues.IsPopulated == false) 
+                    { 
+                        sg.TreeDefaultValues.Populate(); 
+                    }
                     if (sg.TreeDefaultValues.Count == 1)
                     {
                         tdv = sg.TreeDefaultValues[0];
@@ -187,6 +202,14 @@ namespace FSCruiser.Core.Models
         }
         #endregion
 
+        public void ReleaseData()
+        {
+            this.TallyHistoryBuffer = null;
+            this.NonPlotTrees = null;
+            this.SampleGroups = null;
+        }
+
+
         #region save methods
         public bool SaveFieldData()
         {
@@ -204,6 +227,32 @@ namespace FSCruiser.Core.Models
             {
                 return false;
             }
+        }
+
+        public void SaveCounts()
+        {
+            foreach (StratumVM stratum in TreeStrata)
+            {
+                stratum.SaveCounts();
+            }
+            foreach (StratumVM stratum in PlotStrata)
+            {
+                stratum.SaveCounts();
+            }
+        }
+
+        public bool TrySaveCounts()
+        {
+            bool success = true;
+            foreach (StratumVM stratum in TreeStrata)
+            {
+                success = stratum.TrySaveCounts() && success;
+            }
+            foreach (StratumVM stratum in PlotStrata)
+            {
+                success = stratum.TrySaveCounts() && success;
+            }
+            return success;
         }
 
         protected void SaveSampleGroups()
@@ -241,7 +290,10 @@ namespace FSCruiser.Core.Models
 
         public override string ToString()
         {
-            return string.Format("{0}: {1}", base.Code, String.Format("{0} Area: {1}", base.Description, base.Area));
+            return string.Format("{0}: {1} Area: {2}"
+                , base.Code
+                , base.Description
+                , base.Area);
         }
     }
 }

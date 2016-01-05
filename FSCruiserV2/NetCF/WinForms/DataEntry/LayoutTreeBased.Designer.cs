@@ -54,8 +54,7 @@ namespace FSCruiser.WinForms.DataEntry
             // 
             // _BS_tallyHistory
             // 
-            this._BS_tallyHistory.DataSource = typeof(TallyAction);
-            //this._BS_tallyHistory.ListChanged += new System.ComponentModel.ListChangedEventHandler(this._BS_tallyHistory_ListChanged);
+            this._BS_tallyHistory.DataSource = typeof(FSCruiser.Core.Models.TallyAction);
             // 
             // _tallyHistoryLB
             // 
@@ -63,7 +62,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._tallyHistoryLB.Dock = System.Windows.Forms.DockStyle.Fill;
             this._tallyHistoryLB.Location = new System.Drawing.Point(0, 13);
             this._tallyHistoryLB.Name = "_tallyHistoryLB";
-            this._tallyHistoryLB.Size = new System.Drawing.Size(100, 198);
+            this._tallyHistoryLB.Size = new System.Drawing.Size(100, 194);
             this._tallyHistoryLB.TabIndex = 0;
             // 
             // label1

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
-
+using System.Linq;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
@@ -24,23 +24,22 @@ namespace FSCruiser.WinForms.Common
         protected TabPage _treePage;
         protected ControlTreeDataGrid _treeView;
 
-        //protected IList<StratumVM> _plotStrataInfo;
-
 
         public IApplicationController Controller { get; protected set; }
         public FormDataEntryLogic LogicController { get; protected set; }
 
-        //public IList<StratumVM> PlotStrata
-        //{
-        //    get
-        //    {
-        //        return _plotStrataInfo;
-        //    }
-        //}
+        public CuttingUnitVM Unit
+        {
+            get
+            {
+                return LogicController.Unit;
+            }
+        }
 
 
         protected FormDataEntryBase():base() 
         {
+            
         }
 
         protected virtual TabControl MakePageContainer()
@@ -53,6 +52,58 @@ namespace FSCruiser.WinForms.Common
             return pc;
         }
 
+        protected void Initialize(IApplicationController controller
+            , CuttingUnitVM unit)
+        {
+            this.Controller = controller;
+            this.LogicController = new FormDataEntryLogic(unit, this.Controller, this);
+
+            this.SuspendLayout();
+
+            ////if the unit contains Tree based methods or multiple plot strata then we need a tab control
+            //if ((unitMode & DataEntryMode.Tree) == DataEntryMode.Tree ||
+            //    ((unitMode & DataEntryMode.Plot) == DataEntryMode.Plot && unit.Strata.Count > 1))
+            //{
+            //    this._pageContainer = MakePageContainer();
+            //}
+
+
+
+            //do we have any tree based strata in the unit
+            if (unit.TreeStrata != null && unit.TreeStrata.Count > 0)
+            {
+                InitializeTreesTab();
+
+                // if any strata are not H_PCT
+                if (unit.TreeStrata.Any(
+                    x => x.Method != CruiseDAL.Schema.Constants.CruiseMethods.H_PCT))
+                {
+                    InitializeTallyTab();
+                }
+            }
+
+            InitializePlotTabs();
+
+            this._pageContainer.ResumeLayout(false);
+
+            // Set the form title (Text) with current cutting unit and description.
+            this.Text = this.LogicController.GetViewTitle();
+
+            this.ResumeLayout(false);
+        }
+
+        #region virtual methods
+        protected virtual void InitializeTreesTab()
+        { }
+        
+
+        protected virtual void InitializeTallyTab()
+        { }
+
+        protected virtual void InitializePlotTabs()
+        { }
+
+        #endregion
 
         #region Overrides
         protected override void OnLoad(EventArgs e)
@@ -247,16 +298,11 @@ namespace FSCruiser.WinForms.Common
                         }
                     }
                 }
-                if (_previousLayout is ITallyView)
+
+                var tallyView = _previousLayout as ITallyView;
+                if (tallyView != null)
                 {
-                    try
-                    {
-                        this.LogicController.SaveCounts();
-                    }
-                    catch (Exception ex)
-                    {
-                        this.Controller.HandleNonCriticalException(ex, "counts didn't save");
-                    }
+                    tallyView.TrySaveCounts();
                 }
             }
 

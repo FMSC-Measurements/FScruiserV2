@@ -127,6 +127,6 @@
     <value>False</value>
   </metadata>
   <metadata name="$this.FormFactorShadowProperty" xml:space="preserve">
-    <value>Pocket_PC</value>
+    <value>WEBPAD</value>
   </metadata>
 </root>

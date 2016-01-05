@@ -25,6 +25,9 @@ namespace FSCruiser.Core.ViewInterfaces
         Control MakeTallyRow(Control container, SubPop subPop);
         void OnTally(CountTreeVM count);
         void HandleStratumLoaded(Control container);
-        
+
+        void SaveCounts();
+        bool TrySaveCounts();
+
     }
 }

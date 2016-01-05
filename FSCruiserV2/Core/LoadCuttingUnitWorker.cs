@@ -45,37 +45,24 @@ namespace FSCruiser.Core
 
         public void LoadData()
         {
-
+            InitializeStrata();
             InitializeSampleGroups();
+
+            //InitializeCounts();
             //InitializeUnitTreeNumIndex();
             _unit.TallyHistoryBuffer = new TallyHistoryCollection(_unit, Constants.MAX_TALLY_HISTORY_SIZE);
             _unit.TallyHistoryBuffer.Initialize();
 
 
             InitializeNonPlotTrees();
-//            //create a list of just trees in tree based strata
-//            List<TreeVM> nonPlotTrees = _unit.DAL.Read<TreeVM>(@"JOIN Stratum ON Tree.Stratum_CN = Stratum.Stratum_CN WHERE Tree.CuttingUnit_CN = ? AND
-//                        (Stratum.Method = '100' OR Stratum.Method = 'STR' OR Stratum.Method = '3P' OR Stratum.Method = 'S3P') ORDER BY TreeNumber",
-//                        (object)_unit.CuttingUnit_CN);
-//            _unit.NonPlotTrees = new BindingList<TreeVM>(nonPlotTrees);
-
-            if (_unit.DAL.GetRowCount("CuttingUnitStratum", "WHERE CuttingUnit_CN = ?", _unit.CuttingUnit_CN) == 1)
-            {
-                _unit.DefaultStratum = _unit.DAL.ReadSingleRow<StratumVM>("JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ?",
-                        (object)_unit.CuttingUnit_CN);
-            }
-            else
-            {
-                _unit.DefaultStratum = _unit.DAL.ReadSingleRow<StratumVM>(
-                        "JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = ? AND Method = ?",
-                        (object)CruiseDAL.Schema.Constants.CruiseMethods.H_PCT,
-                        (object)_unit.CuttingUnit_CN);
-            }
 
             this.OnDoneLoading();
-            //this.ViewController.HandleCuttingUnitDataLoaded();
-
         }
+
+        //public void InitializeCounts()
+        //{
+        //    _unit.Counts = _unit.DAL.Read<CountTreeVM>((string)null);
+        //}
 
         public void InitializeSampleGroups()
         {
@@ -89,6 +76,27 @@ namespace FSCruiser.Core
             {
                 //DataEntryMode mode = GetStrataDataEntryMode(sg.Stratum);
                 sg.Sampler = sg.MakeSampleSelecter();
+            }
+        }
+
+        public void InitializeStrata()
+        {
+            _unit.TreeStrata = _unit.GetTreeBasedStrata();
+            _unit.PlotStrata = _unit.GetPlotStrata();
+
+            _unit.DefaultStratum = null;
+            foreach (StratumVM stratum in _unit.TreeStrata)
+            {
+                if (stratum.Method == CruiseDAL.Schema.Constants.CruiseMethods.H_PCT)
+                {
+                    _unit.DefaultStratum = stratum;
+                    break;
+                }
+            }
+
+            if (_unit.DefaultStratum == null && _unit.TreeStrata.Count > 0)
+            {
+                _unit.DefaultStratum = _unit.TreeStrata[0];
             }
         }
 

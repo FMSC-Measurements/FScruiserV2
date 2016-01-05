@@ -13,9 +13,14 @@ namespace FSCruiser.Core.Models
 
         public void PopulatePlots(long cuttingUnit_CN)
         {
-            this.Plots = this.DAL.Read<PlotVM>("WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber"
-                        , this.Stratum_CN
+            this.Plots = this.DAL.From<PlotVM>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
+                .OrderBy("PlotNumber")
+                .Query(this.Stratum_CN
                         , cuttingUnit_CN);
+
+            //this.Plots = this.DAL.Read<PlotVM>("WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber"
+            //            , this.Stratum_CN
+            //            , cuttingUnit_CN);
         }
 
         public int GetNextPlotNumber(long cuttingUnit_CN)

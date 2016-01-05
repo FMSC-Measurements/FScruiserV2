@@ -21,7 +21,7 @@ namespace FSCruiser.Core.Models
 
         //public StratumDO Stratum { get; set; }
         //public List<PlotVM> Plots { get; set; }
-        //public List<CountTreeDO> Counts { get; set; }
+        public List<CountTreeVM> Counts { get; set; }
         
         public Dictionary<char, CountTreeVM> HotKeyLookup 
         { 
@@ -37,6 +37,22 @@ namespace FSCruiser.Core.Models
 
         public Control TallyContainer { get; set; }
 
+        public void PopulateHotKeyLookup()
+        {
+            _hotKeyLookup = new Dictionary<char, CountTreeVM>();
+            foreach (CountTreeVM count in Counts)
+            {
+                try
+                {
+                    char hotkey = count.Tally.Hotkey[0];
+                    hotkey = char.ToUpper(hotkey);
+                    HotKeyLookup.Add(hotkey, count);
+                }
+                catch
+                { }
+            }
+        }
+
         public void LoadTreeFieldNames()
         {
             string command = String.Concat("Select group_concat(distinct Field) FROM TreeFieldSetup WHERE Stratum_CN = ", this.Stratum_CN, ";");
@@ -44,6 +60,28 @@ namespace FSCruiser.Core.Models
             if (!string.IsNullOrEmpty(result))
             {
                 this.TreeFieldNames = result.Split(',');
+            }
+        }
+
+        public void SaveCounts()
+        {
+            foreach (CountTreeVM count in Counts)
+            {
+                count.Save();
+            }
+        }
+
+        public bool TrySaveCounts()
+        {
+            try
+            {
+                this.SaveCounts();
+                return true;
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e, "Exception");
+                return false;
             }
         }
     }
