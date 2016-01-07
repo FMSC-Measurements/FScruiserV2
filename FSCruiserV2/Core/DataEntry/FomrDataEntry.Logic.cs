@@ -50,6 +50,8 @@ namespace FSCruiser.Core.DataEntry
             this.Unit = unit;
             this.Controller = controller;
             this.View = view;
+
+            this.Unit.InitializeStrata();
             //this.Counts = this.Database.Read<CountTreeVM>((string)null);
         }
 

@@ -55,6 +55,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             //this.HotKeyLookup = new Dictionary<char, CountTreeDO>();
             this.StrataHotKeyLookup = new Dictionary<char, StratumVM>();
+            this.StrataViews = new Dictionary<StratumVM, Panel>();
             InitializeComponent();
         }
 

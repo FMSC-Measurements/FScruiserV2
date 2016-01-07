@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL;
@@ -15,8 +15,8 @@ namespace FSCruiser.Core.Models
         {
             this.Plots = this.DAL.From<PlotVM>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
                 .OrderBy("PlotNumber")
-                .Query(this.Stratum_CN
-                        , cuttingUnit_CN);
+                .Query(this.Stratum_CN, cuttingUnit_CN)
+                .ToList();
 
             //this.Plots = this.DAL.Read<PlotVM>("WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber"
             //            , this.Stratum_CN

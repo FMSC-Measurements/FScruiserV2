@@ -202,6 +202,27 @@ namespace FSCruiser.Core.Models
         }
         #endregion
 
+        public void InitializeStrata()
+        {
+            this.TreeStrata = this.GetTreeBasedStrata();
+            this.PlotStrata = this.GetPlotStrata();
+
+            this.DefaultStratum = null;
+            foreach (StratumVM stratum in this.TreeStrata)
+            {
+                if (stratum.Method == CruiseDAL.Schema.Constants.CruiseMethods.H_PCT)
+                {
+                    this.DefaultStratum = stratum;
+                    break;
+                }
+            }
+
+            if (this.DefaultStratum == null && this.TreeStrata.Count > 0)
+            {
+                this.DefaultStratum = this.TreeStrata[0];
+            }
+        }
+
         public void ReleaseData()
         {
             this.TallyHistoryBuffer = null;

@@ -45,7 +45,6 @@ namespace FSCruiser.Core
 
         public void LoadData()
         {
-            InitializeStrata();
             InitializeSampleGroups();
 
             //InitializeCounts();
@@ -79,26 +78,7 @@ namespace FSCruiser.Core
             }
         }
 
-        public void InitializeStrata()
-        {
-            _unit.TreeStrata = _unit.GetTreeBasedStrata();
-            _unit.PlotStrata = _unit.GetPlotStrata();
-
-            _unit.DefaultStratum = null;
-            foreach (StratumVM stratum in _unit.TreeStrata)
-            {
-                if (stratum.Method == CruiseDAL.Schema.Constants.CruiseMethods.H_PCT)
-                {
-                    _unit.DefaultStratum = stratum;
-                    break;
-                }
-            }
-
-            if (_unit.DefaultStratum == null && _unit.TreeStrata.Count > 0)
-            {
-                _unit.DefaultStratum = _unit.TreeStrata[0];
-            }
-        }
+        
 
         public void InitializeNonPlotTrees()
         {

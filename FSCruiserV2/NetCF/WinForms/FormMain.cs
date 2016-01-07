@@ -137,8 +137,12 @@ namespace FSCruiser.WinForms
             this._dataEntryMI.Enabled = (unit != null);
             if (unit != null)
             {
-                unit.Strata.Populate();
-                foreach (StratumDO st in unit.Strata)
+                var strata = unit.DAL.From<StratumDO>()
+                    .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
+                    .Where("CUST.CuttingUnit_CN = ?")
+                    .Query(unit.CuttingUnit_CN);
+
+                foreach (StratumDO st in strata)
                 {
                     Label stLBL = new Label();
                     stLBL.Text = st.GetDescriptionShort();

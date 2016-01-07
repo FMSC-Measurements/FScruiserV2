@@ -65,6 +65,7 @@ namespace FSCruiser.Core.Models
 
         public void SaveCounts()
         {
+            if (Counts == null) { return; } // if this is a h_pct stratum then counts won't be populated
             foreach (CountTreeVM count in Counts)
             {
                 count.Save();
