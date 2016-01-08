@@ -46,20 +46,41 @@ namespace FSCruiser.WinForms
             //this._cuttingUnitCB.Update();
         }
 
-        private void _cuttingUnitCB_SelectedValueChanged(object sender, EventArgs e)
+        //private void _cuttingUnitCB_SelectedValueChanged(object sender, EventArgs e)
+        //{
+        //    var unit = SelectedUnit;
+        //    if (unit != null)
+        //    {
+        //        var strata = unit.DAL.From<StratumDO>()
+        //           .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
+        //           .Where("CUST.CuttingUnit_CN = ?")
+        //           .Query(unit.CuttingUnit_CN);
+
+        //        var strataDescriptions = (from StratumDO st in strata
+        //                                  select st.GetDescriptionShort()).ToArray()
+
+        //        this._strataLB.DataSource = strataDescriptions;
+        //    }
+        //    else
+        //    {
+        //        this._strataLB.DataSource = null;
+        //    }
+        //}
+
+        private void _BS_CuttingUnits_CurrentChanged(object sender, EventArgs e)
         {
             var unit = SelectedUnit;
             if (unit != null)
             {
-                unit.Strata.Populate();
-                String[] stDes = new String[unit.Strata.Count];
+                var strata = unit.DAL.From<StratumDO>()
+                   .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
+                   .Where("CUST.CuttingUnit_CN = ?")
+                   .Query(unit.CuttingUnit_CN);
 
-                for (int i = 0; i < unit.Strata.Count; i++)
-                {
-                    StratumDO stratum = unit.Strata[i];
-                    stDes[i] = stratum.GetDescriptionShort();
-                }
-                this._strataLB.DataSource = stDes;
+                var strataDescriptions = (from StratumDO st in strata
+                                          select st.GetDescriptionShort()).ToArray();
+
+                this._strataLB.DataSource = strataDescriptions;
             }
             else
             {

@@ -83,11 +83,11 @@ namespace FSCruiser.WinForms
             this._cuttingUnitCB.Name = "_cuttingUnitCB";
             this._cuttingUnitCB.Size = new System.Drawing.Size(200, 21);
             this._cuttingUnitCB.TabIndex = 0;
-            this._cuttingUnitCB.SelectedValueChanged += new System.EventHandler(this._cuttingUnitCB_SelectedValueChanged);
             // 
             // _BS_CuttingUnits
             // 
             this._BS_CuttingUnits.DataSource = typeof(FSCruiser.Core.Models.CuttingUnitVM);
+            this._BS_CuttingUnits.CurrentChanged += new System.EventHandler(this._BS_CuttingUnits_CurrentChanged);
             // 
             // label1
             // 
