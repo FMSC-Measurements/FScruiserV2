@@ -223,6 +223,22 @@ namespace FSCruiser.WinForms.DataEntry
             return;
         }
 
+        public void SaveCounts()
+        {
+            this.ViewLogicController.SaveCounts();
+        }
+
+        public bool TrySaveCounts()
+        {
+            if (!this.ViewLogicController.TrySaveCounts())
+            {
+                MessageBox.Show("Stratum:" + this.ViewLogicController.Stratum.Code
+                    + " Unable to save Counts");
+                return false;
+            }
+            return true;
+        }
+
         #endregion
 
         #region ITreeView Members
