@@ -18,20 +18,28 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormDataEntry : FormDataEntryBase, IDataEntryView 
     {
+        protected override TabControl PageContainer
+        {
+            get { return this._pageContainer; }
+        }
 
-        public FormDataEntry()
+
+        FormDataEntry()
         {
             InitializeComponent();
+
+            //this._pageContainer = MakePageContainer();
+            //this.Controls.Add(this._pageContainer);
         }
 
-        public FormDataEntry(IApplicationController controller, CuttingUnitVM unit)
+        public FormDataEntry(IApplicationController controller
+            , CuttingUnitVM unit)
+            : this()
         {
-            base.Controller = controller;
-            this.InitializeComponent();
-            base.LogicController = new FormDataEntryLogic(unit, this.Controller, this);
+            base.Initialize(controller, unit);
 
-            this.InitLayout(unit);
         }
+
 
         protected override void OnFocusedLayoutChanged(object sender, EventArgs e)
         {
@@ -46,97 +54,113 @@ namespace FSCruiser.WinForms.DataEntry
             this.LogicController.HandleAddTreeClick();
         }
 
-        protected void InitLayout(CuttingUnitDO unit)
-        {
-            DataEntryMode unitMode = unit.GetDataEntryMode();
-            this.SuspendLayout();
+        //protected override void InitializeTreesTab()
+        //{
+        //    this._treePage = new TabPage();
+        //    //this._treePage.SuspendLayout();
+        //    this._treePage.Text = "Trees";
 
-            _layouts = new List<IDataEntryPage>();
+        //    _treeView = new ControlTreeDataGrid(this.Controller, this.LogicController);
+        //    _treeView.Dock = DockStyle.Fill;
 
-            //if the unit contains Tree based methods or multiple plot strata then we need a tab control
-            if ((unitMode & DataEntryMode.Tree) == DataEntryMode.Tree ||
-                ((unitMode & DataEntryMode.Plot) == DataEntryMode.Plot && unit.Strata.Count > 1))
-            {
-                this._pageContainer = MakePageContainer();
-            }
+        //    _treeView.UserCanAddTrees = true;
 
-            //do we have any tree based strata in the unit
-            if ((unitMode & DataEntryMode.Tree) == DataEntryMode.Tree)
-            {
-                this._treePage = new TabPage();
-                //this._treePage.SuspendLayout();
-                this._treePage.Text = "Trees";
+        //    _treePage.Controls.Add(_treeView);
+        //    this._pageContainer.TabPages.Add(_treePage);
+        //    this._layouts.Add(_treeView);
+        //}
 
-                _treeView = new ControlTreeDataGrid(this.Controller, this.LogicController);
-                _treeView.Dock = DockStyle.Fill;
+        //protected void InitLayout(CuttingUnitDO unit)
+        //{
+        //    DataEntryMode unitMode = unit.GetDataEntryMode();
+        //    this.SuspendLayout();
 
-                _treeView.UserCanAddTrees = true;
+        //    _layouts = new List<IDataEntryPage>();
 
-                _treePage.Controls.Add(_treeView);
-                this._pageContainer.TabPages.Add(_treePage);
-                this._layouts.Add(_treeView);
+        //    //if the unit contains Tree based methods or multiple plot strata then we need a tab control
+        //    if ((unitMode & DataEntryMode.Tree) == DataEntryMode.Tree ||
+        //        ((unitMode & DataEntryMode.Plot) == DataEntryMode.Plot && unit.Strata.Count > 1))
+        //    {
+        //        this._pageContainer = MakePageContainer();
+        //    }
 
-                //List<StratumInfo> strata = Controller.GetUnitTreeBasedStrata();
-                if ((unitMode & DataEntryMode.TallyTree) == DataEntryMode.TallyTree)
-                {
-                    _tallyLayout = new LayoutTreeBased(this.Controller, this.LogicController);
-                    _tallyLayout.Dock = DockStyle.Fill;
+        //    //do we have any tree based strata in the unit
+        //    if ((unitMode & DataEntryMode.Tree) == DataEntryMode.Tree)
+        //    {
+        //        this._treePage = new TabPage();
+        //        //this._treePage.SuspendLayout();
+        //        this._treePage.Text = "Trees";
 
-                    this._tallyPage = new TabPage();
-                    this._tallyPage.Text = "Tally";
-                    this._pageContainer.TabPages.Add(this._tallyPage);
-                    this._tallyPage.Controls.Add(_tallyLayout);
-                    this._layouts.Add(_tallyLayout);
-                }
-            }
+        //        _treeView = new ControlTreeDataGrid(this.Controller, this.LogicController);
+        //        _treeView.Dock = DockStyle.Fill;
 
-            if ((unitMode & DataEntryMode.Plot) == DataEntryMode.Plot)
-            {
-                var plotStrata = unit.GetPlotStrata();
-                foreach (PlotStratum st in plotStrata)
-                {
-                    //st.Plots = this.Controller._cDal.Read<PlotVM>("Plot", "WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber", st.Stratum_CN, Controller.CurrentUnit.CuttingUnit_CN);
+        //        _treeView.UserCanAddTrees = true;
 
-                    st.PopulatePlots(unit.CuttingUnit_CN.GetValueOrDefault());
+        //        _treePage.Controls.Add(_treeView);
+        //        this._pageContainer.TabPages.Add(_treePage);
+        //        this._layouts.Add(_treeView);
 
-                    if (_pageContainer != null)
-                    {
-                        TabPage page = new TabPage();
-                        page.Text = String.Format("{0}-{1}[{2}]", st.Code, st.Method, st.Hotkey);
-                        _pageContainer.TabPages.Add(page);
+        //        //List<StratumInfo> strata = Controller.GetUnitTreeBasedStrata();
+        //        if ((unitMode & DataEntryMode.TallyTree) == DataEntryMode.TallyTree)
+        //        {
+        //            _tallyLayout = new LayoutTreeBased(this.Controller, this.LogicController);
+        //            _tallyLayout.Dock = DockStyle.Fill;
 
-                        LayoutPlot view = new LayoutPlot(this.LogicController, page, st);
-                        view.UserCanAddTrees = true;
-                        _layouts.Add(view);
+        //            this._tallyPage = new TabPage();
+        //            this._tallyPage.Text = "Tally";
+        //            this._pageContainer.TabPages.Add(this._tallyPage);
+        //            this._tallyPage.Controls.Add(_tallyLayout);
+        //            this._layouts.Add(_tallyLayout);
+        //        }
+        //    }
 
-                        int pageIndex = _pageContainer.TabPages.IndexOf(page);
-                        this.LogicController.AddStratumHotKey(st.Hotkey, pageIndex);
+        //    if ((unitMode & DataEntryMode.Plot) == DataEntryMode.Plot)
+        //    {
+        //        var plotStrata = unit.GetPlotStrata();
+        //        foreach (PlotStratum st in plotStrata)
+        //        {
+        //            //st.Plots = this.Controller._cDal.Read<PlotVM>("Plot", "WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber", st.Stratum_CN, Controller.CurrentUnit.CuttingUnit_CN);
 
-                    }
-                    else
-                    {
-                        LayoutPlot view = new LayoutPlot(this.LogicController, this._mainContenPanel, st);
-                        view.UserCanAddTrees = true;
-                        _layouts.Add(view);
-                        //this.Controls.Add(view);
-                    }
-                }
-            }
+        //            st.PopulatePlots(unit.CuttingUnit_CN.GetValueOrDefault());
 
-            if (this._pageContainer != null)
-            {
-                this._mainContenPanel.Controls.Add(this._pageContainer);
-                this._pageContainer.ResumeLayout(false);
-            }
+        //            if (_pageContainer != null)
+        //            {
+        //                TabPage page = new TabPage();
+        //                page.Text = String.Format("{0}-{1}[{2}]", st.Code, st.Method, st.Hotkey);
+        //                _pageContainer.TabPages.Add(page);
+
+        //                LayoutPlot view = new LayoutPlot(this.LogicController, page, st);
+        //                view.UserCanAddTrees = true;
+        //                _layouts.Add(view);
+
+        //                int pageIndex = _pageContainer.TabPages.IndexOf(page);
+        //                this.LogicController.AddStratumHotKey(st.Hotkey, pageIndex);
+
+        //            }
+        //            else
+        //            {
+        //                LayoutPlot view = new LayoutPlot(this.LogicController, this._mainContenPanel, st);
+        //                view.UserCanAddTrees = true;
+        //                _layouts.Add(view);
+        //                //this.Controls.Add(view);
+        //            }
+        //        }
+        //    }
+
+        //    if (this._pageContainer != null)
+        //    {
+        //        this._mainContenPanel.Controls.Add(this._pageContainer);
+        //        this._pageContainer.ResumeLayout(false);
+        //    }
 
 
 
 
-            // Set the form title (Text) with current cutting unit and description.
-            this.Text = this.LogicController.GetViewTitle();
+        //    // Set the form title (Text) with current cutting unit and description.
+        //    this.Text = this.LogicController.GetViewTitle();
 
-            this.ResumeLayout(false);
-        }
+        //    this.ResumeLayout(false);
+        //}
 
         private void _deleteTreeBTN_Click(object sender, EventArgs e)
         {

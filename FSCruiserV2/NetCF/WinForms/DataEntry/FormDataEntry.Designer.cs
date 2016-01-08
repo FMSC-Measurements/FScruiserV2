@@ -38,6 +38,7 @@
             this._editCruisersMI = new System.Windows.Forms.MenuItem();
             this._showHideLogColMI = new System.Windows.Forms.MenuItem();
             this._addTreeMI = new System.Windows.Forms.MenuItem();
+            this._pageContainer = new System.Windows.Forms.TabControl();
             ((System.ComponentModel.ISupportInitialize)(this._BS_TDV)).BeginInit();
             this.SuspendLayout();
             // 
@@ -91,8 +92,18 @@
             this._addTreeMI.Text = "Add Tree";
             this._addTreeMI.Click += new System.EventHandler(this._addTreeMI_Click);
             // 
+            // _pageContainer
+            // 
+            this._pageContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._pageContainer.Location = new System.Drawing.Point(0, 0);
+            this._pageContainer.Name = "_pageContainer";
+            this._pageContainer.SelectedIndex = 0;
+            this._pageContainer.Size = new System.Drawing.Size(752, 432);
+            this._pageContainer.TabIndex = 0;
+            // 
             // FormDataEntry
             // 
+            this.Controls.Add(_pageContainer);
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
@@ -117,6 +128,7 @@
         private System.Windows.Forms.MenuItem _editCruisersMI;
         private System.Windows.Forms.MenuItem _showHideLogColMI;
         private System.Windows.Forms.MenuItem _addTreeMI;
+        private System.Windows.Forms.TabControl _pageContainer;
         
     }
 }

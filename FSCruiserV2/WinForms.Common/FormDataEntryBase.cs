@@ -8,6 +8,11 @@ using FSCruiser.Core;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.WinForms.DataEntry;
+using FMSC.Sampling;
+
+#if NetCF
+using Microsoft.WindowsCE.Forms;
+#endif
 
 namespace FSCruiser.WinForms.Common
 {
@@ -19,11 +24,19 @@ namespace FSCruiser.WinForms.Common
         private IDataEntryPage _previousLayout;
         protected List<IDataEntryPage> _layouts = new List<IDataEntryPage>();
         protected LayoutTreeBased _tallyLayout;
-        protected TabControl _pageContainer;
+        //protected TabControl _pageContainer;
         protected TabPage _tallyPage;
         protected TabPage _treePage;
         protected ControlTreeDataGrid _treeView;
 
+#if NetCF
+        public InputPanel SIP { get; set; }
+#endif
+
+        protected virtual TabControl PageContainer
+        {
+            get { throw new NotSupportedException(); }
+        }
 
         public IApplicationController Controller { get; protected set; }
         public FormDataEntryLogic LogicController { get; protected set; }
@@ -84,7 +97,7 @@ namespace FSCruiser.WinForms.Common
 
             InitializePlotTabs();
 
-            this._pageContainer.ResumeLayout(false);
+            this.PageContainer.ResumeLayout(false);
 
             // Set the form title (Text) with current cutting unit and description.
             this.Text = this.LogicController.GetViewTitle();
@@ -93,15 +106,81 @@ namespace FSCruiser.WinForms.Common
         }
 
         #region virtual methods
-        protected virtual void InitializeTreesTab()
-        { }
-        
+        protected void InitializeTreesTab()
+        {
+            this._treePage = new TabPage();
+            //this._treePage.SuspendLayout();
+            this._treePage.Text = "Trees";
 
-        protected virtual void InitializeTallyTab()
-        { }
+#if NetCF
+            _treeView = new ControlTreeDataGrid(this.Controller
+                , this.LogicController
+                , this.SIP)
+            {
+                Dock = DockStyle.Fill,
+                UserCanAddTrees = true
+            };
+#else
+            _treeView = new ControlTreeDataGrid(this.Controller, this.LogicController);
+#endif
+            _treeView.Dock = DockStyle.Fill;
 
-        protected virtual void InitializePlotTabs()
-        { }
+            _treeView.UserCanAddTrees = true;
+
+            _treePage.Controls.Add(_treeView);
+            this.PageContainer.TabPages.Add(_treePage);
+            this._layouts.Add(_treeView);
+        }
+
+
+        protected void InitializeTallyTab()
+        {
+            _tallyLayout = new LayoutTreeBased(this.Controller, this.LogicController);
+            _tallyLayout.Dock = DockStyle.Fill;
+
+            this._tallyPage = new TabPage();
+            this._tallyPage.Text = "Tally";
+            this.PageContainer.TabPages.Add(this._tallyPage);
+            this._tallyPage.Controls.Add(_tallyLayout);
+            this._layouts.Add(_tallyLayout);
+        }
+
+        protected void InitializePlotTabs()
+        {
+            foreach (PlotStratum st in Unit.PlotStrata)
+            {
+                if (st.Method == "3PPNT")
+                {
+                    if (st.KZ3PPNT <= 0)
+                    {
+                        MessageBox.Show("error 3PPNT missing KZ value, please return to Cruise System Manger and fix");
+                        continue;
+                    }
+                    st.SampleSelecter = new ThreePSelecter((int)st.KZ3PPNT, 1000000, 0);
+                }
+                st.LoadTreeFieldNames();
+
+                st.PopulatePlots(Unit.CuttingUnit_CN.GetValueOrDefault());
+
+
+                TabPage page = new TabPage();
+                page.Text = String.Format("{0}-{1}[{2}]", st.Code, st.Method, st.Hotkey);
+                PageContainer.TabPages.Add(page);
+
+#if NetCF
+                LayoutPlot view = new LayoutPlot(this.LogicController, page, st, this.SIP);
+#else
+                LayoutPlot view = new LayoutPlot(this.LogicController, page, st);
+#endif
+                view.UserCanAddTrees = true;
+                _layouts.Add(view);
+
+                int pageIndex = PageContainer.TabPages.IndexOf(page);
+                this.LogicController.AddStratumHotKey(st.Hotkey, pageIndex);
+
+            }
+
+        }
 
         #endregion
 
@@ -166,7 +245,7 @@ namespace FSCruiser.WinForms.Common
         {
             get
             {
-                if (_pageContainer == null)
+                if (PageContainer == null)
                 {
                     if (_layouts.Count > 0)
                     {
@@ -179,7 +258,7 @@ namespace FSCruiser.WinForms.Common
                 }
                 else
                 {
-                    return _layouts[_pageContainer.SelectedIndex];
+                    return _layouts[PageContainer.SelectedIndex];
                 }
             }
         }
@@ -243,27 +322,27 @@ namespace FSCruiser.WinForms.Common
 
         public void GotoTreePage()
         {
-            if (this._pageContainer == null) { return; }
-            int pageIndex = this._pageContainer.TabPages.IndexOf(_treePage);
+            if (this.PageContainer == null) { return; }
+            int pageIndex = this.PageContainer.TabPages.IndexOf(_treePage);
             this.GoToPageIndex(pageIndex);
         }
 
         public void GoToTallyPage()
         {
-            if (this._pageContainer == null) { return; }
-            int pageIndex = this._pageContainer.TabPages.IndexOf(_tallyPage);
+            if (this.PageContainer == null) { return; }
+            int pageIndex = this.PageContainer.TabPages.IndexOf(_tallyPage);
             this.GoToPageIndex(pageIndex);
         }
 
         public void GoToPageIndex(int i)
         {
-            if (_pageContainer == null) { return; }
-            if (i < 0 || i > _pageContainer.TabPages.Count - 1)
+            if (PageContainer == null) { return; }
+            if (i < 0 || i > PageContainer.TabPages.Count - 1)
             {
                 i = 0;
             }
-            _pageContainer.SelectedIndex = i;
-            _pageContainer.Focus();
+            PageContainer.SelectedIndex = i;
+            PageContainer.Focus();
         }
 
         public void TreeViewMoveLast()

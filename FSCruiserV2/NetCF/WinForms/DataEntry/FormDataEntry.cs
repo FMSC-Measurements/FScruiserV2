@@ -17,15 +17,12 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormDataEntry : FormDataEntryBase, IDataEntryView
     {
-        private Microsoft.WindowsCE.Forms.InputPanel _sip;
-        public InputPanel SIP
+
+        protected override TabControl PageContainer
         {
-            get
-            {
-                return this._sip;
-            }
+            get { return this._pageContainer; }
         }
-       
+
 
         protected FormDataEntry():base()
         {
@@ -35,13 +32,12 @@ namespace FSCruiser.WinForms.DataEntry
 
             InitializeComponent();
 
-            this._pageContainer = MakePageContainer();
-            this.Controls.Add(this._pageContainer);
+            //this.Controls.Add(this._pageContainer);
 
             if(ViewController.PlatformType == PlatformType.WM)
             {
-                this._sip = new Microsoft.WindowsCE.Forms.InputPanel();
-                this.components.Add(_sip);
+                this.SIP = new Microsoft.WindowsCE.Forms.InputPanel();
+                this.components.Add(SIP);
             }
             else if (ViewController.PlatformType == PlatformType.WinCE)
             {
@@ -58,79 +54,79 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         #region override methods
-        protected override void InitializeTreesTab()
-        {
-            this._treePage = new TabPage();
-            //this._treePage.SuspendLayout();
-            this._treePage.Text = "Trees";
+        //protected override void InitializeTreesTab()
+        //{
+        //    this._treePage = new TabPage();
+        //    //this._treePage.SuspendLayout();
+        //    this._treePage.Text = "Trees";
 
-            _treeView = new ControlTreeDataGrid(this.Controller
-                , this.LogicController
-                , this.SIP)
-            {
-                Dock = DockStyle.Fill,
-                UserCanAddTrees = true
-            };
+        //    _treeView = new ControlTreeDataGrid(this.Controller
+        //        , this.LogicController
+        //        , this.SIP)
+        //    {
+        //        Dock = DockStyle.Fill,
+        //        UserCanAddTrees = true
+        //    };
 
 
 
-            _treePage.Controls.Add(_treeView);
-            this._pageContainer.TabPages.Add(_treePage);
-            this._layouts.Add(_treeView);
-        }
+        //    _treePage.Controls.Add(_treeView);
+        //    this._pageContainer.TabPages.Add(_treePage);
+        //    this._layouts.Add(_treeView);
+        //}
 
-        protected override void InitializeTallyTab()
-        {
-            _tallyLayout = new LayoutTreeBased(this.Controller, this.LogicController);
-            _tallyLayout.Dock = DockStyle.Fill;
+        //protected override void InitializeTallyTab()
+        //{
+        //    _tallyLayout = new LayoutTreeBased(this.Controller, this.LogicController);
+        //    _tallyLayout.Dock = DockStyle.Fill;
 
-            this._tallyPage = new TabPage();
-            this._tallyPage.Text = "Tally";
-            this._pageContainer.TabPages.Add(this._tallyPage);
-            this._tallyPage.Controls.Add(_tallyLayout);
-            this._layouts.Add(_tallyLayout);
-        }
+        //    this._tallyPage = new TabPage();
+        //    this._tallyPage.Text = "Tally";
+        //    this._pageContainer.TabPages.Add(this._tallyPage);
+        //    this._tallyPage.Controls.Add(_tallyLayout);
+        //    this._layouts.Add(_tallyLayout);
+        //}
 
-        protected override void InitializePlotTabs()
-        {
-            foreach (PlotStratum st in Unit.PlotStrata)
-            {
-                if (st.Method == "3PPNT")
-                {
-                    if (st.KZ3PPNT <= 0)
-                    {
-                        MessageBox.Show("error 3PPNT missing KZ value, please return to Cruise System Manger and fix");
-                        continue;
-                    }
-                    st.SampleSelecter = new ThreePSelecter((int)st.KZ3PPNT, 1000000, 0);
-                }
-                st.LoadTreeFieldNames();
+        //protected override void InitializePlotTabs()
+        //{
+        //    foreach (PlotStratum st in Unit.PlotStrata)
+        //    {
+        //        if (st.Method == "3PPNT")
+        //        {
+        //            if (st.KZ3PPNT <= 0)
+        //            {
+        //                MessageBox.Show("error 3PPNT missing KZ value, please return to Cruise System Manger and fix");
+        //                continue;
+        //            }
+        //            st.SampleSelecter = new ThreePSelecter((int)st.KZ3PPNT, 1000000, 0);
+        //        }
+        //        st.LoadTreeFieldNames();
 
-                st.PopulatePlots(Unit.CuttingUnit_CN.GetValueOrDefault());
+        //        st.PopulatePlots(Unit.CuttingUnit_CN.GetValueOrDefault());
 
-                if (_pageContainer != null)
-                {
-                    TabPage page = new TabPage();
-                    page.Text = String.Format("{0}-{1}[{2}]", st.Code, st.Method, st.Hotkey);
-                    _pageContainer.TabPages.Add(page);
+        //        if (_pageContainer != null)
+        //        {
+        //            TabPage page = new TabPage();
+        //            page.Text = String.Format("{0}-{1}[{2}]", st.Code, st.Method, st.Hotkey);
+        //            _pageContainer.TabPages.Add(page);
 
-                    LayoutPlot view = new LayoutPlot(this.LogicController, page, st, this.SIP);
-                    view.UserCanAddTrees = true;
-                    _layouts.Add(view);
+        //            LayoutPlot view = new LayoutPlot(this.LogicController, page, st, this.SIP);
+        //            view.UserCanAddTrees = true;
+        //            _layouts.Add(view);
 
-                    int pageIndex = _pageContainer.TabPages.IndexOf(page);
-                    this.LogicController.AddStratumHotKey(st.Hotkey, pageIndex);
-                }
-                else
-                {
-                    LayoutPlot view = new LayoutPlot(this.LogicController, this, st, this.SIP);
-                    view.UserCanAddTrees = true;
-                    _layouts.Add(view);
-                    this.Controls.Add(view);
-                }
-            }
+        //            int pageIndex = _pageContainer.TabPages.IndexOf(page);
+        //            this.LogicController.AddStratumHotKey(st.Hotkey, pageIndex);
+        //        }
+        //        else
+        //        {
+        //            LayoutPlot view = new LayoutPlot(this.LogicController, this, st, this.SIP);
+        //            view.UserCanAddTrees = true;
+        //            _layouts.Add(view);
+        //            this.Controls.Add(view);
+        //        }
+        //    }
 
-        }
+        //}
 
         protected override void OnFocusedLayoutChanged(object sender, EventArgs e)
         {
