@@ -107,6 +107,12 @@
     <Compile Include="WinForms.Common\FormDataEntryBase.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="WinForms.Common\TreeBasedTallyView_Base.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\TreeBasedTallyView_Base.Designer.cs">
+      <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms.Common\ViewController_Base.cs" />
     <Compile Include="WinForms\DataEntry\ControlTreeDataGrid.PC.cs">
       <SubType>Component</SubType>
@@ -202,6 +208,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormDataEntryBase.resx">
       <DependentUpon>FormDataEntryBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\TreeBasedTallyView_Base.resx">
+      <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\CuttingUnitSelectView.resx">
       <DependentUpon>CuttingUnitSelectView.cs</DependentUpon>
