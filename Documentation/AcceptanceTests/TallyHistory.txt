@@ -1,0 +1,55 @@
+Feature: tally history 
+    The user can see a history of tallies in a given unit.     
+    From the tally history they can untally previouse tallies.
+    note: only tree based tallies are stored in the tally history 
+    and tally history only goes back a fix number of tallies
+    
+GIVEN the following units exist:
+    |code   |
+    |01     |
+    |02     |
+AND the following strata exist:
+    |code   |units  |method |    
+    |01     |01&02  |STR    |
+AND the following sample groups:
+    |straum |code   |freq   |tally mode |
+    |01     |01     |2      |by SG      |
+AND the following tallies are setup:
+    |SG     |TDV    |Description    |Counts (unit:treeCount)    |   
+    |01     |       |01             |01:??                      |                
+AND the following tree exist:
+    |unit   |SG |Tree#  |Sp     |
+    |01     |01 |1      |A      |        
+    |01     |01 |2      |A      |
+    |       |   |       |       |
+AND unit 01 has the following tally history records
+    |info       |
+    |01         |
+    |01 #1 M    |
+    |01 #2 M    |
+    
+WHEN the user is in in unit 01
+THEN tally history shows (01,01 #1 M)
+AND tally record "01 - 01 M" is selected  
+AND the tree view has one tree record with Tree# = 1
+
+WHEN the user is in unit 02
+THEN tally history shows no records
+
+GIVEN the user is in unit 01
+AND tally record "01 #1 M" is selected 
+WHEN untally is clicked
+THEN the message "Are you sure?\r\nThis will delete the following tree record: 1" //respond no because this tally record may be used by other test
+
+GIVEN the user untallied a tally with a tree record
+WHEN the user responds "yes" to untally warning message
+THEN the tree count is decremented
+AND the associated tree record is deleted
+
+WHEN tree 02 is deleted 
+THEN tally record "01 #2 M" is removed      //fails
+
+
+
+
+    
