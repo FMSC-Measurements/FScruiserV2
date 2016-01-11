@@ -32,6 +32,7 @@ namespace FSCruiser.WinForms
                 controller.Run();
             }
             Debug.Close();
+            Application.Exit();// forces any extra forms (splash screen) to close
         }
 
         //http://stackoverflow.com/questions/548915/preloading-assemblies
