@@ -6,6 +6,7 @@ using System.ComponentModel;
 using CruiseDAL;
 using CruiseDAL.Schema;
 using System.Diagnostics;
+using FMSC.ORM.Core.EntityAttributes;
 
 namespace FSCruiser.Core.Models
 {
@@ -26,6 +27,7 @@ namespace FSCruiser.Core.Models
             : base(obj)
         { }
 
+        [IgnoreField]
         public new StratumVM Stratum
         {
             get
@@ -38,6 +40,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        [IgnoreField]
         public new CuttingUnitVM CuttingUnit
         {
             get
@@ -50,7 +53,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-
+        [IgnoreField]
         public IList<TreeVM> Trees
         {
             get
@@ -63,6 +66,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        [IgnoreField]
         public long NextPlotTreeNum
         {
             get
@@ -75,6 +79,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        [IgnoreField]
         public bool IsNull
         {
             get

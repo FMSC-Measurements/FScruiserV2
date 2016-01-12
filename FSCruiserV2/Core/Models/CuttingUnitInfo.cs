@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using System.ComponentModel;
 using System.Threading;
+using FMSC.ORM.Core.EntityAttributes;
 
 namespace FSCruiser.Core.Models
 {
@@ -15,13 +16,23 @@ namespace FSCruiser.Core.Models
 
         //public List<CountTreeVM> Counts { get; set; }
 
+        [IgnoreField]
         public IList<PlotStratum> PlotStrata { get; set; }
+
+        [IgnoreField]
         public IList<StratumVM> TreeStrata { get; set; }
 
+        [IgnoreField]
         public StratumVM DefaultStratum { get; set; }
+
+        [IgnoreField]
         public List<SampleGroupVM> SampleGroups { get; set; }
         //public List<TreeVM> TreeList { get; set; }
+
+        [IgnoreField]
         public IList<TreeVM> NonPlotTrees { get; set; }
+
+        [IgnoreField]
         public TallyHistoryCollection TallyHistoryBuffer { get; set; }
 
 

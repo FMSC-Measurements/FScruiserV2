@@ -4,6 +4,7 @@ using System.Text;
 using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
 using CruiseDAL;
+using FMSC.ORM.Core.EntityAttributes;
 
 namespace FSCruiser.Core.Models
 {
@@ -17,6 +18,7 @@ namespace FSCruiser.Core.Models
             : base(ds)
         { }
 
+        [IgnoreField]
         public new SampleGroupVM SampleGroup
         {
             get

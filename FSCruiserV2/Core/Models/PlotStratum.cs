@@ -3,12 +3,13 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL;
+using FMSC.ORM.Core.EntityAttributes;
 
 namespace FSCruiser.Core.Models
 {
     public class PlotStratum : StratumVM
     {
-
+        [IgnoreField]
         public IList<PlotVM> Plots { get; protected set; }
 
         public void PopulatePlots(long cuttingUnit_CN)

@@ -7,6 +7,7 @@ using CruiseDAL.Schema;
 using FMSC.Sampling;
 using System.Xml.Serialization;
 using System.IO;
+using FMSC.ORM.Core.EntityAttributes;
 
 namespace FSCruiser.Core.Models
 {
@@ -16,6 +17,7 @@ namespace FSCruiser.Core.Models
             : base()
         { }
 
+        [IgnoreField]
         public new StratumVM Stratum
         {
             get
@@ -28,17 +30,17 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        [IgnoreField]
+        public SampleSelecter Sampler { get; set; }
+
+
         public override StratumDO GetStratum()
         {
             if (DAL == null) { return null; }
             return DAL.ReadSingleRow<StratumVM>(this.Stratum_CN);
         }
 
-        public SampleSelecter Sampler
-        {
-            get;
-            set;
-        }
+        
 
         #region Sample Selecter Methods
         public void SerializeSamplerState()

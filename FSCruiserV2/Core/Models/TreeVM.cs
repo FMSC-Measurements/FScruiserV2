@@ -2,6 +2,7 @@
 using CruiseDAL;
 using FMSC.ORM.Core;
 using System;
+using FMSC.ORM.Core.EntityAttributes;
 
 namespace FSCruiser.Core.Models
 {
@@ -17,6 +18,7 @@ namespace FSCruiser.Core.Models
         {
         }
 
+        [IgnoreField]
         public new SampleGroupVM SampleGroup
         {
             get
@@ -29,6 +31,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        [IgnoreField]
         public new StratumVM Stratum
         {
             get
