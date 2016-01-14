@@ -206,10 +206,13 @@ namespace FSCruiser.WinForms
         protected void OnUntallyButtonClicked(object sender, EventArgs e)
         {
             if (_viewLoading) { return; }
+
+            TallyAction selectedAction = _BS_tallyHistory.Current as TallyAction;
+
+            if (selectedAction == null) { return; }
             if (MessageBox.Show("Are you sure you want to untally the selected record?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
                 == DialogResult.No) { return; }
 
-            TallyAction selectedAction = _BS_tallyHistory.Current as TallyAction;
             DataEntryController.Unit.TallyHistoryBuffer.Remove(selectedAction);
         }
 
