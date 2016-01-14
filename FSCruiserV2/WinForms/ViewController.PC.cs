@@ -95,17 +95,22 @@ namespace FSCruiser.WinForms
 
         public override void SignalMeasureTree(bool showMessage)
         {
-            System.Media.SystemSounds.Beep.Play();
+            System.Media.SystemSounds.Exclamation.Play();
+            if (showMessage)
+            {
+                MessageBox.Show("Measure Tree");
+            }
         }
 
         public override void SignalInsuranceTree()
         {
             System.Media.SystemSounds.Asterisk.Play();
+            MessageBox.Show("Insurance Tree");
         }
 
         public override void SignalInvalidAction()
         {
-            System.Media.SystemSounds.Exclamation.Play();
+            System.Media.SystemSounds.Beep.Play();
         }
 
 
