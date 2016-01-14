@@ -23,7 +23,6 @@ namespace FSCruiser.WinForms
         {
             base.OnLoad(e);
             label1.Text = "Version " + Constants.FSCRUISER_VERSION;
-            this._exeLBL.Text = AppDomain.CurrentDomain.FriendlyName;
             //this._dob_LBL.Text = "DOB: " + File.GetCreationTime(Assembly.GetExecutingAssembly().GetName().CodeBase).ToString();
         }
     }
