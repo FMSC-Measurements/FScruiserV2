@@ -21,6 +21,62 @@ namespace FSCruiser.WinForms.DataEntry
             InitializeComponent();
         }
 
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            // HACK we need to handle dialog keys manualy 
+            // otherwise the parent form recieves the key press too
+            if (e.KeyData == Keys.Enter)
+            {
+                e.Handled = true;
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            else if (e.KeyData == Keys.Escape)
+            {
+                e.Handled = true;
+                this.DialogResult = DialogResult.Cancel;
+                this.Close();
+            }
+            else
+            {
+                base.OnKeyUp(e);
+            }
+        }
+
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            if (this.DialogResult == DialogResult.Cancel) 
+            {
+                this.UserEnteredValue = null;
+                return; 
+            }
+
+            if (!_canReturnNull && this.UserEnteredValue == null)
+            {
+                MessageBox.Show("No Value Entered");
+                e.Cancel = true;
+            }
+
+            if (this._outputView.Text == "STM")
+            {
+                return;
+            }
+
+            if (this._minValue != null && this.UserEnteredValue < this._minValue.Value)
+            {
+                MessageBox.Show("Must be Greater or Equal to " + this._minValue.ToString());
+                e.Cancel = true;
+            }
+            else if (this._maxValue != null && this.UserEnteredValue > this._maxValue.Value)
+            {
+                MessageBox.Show("Must be Less Than or Equal to " + this._maxValue.ToString());
+                e.Cancel = true;
+            }
+        }
+
         public DialogResult ShowDialog(int? initialValue, bool canReturnNull)
         {
             return this.ShowDialog(null, null, initialValue, canReturnNull);
