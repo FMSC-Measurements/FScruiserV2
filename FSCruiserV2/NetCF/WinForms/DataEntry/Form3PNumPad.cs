@@ -495,7 +495,13 @@ namespace FSCruiser.WinForms.DataEntry
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            
+
+            if (this.DialogResult == DialogResult.Cancel)
+            {
+                this.UserEnteredValue = null;
+                return;
+            }
+
             if (!_canReturnNull && this.UserEnteredValue == null)
             {
                 MessageBox.Show("No Value Entered");
@@ -555,6 +561,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if ((e.KeyCode == System.Windows.Forms.Keys.Escape))
             {
+                this.DialogResult = DialogResult.Cancel;
                 this.UserEnteredValue = null;
                 this.Close();
                 e.Handled = true;
