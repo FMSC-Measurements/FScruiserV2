@@ -16,6 +16,7 @@ namespace FSCruiser.Core
         
         IApplicationController ApplicationController { get; set; }
         bool EnableLogGrading { get; set; }
+        //bool EnableCruiserSelectionPopup { get; set; }
 
         FormMain MainView { get; }
         FormNumPad NumPadDialog { get; }
@@ -25,7 +26,7 @@ namespace FSCruiser.Core
         void BeginShowSplash();
         //FSCruiserV2.Forms.FormPlot GetPlotView(CruiseDAL.DataObjects.CuttingUnitDO unit);
         //FSCruiserV2.Forms.FormDataEntry GetTreeBasedView(CruiseDAL.DataObjects.CuttingUnitDO unit);
-        void HandleCuttingUnitDataLoaded();
+        //void HandleCuttingUnitDataLoaded();
         void HandleCruisersChanged();
 
         void SignalInvalidAction();
@@ -50,14 +51,15 @@ namespace FSCruiser.Core
         void ShowManageCruisers();
         DialogResult ShowOpenCruiseFileDialog(out string fileName);
         
-        void ShowDataEntry(CuttingUnitDO unit);
-        DialogResult ShowPlotInfo(PlotVM plotInfo, bool allowEdit);
+        void ShowDataEntry(CuttingUnitVM unit);
+        DialogResult ShowPlotInfo(PlotVM plotInfo, bool is3PPNT, bool allowEdit);        
         void ShowTallySettings(CountTreeVM count);
 
         void ShowMessage(String message, String caption, MessageBoxIcon icon);
         bool AskYesNo(String message, String caption, MessageBoxIcon icon);
         bool AskYesNo(String message, String caption, MessageBoxIcon icon, bool defaultNo);
         bool AskCancel(String message, String caption, MessageBoxIcon icon, bool defaultCancel);
+        int? AskKPI(int min, int max);
 
         void SignalMeasureTree(bool showMessage);
         void SignalInsuranceTree();

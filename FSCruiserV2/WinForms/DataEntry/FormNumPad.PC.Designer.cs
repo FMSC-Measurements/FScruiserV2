@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this._outputView = new System.Windows.Forms.TextBox();
             this._okBTN = new System.Windows.Forms.Button();
             this._clearBTN = new System.Windows.Forms.Button();
             this._cancelBTN = new System.Windows.Forms.Button();
@@ -42,7 +42,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33133F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33433F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33433F));
-            this.tableLayoutPanel1.Controls.Add(this.textBox1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this._outputView, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this._okBTN, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this._clearBTN, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this._cancelBTN, 2, 1);
@@ -55,14 +55,14 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(261, 49);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // textBox1
+            // _outputView
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this.textBox1, 3);
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(3, 3);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(255, 20);
-            this.textBox1.TabIndex = 0;
+            this.tableLayoutPanel1.SetColumnSpan(this._outputView, 3);
+            this._outputView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._outputView.Location = new System.Drawing.Point(3, 3);
+            this._outputView.Name = "_outputView";
+            this._outputView.Size = new System.Drawing.Size(255, 20);
+            this._outputView.TabIndex = 0;
             // 
             // _okBTN
             // 
@@ -115,7 +115,7 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox _outputView;
         private System.Windows.Forms.Button _okBTN;
         private System.Windows.Forms.Button _clearBTN;
         private System.Windows.Forms.Button _cancelBTN;

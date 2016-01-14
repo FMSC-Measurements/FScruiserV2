@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FSCruiser.Core.Models.CountTreeVM">
+    <Position X="0.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAEIACAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Models\CountTreeVM.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.CruiserVM">
+    <Position X="2.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Models\CruiserVM.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.CuttingUnitVM">
+    <Position X="4" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABBAEAAAggAAAEAAAIgAQAgAAsBAACA4ABCAAAgIA=</HashCode>
+      <FileName>Core\Models\CuttingUnitInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.CuttingUnitExtensions" Collapsed="true">
+    <Position X="7.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAACAAAAE=</HashCode>
+      <FileName>Core\Models\DataModelExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.StratumExtensions" Collapsed="true">
+    <Position X="7.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAE=</HashCode>
+      <FileName>Core\Models\DataModelExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.PlotExtensions" Collapsed="true">
+    <Position X="7.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Models\DataModelExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.SampleGroupExtensions" Collapsed="true">
+    <Position X="7.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Models\DataModelExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.TreeExtensions" Collapsed="true">
+    <Position X="7.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAAAAAAAAAAJAABAAIAAAAIA=</HashCode>
+      <FileName>Core\Models\DataModelExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.PlotVM" Collapsed="true">
+    <Position X="5.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABBAAQASkgABgEAAAIgAAABAEAEAAIAQAAIAAAAIA=</HashCode>
+      <FileName>Core\Models\PlotInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.SampleGroupVM" Collapsed="true">
+    <Position X="5.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAACAAEQAEAAAAQAAAAoBAAAAA=</HashCode>
+      <FileName>Core\Models\SampleGroupVM.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.StratumVM">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAABAAIiACEAAA=</HashCode>
+      <FileName>Core\Models\StratumInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.SubPop">
+    <Position X="2.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Models\SubPopInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.TallyAction" Collapsed="true">
+    <Position X="9.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAIAAAAAAAEJAAQAAQAgAAAAAABEAAAAAAEAQA=</HashCode>
+      <FileName>Core\Models\TallyAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.TallyHistoryCollection" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.5" Y="0.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAIAMIEAEAAAIQCBCAAALCgAAAQAQEQhAgAEABAAAAI=</HashCode>
+      <FileName>Core\Models\TallyHistoryCollection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FSCruiser.Core.Models.TallySettingsDO" Collapsed="true">
+    <Position X="5.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAgAAAAAAAAAAAAAIAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Core\Models\TallySettingsDO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.TreeVM">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECBAAAAEAAAKgAAAAAAICAACAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Core\Models\TreeVM.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="FSCruiser.Core.Models.DataEntryMode" Collapsed="true">
+    <Position X="7.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAACAACAAEAAACAAAAAAAAAgAAAAEAAEAABA=</HashCode>
+      <FileName>Core\Models\DataEntryMode.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

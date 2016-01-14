@@ -35,10 +35,8 @@ namespace FSCruiser.WinForms.DataEntry
             this._rightContentPanel = new System.Windows.Forms.Panel();
             this._tallyHistoryLB = new System.Windows.Forms.ListBox();
             this._untallyBTN = new System.Windows.Forms.Button();
-            this._BS_tallyHistory = new System.Windows.Forms.BindingSource(this.components);
             this._topTableLayout.SuspendLayout();
             this._rightContentPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._BS_tallyHistory)).BeginInit();
             this.SuspendLayout();
             // 
             // _topTableLayout
@@ -77,7 +75,6 @@ namespace FSCruiser.WinForms.DataEntry
             // 
             // _tallyHistoryLB
             // 
-            this._tallyHistoryLB.DataSource = this._BS_tallyHistory;
             this._tallyHistoryLB.Dock = System.Windows.Forms.DockStyle.Fill;
             this._tallyHistoryLB.FormattingEnabled = true;
             this._tallyHistoryLB.IntegralHeight = false;
@@ -96,10 +93,6 @@ namespace FSCruiser.WinForms.DataEntry
             this._untallyBTN.Text = "Untally";
             this._untallyBTN.UseVisualStyleBackColor = true;
             // 
-            // _BS_tallyHistory
-            // 
-            this._BS_tallyHistory.DataSource = typeof(TallyAction);
-            // 
             // LayoutTreeBased
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -109,7 +102,6 @@ namespace FSCruiser.WinForms.DataEntry
             this.Size = new System.Drawing.Size(637, 368);
             this._topTableLayout.ResumeLayout(false);
             this._rightContentPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this._BS_tallyHistory)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -121,6 +113,5 @@ namespace FSCruiser.WinForms.DataEntry
         private System.Windows.Forms.Panel _rightContentPanel;
         private System.Windows.Forms.Button _untallyBTN;
         private System.Windows.Forms.ListBox _tallyHistoryLB;
-        private System.Windows.Forms.BindingSource _BS_tallyHistory;
     }
 }

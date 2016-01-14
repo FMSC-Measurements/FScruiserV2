@@ -1,0 +1,112 @@
+Feature: three p tally
+    users can tally trees using the three p method. Three p only supports tally by species and three p sample selection
+    
+Background:
+GIVEN the following cutting units exist
+    |code   |
+    |01     |
+AND the following strata exist
+    |code   |units      |method |HotKey |Plot Size/BAF  |    
+    |01     |01         |3P     |1      |               |
+    |02     |01         |F3P    |2      |10             |
+    |03     |01         |P3P    |3      |30             |
+AND the following sample groups exist
+    |code   |stratum    |KZ             |insurance freq |species    |Tally mode |MinKPI |MaxKPI |
+    |01     |01         |333            |2              |204        |by Sp      |10     |30     |
+    |02     |01         |333            |               |015&108    |by Sp      |       |       |
+    |03     |02         |333            |               |122        |by Sp      |       |       |
+    |04     |03         |333            |               |017        |by Sp      |       |       |
+
+AND the folling tallys are setup
+    |sample group   |species    |hotkey |discription    |
+    |01             |204        |A      |204            |
+    |02             |015        |B      |015            |
+    |03             |108        |C      |122            |
+    |04             |108        |D      |017            |
+    
+
+WHEN the user enters the data entry screen
+THEN the data entry screen contains the folling tabs: Trees, Tally, 02F3P[2], 03-P3P[3]
+    
+WHEN the user tallys a tree
+THEN the three p number pad is displayed
+
+Senario: user doen't enter a kpi value
+    GIVEN the user has tallyed a tree
+    AND the three p number pad is displayed
+    WHEN the user doesn't enter a number 
+    AND clicks accept
+    THEN the message "No Value Entered" is displayed
+    AND the three p number pad is closed                //should we have a cancel button instead?
+    AND the device squaks                               //fail
+    AND nothing is added to the tally history
+
+Senario: user enters a kpi that is less than the min kpi
+    GIVEN the user has tallyed 204
+    AND the three p number pad is displayed
+    WHEN the user enters 9 
+    AND clicks accept
+    THEN the message "Must be Greater or Equal to 10" is displayed
+    AND the device squaks                               //fail
+
+Senario: user enters a kpi that is greater than the max kpi
+    GIVEN the user has tallyed 204
+    AND the three p number pad is displayed
+    WHEN the user enters 31 
+    AND clicks accept
+    THEN the message "Must be Less or Equal to 30" is displayed
+    AND the device squaks                               //fail
+
+Senario: user tallys a STM tree
+    GIVEN the user has tallyed a tree
+    AND the three p number pad is displayed
+    WHEN the user clicks STM 
+    AND clicks accept
+    THEN a entry is added to the tally history ending with M
+    AND a tree record has been added  with a KPI = 0, STM = Y
+
+Senario Outline: user tallys a non measure tree tree
+    GIVEN has enter a KPI of <x>
+    WHEN the user doent get a insurance tree or a measure tree
+    THEN a entry is added to the tally history ending with "[<x>]"
+    AND the sum KPI value in the Tally infomation has been increased by <x>
+    
+    Examples:
+        |x  |
+        |30 |
+        |10 |
+
+Senario Outline: user tallys a measure tree tree with cruiser selection enabled
+    GIVEN the user has enabled the cruiser selection popup
+    AND has enter a KPI of <x>
+    WHEN the user gets a measure tree
+    THEN the device beeps
+    AND the message "Measure Tree" is displayed
+    FOLLOWED BY the cruiser selection screen
+    FOLLOWED BY the message "Would you like to enter tree data now?"
+    AND the sup KPI value in the Tally infomation has been increased by <x>
+    AND a entry is added to the tally history ending with "[<x>]"
+    AND a tree record has been added  with a KPI = <x>, STM = N
+    
+    Examples:
+        |x  |
+        |30 |
+        |10 |
+
+Senario: check for sample when the user set the kpi on a tree 
+    GIVEN the user has added a tree using the Add Tree button 
+    AND given it the sample group value of 01 
+    AND given it the species value of 204
+    AND entering the KPI value of 50 will generate a sample
+    WHEN the user changes the KPI value from 0 to 50 
+    THEN the message "Measure Tree" is displayed            //fail
+    AND the Count or Measure value on the tree is M         //fail
+    AND the sum kpi of of the 204 tally is increased by 50  //fail
+
+Senario: user changes the kpi of a tree
+    GIVEN a tree exist with a tree_cn of 1 and kpi of 100
+    WHEN the kpi of tree_cn 1 is changed to 80 
+    THEN a record is added to the messageLog table with the message "Tree RecID:1 KPI changed from 100 to 80"
+    AND the sum kpi has been reduced by 20                  //fail
+
+

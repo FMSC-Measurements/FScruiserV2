@@ -32,8 +32,8 @@
             this._settingsBTN = new System.Windows.Forms.Button();
             this._tallyBTN = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this._descriptionLBL = new System.Windows.Forms.Label();
             this._hotKeyLBL = new System.Windows.Forms.Label();
+            this._descriptionLBL = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -66,6 +66,7 @@
             this._settingsBTN.TabIndex = 0;
             this._settingsBTN.Text = "i";
             this._settingsBTN.UseVisualStyleBackColor = true;
+            this._settingsBTN.Click += new System.EventHandler(this.OnSettingsButtonClicked);
             // 
             // _tallyBTN
             // 
@@ -77,6 +78,7 @@
             this._tallyBTN.TabIndex = 1;
             this._tallyBTN.Text = "####";
             this._tallyBTN.UseVisualStyleBackColor = true;
+            this._tallyBTN.Click += new System.EventHandler(this.OnTallyButtonClicked);
             // 
             // panel1
             // 
@@ -89,16 +91,6 @@
             this.panel1.Size = new System.Drawing.Size(148, 56);
             this.panel1.TabIndex = 2;
             // 
-            // _descriptionLBL
-            // 
-            this._descriptionLBL.Dock = System.Windows.Forms.DockStyle.Left;
-            this._descriptionLBL.Location = new System.Drawing.Point(0, 0);
-            this._descriptionLBL.Name = "_descriptionLBL";
-            this._descriptionLBL.Size = new System.Drawing.Size(109, 56);
-            this._descriptionLBL.TabIndex = 0;
-            this._descriptionLBL.Text = "__________";
-            this._descriptionLBL.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // _hotKeyLBL
             // 
             this._hotKeyLBL.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -109,6 +101,16 @@
             this._hotKeyLBL.TabIndex = 1;
             this._hotKeyLBL.Text = "#";
             this._hotKeyLBL.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // _descriptionLBL
+            // 
+            this._descriptionLBL.Dock = System.Windows.Forms.DockStyle.Left;
+            this._descriptionLBL.Location = new System.Drawing.Point(0, 0);
+            this._descriptionLBL.Name = "_descriptionLBL";
+            this._descriptionLBL.Size = new System.Drawing.Size(109, 56);
+            this._descriptionLBL.TabIndex = 0;
+            this._descriptionLBL.Text = "__________";
+            this._descriptionLBL.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // TallyRow
             // 

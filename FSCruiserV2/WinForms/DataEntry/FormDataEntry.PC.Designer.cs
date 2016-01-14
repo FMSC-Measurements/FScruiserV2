@@ -33,7 +33,9 @@
             this._deleteTreeBTN = new System.Windows.Forms.Button();
             this._addTreeBTN = new System.Windows.Forms.Button();
             this._mainContenPanel = new System.Windows.Forms.Panel();
+            this._pageContainer = new System.Windows.Forms.TabControl();
             this.panel1.SuspendLayout();
+            this._mainContenPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -71,11 +73,21 @@
             // _mainContenPanel
             // 
             this._mainContenPanel.BackColor = System.Drawing.SystemColors.Control;
+            this._mainContenPanel.Controls.Add(this._pageContainer);
             this._mainContenPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this._mainContenPanel.Location = new System.Drawing.Point(0, 0);
             this._mainContenPanel.Name = "_mainContenPanel";
             this._mainContenPanel.Size = new System.Drawing.Size(752, 432);
             this._mainContenPanel.TabIndex = 1;
+            // 
+            // _pageContainer
+            // 
+            this._pageContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._pageContainer.Location = new System.Drawing.Point(0, 0);
+            this._pageContainer.Name = "_pageContainer";
+            this._pageContainer.SelectedIndex = 0;
+            this._pageContainer.Size = new System.Drawing.Size(752, 432);
+            this._pageContainer.TabIndex = 0;
             // 
             // FormDataEntry
             // 
@@ -89,6 +101,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FormDataEntry";
             this.panel1.ResumeLayout(false);
+            this._mainContenPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -99,5 +112,6 @@
         private System.Windows.Forms.Button _addTreeBTN;
         private System.Windows.Forms.Button _deleteTreeBTN;
         private System.Windows.Forms.Panel _mainContenPanel;
+        private System.Windows.Forms.TabControl _pageContainer;
     }
 }

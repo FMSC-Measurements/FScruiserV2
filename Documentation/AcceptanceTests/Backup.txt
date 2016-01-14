@@ -1,0 +1,72 @@
+Feature: fileBackup
+    allow the user the option to manualy back up 
+    or automaticly back up cruise files when they leave a unit
+    
+Background:
+GIVEN the fallowing files exist:
+    |fileName               	|Directory      |
+    |BackupTest.cruise      	|\TestBackup    |
+    |BackupTest1.CRUISE     	|\TestBackup    |
+    |BackupTest.m.cruise    	|\TestBackup    |
+    |BackupTest.1.cruise    	|\TestBackup    |
+    |Backedup2.cruise       	|\TestBackup    |
+    |BACK_Backedup2.back-cruise |\TestBackup    |
+    
+Scenario: user trys to backup when no file is open
+    GIVEN no file is open
+    WHEN the user performs a manual backup
+    THEN the message "No file open" is displayed // pass
+ 
+    
+Scenario: change back up directory
+    GIVEN BackupTest.cruise is open
+    AND \My Documents doesn't contain "BACK_BackupTest(????_??_??__??_??).back-cruise"
+    AND back up is set to current file directory
+    WHEN the user selects to back up to alternate directory
+    AND set the alternate directory to \My Documents
+    AND clicks make backup
+    THEN \My Documents contain "BACK_BackupTest(????_??_??__??_??).back-cruise"
+    
+Scenario: set back up to current directory
+    GIVEN BackupTest.cruise is open
+    AND \TestBackup doesn't contain "BACK_BackupTest(????_??_??__??_??).back-cruise"
+    AND back up is set to alternate directory
+    WHEN the user selects to back up to current file directory
+    AND clicks make backup
+    THEN \TestBackup contain "BACK_BackupTest(????_??_??__??_??).back-cruise"
+    
+    
+Scenario Outline: manual backup of a file    
+    GIVEN file <fileName> is open
+    AND the backup folder selected is \TestBackup
+    AND the directory "\TestBackup" doesn't contain <resultPattern>
+    WHEN the user performs a manual backup
+    THEN the directory "\TestBackup" contains <resultPattern> 
+
+    Examples:
+    |fileName               |resultPattern                                  	|
+    |BackupTest.cruise      |"BACK_BackupTest(????_??_??__??_??).back-cruise"   |    
+    |BackupTest1.CRUISE     |"BACK_BackupTest1(????_??_??__??_??).back-cruise"  |    
+    |BackupTest.m.cruise    |"BACK_BackupTest(????_??_??__??_??).m.back-cruise" |
+    |BackupTest.1.cruise    |"BACK_BackupTest(????_??_??__??_??).1.back-cruise" |
+    
+
+Scenario Outline: automatic backup
+    GIVEN file <fileName> is open
+    AND auto backup is enabled
+    AND the user is in a unit
+    WHEN the user leaves a unit
+    THEN the directory "\TestBackup" contains <result>
+
+    Examples:
+    |fileName               |result                         	|
+    |BackupTest.cruise      |"BACK_BackupTest.back-cruise"      |    
+    |BackupTest1.CRUISE     |"BACK_BackupTest1.back-cruise"     |    
+    |BackupTest.m.cruise    |"BACK_BackupTest.m.back-cruise"    |
+    |BackupTest.1.cruise    |"BACK_BackupTest.1.back-cruise"    |
+    |BackupTest2.cruise     |"BACK_BackupTest2.back-cruise"     | // special case: back file already exist   
+
+
+
+
+

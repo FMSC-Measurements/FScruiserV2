@@ -90,7 +90,7 @@ namespace FSCruiser.WinForms
             {
                 this._tallyBySpecies_RB.Checked = true;
             }
-            this._systematicOpt_ChB.Checked = (sampleGroup.SampleSelectorType == CruiseDAL.Schema.Constants.CruiseMethods.SYSTEMATIC_SAMPLER_TYPE);
+            this._systematicOpt_ChB.Checked = (sampleGroup.SampleSelectorType == CruiseDAL.Schema.CruiseMethods.SYSTEMATIC_SAMPLER_TYPE);
             this._systematicOpt_ChB.Enabled = this._tallyBySg_RB.Enabled = this._tallyBySpecies_RB.Enabled = CanEditTallyMode(sampleGroup);
 
             //if (isNew || allowEdit)
@@ -122,7 +122,7 @@ namespace FSCruiser.WinForms
             this._insuranceFreq_TB.Enabled = _allowEdit && SampleGroupDO.CanEnableIFreq(st);
 
             this._tallyBySg_RB.Enabled = this._tallyBySpecies_RB.Enabled = _allowEdit && FormEditSampleGroup.CanEditTallyMode(this.SampleGroup);
-            this._systematicOpt_ChB.Enabled = _allowEdit && ((this.SampleGroup.Stratum.Method == CruiseDAL.Schema.Constants.CruiseMethods.STR)
+            this._systematicOpt_ChB.Enabled = _allowEdit && ((this.SampleGroup.Stratum.Method == CruiseDAL.Schema.CruiseMethods.STR)
                 && SampleGroupDO.CanChangeSamplerType(this.SampleGroup));
         }
 
@@ -147,7 +147,7 @@ namespace FSCruiser.WinForms
                 
                 if(SampleGroupDO.CanChangeSamplerType(this.SampleGroup) && this._systematicOpt_ChB.Checked)// if systematic option checked, set SampleSelectorType to Systematic
                 {
-                    this.SampleGroup.SampleSelectorType = CruiseDAL.Schema.Constants.CruiseMethods.SYSTEMATIC_SAMPLER_TYPE;
+                    this.SampleGroup.SampleSelectorType = CruiseDAL.Schema.CruiseMethods.SYSTEMATIC_SAMPLER_TYPE;
                 }
                 if (FormEditSampleGroup.CanEditTallyMode(this.SampleGroup))
                 {

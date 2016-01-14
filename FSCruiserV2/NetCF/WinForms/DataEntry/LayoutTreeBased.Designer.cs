@@ -29,17 +29,15 @@ namespace FSCruiser.WinForms.DataEntry
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.Panel panel1;
             System.Windows.Forms.Label label1;
-            this._BS_tallyHistory = new System.Windows.Forms.BindingSource(this.components);
             this._tallyHistoryLB = new System.Windows.Forms.ListBox();
             this._untallyButton = new System.Windows.Forms.Button();
             this._leftContentPanel = new System.Windows.Forms.Panel();
             panel1 = new System.Windows.Forms.Panel();
             label1 = new System.Windows.Forms.Label();
+            
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._BS_tallyHistory)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -52,18 +50,13 @@ namespace FSCruiser.WinForms.DataEntry
             panel1.Name = "panel1";
             panel1.Size = new System.Drawing.Size(100, 245);
             // 
-            // _BS_tallyHistory
-            // 
-            this._BS_tallyHistory.DataSource = typeof(TallyAction);
-            //this._BS_tallyHistory.ListChanged += new System.ComponentModel.ListChangedEventHandler(this._BS_tallyHistory_ListChanged);
-            // 
             // _tallyHistoryLB
-            // 
-            this._tallyHistoryLB.DataSource = this._BS_tallyHistory;
+            //             
+            
             this._tallyHistoryLB.Dock = System.Windows.Forms.DockStyle.Fill;
             this._tallyHistoryLB.Location = new System.Drawing.Point(0, 13);
             this._tallyHistoryLB.Name = "_tallyHistoryLB";
-            this._tallyHistoryLB.Size = new System.Drawing.Size(100, 198);
+            this._tallyHistoryLB.Size = new System.Drawing.Size(100, 194);
             this._tallyHistoryLB.TabIndex = 0;
             // 
             // label1
@@ -83,8 +76,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._untallyButton.Name = "_untallyButton";
             this._untallyButton.Size = new System.Drawing.Size(100, 33);
             this._untallyButton.TabIndex = 1;
-            this._untallyButton.Text = "Untally";
-            this._untallyButton.Click += new System.EventHandler(this._untallyButton_Click);
+            this._untallyButton.Text = "Untally";            
             // 
             // _leftContentPanel
             // 
@@ -102,8 +94,8 @@ namespace FSCruiser.WinForms.DataEntry
             this.Controls.Add(panel1);
             this.Name = "LayoutTreeBased";
             this.Size = new System.Drawing.Size(240, 245);
+            
             panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this._BS_tallyHistory)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -113,6 +105,5 @@ namespace FSCruiser.WinForms.DataEntry
         public System.Windows.Forms.Panel _leftContentPanel;
         private System.Windows.Forms.ListBox _tallyHistoryLB;
         private System.Windows.Forms.Button _untallyButton;
-        public System.Windows.Forms.BindingSource _BS_tallyHistory;
     }
 }

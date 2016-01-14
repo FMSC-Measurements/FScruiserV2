@@ -199,9 +199,10 @@
             // 
             this._bafTB.Location = new System.Drawing.Point(94, 84);
             this._bafTB.Name = "_bafTB";
-            this._bafTB.Size = new System.Drawing.Size(39, 21);
+            this._bafTB.Size = new System.Drawing.Size(39, 23);
             this._bafTB.TabIndex = 23;
             this._bafTB.TextChanged += new System.EventHandler(this.input_TextChanged);
+            this._bafTB.GotFocus += new System.EventHandler(this._TB_GotFocus);
             // 
             // _bafOrfpsLBL
             // 
@@ -216,7 +217,7 @@
             this._measureToCB.Items.Add("center");
             this._measureToCB.Location = new System.Drawing.Point(185, 55);
             this._measureToCB.Name = "_measureToCB";
-            this._measureToCB.Size = new System.Drawing.Size(53, 22);
+            this._measureToCB.Size = new System.Drawing.Size(53, 23);
             this._measureToCB.TabIndex = 22;
             this._measureToCB.TextChanged += new System.EventHandler(this.input_TextChanged);
             // 
@@ -224,25 +225,28 @@
             // 
             this._distanceTB.Location = new System.Drawing.Point(94, 57);
             this._distanceTB.Name = "_distanceTB";
-            this._distanceTB.Size = new System.Drawing.Size(39, 21);
+            this._distanceTB.Size = new System.Drawing.Size(39, 23);
             this._distanceTB.TabIndex = 21;
             this._distanceTB.TextChanged += new System.EventHandler(this.input_TextChanged);
+            this._distanceTB.GotFocus += new System.EventHandler(this._TB_GotFocus);
             // 
             // _slopeTB
             // 
             this._slopeTB.Location = new System.Drawing.Point(94, 30);
             this._slopeTB.Name = "_slopeTB";
-            this._slopeTB.Size = new System.Drawing.Size(39, 21);
+            this._slopeTB.Size = new System.Drawing.Size(39, 23);
             this._slopeTB.TabIndex = 19;
             this._slopeTB.TextChanged += new System.EventHandler(this.input_TextChanged);
+            this._slopeTB.GotFocus += new System.EventHandler(this._TB_GotFocus);
             // 
             // _dbhTB
             // 
             this._dbhTB.Location = new System.Drawing.Point(94, 3);
             this._dbhTB.Name = "_dbhTB";
-            this._dbhTB.Size = new System.Drawing.Size(39, 21);
+            this._dbhTB.Size = new System.Drawing.Size(39, 23);
             this._dbhTB.TabIndex = 16;
             this._dbhTB.TextChanged += new System.EventHandler(this.input_TextChanged);
+            this._dbhTB.GotFocus += new System.EventHandler(this._TB_GotFocus);
             // 
             // _sipPlaceholder
             // 

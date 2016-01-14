@@ -58,12 +58,12 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(293, 58);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
-            // textBox1
+            // _outputView
             // 
             this.tableLayoutPanel1.SetColumnSpan(this._outputView, 2);
             this._outputView.Dock = System.Windows.Forms.DockStyle.Fill;
             this._outputView.Location = new System.Drawing.Point(3, 3);
-            this._outputView.Name = "textBox1";
+            this._outputView.Name = "_outputView";
             this._outputView.Size = new System.Drawing.Size(188, 20);
             this._outputView.TabIndex = 0;
             // 
@@ -108,6 +108,7 @@
             this._stmBTN.TabIndex = 4;
             this._stmBTN.Text = "STM";
             this._stmBTN.UseVisualStyleBackColor = true;
+            this._stmBTN.Click += new System.EventHandler(this._stmBTN_Click);
             // 
             // Form3PNumPad
             // 

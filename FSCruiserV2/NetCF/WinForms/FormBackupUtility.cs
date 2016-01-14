@@ -44,13 +44,27 @@ namespace FSCruiser.WinForms
         {
             base.OnLoad(e);
 
-            this._backupOnLeaveUnitCB.Checked = (_controller.BackUpMethod == BackUpMethod.LeaveUnit);
+            this._RB_useCDOption.Checked = _controller.Settings.BackUpToCurrentDir;
+            this._RB_useAlternate.Checked = !_controller.Settings.BackUpToCurrentDir;
 
-            //string dbPath = this._controller._cDal.Path;
-            //this._fileNameLBL.Text = System.IO.Path.GetFileName(dbPath);
+            this._backupOnLeaveUnitCB.Checked = (_controller.Settings.BackUpMethod == BackUpMethod.LeaveUnit);
 
-            //_backupPath = GetBackupFileName(_backupDir);
-            _backupFileLBL.Text = _controller.BackupDir;
+            _backupFileLBL.Text = _controller.Settings.BackupDir;
+
+            OnRadioButtonsChanged();
+        }
+
+        void OnRadioButtonsChanged()
+        {
+            this._changeLocationBTN.Enabled = _RB_useAlternate.Checked;
+            this._backupFileLBL.Enabled = _RB_useAlternate.Checked;
+        }
+
+        void PushSettings()
+        {
+            this._controller.Settings.BackUpToCurrentDir = _RB_useCDOption.Checked;
+            this._controller.Settings.BackupDir = _backupFileLBL.Text;
+            this._controller.Settings.BackUpMethod = (_backupOnLeaveUnitCB.Checked) ? BackUpMethod.LeaveUnit : BackUpMethod.None;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -58,7 +72,7 @@ namespace FSCruiser.WinForms
             base.OnClosing(e);
             if(this.DialogResult == DialogResult.OK)
             {
-                this._controller.BackUpMethod = (_backupOnLeaveUnitCB.Checked) ? BackUpMethod.LeaveUnit : BackUpMethod.None;
+                PushSettings();
             }
         }
 
@@ -78,6 +92,7 @@ namespace FSCruiser.WinForms
         {
             if (_controller._cDal != null)
             {
+                PushSettings();
                 _controller.PerformBackup(true);
             }
             else
@@ -91,10 +106,13 @@ namespace FSCruiser.WinForms
             FMSC.Controls.FolderBrowserDialogCF view = new FMSC.Controls.FolderBrowserDialogCF("\\");
             if (view.ShowDialog() == DialogResult.OK)
             {
-                _controller.BackupDir = view.Folder;
-                //this._backupPath = GetBackupFileName(_backupDir);
-                _backupFileLBL.Text = _controller.BackupDir;
+                _backupFileLBL.Text = view.Folder;
             }
+        }
+
+        private void _RB_useAlternate_CheckedChanged(object sender, EventArgs e)
+        {
+            OnRadioButtonsChanged();
         }
 
         

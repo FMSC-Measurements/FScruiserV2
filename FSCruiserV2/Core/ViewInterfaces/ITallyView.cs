@@ -18,18 +18,16 @@ namespace FSCruiser.Core.ViewInterfaces
         bool HotKeyEnabled { get; }
 
 
-        //IList<StratumInfo> Strata { get; }
-        //StratumInfo SelectedStratum { get; }
-
         bool HandleHotKeyFirst(char key);
-        //bool HandleKeyDown(char key);
-        //bool HandleKeyUp(char key);
         void MakeSGList(List<SampleGroupVM> list, Panel container);
         //SampleSelecter MakeSampleSelecter(CountTreeDO count, DataEntryMode mode);
         Control MakeTallyRow(Control container, CountTreeVM count);
         Control MakeTallyRow(Control container, SubPop subPop);
         void OnTally(CountTreeVM count);
         void HandleStratumLoaded(Control container);
-        
+
+        void SaveCounts();
+        bool TrySaveCounts();
+
     }
 }

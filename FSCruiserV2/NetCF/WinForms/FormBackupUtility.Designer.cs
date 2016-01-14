@@ -39,8 +39,12 @@
             this._okBTN = new System.Windows.Forms.Button();
             this._backupOnLeaveUnitCB = new System.Windows.Forms.CheckBox();
             this._makeBackupBTN = new System.Windows.Forms.Button();
+            this._RB_useCDOption = new System.Windows.Forms.RadioButton();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this._RB_useAlternate = new System.Windows.Forms.RadioButton();
             label2 = new System.Windows.Forms.Label();
             this._ceControlPanel.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -55,19 +59,19 @@
             // 
             this._backupFileLBL.Dock = System.Windows.Forms.DockStyle.Top;
             this._backupFileLBL.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
-            this._backupFileLBL.Location = new System.Drawing.Point(0, 20);
+            this._backupFileLBL.Location = new System.Drawing.Point(0, 40);
             this._backupFileLBL.Name = "_backupFileLBL";
-            this._backupFileLBL.Size = new System.Drawing.Size(240, 60);
+            this._backupFileLBL.Size = new System.Drawing.Size(240, 43);
             this._backupFileLBL.Text = "<backup dir>";
             // 
             // _changeLocationBTN
             // 
-            this._changeLocationBTN.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._changeLocationBTN.Location = new System.Drawing.Point(0, 228);
+            this._changeLocationBTN.Dock = System.Windows.Forms.DockStyle.Top;
+            this._changeLocationBTN.Location = new System.Drawing.Point(0, 83);
             this._changeLocationBTN.Name = "_changeLocationBTN";
-            this._changeLocationBTN.Size = new System.Drawing.Size(240, 20);
+            this._changeLocationBTN.Size = new System.Drawing.Size(240, 22);
             this._changeLocationBTN.TabIndex = 5;
-            this._changeLocationBTN.Text = "Change &Location";
+            this._changeLocationBTN.Text = "Change alternate folder";
             this._changeLocationBTN.Click += new System.EventHandler(this._changeLocationBTN_Click);
             // 
             // mainMenu1
@@ -118,7 +122,7 @@
             // _backupOnLeaveUnitCB
             // 
             this._backupOnLeaveUnitCB.Dock = System.Windows.Forms.DockStyle.Top;
-            this._backupOnLeaveUnitCB.Location = new System.Drawing.Point(0, 80);
+            this._backupOnLeaveUnitCB.Location = new System.Drawing.Point(0, 137);
             this._backupOnLeaveUnitCB.Name = "_backupOnLeaveUnitCB";
             this._backupOnLeaveUnitCB.Size = new System.Drawing.Size(240, 20);
             this._backupOnLeaveUnitCB.TabIndex = 11;
@@ -127,22 +131,52 @@
             // _makeBackupBTN
             // 
             this._makeBackupBTN.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._makeBackupBTN.Location = new System.Drawing.Point(0, 208);
+            this._makeBackupBTN.Location = new System.Drawing.Point(0, 228);
             this._makeBackupBTN.Name = "_makeBackupBTN";
             this._makeBackupBTN.Size = new System.Drawing.Size(240, 20);
             this._makeBackupBTN.TabIndex = 12;
             this._makeBackupBTN.Text = "&Make Backup";
             this._makeBackupBTN.Click += new System.EventHandler(this._makeBackupBTN_Click);
             // 
+            // _RB_useCDOption
+            // 
+            this._RB_useCDOption.Dock = System.Windows.Forms.DockStyle.Top;
+            this._RB_useCDOption.Location = new System.Drawing.Point(0, 0);
+            this._RB_useCDOption.Name = "_RB_useCDOption";
+            this._RB_useCDOption.Size = new System.Drawing.Size(240, 20);
+            this._RB_useCDOption.TabIndex = 16;
+            this._RB_useCDOption.Text = "Use current file folder";
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.panel1.Controls.Add(this._changeLocationBTN);
+            this.panel1.Controls.Add(this._backupFileLBL);
+            this.panel1.Controls.Add(this._RB_useAlternate);
+            this.panel1.Controls.Add(this._RB_useCDOption);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 20);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(240, 117);
+            // 
+            // _RB_useAlternate
+            // 
+            this._RB_useAlternate.Dock = System.Windows.Forms.DockStyle.Top;
+            this._RB_useAlternate.Location = new System.Drawing.Point(0, 20);
+            this._RB_useAlternate.Name = "_RB_useAlternate";
+            this._RB_useAlternate.Size = new System.Drawing.Size(240, 20);
+            this._RB_useAlternate.TabIndex = 17;
+            this._RB_useAlternate.Text = "Use alternate folder";
+            this._RB_useAlternate.CheckedChanged += new System.EventHandler(this._RB_useAlternate_CheckedChanged);
+            // 
             // FormBackupUtility
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(240, 268);
-            this.Controls.Add(this._makeBackupBTN);
             this.Controls.Add(this._backupOnLeaveUnitCB);
-            this.Controls.Add(this._changeLocationBTN);
-            this.Controls.Add(this._backupFileLBL);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this._makeBackupBTN);
             this.Controls.Add(label2);
             this.Controls.Add(this._ceControlPanel);
             this.KeyPreview = true;
@@ -151,6 +185,7 @@
             this.Name = "FormBackupUtility";
             this.Text = "Backup File";
             this._ceControlPanel.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -167,5 +202,8 @@
         private System.Windows.Forms.Button _okBTN;
         private System.Windows.Forms.CheckBox _backupOnLeaveUnitCB;
         private System.Windows.Forms.Button _makeBackupBTN;
+        private System.Windows.Forms.RadioButton _RB_useCDOption;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.RadioButton _RB_useAlternate;
     }
 }

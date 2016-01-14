@@ -1,0 +1,108 @@
+Feature: tree validation
+    allow the user to set up validation rule for data entered on trees. 
+    Validation rules will changed based on what the species of the tree is.
+    Only fields visable to the user will be validated. 
+    In addition to user defined validation rules, 
+    built in validation will be performed, such as insuring that a tree has a species.
+
+Background:
+GIVEN the following units exist:
+    |code   |
+    |01     |
+    |02     |
+AND the following strata exist:
+    |code   |units  |method |
+    |01     |01     |STR    |
+    |02     |02     |STR    |
+    
+AND the following sample groups exist:
+    |code   |stratum    |
+    |01     |01         |
+    |02     |02         |
+    
+AND the following field setup exist for stratum 01:
+    |field name     |
+    |tree number    |
+    |stratum        |
+    |sample group   |
+    |species        |
+    |c/m            |
+    |dbh            |
+    |               |
+    
+AND the following field setup exist for stratum 02:
+    |field name     |
+    |tree number    |
+    |stratum        |
+    |sample group   |
+    |species        |
+    |c/m            |
+    |dbh            |
+    |MrchHtP        |
+        
+AND the following tree defaults exist:
+    |species    |
+    |204        |
+    |105        |
+    
+AND the following tree audit rules exist:
+    |field name |species    |min    |max    |
+    |dbh        |A          |7      |120    |  
+    
+AND the following trees exist in unit 01:
+    |tree number    |unit   |stratum    |sg |species    |C/M    |dbh    |
+    |01             |01     |01         |01 |           |C      |6      |    
+    |02             |01     |01         |01 |           |M      |6      |
+    |03             |01     |01         |01 |204        |C      |6      |
+    |04             |01     |01         |01 |204        |M      |6      |
+    
+AND the following trees exist in unit 02:
+    |tree number    |unit   |stratum    |sg |species    |C/M    |dbh    |
+    |01             |02     |02         |02 |           |C      |6      |    
+    |02             |02     |02         |02 |           |M      |6      |
+    |03             |02     |02         |02 |204        |C      |6      |
+    |04             |02     |02         |02 |204        |M      |6      |
+    |05             |02     |02         |02 |204        |M      |6      |
+    
+WHEN unit 01 loads
+THEN tree 01 has an error on species    //pass on PC, on FDR error shows in error message but not on field
+AND tree 02 has an error on species     //pass on PC, on FDR error shows in error message but not on field
+AND tree 03 has no errors
+AND tree 04 has an error on dbh
+
+WHEN unit 02 loads 
+THEN tree 01 has an error on species    //pass on PC, on FDR error shows in error message but not on field
+AND tree 02 has an error on species     //pass on PC, on FDR error shows in error message but not on field
+AND tree 02 has a error that says "MerchHtS, or UStemHT must be greater than 0"
+AND tree 03 has no errors
+AND tree 04 has an error on dbh
+AND tree 04 has a error that says "MerchHtS, or UStemHT must be greater than 0"
+
+Scenario: tree audit error is removed when the value is fixed
+    GIVEN unit 01 is loaded
+    WHEN the dbh on tree 04 is changed to 7
+    THEN tree 04 doesn't have any errors    //pass
+
+Scenario: error are updated, when c/m is changed to M
+    GIVEN unit 01 is loaded
+    WHEN the c/m on tree 03 is changed to M
+    THEN tree 03 shows and error on dbh         //fails
+
+Scenario: error are updated, when c/m is changed to C
+    GIVEN unit 02 is loaded
+    WHEN the c/m on tree 05 is changed to C
+    THEN tree 05 doesn't have any errors    //fails tree still has "MerchHtS, or UStemHT must be greater than 0" error
+
+Scenario: when leaving unit, aleart user of tree errors
+    GIVEN at least one tree has an error
+    WHEN the user closes the data entry screen 
+    THEN the user is told that there are errors and asked if they would like to continue //pass
+
+//known issues: on pc when trees are loaded, row level error indicator doesn't show until the row is selected
+// this is because when errors are set they don't notify the data grid that an error has been added
+// - when c/m is changed from c to m, the tree record is not being revalidated, but it will when the user leaves the unit
+
+
+
+
+    

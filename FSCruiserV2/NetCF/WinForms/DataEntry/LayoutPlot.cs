@@ -298,7 +298,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                return this.ViewLogicController.StratumInfo.HotKeyLookup;
+                return this.ViewLogicController.Stratum.HotKeyLookup;
             }
              
         }
@@ -317,9 +317,9 @@ namespace FSCruiser.WinForms.DataEntry
             set { this.ViewLogicController.UserCanAddTrees = value; }
         }
 
-        private bool _isGridExpanded = false;
         private ImageList _imageList;
-    
+        private bool _isGridExpanded = false;
+        
         public bool IsGridExpanded
         {
             get
@@ -328,6 +328,10 @@ namespace FSCruiser.WinForms.DataEntry
             }
             set
             {
+                if (this.ViewLogicController.Is3PPNT)
+                {
+                    value = true;
+                }
                 if (value == _isGridExpanded) { return; }
                 if (value == true)
                 {
@@ -347,14 +351,14 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, StratumVM stratum, InputPanel sip)
+        public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, PlotStratum stratum, InputPanel sip)
         {
             //this.HotKeyLookup = new Dictionary<char, CountTreeDO>();
 
             //this.DataEntryController = dataEntryController;
             //this.StratumInfo = stInfo;
             //this.Controller = controller;
-            this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController);
+            this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController, dataEntryController.ViewController);
             InitializeComponent();
 
 
@@ -384,7 +388,7 @@ namespace FSCruiser.WinForms.DataEntry
             
             //Setup DataGrid
             DataGridAdjuster.InitializeGrid(this._dataGrid);
-            _tableStyle = DataGridAdjuster.InitializeTreeColumns(this.AppController._cDal, this._dataGrid, null, stratum, this.AppController.ViewController.EnableLogGrading, this.LogsClicked);
+            _tableStyle = DataGridAdjuster.InitializeTreeColumns(this.AppController._cDal, this._dataGrid, null, stratum, this.AppController.ViewController.EnableLogGrading);
             this._dataGrid.SIP = sip;
             this._dataGrid.CellValidating += new EditableDataGridCellValidatingEventHandler(_dataGrid_CellValidating);
             this._dataGrid.CellValueChanged += new EditableDataGridCellValueChangedEventHandler(this._dataGrid_CellValueChanged);
@@ -400,14 +404,18 @@ namespace FSCruiser.WinForms.DataEntry
             _logsColumn = _tableStyle.GridColumnStyles["LogCount"] as DataGridButtonColumn;
             _kpiColumn = _tableStyle.GridColumnStyles["KPI"] as EditableTextBoxColumn;
 
+            if (_logsColumn != null)
+            {
+                _logsColumn.Click += this.LogsClicked;
+            }
 
             HandleCruisersChanged();
 
             this.Dock = DockStyle.Fill;
             this.Parent = parent;
             this._tallyListPanel.SuspendLayout();
-            this._mode = AppController.GetStrataDataEntryMode(stratum);
-            this.ViewLogicController.DataEntryController.PopulateTallies(stratum, this._mode, AppController.CurrentUnit, this._tallyListPanel, this);
+            this._mode = stratum.GetDataEntryMode();
+            this.ViewLogicController.DataEntryController.PopulateTallies(stratum, this._mode, DataEntryController.Unit, this._tallyListPanel, this);
             if (stratum.Method == "3PPNT")
             {
                 this.IsGridExpanded = true;
@@ -416,6 +424,22 @@ namespace FSCruiser.WinForms.DataEntry
             _tallyListPanel.ResumeLayout(false);
 
             
+        }
+
+        public void SaveCounts()
+        {
+            this.ViewLogicController.SaveCounts();
+        }
+
+        public bool TrySaveCounts()
+        {
+            if (!this.ViewLogicController.TrySaveCounts())
+            {
+                MessageBox.Show("Stratum:" + this.ViewLogicController.Stratum.Code
+                    + " Unable to save Counts");
+                return false;
+            }
+            return true;
         }
 
         //protected void RefreshColumnReferences()
@@ -521,7 +545,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             //this.LogsView.ShowDialog(tree);
             //this.Controller.ViewController.ShowLogsView(this.StratumInfo, tree);
-            this.AppController.ShowLogs(tree);
+            this.DataEntryController.ShowLogs(tree);
         }
 
         public void HandleStratumLoaded(Control container)
@@ -536,12 +560,10 @@ namespace FSCruiser.WinForms.DataEntry
             if ((_logsColumn.Width > 0) == this.AppController.ViewController.EnableLogGrading) { return; }
             if (this.AppController.ViewController.EnableLogGrading)
             {
-                _logsColumn.Click += this.LogsClicked;
                 _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
             }
             else
             {
-                _logsColumn.Click -= this.LogsClicked;
                 _logsColumn.Width = -1;
             }
         }
@@ -550,7 +572,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this._initialsColoumn != null)
             {
-                this._initialsColoumn.DataSource = this.AppController.GetCruiserList();
+                this._initialsColoumn.DataSource = this.AppController.Settings.Cruisers.ToArray();
             }
         }
 
@@ -618,12 +640,14 @@ namespace FSCruiser.WinForms.DataEntry
         public bool HandleEscKey()
         {
             if (_viewLoading) { return false; }
-            if (!this.IsGridExpanded)
-            {
-                this.IsGridExpanded = true;
-                return true;
-            }
-            return false;
+            IsGridExpanded = !IsGridExpanded;
+            return true;
+            //if (!this.IsGridExpanded)
+            //{
+            //    this.IsGridExpanded = true;
+            //    return true;
+            //}
+            //return false;
             
         }
 
@@ -853,7 +877,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_speciesColumn != null)
             {
-                _speciesColumn.DataSource = AppController.GetTreeTDVList(tree);
+                _speciesColumn.DataSource = tree.ReadValidTDVs();
             }
         }
 
@@ -861,7 +885,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = AppController.GetTreeSGList(tree);
+                _sgColumn.DataSource = tree.ReadValidSampleGroups();
             }
         }
 
@@ -893,7 +917,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void ShowLimitingDistanceDialog()
         {
-            if (this.ViewLogicController.CurrentPlotInfo == null)
+            if (this.ViewLogicController.CurrentPlot == null)
             {
                 ShowNoPlotSelectedMessage();
                 return;
@@ -911,7 +935,7 @@ namespace FSCruiser.WinForms.DataEntry
                 }
             }
 
-            this.ViewLogicController.Controller.ShowLimitingDistanceDialog(this.ViewLogicController.StratumInfo, this.ViewLogicController.CurrentPlotInfo, tree);
+            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot, tree);
         }
 
 

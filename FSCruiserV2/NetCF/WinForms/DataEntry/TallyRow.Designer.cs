@@ -1,4 +1,4 @@
-﻿namespace FSCruiser.WinForms
+﻿namespace FSCruiser.WinForms.DataEntry
 {
     partial class TallyRow
     {
@@ -42,6 +42,7 @@
             this._settingsButton.Size = new System.Drawing.Size(15, 23);
             this._settingsButton.TabIndex = 1;
             this._settingsButton.Text = "i";
+            this._settingsButton.Click += new System.EventHandler(this.OnSettingsButtonClicked);
             // 
             // _discriptionLabel
             // 
@@ -64,10 +65,12 @@
             // _tallyButton
             // 
             this._tallyButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this._tallyButton.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Regular);
             this._tallyButton.Location = new System.Drawing.Point(89, 0);
             this._tallyButton.Name = "_tallyButton";
             this._tallyButton.Size = new System.Drawing.Size(54, 23);
-            this._tallyButton.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Regular);
+            this._tallyButton.TabIndex = 1;
+            this._tallyButton.Click += new System.EventHandler(this.OnTallyButtonClicked);
             // 
             // TallyRow
             // 

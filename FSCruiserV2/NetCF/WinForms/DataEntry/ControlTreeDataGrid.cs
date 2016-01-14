@@ -41,7 +41,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                return this.Controller.CurrentUnitNonPlotTreeList;
+                return this.DataEntryController.Unit.NonPlotTrees;
             }
         }
 
@@ -79,7 +79,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.Controller = controller;
             this.DataEntryController = dataEntryController;
             DataGridAdjuster.InitializeGrid(this);
-            DataGridTableStyle tableStyle = DataGridAdjuster.InitializeTreeColumns(controller._cDal, this, this.Controller.CurrentUnit, null,this.Controller.ViewController.EnableLogGrading, this.LogsClicked);
+            DataGridTableStyle tableStyle = DataGridAdjuster.InitializeTreeColumns(controller._cDal, this, this.DataEntryController.Unit, null,this.Controller.ViewController.EnableLogGrading);
 
             this.AllowUserToAddRows = false;//don't allow down arrow to add tree
             this.SIP = sip;
@@ -128,9 +128,14 @@ namespace FSCruiser.WinForms.DataEntry
             //    _kpiColumn.CellEditBeginning += new CellEditEventHandler(_kpiColumn_CellEditBeginning);
             //}
 
+            if (_logsColumn != null)
+            {
+                _logsColumn.Click += this.LogsClicked;
+            }
+
             if (_initialsColoumn != null)
             {
-                _initialsColoumn.DataSource = this.Controller.GetCruiserList();
+                _initialsColoumn.DataSource = this.Controller.Settings.Cruisers.ToArray();
             }
         }
 
@@ -253,7 +258,8 @@ namespace FSCruiser.WinForms.DataEntry
         {
             try
             {
-                if (!this.Controller.EnsureTreeNumberAvalible(newTreeNumber))
+
+                if (!this.DataEntryController.Unit.IsTreeNumberAvalible(newTreeNumber))
                 {
                     cancel = true;
                     return;
@@ -364,21 +370,27 @@ namespace FSCruiser.WinForms.DataEntry
         {
             TreeVM tree = this._BS_trees[e.RowNumber] as TreeVM;
             if (tree == null) { return; }
-            this.Controller.ShowLogs(tree);
+            this.DataEntryController.ShowLogs(tree);
         }
 
         private TreeVM GetNewTree()
         {
             if (this.UserCanAddTrees == false) { return null; }
             TreeVM prevTree = null;
-            StratumVM assumedSt = Controller.DefaultStratum;
+            StratumVM assumedSt = DataEntryController.Unit.DefaultStratum;
             if (_BS_trees.Count > 0)
             {
                 prevTree = (TreeVM)_BS_trees[_BS_trees.Count - 1];
                 assumedSt = prevTree.Stratum;
             }
 
-            return Controller.UserAddTree(prevTree, assumedSt, null);
+            var newTree = this.DataEntryController.Unit.UserAddTree(prevTree
+                , assumedSt
+                , this.DataEntryController.ViewController);
+            //this.DataEntryController.Controller.OnTally();
+            return newTree;
+
+            //return Controller.UserAddTree(prevTree, assumedSt, null);
         }
 
         public TreeVM UserAddTree()
@@ -412,7 +424,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_speciesColumn != null)
             {
-                _speciesColumn.DataSource = Controller.GetTreeTDVList(tree);
+                _speciesColumn.DataSource = tree.ReadValidTDVs();
             }
         }
 
@@ -420,7 +432,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = Controller.GetTreeSGList(tree);
+                _sgColumn.DataSource = tree.ReadValidSampleGroups();
             }
         }
 
@@ -428,7 +440,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_stratumColumn != null)
             {
-                _stratumColumn.DataSource = Controller.GetUnitTreeBasedStrata();
+                _stratumColumn.DataSource = DataEntryController.Unit.GetTreeBasedStrata();
             }
         }
         protected override void Dispose(bool disposing)
@@ -460,7 +472,7 @@ namespace FSCruiser.WinForms.DataEntry
         public void HandleLoad()
         {
             UpdateStratumColumn();
-            this._BS_trees.DataSource = Controller.CurrentUnitNonPlotTreeList;
+            this._BS_trees.DataSource = DataEntryController.Unit.NonPlotTrees;
             
             _viewLoading = false;
         }
@@ -477,12 +489,10 @@ namespace FSCruiser.WinForms.DataEntry
             if ((_logsColumn.Width > 0) == this.Controller.ViewController.EnableLogGrading) { return; }
             if (this.Controller.ViewController.EnableLogGrading)
             {
-                _logsColumn.Click += this.LogsClicked;
                 _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
             }
             else
             {
-                _logsColumn.Click -= this.LogsClicked;
                 _logsColumn.Width = -1;
             }
         }
@@ -491,7 +501,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this._initialsColoumn != null)
             {
-                this._initialsColoumn.DataSource = this.Controller.GetCruiserList();
+                this._initialsColoumn.DataSource = this.Controller.Settings.Cruisers.ToArray();
             }
         }
 
@@ -511,7 +521,9 @@ namespace FSCruiser.WinForms.DataEntry
                     MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button2))
                 {
-                    Controller.DeleteTree(curTree);
+                    DataEntryController.Unit.DeleteTree(curTree);
+                    //curTree.Delete();
+                    //Controller.DeleteTree(curTree);
                 }
             }
             

@@ -16,7 +16,9 @@ namespace FSCruiser.WinForms.Common
 {
     public abstract class WinFormsViewControllerBase : IViewController
     {
-        private static Thread _splashThread; 
+        private static Thread _splashThread;
+
+        private Dictionary<StratumDO, FormLogs> _logViews = new Dictionary<StratumDO, FormLogs>();
 
         protected object _dataEntrySyncLock = new object();
         private FormMain _main;
@@ -51,6 +53,8 @@ namespace FSCruiser.WinForms.Common
                 }
             }
         }
+
+        //public bool EnableCruiserSelectionPopup { get; set; }
 
         public FormCruiserSelection CruiserSelectionView
         {
@@ -132,19 +136,29 @@ namespace FSCruiser.WinForms.Common
         }
 
 
-
-
-
-        public void HandleCuttingUnitDataLoaded()
+        public FormLogs GetLogsView(StratumDO stratum)
         {
-            lock (_dataEntrySyncLock)
+            if (_logViews.ContainsKey(stratum))
             {
-                if (_dataEntryView != null)
-                {
-                    _dataEntryView.HandleCuttingUnitDataLoaded();
-                }
+                return _logViews[stratum];
             }
-        }
+            FormLogs logView = new FormLogs(this.ApplicationController, stratum.Stratum_CN.Value);
+            _logViews.Add(stratum, logView);
+
+            return logView;
+        }   
+
+
+        //public void HandleCuttingUnitDataLoaded()
+        //{
+        //    lock (_dataEntrySyncLock)
+        //    {
+        //        if (_dataEntryView != null)
+        //        {
+        //            _dataEntryView.HandleCuttingUnitDataLoaded();
+        //        }
+        //    }
+        //}
 
         public void HandleCruisersChanged()
         {
@@ -183,7 +197,10 @@ namespace FSCruiser.WinForms.Common
 
         public void ShowCruiserSelection(TreeVM tree)
         {
-            this.CruiserSelectionView.ShowDialog(tree);
+            if (this.ApplicationController.Settings.EnableCruiserPopup)
+            {
+                this.CruiserSelectionView.ShowDialog(tree);
+            }
         }
 
         public abstract System.Windows.Forms.DialogResult ShowEditSampleGroup(CruiseDAL.DataObjects.SampleGroupDO sg, bool allowEdit);
@@ -195,7 +212,14 @@ namespace FSCruiser.WinForms.Common
         public abstract System.Windows.Forms.DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage);
 
 
-        public abstract void ShowLogsView(CruiseDAL.DataObjects.StratumDO stratum, TreeVM tree);
+        public void ShowLogsView(StratumDO stratum, TreeVM tree)
+        {
+            if (stratum == null)
+            {
+                MessageBox.Show("Invalid Action. Stratum not set.");
+            }
+            this.GetLogsView(stratum).ShowDialog(tree);
+        }
 
 
         public abstract void ShowManageCruisers();
@@ -204,16 +228,24 @@ namespace FSCruiser.WinForms.Common
         public abstract System.Windows.Forms.DialogResult ShowOpenCruiseFileDialog(out string fileName);
 
 
-        public abstract void ShowDataEntry(CuttingUnitDO unit);
-       
+        public abstract void ShowDataEntry(CuttingUnitVM unit);
 
-        public DialogResult ShowPlotInfo(PlotVM plotInfo, bool allowEdit)
+        //public int? ShowNumericValueInput(int? min, int? max, int? initialValue, bool acceptNullInput)
+        //{
+        //    this.NumPadDialog.ShowDialog(min, max, initialValue, acceptNullInput);
+        //    return this.NumPadDialog.UserEnteredValue;
+        //}
+
+        public DialogResult ShowPlotInfo( PlotVM plotInfo, bool is3PPNT, bool allowEdit)
         {
             if (plotInfo == null) { return DialogResult.None; }
+
+            
+
             IPlotInfoDialog view = null;
             try
             {
-                if (plotInfo.Stratum.Method == "3PPNT" && allowEdit)
+                if (is3PPNT && allowEdit)
                 {
                     view = new Form3PPNTPlotInfo(this.ApplicationController);
                 }
@@ -229,6 +261,7 @@ namespace FSCruiser.WinForms.Common
                 ((Form)view).Dispose();
             }
         }
+
 
         public void ShowTallySettings(CountTreeVM count)
         {
@@ -266,10 +299,23 @@ namespace FSCruiser.WinForms.Common
                 (defaultCancel) ? MessageBoxDefaultButton.Button2 : MessageBoxDefaultButton.Button1) == DialogResult.Cancel;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <returns>KPI, value is -1 if STM</returns>
+        public int? AskKPI(int min, int max)
+        {
+            ThreePNumPad.ShowDialog(min, max, null, true);
+            return ThreePNumPad.UserEnteredValue;
+        }
+        
+ 
+
         public abstract void SignalMeasureTree(bool showMessage);
 
 
         public abstract void SignalInsuranceTree();
+
+        
 
 
         public void ShowWait()

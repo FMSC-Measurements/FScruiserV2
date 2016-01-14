@@ -4,6 +4,7 @@ using System.Text;
 using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
 using CruiseDAL;
+using FMSC.ORM.Core.EntityAttributes;
 
 namespace FSCruiser.Core.Models
 {
@@ -17,6 +18,7 @@ namespace FSCruiser.Core.Models
             : base(ds)
         { }
 
+        [IgnoreField]
         public new SampleGroupVM SampleGroup
         {
             get
@@ -32,7 +34,7 @@ namespace FSCruiser.Core.Models
         public override SampleGroupDO GetSampleGroup()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<SampleGroupVM>(SAMPLEGROUP._NAME, this.SampleGroup_CN);
+            return DAL.ReadSingleRow<SampleGroupVM>(this.SampleGroup_CN);
         }
 
         public long GetCountsFromTrees()

@@ -1,0 +1,23 @@
+Feature: 100% tally method
+	The 100% tally method can be used for stata that require measurement of every tree. 
+
+GIVEN the folling cutting units exist:
+    |code   |
+    |01     |// single hpct strata
+    |02     |// mixed mode (hpct + str ...)
+AND the folling strata exist:
+    |code   |method |units  |hotkey |
+    |01     |h_pct  |01&02  |01     |
+    |02     |02     |02     |02     |
+
+Senario: display unit with just h_pct tally
+    GIVEN unit 02 is the current unit
+    WHEN the user enters data entry
+    THEN the data entry screen contains the folling tabs: Trees
+
+Senario: display unit with h_pct and tree based tally
+    GIVEN unit 01 is the current unit
+    WHEN the user enters data entry
+    THEN the data entry screen contains the folling tabs: Trees, Tally
+
+    

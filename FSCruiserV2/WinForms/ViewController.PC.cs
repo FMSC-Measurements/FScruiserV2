@@ -30,17 +30,13 @@ namespace FSCruiser.WinForms
             throw new NotImplementedException();
         }
 
-        public override void ShowLogsView(CruiseDAL.DataObjects.StratumDO stratum, TreeVM tree)
-        {
-            throw new NotImplementedException();
-        }
 
         public override void ShowManageCruisers()
         {
             throw new NotImplementedException();
         }
 
-        public override void ShowDataEntry(CruiseDAL.DataObjects.CuttingUnitDO unit)
+        public override void ShowDataEntry(CuttingUnitVM unit)
         {
             _dataEntryView = null;
 

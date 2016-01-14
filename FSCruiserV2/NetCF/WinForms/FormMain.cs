@@ -62,7 +62,7 @@ namespace FSCruiser.WinForms
             get 
             {
                 CuttingUnitVM unitVM = _BS_cuttingUnits.Current as CuttingUnitVM;
-                if (unitVM != null)
+                if (unitVM != null && unitVM.Code != null)
                 {
                     return unitVM;
                 }
@@ -73,12 +73,14 @@ namespace FSCruiser.WinForms
         private void OpenButton_Click(object sender, EventArgs e)
         {
             bool success = this.Controller.OpenFile();
-            this._dataEntryMI.Enabled = success;
-            this._cuttingUnitCB.Enabled = success;
-            this._fileNameTB.Text = (success) ? Controller._cDal.Path : String.Empty;
             if (success)
             {
-                this._BS_cuttingUnits.DataSource = Controller.CuttingUnits;
+                this._cuttingUnitCB.Enabled = success;
+                this._fileNameTB.Text = (success) ? Controller._cDal.Path : String.Empty;
+                if (success)
+                {
+                    this._BS_cuttingUnits.DataSource = Controller.CuttingUnits;
+                }
             }
         }
 
@@ -125,58 +127,42 @@ namespace FSCruiser.WinForms
 
         private void _BS_cuttingUnits_CurrentChanged(object sender, EventArgs e)
         {
-            
-            if (SelectedUnit != null)
-            {
-                LoadCuttingUnitInfo(SelectedUnit);
-            }
+            LoadCuttingUnitInfo(SelectedUnit);
         }
 
         private void LoadCuttingUnitInfo(CuttingUnitVM unit)
         {
-            //_cuttingUnitInfoLable.Text = String.Format("{0} Area: {1}", unit.Description, unit.Area);
-            
-            
-            //_strataLB..Clear();
-            //foreach (StratumDO st in unit.Strata)
-            //{
-            //    ListViewItem item = new ListViewItem(Controller.GetStratumInfoShort(st));
-                
-            //    _strataLB.Items.Add(item);
-            //}
-
-
-
-            unit.Strata.Populate();
-            _strataView.Controls.Clear();
             _strataView.SuspendLayout();
-            foreach (StratumDO st in unit.Strata)
+            _strataView.Controls.Clear();
+            this._dataEntryMI.Enabled = (unit != null);
+            if (unit != null)
             {
-                Label stLBL = new Label();
-                stLBL.Text = ApplicationController.GetStratumInfoShort(st);
-                if( _fontHeight == 0 )
-                {
-                    using (Graphics g = base.CreateGraphics())
-                    {
-                        SizeF s = g.MeasureString(" ", stLBL.Font);
-                        _fontHeight = (int)Math.Ceiling(s.Height);
-                    }
-                    
-                }
-                
-                stLBL.Dock = DockStyle.Top;
-                stLBL.Height = _fontHeight;
-                _strataView.Controls.Add(stLBL);
+                var strata = unit.DAL.From<StratumDO>()
+                    .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
+                    .Where("CUST.CuttingUnit_CN = ?")
+                    .Query(unit.CuttingUnit_CN);
 
+                foreach (StratumDO st in strata)
+                {
+                    Label stLBL = new Label();
+                    stLBL.Text = st.GetDescriptionShort();
+                    if (_fontHeight == 0)
+                    {
+                        using (Graphics g = base.CreateGraphics())
+                        {
+                            SizeF s = g.MeasureString(" ", stLBL.Font);
+                            _fontHeight = (int)Math.Ceiling(s.Height);
+                        }
+
+                    }
+
+                    stLBL.Dock = DockStyle.Top;
+                    stLBL.Height = _fontHeight;
+                    _strataView.Controls.Add(stLBL);
+
+                }
             }
             _strataView.ResumeLayout();
-
-            //string[] strataStr = new string[unit.Strata.Count];
-            //for (int i = 0; i < unit.Strata.Count; i++)
-            //{
-            //    strataStr[i] = ApplicationController.GetStratumInfoShort(unit.Strata[i]);
-            //}
-            //_strataLB.DataSource = strataStr;
         }
 
         private void dataEntryButton_Click(object sender, EventArgs e)

@@ -6,6 +6,8 @@ using System.ComponentModel;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.DataEntry;
+using CruiseDAL.DataObjects;
+using FMSC.Sampling;
 
 namespace FSCruiser.Core.DataEntry
 {
@@ -19,11 +21,20 @@ namespace FSCruiser.Core.DataEntry
 
         public IPlotLayout View { get; set; }
         public IApplicationController Controller { get { return this.DataEntryController.Controller; } }
+        public IViewController ViewController { get; set; } 
         public FormDataEntryLogic DataEntryController { get; protected set; }
 
         public bool UserCanAddTrees { get; set; }
 
-        public StratumVM StratumInfo { get; set; }
+        public bool Is3PPNT
+        {
+            get
+            {
+                return this.Stratum.Method == CruiseDAL.Schema.CruiseMethods.THREEPPNT;
+            }
+        }
+
+        public PlotStratum Stratum { get; set; }
 
         public IList<PlotVM> Plots 
         {
@@ -33,7 +44,7 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public PlotVM CurrentPlotInfo
+        public PlotVM CurrentPlot
         {
             get
             {
@@ -46,7 +57,7 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public BindingList<TreeVM> CurrentPlotTreeList
+        public IList<TreeVM> CurrentPlotTreeList
         {
             get
             {
@@ -67,11 +78,14 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public LayoutPlotLogic(StratumVM stratum, LayoutPlot view, FormDataEntryLogic dataEntryController)
+        public LayoutPlotLogic(PlotStratum stratum, LayoutPlot view
+            , FormDataEntryLogic dataEntryController
+            , IViewController viewController)
         {
-            this.StratumInfo = stratum;
+            this.Stratum = stratum;
             this.View = view;
             this.DataEntryController = dataEntryController;
+            this.ViewController = viewController;
 
 
             this._BS_Plots = new BindingSource();
@@ -88,12 +102,12 @@ namespace FSCruiser.Core.DataEntry
             ((System.ComponentModel.ISupportInitialize)(this._BS_Plots)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._BS_Trees)).EndInit();
 
-            _BS_Plots.DataSource = this.StratumInfo.Plots;
+            _BS_Plots.DataSource = this.Stratum.Plots;
         }
 
         public bool CheckCurrentPlot()
         {
-            return this.CheckPlot(this.CurrentPlotInfo);
+            return this.CheckPlot(this.CurrentPlot);
         }
 
         public bool CheckPlot(PlotVM pInfo)
@@ -101,7 +115,8 @@ namespace FSCruiser.Core.DataEntry
             if (pInfo != null)
             {
                 this.EndEdit();
-                if (!Controller.ValidateTrees(pInfo.Trees))
+                var worker = new TreeValidationWorker(pInfo.Trees);
+                if (!worker.ValidateTrees())
                 {
                     return this.View.AskContinueOnCurrnetPlotTreeError();
                 }
@@ -132,7 +147,7 @@ namespace FSCruiser.Core.DataEntry
         public bool EnsurePlotSelected()
         {
             if (this.View.ViewLoading) { return false; }
-            if (this.CurrentPlotInfo == null)
+            if (this.CurrentPlot == null)
             {
                 this.View.ShowNoPlotSelectedMessage();
                 return false;
@@ -142,7 +157,7 @@ namespace FSCruiser.Core.DataEntry
 
         public bool EnsureCurrentPlotNotEmpty()
         {
-            if (this.CurrentPlotInfo.IsNull)
+            if (this.CurrentPlot.IsNull)
             {
                 this.View.ShowNullPlotMessage();
                 return false;
@@ -156,9 +171,9 @@ namespace FSCruiser.Core.DataEntry
             this.EndEdit();
             try
             {
-                Controller.SaveTrees(plot.Trees);
+                plot.SaveTrees();
             }
-            catch (CruiseDAL.DatabaseExecutionException)
+            catch (FMSC.ORM.SQLException)
             {
                 if (!this.Controller.ViewController.AskYesNo("Can not save all trees in the plot, Would you like to continue?", "Continue?", MessageBoxIcon.Asterisk, true))
                 {
@@ -171,37 +186,37 @@ namespace FSCruiser.Core.DataEntry
 
         public bool SavePlotTrees()
         {
-            if (this.CurrentPlotInfo == null) { return false; }
-            return this.SavePlotTrees(this.CurrentPlotInfo);
+            if (this.CurrentPlot == null) { return false; }
+            return this.SavePlotTrees(this.CurrentPlot);
         }
 
         public void UpdateCurrentPlot()
         {
             if (View.ViewLoading) { return; }
             this.EndEdit();
-            if (CurrentPlotInfo != null)
+            if (CurrentPlot != null)
             {
-                CurrentPlotInfo.LoadData();
-                this._BS_Trees.DataSource = CurrentPlotInfo.Trees;
+                CurrentPlot.PopulateTreeData();
+                this._BS_Trees.DataSource = CurrentPlot.Trees;
             }
             else
             {
                 this._BS_Trees.DataSource = new TreeVM[0];
             }
-            this.View.RefreshTreeView(this.CurrentPlotInfo);
+            this.View.RefreshTreeView(this.CurrentPlot);
 
         }
 
 
         public void HandleAddPlot()
         {
-            if (this.CurrentPlotInfo != null 
-                &&(!this.SavePlotTrees(this.CurrentPlotInfo) || !this.CheckCurrentPlot()))
+            if (this.CurrentPlot != null 
+                &&(!this.SavePlotTrees(this.CurrentPlot) || !this.CheckCurrentPlot()))
             {
                 return;
             }
 
-            PlotVM plotInfo = this.DataEntryController.AddPlot(this.StratumInfo);
+            PlotVM plotInfo = this.AddPlot();
             if (plotInfo != null)
             {
                 this._disableCheckPlot = true;
@@ -218,9 +233,52 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
+        /// <summary>
+        /// Creates a new plot using the plot info view and adds it to the given stratum's plot collection
+        /// </summary>
+        /// <param name="stratum">stratum to create plot in</param>
+        /// <returns>reference to newly created plot</returns>
+        protected PlotVM AddPlot()
+        {
+            PlotVM newPlot = new PlotVM(this.DataEntryController.Database);
+            newPlot.CuttingUnit = this.DataEntryController.Unit;
+            newPlot.Stratum = this.Stratum;
+            newPlot.PlotNumber = this.Stratum.GetNextPlotNumber(this.DataEntryController.Unit.CuttingUnit_CN.Value);
+
+            //PlotInfo plotInfo = new PlotInfo(newPlot, stratum);
+            //newPlot.NextPlotTreeNum = 1;
+            if (this.ViewController.ShowPlotInfo(newPlot, Is3PPNT, true) == DialogResult.OK)
+            {
+                foreach (PlotVM pi in this.Stratum.Plots)
+                {
+                    if (pi.PlotNumber == newPlot.PlotNumber)
+                    {
+                        MessageBox.Show(String.Format("Plot Number {0} Already Exists", newPlot.PlotNumber));
+                        return this.AddPlot();
+                    }
+                }
+
+
+                newPlot.Save();
+                this.Stratum.Plots.Add(newPlot);
+                newPlot.CheckDataState();
+
+                if (!String.IsNullOrEmpty(newPlot.IsEmpty) && String.Compare(newPlot.IsEmpty.Trim(), "True", true) == 0)
+                {
+                    return this.AddPlot() ?? newPlot;//add plot may return null, in that case return most recently created plot
+                }
+                else if (Is3PPNT && newPlot.Trees.Count == 0)
+                {
+                    return this.AddPlot() ?? newPlot;//add plot may return null, in that case return most recently created plot
+                }
+                return newPlot;
+            }
+            return null;
+        }
+
         public void HandleDeletePlot()
         {            
-            if (CurrentPlotInfo == null)
+            if (CurrentPlot == null)
             {
                 this.View.ShowNoPlotSelectedMessage();
                 return;
@@ -229,8 +287,8 @@ namespace FSCruiser.Core.DataEntry
             if (this.Controller.ViewController.AskYesNo("Are you sure you want to delete this plot?", "", MessageBoxIcon.Question, true))
             {
                 this._disableCheckPlot = true;
-                Controller.DeletePlot(CurrentPlotInfo);
-                _BS_Plots.Remove(CurrentPlotInfo);
+                CurrentPlot.Delete();
+                _BS_Plots.Remove(CurrentPlot);
                 this._disableCheckPlot = false; 
             }
         }
@@ -251,7 +309,7 @@ namespace FSCruiser.Core.DataEntry
                 {
                     //this._BS_Trees.Remove(curTree);
                     //Controller.DeleteTree(curTree);
-                    Controller.DeleteTree(curTree, this.CurrentPlotInfo);
+                    this.CurrentPlot.DeleteTree(curTree);
                 }
             }
             else
@@ -264,7 +322,8 @@ namespace FSCruiser.Core.DataEntry
         {
             try
             {
-                if (!this.Controller.EnsureTreeNumberAvalible(newTreeNumber, this.CurrentPlotInfo))
+
+                if (!this.CurrentPlot.IsTreeNumberAvalible(newTreeNumber))
                 {
                     cancel = true;
                     return;
@@ -282,39 +341,164 @@ namespace FSCruiser.Core.DataEntry
         {
             if (!this.EnsureCurrentPlotWorkable()) { return; }
 
-            this.DataEntryController.OnTally(count, this.CurrentPlotInfo, this.View);
+            this.OnTally(count, this.CurrentPlot);
             this.SelectLastTree();
+        }
+
+        protected void OnTally(CountTreeVM count, PlotVM plot)
+        {
+            System.Diagnostics.Debug.Assert(plot != null);
+
+            SampleGroupDO sg = count.SampleGroup;
+            //if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
+            //{
+            //    TreeVM newTree;
+            //    newTree = Controller.CreateNewTreeEntry(count, plot, true);
+            //    count.TreeCount += sg.SamplingFrequency;
+            //    this.Controller.TrySaveTree(newTree);
+            //    Controller.OnTally();
+            //    return;
+            //}
+
+            SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Sampler;
+            TreeVM tree = null;
+            DataEntryMode mode = count.SampleGroup.Stratum.GetDataEntryMode();
+            if ((mode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP)
+            {
+                int kpi = 0;
+                int? value = ViewController.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
+                if (value == null)
+                {
+                    this.ViewController.ShowMessage("No Value Entered", null, MessageBoxIcon.None);
+                    return;
+                }
+                else
+                {
+                    kpi = value.Value;
+                }
+
+                //if kpi == -1 then tree is sure to measure 
+                if (kpi != -1)
+                {
+                    ThreePItem item = (ThreePItem)((ThreePSelecter)sampler).NextItem();
+
+                    if (item != null && kpi > item.KPI)
+                    {
+                        //because the three p sample selector doesn't select insurance trees for us
+                        //we need to select them our selves 
+                        if (sampler.IsSelectingITrees)
+                        {
+                            item.IsInsuranceItem = sampler.InsuranceCounter.Next();
+                        }
+                        if (item.IsInsuranceItem)
+                        {
+                            this.ViewController.SignalInsuranceTree();
+                            tree = plot.CreateNewTreeEntry(count, true);
+                            tree.CountOrMeasure = "I";
+                        }
+                        else
+                        {
+                            this.ViewController.SignalMeasureTree(true);
+                            tree = plot.CreateNewTreeEntry(count, true);
+                            //tree.CountOrMeasure = "M";
+
+                        }
+                    }
+                    else
+                    {
+                        tree = plot.CreateNewTreeEntry(count, false);
+                        //tree.CountOrMeasure = "C";
+                    }
+                    tree.KPI = kpi;
+                }
+                else
+                {
+                    tree = plot.CreateNewTreeEntry(count, true);
+                    tree.STM = "Y";
+                }
+
+            }
+            else
+            {
+                //count.TreeCount++; tree count doesn't get incremented for plots
+
+
+                boolItem item = (sampler != null) ? (boolItem)sampler.NextItem() : (boolItem)null;
+                if (item != null && !item.IsInsuranceItem)
+                {
+                    this.ViewController.SignalMeasureTree(true);
+                    tree = plot.CreateNewTreeEntry(count, true);
+                    //tree.CountOrMeasure = "M";
+
+                }
+                else if (item != null && item.IsInsuranceItem)
+                {
+                    this.ViewController.SignalInsuranceTree();
+                    tree = plot.CreateNewTreeEntry(count, true);
+                    tree.CountOrMeasure = "I";
+                }
+                else
+                {
+                    tree = plot.CreateNewTreeEntry(count, false);
+                }
+
+
+            }
+
+            tree.TreeCount = 1;
+            tree.TrySave();
+
+            plot.AddTree(tree);
         }
 
         //TODO rename method
         public void AddTree(SampleGroupVM sg, CruiseDAL.DataObjects.TreeDefaultValueDO tdv)
         {
             TreeVM tree;
-            tree = Controller.CreateNewTreeEntry(Controller.CurrentUnit, this.StratumInfo, sg, tdv, this.CurrentPlotInfo, true);
-            
+            tree = this.CurrentPlot.CreateNewTreeEntry(sg, tdv, true);
             tree.TreeCount = 1;
-            this.Controller.TrySaveTree(tree);
-            this.CurrentPlotTreeList.Add(tree);
-            Controller.OnTally();
+
+            this.Controller.ViewController.ShowCruiserSelection(tree);
+
+            tree.TrySave();
+            this.CurrentPlot.AddTree(tree);
 
             this.SelectLastTree();
         }
 
-        protected TreeVM GetNewTree()
+        //protected TreeVM GetNewTree()
+        //{
+
+        //    if (!this.EnsureCurrentPlotWorkable())// if no plot is selected cancel action
+        //    {
+        //        return null;
+        //    }
+
+        //    if (this.UserCanAddTrees == false) { return null; }
+
+        //    //adding trees can be allowed in some cases for 3PPNT
+        //    //if (this.StratumInfo.Stratum.Method == "3PPNT")// if this is a 3PPNT stratum users aren't allowed to manualy enter trees
+        //    //{
+        //    //    return null;
+        //    //}
+
+        //    TreeVM prevTree = null;
+        //    if (_BS_Trees.Count > 0)
+        //    {
+        //        prevTree = (TreeVM)_BS_Trees[_BS_Trees.Count - 1];
+        //    }
+
+        //    var newTree = this.CurrentPlot.UserAddTree(prevTree, this.DataEntryController.ViewController);
+        //    //DataEntryController.Controller.OnTally();
+        //    return newTree;
+
+        //    //return Controller.UserAddTree(prevTree, this.StratumInfo, this.CurrentPlotInfo);
+        //}
+
+        public TreeVM UserAddTree()
         {
-
-            if (!this.EnsureCurrentPlotWorkable())// if no plot is selected cancel action
-            {
-                return null;
-            }
-
-            if (this.UserCanAddTrees == false) { return null; }
-
-            //adding trees can be allowed in some cases for 3PPNT
-            //if (this.StratumInfo.Stratum.Method == "3PPNT")// if this is a 3PPNT stratum users aren't allowed to manualy enter trees
-            //{
-            //    return null;
-            //}
+            if (!this.EnsureCurrentPlotWorkable()) { return null; }
+            if (!this.UserCanAddTrees) { return null; }
 
             TreeVM prevTree = null;
             if (_BS_Trees.Count > 0)
@@ -322,20 +506,14 @@ namespace FSCruiser.Core.DataEntry
                 prevTree = (TreeVM)_BS_Trees[_BS_Trees.Count - 1];
             }
 
-            return Controller.UserAddTree(prevTree, this.StratumInfo, this.CurrentPlotInfo);
-        }
+            var newTree = this.CurrentPlot.UserAddTree(prevTree, this.DataEntryController.ViewController);
 
-        public TreeVM UserAddTree()
-        {
-            if (!this.EnsureCurrentPlotWorkable()) { return null; }
-
-            TreeVM t = this.GetNewTree();
-            if (t != null)
+            if (newTree != null)
             {
-                this._BS_Trees.Add(t);
                 this.SelectLastTree();
             }
-            return t;
+
+            return newTree;
         }
 
         public void SelectFirstPlot()
@@ -367,14 +545,15 @@ namespace FSCruiser.Core.DataEntry
 
         public void ShowCurrentPlotInfo()
         {
-            if (CurrentPlotInfo == null)
+            if (CurrentPlot == null)
             {
                 this.View.ShowNoPlotSelectedMessage();
                 return;
             }
-            if (Controller.ViewController.ShowPlotInfo(CurrentPlotInfo, false) == DialogResult.OK)
+
+            if (Controller.ViewController.ShowPlotInfo(CurrentPlot, Is3PPNT, false) == DialogResult.OK)
             {
-                CurrentPlotInfo.Save();
+                CurrentPlot.Save();
                 this._BS_Plots.ResetCurrentItem();
                 this.UpdateCurrentPlot();
             }
@@ -383,24 +562,35 @@ namespace FSCruiser.Core.DataEntry
 
         public void Save()
         {
-            foreach (PlotVM p in this.StratumInfo.Plots)
+            foreach (PlotVM p in this.Stratum.Plots)
             {
                 p.Save();
             }
         }
 
+        public void SaveCounts()
+        {
+            this.Stratum.SaveCounts();
+        }
+
+        public bool TrySaveCounts()
+        {
+            return this.Stratum.TrySaveCounts();
+        }
+
+
         #region event handlers 
         private void _BS_Plots_CurrentChanged(object sender, EventArgs e)
         {
-            if (!_disableCheckPlot && _prevPlot != null && _prevPlot != CurrentPlotInfo)
+            if (!_disableCheckPlot && _prevPlot != null && _prevPlot != CurrentPlot)
             {
                 if (!this.CheckPlot(_prevPlot) && !this.SavePlotTrees(_prevPlot))
                 {
-                    this.CurrentPlotInfo = _prevPlot;
+                    this.CurrentPlot = _prevPlot;
                 }
             }
             this.UpdateCurrentPlot();
-            _prevPlot = CurrentPlotInfo;
+            _prevPlot = CurrentPlot;
         }
 
         private void _BS_Trees_CurrentChanged(object sender, EventArgs e)

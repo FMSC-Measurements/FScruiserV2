@@ -12,124 +12,160 @@ using FSCruiser.Core.Models;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public partial class LayoutTreeBased : UserControl, ITallyView
+    public partial class LayoutTreeBased : TreeBasedTallyView_Base, ITallyView
     {
-        private Panel _visableTallyPanel;
-        private bool _viewLoading = true;
+        //private Panel _visableTallyPanel;
+        //private bool _viewLoading = true;
 
-        public IApplicationController Controller { get; protected set; }
-        public FormDataEntryLogic DataEntryController { get; protected set; }
-        public Dictionary<char, CountTreeVM> HotKeyLookup 
-        {
-            get
-            {
-                if (SelectedStratum != null)
-                {
-                    return SelectedStratum.HotKeyLookup;
-                }
-                return null;
-            }
-        }
-        public Dictionary<char, StratumVM> StrataHotKeyLookup { get; protected set; }
-        public IList<StratumVM> Strata { get; protected set; }
-        public StratumVM SelectedStratum { get; protected set; }
-        public bool HotKeyEnabled 
-        {
-            get { return true; }
-        }
+        //public IApplicationController Controller                { get; protected set; }
+        //public FormDataEntryLogic DataEntryController           { get; protected set; }
+        //public Dictionary<char, CountTreeVM> HotKeyLookup 
+        //{
+        //    get
+        //    {
+        //        if (SelectedStratum != null)
+        //        {
+        //            return SelectedStratum.HotKeyLookup;
+        //        }
+        //        return null;
+        //    }
+        //}
+        //public Dictionary<char, StratumVM> StrataHotKeyLookup   { get; protected set; }
+        //public Dictionary<StratumVM, Panel> StrataViews         { get; protected set; }
 
-        public bool ViewLoading { get { return _viewLoading; } }
-        //public List<CountTreeDO> Counts { get; set; }
+        //public IList<StratumVM> Strata                          { get; protected set; }
+        //public StratumVM SelectedStratum                        { get; protected set; }
+        //public bool HotKeyEnabled 
+        //{
+        //    get { return true; }
+        //}
 
-        public IDataEntryView DataEntryForm
-        {
-            get
-            {
-                return (FormDataEntry)this.TopLevelControl;
-            }
-        }
+        //public bool ViewLoading { get { return _viewLoading; } }
+        ////public List<CountTreeDO> Counts { get; set; }
 
-        public LayoutTreeBased()
+        //public IDataEntryView DataEntryForm
+        //{
+        //    get
+        //    {
+        //        return (FormDataEntry)this.TopLevelControl;
+        //    }
+        //}
+
+        LayoutTreeBased() : base()
         {
-            //this.HotKeyLookup = new Dictionary<char, CountTreeDO>();
-            this.StrataHotKeyLookup = new Dictionary<char, StratumVM>();
             InitializeComponent();
+
+            ((System.ComponentModel.ISupportInitialize)(this._BS_tallyHistory)).BeginInit();
+            this._tallyHistoryLB.DataSource = this._BS_tallyHistory;
+            ((System.ComponentModel.ISupportInitialize)(this._BS_tallyHistory)).EndInit();
+
+            this._untallyButton.Click += new System.EventHandler(this.OnUntallyButtonClicked);
         }
 
-        public LayoutTreeBased(IApplicationController controller, FormDataEntryLogic dataEntryController): this()
+        public LayoutTreeBased(IApplicationController controller
+            , FormDataEntryLogic dataEntryController): this()
         {
-            this.DataEntryController = dataEntryController;
-            this.Controller = controller;
-
-            this.SuspendLayout();
-            this.PopulateStrata(Controller.CurrentUnit);
-
-            //if there is only one strata in the unit 
-            //display the counts for that stratum
-            if (this.Strata.Count == 1)
-            {
-                this.DisplayTallyPanel(this.Strata[0]);
-            }
-
-            this.ResumeLayout(false);
-
-            
+            base.Initialize(controller, dataEntryController, _leftContentPanel);
         }
 
+        //protected void InitializeStrataViews()
+        //{
+        //    this.SuspendLayout();
 
-        private void PopulateStrata(CuttingUnitVM unit)
-        {
-            //unit.Strata.Populate();
-            Strata = Controller.GetUnitTreeBasedStrata();
-            foreach (StratumVM stratum in this.Strata)
-            {
-                if (stratum.Method == CruiseDAL.Schema.Constants.CruiseMethods.H_PCT) { continue; }
-                //if ((Controller.GetStrataDataEntryMode(stratum) & DataEntryMode.Plot) 
-                //    == DataEntryMode.Plot) { continue; }
+        //    this.PopulateStrata();
 
-                Button strataButton = new Button();
-                Panel tallyContainer = new Panel();
-                //StratumInfo stratumInfo = new StratumInfo(stratum);
-                stratum.TallyContainer = tallyContainer;
-                //Strata.Add(stratumInfo);
-                //tallyContainer.SuspendLayout();
-                //strataButton.SuspendLayout();
+        //    //if there is only one strata in the unit 
+        //    //display the counts for that stratum
+        //    if (this.Strata.Count == 1)
+        //    {
+        //        this.DisplayTallyPanel(this.Strata[0]);
+        //    }
 
-                tallyContainer.Dock = DockStyle.Top;
-                tallyContainer.Visible = false;
-                tallyContainer.Parent = _leftContentPanel;
-                tallyContainer.Tag = stratum;
+        //    this.ResumeLayout(false);
+        //}
+
+        //public void SaveCounts()
+        //{
+        //    foreach (StratumVM stratum in Strata)
+        //    {
+        //        stratum.SaveCounts();
+        //    }
+        //}
+
+        //public bool TrySaveCounts()
+        //{
+        //    bool success = true;
+        //    foreach (StratumVM stratum in Strata)
+        //    {
+        //        if (!stratum.TrySaveCounts())
+        //        {
+        //            System.Diagnostics.Debug.Fail("unable to save St:" 
+        //                + stratum.Code + " counts");
+        //            success = false;
+        //        }
+        //    }
+        //    return success;
+        //}
+
+
+        //private void PopulateStrata()
+        //{
+        //    foreach (StratumVM stratum in this.Strata)
+        //    {
+        //        if (stratum.Method == CruiseDAL.Schema.Constants.CruiseMethods.H_PCT) { continue; }
+        //        //if ((Controller.GetStrataDataEntryMode(stratum) & DataEntryMode.Plot) 
+        //        //    == DataEntryMode.Plot) { continue; }
+
+        //        Button strataButton = new Button();
+        //        Panel tallyContainer = new Panel();
+        //        //StratumInfo stratumInfo = new StratumInfo(stratum);
+        //        //stratum.TallyContainer = tallyContainer;
+        //        //Strata.Add(stratumInfo);
+        //        //tallyContainer.SuspendLayout();
+        //        //strataButton.SuspendLayout();
+
+        //        tallyContainer.Dock = DockStyle.Top;
+        //        tallyContainer.Visible = false;
+        //        tallyContainer.Parent = _leftContentPanel;
+        //        tallyContainer.Tag = stratum;
                 
-                strataButton.Height = 25;
-                strataButton.BackColor = System.Drawing.Color.FromArgb(0x2F, 0x4F, 0x4F); //Color.DarkSlateGray;// DarkGray;// Green;System.Drawing.Color.FromArgb(0x2F, 0x4F, 0x4F);
-                strataButton.ForeColor = Color.White;
-                strataButton.Text = ApplicationController.GetStratumInfoShort(stratum);
-                if (stratum.Hotkey != null && stratum.Hotkey.Length > 0)
-                {
-                    strataButton.Text += "[" + stratum.Hotkey.Substring(0, 1) + "]";
-                }
+        //        strataButton.Height = 25;
+        //        strataButton.BackColor = System.Drawing.Color.FromArgb(0x2F, 0x4F, 0x4F); //Color.DarkSlateGray;// DarkGray;// Green;System.Drawing.Color.FromArgb(0x2F, 0x4F, 0x4F);
+        //        strataButton.ForeColor = Color.White;
+        //        strataButton.Text = stratum.GetDescriptionShort();
+        //        if (stratum.Hotkey != null && stratum.Hotkey.Length > 0)
+        //        {
+        //            strataButton.Text += "[" + stratum.Hotkey.Substring(0, 1) + "]";
+        //        }
 
-                strataButton.Click += new EventHandler(strataButton_Click);
-                strataButton.Dock = DockStyle.Top;
-                FMSC.Controls.DpiHelper.AdjustControl(strataButton);
-                strataButton.Parent = _leftContentPanel;
-                strataButton.Tag = stratum;
+        //        strataButton.Click += new EventHandler(strataButton_Click);
+        //        strataButton.Dock = DockStyle.Top;
+        //        FMSC.Controls.DpiHelper.AdjustControl(strataButton);
+        //        strataButton.Parent = _leftContentPanel;
+        //        strataButton.Tag = stratum;
 
-                DataEntryMode mode = Controller.GetStrataDataEntryMode(stratum);
-                this.DataEntryController.PopulateTallies(stratum, mode, unit, tallyContainer, this);
-                //AdjustPanelHeight(tallyContainer);
+        //        StrataViews.Add(stratum, tallyContainer);
 
-                if (string.IsNullOrEmpty(stratum.Hotkey) == false)
-                {
-                    StrataHotKeyLookup.Add(char.ToUpper(stratum.Hotkey[0]), stratum);
-                }
-            }
+        //        DataEntryMode mode = stratum.GetDataEntryMode();
+        //        this.DataEntryController.PopulateTallies(stratum
+        //            , mode
+        //            , DataEntryController.Unit
+        //            , tallyContainer
+        //            , this);
 
-            //foreach (Control c in _leftContentPanel.Controls)
-            //{
-            //    c.ResumeLayout(false);
-            //}
-        }
+        //        //AdjustPanelHeight(tallyContainer);
+
+        //        if (string.IsNullOrEmpty(stratum.Hotkey) == false)
+        //        {
+        //            StrataHotKeyLookup.Add(char.ToUpper(stratum.Hotkey[0]), stratum);
+        //        }
+        //    }
+
+        //    //foreach (Control c in _leftContentPanel.Controls)
+        //    //{
+        //    //    c.ResumeLayout(false);
+        //    //}
+        //}
 
         //private void PopulateTallies(Panel control, CuttingUnitDO unit, StratumDO stratum)
         //{
@@ -143,79 +179,68 @@ namespace FSCruiser.WinForms.DataEntry
         //    this.Counts.AddRange(counts);
         //}
 
-        public void HandleLoad()
-        {
-           
+        //public void HandleLoad()
+        //{
+        //    _BS_tallyHistory.DataSource = DataEntryController.Unit.TallyHistoryBuffer;
+        //    this._viewLoading = false;
+        //}
 
-            _BS_tallyHistory.DataSource = Controller.TallyHistory;
-            this._viewLoading = false;
-        }
+        //private void DisplayTallyPanel(StratumVM stratumInfo)
+        //{
+        //    System.Diagnostics.Debug.Assert(StrataViews.ContainsKey(stratumInfo));
+        //    if (!StrataViews.ContainsKey(stratumInfo)) { return; }
 
-        private void DisplayTallyPanel(StratumVM stratumInfo)
-        {
-            Panel tallyContainer = (Panel)stratumInfo.TallyContainer;
+        //    Panel tallyContainer = StrataViews[stratumInfo];
 
-            if (_visableTallyPanel != null && _visableTallyPanel == tallyContainer && tallyContainer.Visible == true)
-            {
-                tallyContainer.Visible = false;
-                this.SelectedStratum = null; 
-                _visableTallyPanel = null;
-                return;
-            }
-            else if (_visableTallyPanel != null && _visableTallyPanel != tallyContainer)
-            {
-                _visableTallyPanel.Visible = false;
-
-            }
-
-            if (tallyContainer == _visableTallyPanel) { return; }
-            _visableTallyPanel = tallyContainer;
-            //HotKeyLookup.Clear();
-            //foreach (Control c in tallyContainer.Controls)
-            //{
-            //    TallyRow row = c as TallyRow;
-            //    if (row != null)
-            //    {
-            //        CountTreeDO count = (CountTreeDO)row.Tag;
-            //        char hotkey = count.Tally.Hotkey[0];
-            //        HotKeyLookup.Add(hotkey, count);
-            //    }
-            //}
-            //if (tallyContainer.Controls.Count == 0)
-            //{
-            //    StratumDO stratum = (StratumDO)tallyContainer.Tag;
-            //    tallyContainer.SuspendLayout();
-            //    PopulateTallies(tallyContainer, Unit, stratum);
+        //    // if strata is already displayed 
+        //    if (_visableTallyPanel != null 
+        //        && _visableTallyPanel == tallyContainer 
+        //        && tallyContainer.Visible == true)
+        //    {
+        //        // toggle off visability
+        //        _visableTallyPanel.Visible = false;
+        //        this.SelectedStratum = null; 
+        //        _visableTallyPanel = null;
+        //        return;
+        //    }
+        //    else if (_visableTallyPanel != null
+        //        && _visableTallyPanel != tallyContainer)
+        //    {
+        //        // hide current stratum
+        //        _visableTallyPanel.Visible = false;
+        //    }
             
-            //AdjustPanelHeight(tallyContainer);
-            //    tallyContainer.ResumeLayout(true);
-            //}
-            this.SelectedStratum = stratumInfo;
-            tallyContainer.Visible = true;
-        }
+        //    this.SelectedStratum = stratumInfo;
+        //    _visableTallyPanel = tallyContainer;
+        //    if (_visableTallyPanel != null)
+        //    {
+        //        _visableTallyPanel.Visible = true;
+        //    }
 
-        public void HandleStratumLoaded(Control container)
-        {
-            if (container.InvokeRequired)
-            {
-                Action<Panel> a = new Action<Panel>(AdjustPanelHeight);
-                container.Invoke(a, container);
-            }
-            else
-            {
-                this.AdjustPanelHeight((Panel)container);
-            }
-        }
+        //}
 
-        private void AdjustPanelHeight(Panel panel)
-        {
-            int totalChildHeight = 0;
-            foreach (Control c in panel.Controls)
-            {
-                totalChildHeight += c.Height;
-            }
-            panel.Height = totalChildHeight;
-        }
+        //public void HandleStratumLoaded(Control container)
+        //{
+        //    if (container.InvokeRequired)
+        //    {
+        //        Action<Panel> a = new Action<Panel>(AdjustPanelHeight);
+        //        container.Invoke(a, container);
+        //    }
+        //    else
+        //    {
+        //        this.AdjustPanelHeight((Panel)container);
+        //    }
+        //}
+
+        //private void AdjustPanelHeight(Panel panel)
+        //{
+        //    int totalChildHeight = 0;
+        //    foreach (Control c in panel.Controls)
+        //    {
+        //        totalChildHeight += c.Height;
+        //    }
+        //    panel.Height = totalChildHeight;
+        //}
 
 
         //public SampleSelecter MakeSampleSelecter(CountTreeDO count, DataEntryMode mode)
@@ -256,35 +281,35 @@ namespace FSCruiser.WinForms.DataEntry
         //    return selecter;
         //}
 
-        public Control MakeTallyRow(Control container, CountTreeVM count)
-        {
-            TallyRow row = new TallyRow();
-            row.SuspendLayout();
-            row.DiscriptionLabel.Text = count.Tally.Description;
-            row.TallyButton.Click += new EventHandler(TallyButton_Click);
-            row.SettingsButton.Click += new EventHandler(SettingsButton_Click);
-            if (count.Tally.Hotkey != null && count.Tally.Hotkey.Length > 0)
-            {
-                row.HotKeyLabel.Text = count.Tally.Hotkey.Substring(0, 1);
-            }
+        //public override Control MakeTallyRow(Control container, CountTreeVM count)
+        //{
+        //    TallyRow row = new TallyRow();
+        //    row.SuspendLayout();
+        //    row.DiscriptionLabel.Text = count.Tally.Description;
+        //    row.TallyButton.Click += new EventHandler(base.OnTallyButtonClicked);
+        //    row.SettingsButton.Click += new EventHandler(base.OnTallySettingsClicked);
+        //    if (count.Tally.Hotkey != null && count.Tally.Hotkey.Length > 0)
+        //    {
+        //        row.HotKeyLabel.Text = count.Tally.Hotkey.Substring(0, 1);
+        //    }
 
-            row.TallyButton.DataBindings.Add(new Binding("Text", count, "TreeCount"));
+        //    row.TallyButton.DataBindings.Add(new Binding("Text", count, "TreeCount"));
 
-            row.Count = count;
-            row.Parent = container;
+        //    row.Count = count;
+        //    row.Parent = container;
 
 
-            row.Dock = DockStyle.Top;
-            row.ResumeLayout(false);
-            return row;
-        }
+        //    row.Dock = DockStyle.Top;
+        //    row.ResumeLayout(false);
+        //    return row;
+        //}
 
-        public Control MakeTallyRow(Control container, SubPop subPop)
+        public override Control MakeTallyRow(Control container, SubPop subPop)
         {
             Button tallyButton = new Button();
             tallyButton.SuspendLayout();
             tallyButton.Text = subPop.TDV.Species;
-            tallyButton.Click += new EventHandler(SpeciesButton_Click);
+            tallyButton.Click += new EventHandler(base.OnSpeciesButtonClick);
             tallyButton.Tag = subPop;
             tallyButton.Parent = container;
             tallyButton.Dock = DockStyle.Top;
@@ -292,7 +317,7 @@ namespace FSCruiser.WinForms.DataEntry
             return tallyButton;
         }
 
-        public void MakeSGList(List<SampleGroupVM> list, Panel container)
+        public override void MakeSGList(List<SampleGroupVM> list, Panel container)
         {
             if (list.Count == 1)
             {
@@ -331,51 +356,52 @@ namespace FSCruiser.WinForms.DataEntry
 
                     sgButton.Parent = container;
                     sgButton.Dock = DockStyle.Top;
-                    sgButton.Click += new EventHandler(sgButton_Click);
+                    sgButton.Click += new EventHandler(base.OnSgButtonClick);
                 }
             }
         }
 
-        void sgButton_Click(object sender, EventArgs e)
-        {
-            Button sgButton = (Button)sender;
-            Panel spContainer = (Panel)sgButton.Tag;
-            spContainer.Visible = !spContainer.Visible;
-        }
+        //void sgButton_Click(object sender, EventArgs e)
+        //{
+        //    Button sgButton = (Button)sender;
+        //    Panel spContainer = (Panel)sgButton.Tag;
+        //    spContainer.Visible = !spContainer.Visible;
+        //}
 
-        void SpeciesButton_Click(object sender, EventArgs e)
-        {
-            if (_viewLoading) { return; }
-            Button button = (Button)sender;
-            SubPop subPop = (SubPop)button.Tag;
-            TreeDO tree;
-            tree = Controller.CreateNewTreeEntry(Controller.CurrentUnit, subPop.SG.Stratum, subPop.SG, subPop.TDV, null, true);
+        //void SpeciesButton_Click(object sender, EventArgs e)
+        //{
+        //    if (_viewLoading) { return; }
+        //    Button button = (Button)sender;
+        //    SubPop subPop = (SubPop)button.Tag;
 
-            tree.TreeCount = 1;
-            //tree.CountOrMeasure = "M";
-            DataEntryForm.GotoTreePage();
-            Controller.OnTally();
-        }
+        //    var tree = DataEntryController.Unit.CreateNewTreeEntry(subPop.SG.Stratum, subPop.SG, subPop.TDV, true);
+        //    tree.TreeCount = 1;
 
-        public bool HandleHotKeyFirst(char key)
-        {
-            key = char.ToUpper(key);
-            if (StrataHotKeyLookup.ContainsKey(key))
-            {
-                DisplayTallyPanel(StrataHotKeyLookup[key]);
-                return true;
-            }
-            return false;
+        //    this.Controller.ViewController.ShowCruiserSelection(tree);
+
+        //    DataEntryController.Unit.AddNonPlotTree(tree);
+        //    DataEntryForm.GotoTreePage();
+        //}
+
+        //public bool HandleHotKeyFirst(char key)
+        //{
+        //    key = char.ToUpper(key);
+        //    if (StrataHotKeyLookup.ContainsKey(key))
+        //    {
+        //        DisplayTallyPanel(StrataHotKeyLookup[key]);
+        //        return true;
+        //    }
+        //    return false;
 
             
-            //return Controller.ProcessHotKey(key, this);
-        }
+        //    //return Controller.ProcessHotKey(key, this);
+        //}
 
-        public bool HandleEscKey()
-        {
-            this.DataEntryController.View.GotoTreePage();
-            return true; 
-        }
+        //public bool HandleEscKey()
+        //{
+        //    this.DataEntryController.View.GotoTreePage();
+        //    return true; 
+        //}
 
         //public bool HandleKeyUp(char key)
         //{
@@ -396,12 +422,12 @@ namespace FSCruiser.WinForms.DataEntry
             
         //}
 
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
-            base.OnKeyUp(e);
-            char key = (char)e.KeyValue;
-            e.Handled = this.DataEntryController.ProcessHotKey(key, this);
-        }
+        //protected override void OnKeyUp(KeyEventArgs e)
+        //{
+        //    base.OnKeyUp(e);
+        //    char key = (char)e.KeyValue;
+        //    e.Handled = this.DataEntryController.ProcessHotKey(key, this);
+        //}
 
 
 
@@ -417,139 +443,139 @@ namespace FSCruiser.WinForms.DataEntry
 
         //}
 
-        private void _untallyButton_Click(object sender, EventArgs e)
-        {
-            if (_viewLoading) { return; }
-            if (MessageBox.Show("Are you sure you want to untally the selected record?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
-                == DialogResult.No) { return; }
+        //private void _untallyButton_Click(object sender, EventArgs e)
+        //{
+        //    if (_viewLoading) { return; }
+        //    if (MessageBox.Show("Are you sure you want to untally the selected record?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
+        //        == DialogResult.No) { return; }
 
-            TallyAction selectedAction = _BS_tallyHistory.Current as TallyAction;
-            Controller.Untally(selectedAction);
-        }
+        //    TallyAction selectedAction = _BS_tallyHistory.Current as TallyAction;
+        //    DataEntryController.Unit.TallyHistoryBuffer.Remove(selectedAction);
+        //}
 
-        void strataButton_Click(object sender, EventArgs e)
-        {
-            Button strataButton = (Button)sender;
-            StratumVM stratumInfo = (StratumVM)strataButton.Tag;
+        //void strataButton_Click(object sender, EventArgs e)
+        //{
+        //    Button strataButton = (Button)sender;
+        //    StratumVM stratumInfo = (StratumVM)strataButton.Tag;
             
 
-            //if (_visableTallyPanel != null && _visableTallyPanel == tallyContainer && tallyContainer.Visible == true)
-            //{
-            //    tallyContainer.Visible = false;
-            //    _visableTallyPanel = null;
-            //    return;
-            //}
-            //else if (_visableTallyPanel != null && _visableTallyPanel != tallyContainer)
-            //{
-            //    _visableTallyPanel.Visible = false;
+        //    //if (_visableTallyPanel != null && _visableTallyPanel == tallyContainer && tallyContainer.Visible == true)
+        //    //{
+        //    //    tallyContainer.Visible = false;
+        //    //    _visableTallyPanel = null;
+        //    //    return;
+        //    //}
+        //    //else if (_visableTallyPanel != null && _visableTallyPanel != tallyContainer)
+        //    //{
+        //    //    _visableTallyPanel.Visible = false;
 
-            //}
+        //    //}
 
-            DisplayTallyPanel(stratumInfo);
+        //    DisplayTallyPanel(stratumInfo);
 
-        }
+        //}
 
-        void SettingsButton_Click(object sender, EventArgs e)
-        {
-            Button settingsbutton = (Button)sender; 
-            TallyRow row = (TallyRow)settingsbutton.Parent;
-            CountTreeVM count = (CountTreeVM)row.Count;
-            Controller.ViewController.ShowTallySettings(count);
-            row.DiscriptionLabel.Text = count.Tally.Description;
-        }
+        //void SettingsButton_Click(object sender, EventArgs e)
+        //{
+        //    Button settingsbutton = (Button)sender; 
+        //    TallyRow row = (TallyRow)settingsbutton.Parent;
+        //    CountTreeVM count = (CountTreeVM)row.Count;
+        //    Controller.ViewController.ShowTallySettings(count);
+        //    row.DiscriptionLabel.Text = count.Tally.Description;
+        //}
 
-        void TallyButton_Click(object sender, EventArgs e)
-        {
-            Control button = (Control)sender;
-            TallyRow row = (TallyRow)button.Parent;
-            CountTreeVM count = (CountTreeVM)row.Count;
-            OnTally(count);
-        }
+        //void TallyButton_Click(object sender, EventArgs e)
+        //{
+        //    Control button = (Control)sender;
+        //    TallyRow row = (TallyRow)button.Parent;
+        //    CountTreeVM count = (CountTreeVM)row.Count;
+        //    OnTally(count);
+        //}
 
-        public void OnTally(CountTreeVM count)
-        {
-            if (_viewLoading) { return; }
-            this.DataEntryController.OnTally(count);
-            this._BS_tallyHistory.MoveLast();
+        //public void OnTally(CountTreeVM count)
+        //{
+        //    if (_viewLoading) { return; }
+        //    this.DataEntryController.OnTally(count);
+        //    this._BS_tallyHistory.MoveLast();
 
-            //SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Tag;
-            //TallyAction action = new TallyAction(count);
+        //    //SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Tag;
+        //    //TallyAction action = new TallyAction(count);
 
-            //DataEntryMode mode = Controller.GetStrataDataEntryMode(count.SampleGroup.Stratum);
-            //if ((mode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP)
-            //{
+        //    //DataEntryMode mode = Controller.GetStrataDataEntryMode(count.SampleGroup.Stratum);
+        //    //if ((mode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP)
+        //    //{
 
-            //    int kpi = 0;
-            //    int? value = Controller.GetKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
-            //    if (value == null)
-            //    {
-            //        MessageBox.Show("No Value Entered");
-            //        return;
-            //    }
-            //    else
-            //    {
-            //        kpi = value.Value;
-            //    }
-            //    if (kpi == -1)
-            //    {
-            //        TreeVM tree;
-            //        tree = Controller.CreateNewTreeEntry(count);
-            //        tree.STM = "Y";
-            //        Controller.TrySaveTree(tree);
-            //        action.TreeRecord = tree;
-            //    }
-            //    else
-            //    {
-            //        action.KPI = kpi;
-            //        count.SumKPI += kpi;
-            //        ThreePItem item = (ThreePItem)((ThreePSelecter)sampler).NextItem();
-            //        if (item != null && kpi > item.KPI)
-            //        {
-            //            if (sampler.IsSelectingITrees)
-            //            {
-            //                item.IsInsuranceItem = sampler.InsuranceCounter.Next();
-            //            }
-            //            if (item.IsInsuranceItem)
-            //            {
-            //                Controller.ViewController.SignalInsuranceTree();
+        //    //    int kpi = 0;
+        //    //    int? value = Controller.GetKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
+        //    //    if (value == null)
+        //    //    {
+        //    //        MessageBox.Show("No Value Entered");
+        //    //        return;
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        kpi = value.Value;
+        //    //    }
+        //    //    if (kpi == -1)
+        //    //    {
+        //    //        TreeVM tree;
+        //    //        tree = Controller.CreateNewTreeEntry(count);
+        //    //        tree.STM = "Y";
+        //    //        Controller.TrySaveTree(tree);
+        //    //        action.TreeRecord = tree;
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        action.KPI = kpi;
+        //    //        count.SumKPI += kpi;
+        //    //        ThreePItem item = (ThreePItem)((ThreePSelecter)sampler).NextItem();
+        //    //        if (item != null && kpi > item.KPI)
+        //    //        {
+        //    //            if (sampler.IsSelectingITrees)
+        //    //            {
+        //    //                item.IsInsuranceItem = sampler.InsuranceCounter.Next();
+        //    //            }
+        //    //            if (item.IsInsuranceItem)
+        //    //            {
+        //    //                Controller.ViewController.SignalInsuranceTree();
 
-            //                TreeVM tree;
-            //                tree = Controller.CreateNewTreeEntry(count);
-            //                tree.KPI = kpi;
-            //                tree.CountOrMeasure = "I";
-            //                Controller.TrySaveTree(tree);
-            //                action.TreeRecord = tree;
-            //            }
-            //            else
-            //            {
-            //                OnSample(action, count, kpi);
-            //            }
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    boolItem item = (boolItem)sampler.NextItem();
-            //    if (item != null && item.IsInsuranceItem)
-            //    {
-            //        Controller.ViewController.SignalInsuranceTree();
-            //        TreeVM tree;
-            //        tree = Controller.CreateNewTreeEntry(count);
-            //        tree.CountOrMeasure = "I";
-            //        Controller.TrySaveTree(tree);
-            //        action.TreeRecord = tree; 
-            //    }
-            //    else if (item != null)
-            //    {
-            //        OnSample(action, count);
-            //    }
-            //}
+        //    //                TreeVM tree;
+        //    //                tree = Controller.CreateNewTreeEntry(count);
+        //    //                tree.KPI = kpi;
+        //    //                tree.CountOrMeasure = "I";
+        //    //                Controller.TrySaveTree(tree);
+        //    //                action.TreeRecord = tree;
+        //    //            }
+        //    //            else
+        //    //            {
+        //    //                OnSample(action, count, kpi);
+        //    //            }
+        //    //        }
+        //    //    }
+        //    //}
+        //    //else
+        //    //{
+        //    //    boolItem item = (boolItem)sampler.NextItem();
+        //    //    if (item != null && item.IsInsuranceItem)
+        //    //    {
+        //    //        Controller.ViewController.SignalInsuranceTree();
+        //    //        TreeVM tree;
+        //    //        tree = Controller.CreateNewTreeEntry(count);
+        //    //        tree.CountOrMeasure = "I";
+        //    //        Controller.TrySaveTree(tree);
+        //    //        action.TreeRecord = tree; 
+        //    //    }
+        //    //    else if (item != null)
+        //    //    {
+        //    //        OnSample(action, count);
+        //    //    }
+        //    //}
 
-            //count.TreeCount++;
-            //Controller.AddTallyAction(action);
-            //this._BS_tallyHistory.MoveLast();
-            //Controller.OnTally();
-        }
+        //    //count.TreeCount++;
+        //    //Controller.AddTallyAction(action);
+        //    //this._BS_tallyHistory.MoveLast();
+        //    //Controller.OnTally();
+        //}
 
 
         //void OnSample(TallyAction action, CountTreeDO count, int kpi)

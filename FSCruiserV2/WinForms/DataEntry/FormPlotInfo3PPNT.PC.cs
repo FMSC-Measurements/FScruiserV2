@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using FMSC.Sampling;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using CruiseDAL.DataObjects;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -81,6 +82,12 @@ namespace FSCruiser.WinForms.DataEntry
         }
         #endregion
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            this._kz_lbl.Text = CurrentPlotInfo.Stratum.KZ3PPNT.ToString();
+        }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
@@ -106,18 +113,45 @@ namespace FSCruiser.WinForms.DataEntry
             ThreePItem item = (ThreePItem)base.CurrentPlotInfo.Stratum.SampleSelecter.NextItem();
             if (this.KPI >= item.KPI)
             {
+                CreateTrees();
                 SignalMeasurePlot();
-                for (int i = 0; i < this.TreeCount; i++)
-                {
-                    TreeVM tree = Controller.CreateNewTreeEntry(null, base.CurrentPlotInfo.Stratum, null, null, base.CurrentPlotInfo, false);
-                    tree.TreeCount = 1;
-                    tree.CountOrMeasure = "M";
-                    tree.TreeNumber = i + 1; 
-                    base.CurrentPlotInfo.Trees.Add(tree);
-                }
             }
 
 
+        }
+
+        private void CreateTrees()
+        {
+            TreeVM[] newTrees = new TreeVM[this.TreeCount];
+            lock (CurrentPlotInfo.DAL.TransactionSyncLock)
+            {
+                CurrentPlotInfo.DAL.BeginTransaction();
+                try
+                {
+
+                    for (long i = 0; i < this.TreeCount; i++)
+                    {
+                        TreeVM t = CurrentPlotInfo.CreateNewTreeEntry((SampleGroupVM)null, (TreeDefaultValueDO)null, false);
+                        t.TreeCount = 1;
+                        t.CountOrMeasure = "M";
+                        t.TreeNumber = i + 1;
+                        newTrees[i] = t;
+                        t.Save();
+                    }
+                    CurrentPlotInfo.DAL.CommitTransaction();
+                }
+                catch (Exception e)
+                {
+                    CurrentPlotInfo.DAL.RollbackTransaction();
+                    throw e;
+                }
+            }
+
+            foreach (TreeVM tree in newTrees)
+            {
+                this.CurrentPlotInfo.AddTree(tree);
+                //this._currentPlotInfo.Trees.Add(tree);
+            }
         }
 
         private void SignalMeasurePlot()
@@ -143,7 +177,14 @@ namespace FSCruiser.WinForms.DataEntry
             if (_blockTBClick == true) { return; }
             _blockTBClick = true;
 
-            this.AverageHgt = (int)(Controller.ShowNumericValueInput(0, 999, (this.AverageHgt <= 0) ? (int?)null : (int?)this.AverageHgt, true) ?? -1);
+            var viewController = this.Controller.ViewController;
+
+            int? initialValue = (this.AverageHgt <= 0) ? (int?)null : (int?)this.AverageHgt;
+            viewController.NumPadDialog.ShowDialog(0, 999, initialValue, true);
+            TreeCount = viewController.NumPadDialog.UserEnteredValue ?? -1;
+
+            //this.AverageHgt = (int)(ViewController.ShowNumericValueInput(0, 999, (this.AverageHgt <= 0) ? (int?)null : (int?)this.AverageHgt, true) ?? -1);
+
             CalculateKPI();
             _blockTBClick = false;
         }
@@ -153,10 +194,17 @@ namespace FSCruiser.WinForms.DataEntry
             if (_blockTBClick == true) { return; }
             _blockTBClick = true;
 
+            var viewController = this.Controller.ViewController;
 
-            this.TreeCount = (int)(Controller.ShowNumericValueInput(0, 999, (this.TreeCount <= 0) ? (int?)null : (int?)this.TreeCount, true) ?? -1);
+            int? initialValue = (this.TreeCount <= 0) ? (int?)null : (int?)this.TreeCount;
+            viewController.NumPadDialog.ShowDialog(0, 999, initialValue, true);
+            TreeCount = viewController.NumPadDialog.UserEnteredValue ?? -1;
+
+            //this.TreeCount = (int)(Controller.ShowNumericValueInput(0, 999, (this.TreeCount <= 0) ? (int?)null : (int?)this.TreeCount, true) ?? -1);
             CalculateKPI();
             _blockTBClick = false;
         }
+
+      
     }
 }

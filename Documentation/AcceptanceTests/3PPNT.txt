@@ -1,0 +1,49 @@
+Feature: 3PPNT tally
+    3PPNT is a plot based cruising method where a KPI is estimated for the plot, 
+    and based on that the plot is determined to either be in or out. 
+    When a plot is in, a tree record is created for all the trees in the plot. 
+
+Given the folowing strata exist:
+    |code   |method |baf    |KZ |
+    |01     |3PPNT  |35     |100|
+    
+WHEN the user adds a plot 
+THEN the 3PPNT plot screen show
+AND the displayed KZ is 100
+
+GIVEN the user is adding a 3PPNT plot
+AND the 3PPNT screen is displayed
+THEN the volumn factor textbox is disabled
+AND the tree count textbox is enabled
+AND the Average height textbox is enabled
+AND the KPI displayed is blank
+
+GIVEN the user is adding a 3PPNT plot
+AND the 3PPNT screen is displayed
+AND volume factor show .333
+WHEN the user enters 10 for the tree count
+AND 30 for the average height
+THEN tree count shows 10 
+AND average height shows 30
+AND KPI shows 3496 = 10 * 30 * baf(35) * .333 
+
+GIVEN the user enters a tree count of 10 
+WHEN the user gets a measure plot
+THEN the message "measure plot" is displayed
+AND a plot containing 10 tree is added
+
+GIVEN the user enters a tree count of 10 
+AND the plot number is n
+WHEN the user gets a count plot
+THEN the message "count plot" is displayed 
+AND a plot containing 0 tree is added
+AND the 3PPNT screen is redisplayed with plot number n + 1
+
+//unsupported?
+GIVEN a plot is selected
+WHEN the user clicks the plot info button 
+THEN the 3PPNT plot screen is displayed     //fail
+AND the tree count textbox is disabled
+AND the Average height textbox is disabled
+
+

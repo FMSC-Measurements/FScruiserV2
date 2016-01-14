@@ -12,6 +12,15 @@ namespace FSCruiser.WinForms
 {
     public static class DataGridAdjuster
     {
+        private static LogFieldSetupDO[] _defaultLogFields = new LogFieldSetupDO[]{
+            new LogFieldSetupDO(){
+                Field = CruiseDAL.Schema.LOG.LOGNUMBER, Heading = "LogNum", FieldOrder = 1, ColumnType = "Text" },
+            new LogFieldSetupDO(){
+                Field = CruiseDAL.Schema.LOG.GRADE, Heading = "Grade", FieldOrder = 2, ColumnType = "Text"},
+            new LogFieldSetupDO() {
+                Field = CruiseDAL.Schema.LOG.SEENDEFECT, Heading = "PctSeenDef", FieldOrder = 3, ColumnType = "Text"}
+        };
+
         public static List<TreeFieldSetupDO> GetTreeFieldSetupByStratum(DAL dal, long stratum_cn)
         {
             //   return base.DAL.Read<TreeFieldSetupDO>(TREEFIELDSETUP._NAME, TREEFIELDSETUP.STRATUM_CN + " = ?", new string[] { stratum_cn });
@@ -49,7 +58,7 @@ namespace FSCruiser.WinForms
                 fieldSetups.AddRange(Constants.DEFAULT_TREE_FIELDS);
             }
 
-            bool isPlotLayout = stratum != null && (Array.IndexOf(CruiseDAL.Schema.Constants.CruiseMethods.PLOT_METHODS, stratum.Method) >= 0);
+            bool isPlotLayout = stratum != null && (Array.IndexOf(CruiseDAL.Schema.CruiseMethods.PLOT_METHODS, stratum.Method) >= 0);
             if(isPlotLayout  && fieldSetups.FindIndex(((tfs) => tfs.Field == CruiseDAL.Schema.TREE.COUNTORMEASURE)) < 0)
             {
                 fieldSetups.Insert(5, new TreeFieldSetupDO() { Field = CruiseDAL.Schema.TREE.COUNTORMEASURE, Heading = "C/M" });
@@ -189,6 +198,21 @@ namespace FSCruiser.WinForms
                 columns.Add(col);
             }
 
+            columns.Add(new DataGridViewButtonColumn()
+            {
+                Name = "Logs",
+                HeaderText = "Logs",
+                DataPropertyName = "LogCount"
+            });
+
+            //columns.Add(new DataGridViewTextBoxColumn()
+            //{
+            //    Name = "Error",
+            //    HeaderText = "Error",
+            //    DataPropertyName = "Error",
+                
+            //});
+
             return columns.ToArray();
         }
 
@@ -226,6 +250,44 @@ namespace FSCruiser.WinForms
                     }
             }//end switch
         }//end method
+
+        public static List<DataGridViewColumn> MakeLogColumns(DAL dal, long stratum_CN)
+        {
+            List<LogFieldSetupDO> fieldSetups = dal.Read<LogFieldSetupDO>("WHERE Stratum_CN = ? ORDER BY FieldOrder"
+                , (object)stratum_CN);
+
+            if (fieldSetups.Count == 0)
+            {
+                fieldSetups.AddRange(_defaultLogFields);
+            }
+
+            List<DataGridViewColumn> columns = new List<DataGridViewColumn>();
+
+            foreach (LogFieldSetupDO field in fieldSetups)
+            {
+                var col = MakeColumn(field.ColumnType);
+                col.DataPropertyName = field.Field;
+                col.HeaderText = field.Heading;
+
+                if(!string.IsNullOrEmpty(field.Format))                                // AND field has format 
+                {
+                    col.DefaultCellStyle = new DataGridViewCellStyle()
+                        {
+                            Format = field.Format
+                        };
+                }
+
+
+
+
+                columns.Add(col);
+            }
+
+
+            return columns;
+
+        }
+
     }//end class
 
 

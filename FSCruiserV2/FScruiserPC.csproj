@@ -66,20 +66,29 @@
     <Compile Include="Core\CountTreeExtensions.cs" />
     <Compile Include="Core\DataEntry\FomrDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
+    <Compile Include="Core\Exceptions.cs" />
     <Compile Include="Core\FormCruiserSelection.Logic.cs" />
     <Compile Include="Core\IApplicationController.cs" />
     <Compile Include="Core\IViewController.cs" />
+    <Compile Include="Core\LoadCuttingUnitWorker.cs" />
     <Compile Include="Core\Models\CountTreeVM.cs" />
     <Compile Include="Core\Models\CruiserVM.cs" />
     <Compile Include="Core\Models\CuttingUnitInfo.cs" />
+    <Compile Include="Core\Models\DataEntryMode.cs" />
+    <Compile Include="Core\Models\DataModelExtensions.cs" />
+    <Compile Include="Core\Models\ITreeContaningModel.cs" />
     <Compile Include="Core\Models\PlotInfo.cs" />
+    <Compile Include="Core\Models\PlotStratum.cs" />
     <Compile Include="Core\Models\SampleGroupVM.cs" />
     <Compile Include="Core\Models\StratumInfo.cs" />
     <Compile Include="Core\Models\SubPopInfo.cs" />
     <Compile Include="Core\Models\TallyAction.cs" />
+    <Compile Include="Core\Models\TallyHistoryCollection.cs" />
     <Compile Include="Core\Models\TallySettingsDO.cs" />
     <Compile Include="Core\Models\TreeVM.cs" />
     <Compile Include="Core\ApplicationSettings.cs" />
+    <Compile Include="Core\SaveTreesWorker.cs" />
+    <Compile Include="Core\TreeValidationWorker.cs" />
     <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
     <Compile Include="Core\ViewInterfaces\IDataEntryPage.cs" />
     <Compile Include="Core\ViewInterfaces\IDataEntryView.cs" />
@@ -89,18 +98,24 @@
     <Compile Include="Core\ViewInterfaces\IPlotLayout.cs" />
     <Compile Include="Core\ViewInterfaces\ITallyView.cs" />
     <Compile Include="Core\ViewInterfaces\ITreeView.cs" />
+    <Compile Include="WinForms.Common\FormCruiserSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FormCruiserSelection.Designer.cs">
+      <DependentUpon>FormCruiserSelection.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms.Common\FormDataEntryBase.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\TreeBasedTallyView_Base.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\TreeBasedTallyView_Base.Designer.cs">
+      <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms.Common\ViewController_Base.cs" />
     <Compile Include="WinForms\DataEntry\ControlTreeDataGrid.PC.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="WinForms\CruiserSelectionView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms\CruiserSelectionView.Designer.cs">
-      <DependentUpon>CruiserSelectionView.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms\CuttingUnitSelectView.cs">
       <SubType>UserControl</SubType>
@@ -114,6 +129,13 @@
     <Compile Include="WinForms\DataEntry\Form3PNumPad.PC.Designer.cs">
       <DependentUpon>Form3PNumPad.PC.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinForms\DataEntry\FormLogs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\DataEntry\FormLogs.Designer.cs">
+      <DependentUpon>FormLogs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\DataGridExtentions.cs" />
     <Compile Include="WinForms\FormAbout.PC.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -181,12 +203,14 @@
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="WinForms\ViewController.PC.cs" />
     <Compile Include="Properties\AssemblyInfo.PC.cs" />
+    <EmbeddedResource Include="WinForms.Common\FormCruiserSelection.resx">
+      <DependentUpon>FormCruiserSelection.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormDataEntryBase.resx">
       <DependentUpon>FormDataEntryBase.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\CruiserSelectionView.resx">
-      <DependentUpon>CruiserSelectionView.cs</DependentUpon>
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="WinForms.Common\TreeBasedTallyView_Base.resx">
+      <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\CuttingUnitSelectView.resx">
       <DependentUpon>CuttingUnitSelectView.cs</DependentUpon>
@@ -195,6 +219,9 @@
     <EmbeddedResource Include="WinForms\DataEntry\Form3PNumPad.PC.resx">
       <DependentUpon>Form3PNumPad.PC.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\DataEntry\FormLogs.resx">
+      <DependentUpon>FormLogs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\FormAbout.PC.resx">
       <DependentUpon>FormAbout.PC.cs</DependentUpon>
@@ -251,6 +278,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Core\FSCruiser.Core.cd" />
+    <None Include="Core\Models\FMSC.Core.Models.cd" />
     <None Include="Core\ViewInterfaces\FSCruiser.Core.ViewInterfaces.cd" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.TreeDO.datasource" />
@@ -273,6 +301,10 @@
     <ProjectReference Include="..\CruiseDAL\CruiseDAL\CruiseDAL_FF35.csproj">
       <Project>{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}</Project>
       <Name>CruiseDAL_FF35</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CruiseDAL\FMSC.ORM\FMSC.ORM.Net35.csproj">
+      <Project>{0452719F-1CAA-4959-B00C-AB8B1C438571}</Project>
+      <Name>FMSC.ORM.Net35</Name>
     </ProjectReference>
     <ProjectReference Include="..\FMSC.Controls\FMSC.Controls\FMSC.Controls.VS08.csproj">
       <Project>{83CCFC7F-D667-4550-B335-B48C2F67A207}</Project>
@@ -310,6 +342,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="FMSC_Logo.jpg" />
     <Content Include="fscruiser.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

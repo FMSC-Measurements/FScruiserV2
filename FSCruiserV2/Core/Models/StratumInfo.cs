@@ -11,10 +11,6 @@ namespace FSCruiser.Core.Models
     {
         private Dictionary<char, CountTreeVM> _hotKeyLookup;
 
-        public StratumVM()
-            : base()
-        { }
-
 
         /// <summary>
         /// for 3ppnt 
@@ -24,8 +20,8 @@ namespace FSCruiser.Core.Models
         public string[] TreeFieldNames { get; set; }
 
         //public StratumDO Stratum { get; set; }
-        public List<PlotVM> Plots { get; set; }
-        //public List<CountTreeDO> Counts { get; set; }
+        //public List<PlotVM> Plots { get; set; }
+        public List<CountTreeVM> Counts { get; set; }
         
         public Dictionary<char, CountTreeVM> HotKeyLookup 
         { 
@@ -38,7 +34,24 @@ namespace FSCruiser.Core.Models
                 return _hotKeyLookup;
             }
         }
+
         public Control TallyContainer { get; set; }
+
+        public void PopulateHotKeyLookup()
+        {
+            _hotKeyLookup = new Dictionary<char, CountTreeVM>();
+            foreach (CountTreeVM count in Counts)
+            {
+                try
+                {
+                    char hotkey = count.Tally.Hotkey[0];
+                    hotkey = char.ToUpper(hotkey);
+                    HotKeyLookup.Add(hotkey, count);
+                }
+                catch
+                { }
+            }
+        }
 
         public void LoadTreeFieldNames()
         {
@@ -50,5 +63,27 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public void SaveCounts()
+        {
+            if (Counts == null) { return; } // if this is a h_pct stratum then counts won't be populated
+            foreach (CountTreeVM count in Counts)
+            {
+                count.Save();
+            }
+        }
+
+        public bool TrySaveCounts()
+        {
+            try
+            {
+                this.SaveCounts();
+                return true;
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e, "Exception");
+                return false;
+            }
+        }
     }
 }

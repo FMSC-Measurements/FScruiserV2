@@ -35,10 +35,10 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        
+
+
 
         
-
         private double _limitingDistance;
         private int _isTreeIn;
 
@@ -348,6 +348,15 @@ namespace FSCruiser.WinForms.DataEntry
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
+
+        private void _TB_GotFocus(object sender, EventArgs e)
+        {
+            var tb = sender as TextBox;
+            if (tb == null) { return; }
+            tb.BeginInvoke(new Action(tb.SelectAll));
+        }
+
+
 
 
     }

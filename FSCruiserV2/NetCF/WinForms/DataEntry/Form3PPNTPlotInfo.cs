@@ -98,6 +98,8 @@ namespace FSCruiser.WinForms.DataEntry
         {
             
             this._currentPlotInfo = plotInfo;
+
+            this._kz3ppnt_lbl.Text = plotInfo.Stratum.KZ3PPNT.ToString();
             this._BS_plot.DataSource = plotInfo;
 
             this.TreeCount = -1;
@@ -182,29 +184,34 @@ namespace FSCruiser.WinForms.DataEntry
         private void CreateTrees()
         {
             TreeVM[] newTrees = new TreeVM[this.TreeCount];
-            try
+            lock (_currentPlotInfo.DAL.TransactionSyncLock)
             {
-                this.Controller._cDal.BeginTransaction();
-                for (long i = 0; i < this.TreeCount; i++)
+                _currentPlotInfo.DAL.BeginTransaction();
+                try
                 {
-                    TreeVM t = Controller.CreateNewTreeEntry(null, _currentPlotInfo.Stratum, null, null, this._currentPlotInfo, false);
-                    t.TreeCount = 1;
-                    t.CountOrMeasure = "M";
-                    t.TreeNumber = i + 1;
-                    newTrees[i] = t;
-                    t.Save();
+
+                    for (long i = 0; i < this.TreeCount; i++)
+                    {
+                        TreeVM t = _currentPlotInfo.CreateNewTreeEntry((SampleGroupVM)null, (TreeDefaultValueDO)null, false);
+                        t.TreeCount = 1;
+                        t.CountOrMeasure = "M";
+                        t.TreeNumber = i + 1;
+                        newTrees[i] = t;
+                        t.Save();
+                    }
+                    _currentPlotInfo.DAL.CommitTransaction();
                 }
-                this.Controller._cDal.EndTransaction();
-            }
-            catch (Exception e)
-            {
-                this.Controller._cDal.CancelTransaction();
-                throw e;
+                catch (Exception e)
+                {
+                    _currentPlotInfo.DAL.RollbackTransaction();
+                    throw e;
+                }
             }
 
-            foreach (TreeVM t in newTrees)
+            foreach (TreeVM tree in newTrees)
             {
-                this._currentPlotInfo.Trees.Add(t);
+                this._currentPlotInfo.AddTree(tree);
+                //this._currentPlotInfo.Trees.Add(tree);
             }
         }
 
@@ -224,15 +231,14 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_blockTBClick == true) { return; }
             _blockTBClick = true;
-            //int? num = null;
-            //try
-            //{
-            //    num = Convert.ToInt32(_aveHtTB.Text);
-            //}
-            //catch
-            //{ }
 
-            this.AverageHgt = (int)(Controller.ShowNumericValueInput(0, 999, (this.AverageHgt <= 0) ? (int?)null : (int?)this.AverageHgt, true) ?? -1);
+            var viewController = this.Controller.ViewController;
+
+            int? initialValue = (this.AverageHgt <= 0) ? (int?)null : (int?)this.AverageHgt;
+            viewController.NumPadDialog.ShowDialog(0, 999, initialValue, true);
+            AverageHgt = viewController.NumPadDialog.UserEnteredValue ?? -1;
+
+            //this.AverageHgt = (int)(Controller.ShowNumericValueInput(0, 999, (this.AverageHgt <= 0) ? (int?)null : (int?)this.AverageHgt, true) ?? -1);
             CalculateKPI();
             _blockTBClick = false;
         }
@@ -242,8 +248,12 @@ namespace FSCruiser.WinForms.DataEntry
             if (_blockTBClick == true) { return; }
             _blockTBClick = true;
 
+            var viewController = this.Controller.ViewController;
 
-            this.TreeCount = (int)(Controller.ShowNumericValueInput(0, 999, (this.TreeCount <= 0) ? (int?)null : (int?)this.TreeCount, true) ?? -1);
+            int? initialValue = (this.TreeCount <= 0) ? (int?)null : (int?)this.TreeCount;
+            viewController.NumPadDialog.ShowDialog(0, 999, initialValue, true);
+            TreeCount = viewController.NumPadDialog.UserEnteredValue ?? -1;
+            //this.TreeCount = (int)(Controller.ShowNumericValueInput(0, 999, (this.TreeCount <= 0) ? (int?)null : (int?)this.TreeCount, true) ?? -1);
             CalculateKPI();
             _blockTBClick = false;
         }

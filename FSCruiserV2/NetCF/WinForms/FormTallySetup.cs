@@ -57,7 +57,7 @@ namespace FSCruiser.WinForms
             {
                 this._species_LBL.Visible = false;
                 this._speciesSelect_CB.Visible = false;
-                TallyDO t = this.Controller._cDal.ReadSingleRow<TallyDO>(CruiseDAL.Schema.TALLY._NAME, "JOIN CountTree USING (Tally_CN) WHERE SampleGroup_CN = ?", sg.SampleGroup_CN);
+                TallyDO t = this.Controller._cDal.ReadSingleRow<TallyDO>("JOIN CountTree USING (Tally_CN) WHERE SampleGroup_CN = ?", (object)sg.SampleGroup_CN);
                 if (t == null)
                 {
                     t = new TallyDO(this.Controller._cDal);
@@ -74,7 +74,7 @@ namespace FSCruiser.WinForms
 
                 foreach (TreeDefaultValueDO tdv in sg.TreeDefaultValues)
                 {
-                    TallyDO t = this.Controller._cDal.ReadSingleRow<TallyDO>(CruiseDAL.Schema.TALLY._NAME, "JOIN CountTree USING (Tally_CN) WHERE SampleGroup_CN = ? and TreeDefaultValue_CN = ?", sg.SampleGroup_CN, tdv.TreeDefaultValue_CN);
+                    TallyDO t = this.Controller._cDal.ReadSingleRow<TallyDO>("JOIN CountTree USING (Tally_CN) WHERE SampleGroup_CN = ? and TreeDefaultValue_CN = ?", (object)sg.SampleGroup_CN, tdv.TreeDefaultValue_CN);
                     if (t == null)
                     {
                         t = new TallyDO(this.Controller._cDal);
@@ -112,7 +112,9 @@ namespace FSCruiser.WinForms
                     {
                         if (this.Tally.IsPersisted == false)
                         {
-                            TallyDO t = this.Controller._cDal.ReadSingleRow<TallyDO>("Tally", "WHERE Description = ? and Hotkey = ?", this.Tally.Description, this.Tally.Hotkey);
+                            TallyDO t = this.Controller._cDal.ReadSingleRow<TallyDO>("WHERE Description = ? and Hotkey = ?"
+                                , (object)this.Tally.Description
+                                , this.Tally.Hotkey);
                             if (t != null) { this.Tally = t; }
                             else
                             {
@@ -155,7 +157,9 @@ namespace FSCruiser.WinForms
 
                             if (tally.IsPersisted == false)
                             {
-                                TallyDO t = this.Controller._cDal.ReadSingleRow<TallyDO>("Tally", "WHERE Description = ? and Hotkey = ?", tally.Description, tally.Hotkey);
+                                TallyDO t = this.Controller._cDal.ReadSingleRow<TallyDO>("WHERE Description = ? and Hotkey = ?"
+                                    , (object)tally.Description
+                                    , tally.Hotkey);
                                 if (t != null) { tally = t; }
                                 else
                                 {
@@ -169,11 +173,11 @@ namespace FSCruiser.WinForms
                         }
 
                     }
-                    this.Controller._cDal.EndTransaction();
+                    this.Controller._cDal.CommitTransaction();
                 }
                 catch (Exception ex)
                 {
-                    this.Controller._cDal.CancelTransaction();
+                    this.Controller._cDal.RollbackTransaction();
                     this.Controller.HandleNonCriticalException(ex, "Some thing went wrong while saving");
                 }
                 finally

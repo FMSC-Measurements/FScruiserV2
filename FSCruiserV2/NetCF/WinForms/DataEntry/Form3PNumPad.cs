@@ -509,12 +509,12 @@ namespace FSCruiser.WinForms.DataEntry
 
             if(this._minValue != null && this.UserEnteredValue < this._minValue.Value)
             {
-                MessageBox.Show("Value Entered Must Be Greater Than " + this._minValue.ToString());
+                MessageBox.Show("Must be Greater or Equal to " + this._minValue.ToString());
                 e.Cancel = true;
             }
             else if(this._maxValue != null && this.UserEnteredValue > this._maxValue.Value)
             {
-                MessageBox.Show("Value Entered Must Be Less Than " + this._maxValue.ToString());
+                MessageBox.Show("Must be Less Than or Equal to " + this._maxValue.ToString());
                 e.Cancel = true;
             }
         }

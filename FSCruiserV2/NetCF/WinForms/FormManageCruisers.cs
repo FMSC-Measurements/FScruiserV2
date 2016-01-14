@@ -33,7 +33,7 @@ namespace FSCruiser.WinForms
         protected override void OnLoad(EventArgs e)
         {
             this.UpdateCruiserList();
-            this._enableCruiserPopupCB.Checked = this.Controller.EnableCruiserSelectionPopup;
+            this._enableCruiserPopupCB.Checked = this.Controller.Settings.EnableCruiserPopup;
             base.OnLoad(e);
             
         }
@@ -54,8 +54,8 @@ namespace FSCruiser.WinForms
                 }
                 this._cruiserListContainer.Controls.Clear();
             }
-            CruiserVM[] cruisers = this.Controller.GetCruiserList();
-            foreach (CruiserVM c in cruisers)
+
+            foreach (CruiserVM c in this.Controller.Settings.Cruisers)
             {
                 MakeCruiserListItem(c, this._cruiserListContainer);
             }
@@ -115,7 +115,7 @@ namespace FSCruiser.WinForms
         {
             if (!String.IsNullOrEmpty(this._initialsTB.Text))
             {
-                this.Controller.AddCruiser(this._initialsTB.Text);
+                this.Controller.Settings.AddCruiser(this._initialsTB.Text);
                 this.UpdateCruiserList();
                 this._initialsTB.Text = String.Empty;
             }
@@ -125,13 +125,13 @@ namespace FSCruiser.WinForms
         {
             Panel p = ((Panel)((Button)sender).Parent);
             CruiserVM cruiser = (CruiserVM)p.Tag;
-            this.Controller.RemoveCruiser(cruiser);
+            this.Controller.Settings.RemoveCruiser(cruiser);
             this.UpdateCruiserList();
         }
 
         private void _enableCruiserPopupCB_CheckStateChanged(object sender, EventArgs e)
         {
-            this.Controller.EnableCruiserSelectionPopup = this._enableCruiserPopupCB.Checked;
+            this.Controller.Settings.EnableCruiserPopup = this._enableCruiserPopupCB.Checked;
         }
 
         private void _initialsTB_KeyDown(object sender, KeyEventArgs e)

@@ -5,15 +5,18 @@ using System.Text;
 using System.Windows.Forms;
 
 using CruiseDAL.DataObjects;
+using CruiseDAL; 
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
+using FMSC.ORM.Core.SQL;
 
 namespace FSCruiser.WinForms.DataEntry
 {
     public class ControlTreeDataGrid : DataGridView, ITreeView
     {
+        bool _userCanAddTrees;
         private bool _viewLoading = true;
         private BindingSource _BS_trees;
         private DataGridViewComboBoxColumn _speciesColumn;
@@ -39,7 +42,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                return DataGridAdjuster.GetTreeFieldNames(this.Controller._cDal, this.Controller.CurrentUnit, null);
+                return DataGridAdjuster.GetTreeFieldNames(this.Controller._cDal, this.DataEntryController.Unit, null);
             }
         }
 
@@ -47,7 +50,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                return this.Controller.CurrentUnitNonPlotTreeList;
+                return this.DataEntryController.Unit.NonPlotTrees;
             }
         }
 
@@ -59,7 +62,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.Controller = controller;
             this.DataEntryController = dataEntryController;
 
-            
+            this.CellClick += new DataGridViewCellEventHandler(ControlTreeDataGrid_CellClick);
 
             this._BS_trees = new BindingSource();
             ((System.ComponentModel.ISupportInitialize)this._BS_trees).BeginInit();
@@ -77,7 +80,7 @@ namespace FSCruiser.WinForms.DataEntry
             //this._BS_TreeSampleGroups.DataSource = typeof(SampleGroupDO);
             //((System.ComponentModel.ISupportInitialize)this._BS_TreeSampleGroups).EndInit();
 
-            DataGridViewColumn[] columns = DataGridAdjuster.MakeTreeColumns(controller._cDal, controller.CurrentUnit, null, this.Controller.ViewController.EnableLogGrading);
+            DataGridViewColumn[] columns = DataGridAdjuster.MakeTreeColumns(controller._cDal, DataEntryController.Unit, null, this.Controller.ViewController.EnableLogGrading);
             base.Columns.AddRange(columns);
 
             _speciesColumn = base.Columns["Species"] as DataGridViewComboBoxColumn;
@@ -85,22 +88,37 @@ namespace FSCruiser.WinForms.DataEntry
             _stratumColumn = base.Columns["Stratum"] as DataGridViewComboBoxColumn;
             _treeNumberColumn = base.Columns["TreeNumber"] as DataGridViewTextBoxColumn;
             _initialsColoumn = base.Columns["Initials"] as DataGridViewComboBoxColumn;
+            _errorMessageColumn = base.Columns["Error"] as DataGridViewTextBoxColumn;
+            _logsColumn = base.Columns["Logs"] as DataGridViewButtonColumn;
 
             if (_speciesColumn != null)
             {
-                _speciesColumn.DataSource = Controller._cDal.Read<TreeDefaultValueDO>("TreeDefaultValue", null);
+                _speciesColumn.DataSource = Controller._cDal.Read<TreeDefaultValueDO>((WhereClause)null);
             }
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = Controller._cDal.Read<SampleGroupVM>("SampleGroup", null);
+                _sgColumn.DataSource = Controller._cDal.Read<SampleGroupVM>((WhereClause)null);
             }
             if (_stratumColumn != null)
             {
-                _stratumColumn.DataSource = Controller.GetUnitTreeBasedStrata();
+                _stratumColumn.DataSource = DataEntryController.Unit.GetTreeBasedStrata();
             }
             if (_initialsColoumn != null)
             {
-                _initialsColoumn.DataSource = this.Controller.GetCruiserList();
+                _initialsColoumn.DataSource = this.Controller.Settings.Cruisers.ToArray();
+            }
+            
+        }
+
+        void ControlTreeDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (_logsColumn != null && e.ColumnIndex == _logsColumn.Index)
+            {
+                TreeVM curTree = this.Trees[e.RowIndex] as TreeVM;
+                if (curTree != null)
+                {
+                    this.DataEntryController.ShowLogs(curTree);
+                }
             }
         }
 
@@ -225,9 +243,9 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (!tree.SampleGroup.TreeDefaultValues.Contains(tree.TreeDefaultValue))
             {
-                this.Controller.SetTreeTDV(tree, null);
+                tree.SetTreeTDV(null);
             }
-            return this.Controller.TrySaveTree(tree);
+            return tree.TrySave();
         }
 
 
@@ -237,8 +255,8 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (tree == null) { return true; }
             if (tree.TreeDefaultValue == tdv) { return true; }
-            this.Controller.SetTreeTDV(tree, tdv);
-            return this.Controller.TrySaveTree(tree);
+            tree.SetTreeTDV(tdv);
+            return tree.TrySave();
         }
 
         public void UpdateSampleGroupColumn(TreeVM tree)
@@ -254,13 +272,13 @@ namespace FSCruiser.WinForms.DataEntry
         protected void UpdateSampleGroupColumn(TreeVM tree, DataGridViewComboBoxCell cell)
         {
             if (cell == null) { return; }
-            cell.DataSource = Controller.GetTreeSGList(tree);
+            cell.DataSource = tree.ReadValidSampleGroups();
         }
 
         protected void UpdateSpeciesColumn(TreeVM tree, DataGridViewComboBoxCell cell)
         {
             if (cell == null) { return; }
-            cell.DataSource = Controller.GetTreeTDVList(tree);
+            cell.DataSource = tree.ReadValidTDVs();
         }
 
         //private void UpdateSampleGroupColumn(TreeVM tree, DataGridViewComboBoxEditingControl editControl)
@@ -284,15 +302,18 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region ITreeView Members
 
+        
         public bool UserCanAddTrees
         {
             get
             {
-                return this.AllowUserToAddRows;
+                return _userCanAddTrees;
+                //return this.AllowUserToAddRows;
             }
             set
             {
-                this.AllowUserToAddRows = value;
+                _userCanAddTrees = value;
+                //this.AllowUserToAddRows = value;
             }
         }
 
@@ -304,7 +325,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void HandleLoad()
         {
-            this._BS_trees.DataSource = Controller.CurrentUnitNonPlotTreeList;
+            this._BS_trees.DataSource = DataEntryController.Unit.NonPlotTrees;
 
             _viewLoading = false;
         }
@@ -329,7 +350,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this._initialsColoumn != null)
             {
-                this._initialsColoumn.DataSource = this.Controller.GetCruiserList();
+                this._initialsColoumn.DataSource = this.Controller.Settings.Cruisers.ToArray();
             }
         }
 
@@ -348,7 +369,7 @@ namespace FSCruiser.WinForms.DataEntry
                     MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button2))
                 {
-                    Controller.DeleteTree(curTree);
+                    DataEntryController.Unit.DeleteTree(curTree);
                 }
             }
         }
@@ -365,7 +386,13 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void MoveHomeField()
         {
-            this.CurrentCell = this[0, this.CurrentCellAddress.Y];
+            if (this.CurrentCellAddress.Y == -1) { return; }
+            try
+            {
+                this.CurrentCell = this[0, this.CurrentCellAddress.Y];
+            }
+            catch
+            { }
         }
 
         public TreeVM UserAddTree()
@@ -376,8 +403,8 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 //t.TreeCount = 1; //for pc dont set tree count to 1
                 //this._BS_trees.Add(t);
-                this._BS_trees.MoveLast();
-                base.CurrentCell = base[this.HomeColumnIndex, base.CurrentRow.Index];
+                this.MoveLast();
+                this.MoveHomeField();
             }
             return t;
 
@@ -387,14 +414,14 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this.UserCanAddTrees == false) { return null; }
             TreeVM prevTree = null;
-            StratumVM assumedSt = Controller.DefaultStratum;
+            StratumVM assumedSt = DataEntryController.Unit.DefaultStratum;
             if (_BS_trees.Count > 0)
             {
                 prevTree = (TreeVM)_BS_trees[_BS_trees.Count - 1];
                 assumedSt = prevTree.Stratum;
             }
 
-            return Controller.UserAddTree(prevTree, assumedSt, null);
+            return DataEntryController.Unit.UserAddTree(prevTree, assumedSt, DataEntryController.ViewController);
         }
 
         #endregion

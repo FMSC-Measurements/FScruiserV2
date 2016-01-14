@@ -68,5 +68,10 @@ namespace FSCruiser.WinForms.DataEntry
                 _outputView.Text = (value != null) ? value.Value.ToString() : String.Empty;
             }
         }
+
+        private void _stmBTN_Click(object sender, EventArgs e)
+        {
+            _outputView.Text = "STM";
+        }
     }
 }

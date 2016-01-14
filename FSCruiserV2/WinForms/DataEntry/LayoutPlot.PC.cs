@@ -6,17 +6,22 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+
+using CruiseDAL;
 using CruiseDAL.DataObjects;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
+using FMSC.ORM.Core.SQL;
 
 namespace FSCruiser.WinForms.DataEntry
 {
     public partial class LayoutPlot : UserControl , ITallyView , ITreeView, IPlotLayout
     {
         private bool _viewLoading = true;
+
+        private DataEntryMode _mode;
 
         private DataGridViewComboBoxColumn _initialsColoumn;
         private DataGridViewComboBoxColumn _sgColumn;
@@ -40,13 +45,13 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
 
-        public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, StratumVM stratum)
+        public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, PlotStratum stratum)
         {
-            this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController);
+            this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController, dataEntryController.ViewController);
             this.Dock = DockStyle.Fill;            
             InitializeComponent();
-            
-            
+
+            this._dataGrid.CellClick += new DataGridViewCellEventHandler(_dataGrid_CellClick);
 
             this._dataGrid.AutoGenerateColumns = false;
             //this._dataGrid.DataSource = _BS_Trees;
@@ -59,26 +64,71 @@ namespace FSCruiser.WinForms.DataEntry
             _sgColumn = _dataGrid.Columns["SampleGroup"] as DataGridViewComboBoxColumn;
             _treeNumberColumn = _dataGrid.Columns["TreeNumber"] as DataGridViewTextBoxColumn;
             _initialsColoumn = _dataGrid.Columns["Initials"] as DataGridViewComboBoxColumn;
+            _errorMessageColumn = _dataGrid.Columns["Error"] as DataGridViewTextBoxColumn;
+            _logsColumn = _dataGrid.Columns["Logs"] as DataGridViewButtonColumn;
 
             if (_speciesColumn != null)
             {
-                _speciesColumn.DataSource = AppController._cDal.Read<TreeDefaultValueDO>("TreeDefaultValue", null);
+                _speciesColumn.DataSource = AppController._cDal.Read<TreeDefaultValueDO>((WhereClause)null);
             }
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = AppController._cDal.Read<SampleGroupVM>("SampleGroup", null);
+                _sgColumn.DataSource = AppController._cDal.Read<SampleGroupVM>((WhereClause)null);
             }
             if (_initialsColoumn != null)
             {
-                _initialsColoumn.DataSource = this.AppController.GetCruiserList();
+                _initialsColoumn.DataSource = this.AppController.Settings.Cruisers.ToArray();
             }
+
 
             //no need to load tallies....?
             //Controller.PopulateTallies(this.StratumInfo, this._mode, Controller.CurrentUnit, this._tallyListPanel, this);
             this.Parent = parent;
-            this.ViewLogicController.UpdateCurrentPlot();
+
+            
         }
 
+        void _dataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (_logsColumn != null && e.ColumnIndex == _logsColumn.Index)
+            {
+                TreeVM curTree = this.Trees[e.RowIndex] as TreeVM;
+                if (curTree != null)
+                {
+                    this.DataEntryController.ShowLogs(curTree);
+                }
+            }
+        }
+
+        #region IPlotLayout members
+        private bool _isGridExpanded = false;
+        public bool IsGridExpanded
+        {
+            get
+            {
+                return _isGridExpanded;
+            }
+            set
+            {
+                if (value == _isGridExpanded) { return; }
+                if (value == true)
+                {
+                    _tallyListPanel.Visible = false;
+                    //_dataGrid.ReadOnly = false;
+
+                    //_expandGridButton.ImageIndex = 3;
+                }
+                else
+                {
+                    _tallyListPanel.Visible = true;
+                    //_dataGrid.ReadOnly = true;
+
+                    //_expandGridButton.ImageIndex = 0;
+                }
+                _isGridExpanded = value;
+            }
+        }
+        #endregion
 
         #region ITallyView Members
         //TODO implement ITallyView members 
@@ -93,7 +143,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                return this.ViewLogicController.StratumInfo.HotKeyLookup;
+                return this.ViewLogicController.Stratum.HotKeyLookup;
             }
 
         }
@@ -116,7 +166,27 @@ namespace FSCruiser.WinForms.DataEntry
 
         public Control MakeTallyRow(Control container, CountTreeVM count)
         {
-            throw new NotImplementedException();
+            TallyRow row = new TallyRow();
+            row.SuspendLayout();
+
+            row.DiscriptionLabel.Text = count.Tally.Description;
+            row.TallyButton.Click += new EventHandler(this.HandleTallyButtonClick);
+            row.SettingsButton.Click += new EventHandler(this.HandleSettingsButtonClick);
+            if (count.Tally.Hotkey != null && count.Tally.Hotkey.Length > 0)
+            {
+                row.HotKeyLabel.Text = count.Tally.Hotkey.Substring(0, 1);
+            }
+
+            row.TallyButton.DataBindings.Add(new Binding("Text", count, "TreeCount"));
+
+            row.Tag = count;
+            row.Parent = container;
+
+
+            row.Dock = DockStyle.Top;
+            row.ResumeLayout(true);
+            return row;
+            
         }
 
         public Control MakeTallyRow(Control container, SubPop subPop)
@@ -124,15 +194,49 @@ namespace FSCruiser.WinForms.DataEntry
             throw new NotImplementedException();
         }
 
+        private void HandleTallyButtonClick(object sender, EventArgs e)
+        {
+            Control button = (Control)sender;
+            TallyRow row = (TallyRow)button.Parent.Parent;
+            CountTreeVM count = (CountTreeVM)row.Tag;
+            OnTally(count);
+
+        }
+
+        private void HandleSettingsButtonClick(object sender, EventArgs e)
+        {
+            Button settingsbutton = (Button)sender;
+            TallyRow row = (TallyRow)settingsbutton.Parent.Parent;
+            CountTreeVM count = (CountTreeVM)row.Tag;
+            this.ViewLogicController.ViewController.ShowTallySettings(count);
+            row.DiscriptionLabel.Text = count.Tally.Description;
+        }
+
         public void OnTally(CountTreeVM count)
         {
-            throw new NotImplementedException();
+            this.ViewLogicController.OnTally(count);
         }
 
         public void HandleStratumLoaded(Control container)
         {
             //do nothing 
             return;
+        }
+
+        public void SaveCounts()
+        {
+            this.ViewLogicController.SaveCounts();
+        }
+
+        public bool TrySaveCounts()
+        {
+            if (!this.ViewLogicController.TrySaveCounts())
+            {
+                MessageBox.Show("Stratum:" + this.ViewLogicController.Stratum.Code
+                    + " Unable to save Counts");
+                return false;
+            }
+            return true;
         }
 
         #endregion
@@ -172,7 +276,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this._initialsColoumn != null)
             {
-                this._initialsColoumn.DataSource = this.AppController.GetCruiserList();
+                this._initialsColoumn.DataSource = this.AppController.Settings.Cruisers.ToArray();
             }
         }
 
@@ -198,7 +302,13 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void MoveHomeField()
         {
-            this._dataGrid.CurrentCell = this._dataGrid[0, this._dataGrid.CurrentCellAddress.Y];
+            if (this._dataGrid.CurrentCellAddress.Y == -1) { return; }
+            try
+            {
+                this._dataGrid.CurrentCell = this._dataGrid[0, this._dataGrid.CurrentCellAddress.Y];
+            }
+            catch
+            { }
         }
 
         public TreeVM UserAddTree()
@@ -221,7 +331,6 @@ namespace FSCruiser.WinForms.DataEntry
             if (cell.FormattedValue == e.FormattedValue) { return; }//are there any changes 
 
 
-            bool cancel = false;
             TreeVM curTree = null;
             try
             {
@@ -294,13 +403,13 @@ namespace FSCruiser.WinForms.DataEntry
         protected void UpdateSampleGroupColumn(TreeVM tree, DataGridViewComboBoxCell cell)
         {
             if (cell == null) { return; }
-            cell.DataSource = AppController.GetTreeSGList(tree);
+            cell.DataSource = tree.ReadValidSampleGroups();
         }
 
         protected void UpdateSpeciesColumn(TreeVM tree, DataGridViewComboBoxCell cell)
         {
             if (cell == null) { return; }
-            cell.DataSource = AppController.GetTreeTDVList(tree);
+            cell.DataSource = tree.ReadValidTDVs();
         }
 
         protected bool ProcessSampleGroupChanging(TreeVM tree, SampleGroupVM newSG)
@@ -329,9 +438,9 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (!tree.SampleGroup.TreeDefaultValues.Contains(tree.TreeDefaultValue))
             {
-                this.AppController.SetTreeTDV(tree, null);
+                tree.SetTreeTDV(null);
             }
-            return this.AppController.TrySaveTree(tree);
+            return tree.TrySave();
         }
 
 
@@ -341,8 +450,8 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (tree == null) { return true; }
             if (tree.TreeDefaultValue == tdv) { return true; }
-            this.AppController.SetTreeTDV(tree, tdv);
-            return this.AppController.TrySaveTree(tree);
+            tree.SetTreeTDV(tdv);
+            return tree.TrySave();
         }
         #endregion 
 
@@ -367,13 +476,14 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void ShowLimitingDistanceDialog()
         {
-            if (this.ViewLogicController.CurrentPlotInfo == null)
+            if (this.ViewLogicController.CurrentPlot == null)
             {
                 ShowNoPlotSelectedMessage();
                 return;
             }
 
-            this.ViewLogicController.Controller.ShowLimitingDistanceDialog(this.ViewLogicController.StratumInfo, this.ViewLogicController.CurrentPlotInfo, null);
+
+            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot, null);
         }
 
         public void RefreshTreeView(PlotVM currentPlot)
@@ -392,6 +502,8 @@ namespace FSCruiser.WinForms.DataEntry
         public void BindPlotData(BindingSource plotBS)
         {
             this._bindingNavigator.BindingSource = plotBS;
+            this.toolStripComboBox1.ComboBox.DisplayMember = "PlotNumber";
+            this.toolStripComboBox1.ComboBox.DataSource = plotBS;
         }
 
         public void BindTreeData(BindingSource treeBS)
@@ -400,6 +512,25 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         #endregion
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            var stratum = this.ViewLogicController.Stratum;
+
+            this._tallyListPanel.SuspendLayout();
+            this._mode = stratum.GetDataEntryMode();
+            this.ViewLogicController.DataEntryController.PopulateTallies(stratum, this._mode, DataEntryController.Unit, this._tallyListPanel, this);
+            if (stratum.Method == "3PPNT")
+            {
+                this.IsGridExpanded = true;
+            }
+
+            this._tallyListPanel.ResumeLayout();
+
+            this.ViewLogicController.UpdateCurrentPlot();
+        }
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
