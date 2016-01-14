@@ -58,7 +58,7 @@ namespace FSCruiser.WinForms
                 fieldSetups.AddRange(Constants.DEFAULT_TREE_FIELDS);
             }
 
-            bool isPlotLayout = stratum != null && (Array.IndexOf(CruiseDAL.Schema.Constants.CruiseMethods.PLOT_METHODS, stratum.Method) >= 0);
+            bool isPlotLayout = stratum != null && (Array.IndexOf(CruiseDAL.Schema.CruiseMethods.PLOT_METHODS, stratum.Method) >= 0);
             if(isPlotLayout  && fieldSetups.FindIndex(((tfs) => tfs.Field == CruiseDAL.Schema.TREE.COUNTORMEASURE)) < 0)
             {
                 fieldSetups.Insert(5, new TreeFieldSetupDO() { Field = CruiseDAL.Schema.TREE.COUNTORMEASURE, Heading = "C/M" });

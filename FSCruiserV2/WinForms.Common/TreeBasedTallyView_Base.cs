@@ -81,7 +81,7 @@ namespace FSCruiser.WinForms
         {
             foreach (StratumVM stratum in this.Strata)
             {
-                if (stratum.Method == CruiseDAL.Schema.Constants.CruiseMethods.H_PCT) { continue; }
+                if (stratum.Method == CruiseDAL.Schema.CruiseMethods.H_PCT) { continue; }
                 //if ((Controller.GetStrataDataEntryMode(stratum) & DataEntryMode.Plot) 
                 //    == DataEntryMode.Plot) { continue; }
 

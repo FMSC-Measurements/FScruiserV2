@@ -89,7 +89,7 @@ namespace FSCruiser.WinForms.Common
 
                 // if any strata are not H_PCT
                 if (unit.TreeStrata.Any(
-                    x => x.Method != CruiseDAL.Schema.Constants.CruiseMethods.H_PCT))
+                    x => x.Method != CruiseDAL.Schema.CruiseMethods.H_PCT))
                 {
                     InitializeTallyTab();
                 }

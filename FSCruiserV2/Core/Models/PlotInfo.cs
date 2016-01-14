@@ -196,7 +196,7 @@ namespace FSCruiser.Core.Models
             viewController.ShowCruiserSelection(newTree);
 
             //if a 3P plot method set Count Measure to empty. 
-            if (Array.IndexOf(CruiseDAL.Schema.Constants.CruiseMethods.THREE_P_METHODS, 
+            if (Array.IndexOf(CruiseDAL.Schema.CruiseMethods.THREE_P_METHODS, 
                 this.Stratum.Method) >= 0)
             {
                 newTree.CountOrMeasure = string.Empty;

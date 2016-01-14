@@ -11,7 +11,7 @@ using System.Threading;
 using System.Text;
 using System.Reflection;
 using CruiseDAL;
-using CruiseDAL.Schema.Constants;
+using CruiseDAL.Schema;
 using FSCruiser.Core.Models;
 using FMSC.ORM.Core.SQL;
 

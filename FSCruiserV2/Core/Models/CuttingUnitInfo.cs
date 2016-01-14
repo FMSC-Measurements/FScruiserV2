@@ -221,7 +221,7 @@ namespace FSCruiser.Core.Models
             this.DefaultStratum = null;
             foreach (StratumVM stratum in this.TreeStrata)
             {
-                if (stratum.Method == CruiseDAL.Schema.Constants.CruiseMethods.H_PCT)
+                if (stratum.Method == CruiseDAL.Schema.CruiseMethods.H_PCT)
                 {
                     this.DefaultStratum = stratum;
                     break;

@@ -30,7 +30,7 @@ namespace FSCruiser.Core.DataEntry
         {
             get
             {
-                return this.Stratum.Method == CruiseDAL.Schema.Constants.CruiseMethods.THREEPPNT;
+                return this.Stratum.Method == CruiseDAL.Schema.CruiseMethods.THREEPPNT;
             }
         }
 
