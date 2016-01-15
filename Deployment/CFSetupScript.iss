@@ -32,6 +32,8 @@ SolidCompression=yes
 PrivilegesRequired=admin
 ShowLanguageDialog=no
 
+InfoBeforeFile=..\Documentation\ConnectingToDevice.md
+
 [Files]
 ;Compact framework files
 Source: "netcf20.ini"; DestDir: "{app}"; Flags: ignoreversion; 
