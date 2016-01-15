@@ -55,7 +55,7 @@ namespace FSCruiser.WinForms
             newNavButton.FlatAppearance.BorderSize = 2;
             newNavButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             //newNavButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            newNavButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            newNavButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             newNavButton.ForeColor = System.Drawing.SystemColors.ControlText;
             newNavButton.Location = new System.Drawing.Point(0, 0);
             newNavButton.Size = new System.Drawing.Size(200, 35);

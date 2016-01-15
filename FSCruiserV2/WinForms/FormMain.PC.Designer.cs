@@ -32,7 +32,7 @@
             System.Windows.Forms.Panel panel1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this._viewContentPanel = new System.Windows.Forms.Panel();
-            this._cuttingUnitSelectView = new CuttingUnitSelectView();
+            this._cuttingUnitSelectView = new FSCruiser.WinForms.CuttingUnitSelectView();
             this._viewNavPanel = new System.Windows.Forms.Panel();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -148,6 +148,7 @@
             this.ClientSize = new System.Drawing.Size(752, 466);
             this.Controls.Add(panel1);
             this.Controls.Add(this.menuStrip);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
             this.Text = "FSCruiser";

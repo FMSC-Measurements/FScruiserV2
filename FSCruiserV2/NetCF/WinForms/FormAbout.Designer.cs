@@ -59,8 +59,8 @@
             this.label2.Location = new System.Drawing.Point(9, 112);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(211, 62);
-            this.label2.Text = "U.S. Forest Service                      Forest Management Service Center        " +
-                "  Fort Collins, CO   http://www.fs.fed.us/fmsc/measure";
+            this.label2.Text = "U.S. Forest Service\r\nForest Management Service Center\r\nFort Collins, CO\r\nhttp://w" +
+                "ww.fs.fed.us/fmsc/measure";
             // 
             // label3
             // 

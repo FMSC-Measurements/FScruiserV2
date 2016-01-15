@@ -2,8 +2,8 @@
 ; #defines require the ISPP add-on: http://sourceforge.net/projects/ispp/
 #define APP "FSCruiserV2"
 
-#define APP_VERSION "2016.01.13"
-#define SETUPVERSION "20150310"
+#define APP_VERSION "2016.01.15"
+#define SETUPVERSION "20160115"
 #define SPECIALTAG "Production"
 #define BASEURL "http://www.fs.fed.us/fmsc/measure"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
@@ -26,11 +26,13 @@ DefaultGroupName=FMSC\{#APP}
 UsePreviousAppDir=no
 
 CreateAppDir=yes
-OutputBaseFilename=FScruiserV2_Setup_{#SETUPVERSION}
+OutputBaseFilename=FScruiserV2_FDR_{#SETUPVERSION}
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin
 ShowLanguageDialog=no
+
+InfoBeforeFile=..\Documentation\ConnectingToDevice.md
 
 [Files]
 ;Compact framework files
