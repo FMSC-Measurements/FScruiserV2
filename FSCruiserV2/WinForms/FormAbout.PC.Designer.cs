@@ -29,22 +29,13 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAbout));
-            this._exeLBL = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this._dob_LBL = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // _exeLBL
-            // 
-            this._exeLBL.Location = new System.Drawing.Point(29, 238);
-            this._exeLBL.Name = "_exeLBL";
-            this._exeLBL.Size = new System.Drawing.Size(211, 20);
-            this._exeLBL.TabIndex = 6;
             // 
             // label4
             // 
@@ -68,10 +59,10 @@
             // 
             this.label2.Location = new System.Drawing.Point(29, 118);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(211, 68);
+            this.label2.Size = new System.Drawing.Size(212, 68);
             this.label2.TabIndex = 9;
-            this.label2.Text = "U.S. Forest Service                      Forest Management Service Center        " +
-                "  Fort Collins, CO   http://www.fs.fed.us/fmsc/measure";
+            this.label2.Text = "U.S. Forest Service\r\nForest Management Service Center\r\nFort Collins, CO\r\nhttp://w" +
+                "ww.fs.fed.us/fmsc/measure";
             // 
             // label1
             // 
@@ -91,21 +82,11 @@
             this.pictureBox1.TabIndex = 11;
             this.pictureBox1.TabStop = false;
             // 
-            // _dob_LBL
-            // 
-            this._dob_LBL.Location = new System.Drawing.Point(32, 238);
-            this._dob_LBL.Name = "_dob_LBL";
-            this._dob_LBL.Size = new System.Drawing.Size(225, 23);
-            this._dob_LBL.TabIndex = 12;
-            this._dob_LBL.Text = "<DOB>";
-            // 
             // FormAbout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Controls.Add(this._dob_LBL);
-            this.Controls.Add(this._exeLBL);
+            this.ClientSize = new System.Drawing.Size(273, 262);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -124,12 +105,10 @@
 
         #endregion
 
-        private System.Windows.Forms.Label _exeLBL;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label _dob_LBL;
     }
 }

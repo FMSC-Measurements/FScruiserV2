@@ -153,7 +153,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void _BTN_delete_Click(object sender, EventArgs e)
         {
-            LogDO log = this._BS_Logs.Current as LogDO;
+            if (this._dataGrid.CurrentRow == null) { return; }
+            LogDO log = this._dataGrid.CurrentRow.DataBoundItem as LogDO;
             if (log == null) { return; }
 
             try

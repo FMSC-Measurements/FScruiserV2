@@ -185,7 +185,10 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void _deleteBtn_Click(object sender, EventArgs e)
         {
-            LogDO log = this._BS_Logs.Current as LogDO;
+            if (this._dataGrid.CurrentRowIndex < 0) { return; }
+
+
+            LogDO log = this._logs[this._dataGrid.CurrentRowIndex] as LogDO;
             if (log == null) { return; }
 
             try

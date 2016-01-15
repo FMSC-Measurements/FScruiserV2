@@ -1,7 +1,7 @@
 #define APP "FSCruiserV2"
 
-#define APP_VERSION "2016.01.13"
-#define SETUPVERSION "20160113"
+#define APP_VERSION "2016.01.15"
+#define SETUPVERSION "20160115"
 #define SPECIALTAG "Production"
 #define BASEURL "http://www.fs.fed.us/fmsc/measure"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
@@ -13,7 +13,7 @@
 [Setup]
 AppName=FSCruiser V2
 AppVersion={#APP_VERSION}
-AppVerName=FSCruiser version {#SETUPVERSION} for Windows CE, and Windows Mobile devices
+AppVerName=FSCruiser version {#SETUPVERSION} for Windows Desktop
 AppPublisher={#ORGANIZATION}
 AppPublisherURL={#BASEURL}
 AppSupportURL={#BASEURL}/support.shtml
@@ -31,7 +31,7 @@ PrivilegesRequired=admin
 ShowLanguageDialog=no
 
 [Files]
-Source: "..\FSCruiserV2\bin\x86\Release\*.exe"; DestDir: "{app}"; Flags: ignoreversion;
+Source: "..\FSCruiserV2\bin\x86\Release\FScruiserPC.exe"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "..\FSCruiserV2\bin\x86\Release\*.dll"; DestDir: "{app}"; Flags: ignoreversion;
 
 [Icons]

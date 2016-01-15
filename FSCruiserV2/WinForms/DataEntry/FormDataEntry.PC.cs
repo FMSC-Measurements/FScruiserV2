@@ -162,6 +162,21 @@ namespace FSCruiser.WinForms.DataEntry
         //    this.ResumeLayout(false);
         //}
 
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.F2)
+            {
+                this.LogicController.HandleAddTreeClick();
+                e.Handled = true;
+            }
+            else
+            {
+                base.OnKeyUp(e);
+            }
+
+
+        }
+
         private void _deleteTreeBTN_Click(object sender, EventArgs e)
         {
             this.LogicController.HandleDeleteRowButtonClick();
