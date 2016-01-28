@@ -29,7 +29,7 @@ CreateAppDir=yes
 OutputBaseFilename=FScruiserV2_FDR_{#SETUPVERSION}
 Compression=lzma
 SolidCompression=yes
-PrivilegesRequired=admin
+PrivilegesRequired=lowest
 ShowLanguageDialog=no
 
 InfoBeforeFile=..\Documentation\ConnectingToDevice.md
@@ -57,7 +57,6 @@ Source: "..\FSCruiserV2CECF20_CAB\Release\FSCruiserV2.CAB"; DestDir: "{app}"; Fl
 Source: "..\Documentation\FScruiserV2UserGuide.docx"; DestName:"FScruiserV2UserGuide.docx"; DestDir: "{app}"; Flags: ignoreversion;
 
 [Icons]
-Name: {userdesktop}\FScruiserV2; Filename: {app}\FScruiserPC.exe;
 Name: {group}\FScruiser V2 User Guide.docx; Filename: {app}\FScruiser V2 User Guide.docx
 
 ;[Run]
@@ -67,8 +66,24 @@ Name: {group}\FScruiser V2 User Guide.docx; Filename: {app}\FScruiser V2 User Gu
 ;Name: mobileInstall; Description: "Install FScruiser on mobile devices"; GroupDescription: "Install Options";
 
 
+;function InitializeSetup() : Boolean;
+;var
+;ResultCode: Integer;
+;begin
+;  if IsAdminLoggedOn() or IsPowerUserLoggedOn() then
+;  begin
+;    Exec('runas', ExpandConstant('/trustlevel:0x20000 "{srcexe} ') + GetCmdTail() +'"', '', SW_HIDE, ewNoWait, ResultCode)
+;    result := False
+;  end
+;  else
+;    result := True
+;end;  
+
 
 [Code]
+
+
+
 function GetCEappManager(Param : string) : string;
 var Path: String;
 begin
@@ -79,7 +94,7 @@ begin
         Path:= 'C:\Windows\WindowsMobile\ceappmgr.exe'
 
       
-  result:= Path
+  result:=  Path
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
