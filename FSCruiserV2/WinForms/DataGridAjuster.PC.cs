@@ -154,16 +154,16 @@ namespace FSCruiser.WinForms
                     case "KPI":
                         {
                             col = MakeColumn(columnType);
-                            col.ReadOnly = true;
+                            // col.ReadOnly = true;
                             break;
                         }
-                    case "Initials":
-                        {
-                            col = new DataGridViewComboBoxColumn();
-                            ((DataGridViewComboBoxColumn)col).DisplayMember = "Initials";
-                            ((DataGridViewComboBoxColumn)col).ValueMember = "Initials";
-                            break;
-                        }
+                    //case "Initials":
+                    //    {
+                    //        col = new DataGridViewComboBoxColumn();
+                    //        ((DataGridViewComboBoxColumn)col).DisplayMember = "Initials";
+                    //        ((DataGridViewComboBoxColumn)col).ValueMember = "Initials";
+                    //        break;
+                    //    }
                     default:
                         {
                             col = MakeColumn(columnType);
