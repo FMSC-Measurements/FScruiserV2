@@ -151,14 +151,19 @@ namespace FSCruiser.WinForms.DataEntry
 
             if (this.TreeCount <= 0)
             {
+                
                 this._currentPlotInfo.IsNull = true;
+                this._currentPlotInfo.Save();
                 this.SignalCountPlot();//if it's an empty plot then it will be a count plot
                 return;
             }
 
+            this._currentPlotInfo.Save();
+
             ThreePItem item = (ThreePItem)this._currentPlotInfo.Stratum.SampleSelecter.NextItem();
             if (this.KPI >= item.KPI)
             {
+                
                 CreateTrees();
                 SignalMeasurePlot();
             }

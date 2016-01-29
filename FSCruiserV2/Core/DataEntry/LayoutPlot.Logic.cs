@@ -562,9 +562,22 @@ namespace FSCruiser.Core.DataEntry
 
         public void Save()
         {
+
+
             foreach (PlotVM p in this.Stratum.Plots)
             {
                 p.Save();
+
+                try
+                {
+                    p.TrySaveTrees();
+                }
+                catch (FMSC.ORM.SQLException e)
+                {
+                    this.ViewController.ShowMessage(e.Message
+                        , "Stratum " +this.Stratum.Code + "Plot " + p.PlotNumber.ToString()
+                        , MessageBoxIcon.None);
+                }
             }
         }
 
