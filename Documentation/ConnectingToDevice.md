@@ -13,6 +13,10 @@ Download WMDC
 
 Troubleshooting Connection issues
 =================================
+Add/Remove programs window says "Unable to retrieve device information"
+---------------------------------------------------------------------------
+If using Forest Service computer, run the installer with out using "Run Elevated"
+
 The device is connected, but WMDC says the device is not connected.
 -------------------------------------------------------------------
 1. On the device, go to the connections tab in the settings menu
@@ -25,11 +29,7 @@ The device disconnects while transferring files
 - plug USB cable directly into device, if using a dock
 - reinstall WMDC
 
-Add/Remove programs window displays an error and FScruiser is not installed
----------------------------------------------------------------------------
-1. download FScruiserV2.CAB or locate it in C:\Program Files (x86)\FMSC\FSCruiserV2
-2. copy FScruiserV2.CAB to your device
-3. from the device, locate and run FScruiserV2.CAB using File Explorer
+
 
 Additional Troubleshooting
 --------------------------
