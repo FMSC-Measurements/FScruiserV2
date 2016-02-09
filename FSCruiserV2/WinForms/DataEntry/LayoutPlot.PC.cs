@@ -161,7 +161,12 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void MakeSGList(List<SampleGroupVM> list, Panel container)
         {
-            throw new NotImplementedException();
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (NotImplementedException)
+            { }
         }
 
         public Control MakeTallyRow(Control container, CountTreeVM count)
@@ -191,7 +196,13 @@ namespace FSCruiser.WinForms.DataEntry
 
         public Control MakeTallyRow(Control container, SubPop subPop)
         {
-            throw new NotImplementedException();
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (NotImplementedException)
+            { }
+            return null;
         }
 
         private void HandleTallyButtonClick(object sender, EventArgs e)

@@ -297,7 +297,12 @@ namespace FSCruiser.WinForms
 
         public virtual void MakeSGList(List<FSCruiser.Core.Models.SampleGroupVM> list, Panel container)
         {
-            throw new NotImplementedException();
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (NotImplementedException)
+            { }
         }
 
         public Control MakeTallyRow(Control container, CountTreeVM count)
@@ -327,7 +332,13 @@ namespace FSCruiser.WinForms
 
         public virtual Control MakeTallyRow(Control container, FSCruiser.Core.Models.SubPop subPop)
         {
-            throw new NotImplementedException();
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (NotImplementedException)
+            { }
+            return null;
         }
 
         public void OnTally(FSCruiser.Core.Models.CountTreeVM count)
