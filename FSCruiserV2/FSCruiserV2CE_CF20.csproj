@@ -73,8 +73,6 @@
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
     <Compile Include="NetCF\NamedMutex.cs" />
-    <Compile Include="NetCF\System\Action.cs" />
-    <Compile Include="NetCF\System\IEnumerableExtensions.cs" />
     <Compile Include="NetCF\WinForms\DataEntry\ControlTreeDataGrid.cs">
       <SubType>Component</SubType>
     </Compile>
