@@ -7,7 +7,7 @@ using CruiseDAL.Schema;
 using FMSC.Sampling;
 using System.Xml.Serialization;
 using System.IO;
-using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {

@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -66,9 +66,11 @@ namespace FSCruiser.Core
         public void InitializeSampleGroups()
         {
             //create a list of all samplegroups in the unit
-            _unit.SampleGroups = _unit.DAL.Read<SampleGroupVM>(@"JOIN Stratum ON SampleGroup.Stratum_CN = Stratum.Stratum_CN 
-                JOIN CuttingUnitStratum ON CuttingUnitStratum.Stratum_CN = Stratum.Stratum_CN
-                WHERE CuttingUnitStratum.CuttingUnit_CN = ?", (object)_unit.CuttingUnit_CN);
+            _unit.SampleGroups = _unit.DAL.From<SampleGroupVM>()
+                .Join("Stratum", "USING (Stratum_CM)")
+                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
+                .Where("CuttingUnitStratum.CuttingUnit_CN = ?")
+                .Read(_unit.CuttingUnit_CN).ToList();
 
             //initialize sample selectors for all sampleGroups
             foreach (SampleGroupVM sg in _unit.SampleGroups)
@@ -83,9 +85,13 @@ namespace FSCruiser.Core
         public void InitializeNonPlotTrees()
         {
             //create a list of just trees in tree based strata
-            List<TreeVM> nonPlotTrees = _unit.DAL.Read<TreeVM>(@"JOIN Stratum ON Tree.Stratum_CN = Stratum.Stratum_CN WHERE Tree.CuttingUnit_CN = ? AND
-                        (Stratum.Method = '100' OR Stratum.Method = 'STR' OR Stratum.Method = '3P' OR Stratum.Method = 'S3P') ORDER BY TreeNumber",
-                        (object)_unit.CuttingUnit_CN);
+            List<TreeVM> nonPlotTrees = _unit.DAL.From<TreeVM>()
+                .Join("Stratum", "USING (Stratum_CN)")
+                .Where("Tree.CuttingUnit_CN = ? AND " +
+                        "Stratum.Method IN ('100','STR','3P','S3P')")
+                .OrderBy("TreeNumber")
+                .Read(_unit.CuttingUnit_CN).ToList();
+            
             _unit.NonPlotTrees = new BindingList<TreeVM>(nonPlotTrees);
             _unit.ValidateTreesAsync();
         }

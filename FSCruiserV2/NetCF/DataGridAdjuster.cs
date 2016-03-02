@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
@@ -151,8 +152,10 @@ namespace FSCruiser.WinForms
 
         public static DataGridTableStyle InitializeLogColumns(DAL dal, EditableDataGrid grid, long stratum_CN)
         {
-            List<LogFieldSetupDO> fieldSetups = dal.Read<LogFieldSetupDO>("WHERE Stratum_CN = ? ORDER BY FieldOrder"
-                , (object)stratum_CN);
+            List<LogFieldSetupDO> fieldSetups = dal.From<LogFieldSetupDO>()
+                .Where("Stratum_CN = ?")
+                .OrderBy("FieldOrder")
+                .Read(stratum_CN).ToList();
 
             DataGridTableStyle tblStyle = new DataGridTableStyle();
             tblStyle.MappingName = "LogDO";
@@ -224,21 +227,20 @@ namespace FSCruiser.WinForms
 
         public static List<TreeFieldSetupDO> GetTreeFieldSetupByStratum(DAL dal, long stratum_cn)
         {
-            //   return base.DAL.Read<TreeFieldSetupDO>(TREEFIELDSETUP._NAME, TREEFIELDSETUP.STRATUM_CN + " = ?", new string[] { stratum_cn });
-            return dal.Read<TreeFieldSetupDO>("WHERE Stratum_CN = ?  ORDER BY FieldOrder"
-                , stratum_cn);
-
+            return dal.From<TreeFieldSetupDO>()
+                .Where("Stratum_CN = ?")
+                .OrderBy("FieldOrder")
+                .Read(stratum_cn).ToList();
         }
 
         public static List<TreeFieldSetupDO> GetTreeFieldSetupByUnit(DAL dal, long unit_cn)
         {
-            return dal.Read<TreeFieldSetupDO>(
-                    @"JOIN CuttingUnitStratum 
-                    ON TreeFieldSetup.Stratum_CN = CuttingUnitStratum.Stratum_CN 
-                    WHERE CuttingUnitStratum.CuttingUnit_CN = ?  
-                    Group BY TreeFieldSetup.Field 
-                    ORDER BY TreeFieldSetup.FieldOrder;", unit_cn);
-
+            return dal.From<TreeFieldSetupDO>()
+                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
+                .Where("CuttingUnitStratum.CuttingUnit_CN = ?")
+                .GroupBy("TreeFieldSetup.Field")
+                .OrderBy("TreeFieldSetup.FieldOrder")
+                .Read(unit_cn).ToList();
         }
 
         private static List<TreeFieldSetupDO> GetTreeFieldSetups(DAL db, CuttingUnitDO unit, StratumVM stratum)

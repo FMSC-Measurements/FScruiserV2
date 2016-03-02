@@ -1,19 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using System.ComponentModel;
 using System.Collections.Generic;
-using System.Collections;
-using FMSC.Sampling;
 using System.Xml.Serialization;
 using System.IO;
-using System.Threading;
-using System.Text;
 using System.Reflection;
 using CruiseDAL;
-using CruiseDAL.Schema;
 using FSCruiser.Core.Models;
-using FMSC.ORM.Core.SQL;
 
 
 namespace FSCruiser.Core
@@ -170,17 +165,15 @@ namespace FSCruiser.Core
                 _cDal = new CruiseDAL.DAL(path);
                 _cDal.LogMessage(string.Format("Opened By FSCruiser ({0})", Constants.FSCRUISER_VERSION), "I");
                 //read all cutting units
-                var units = this._cDal.Read<CuttingUnitVM>((WhereClause)null);
+                var units = this._cDal.From<CuttingUnitVM>().Read().ToList();
                 //HACK insert dummy unit for unit dropdown, this needs to be done by main form 
                 units.Insert(0, new CuttingUnitVM());
                 this.CuttingUnits = units;
 
                 //read the sale, to see if log grading is enabled
-                SaleDO sale = this._cDal.ReadSingleRow<SaleDO>((WhereClause)null);
-                if (sale != null)
-                {
-                    this.ViewController.EnableLogGrading = sale.LogGradingEnabled;
-                }
+                this.ViewController.EnableLogGrading = 
+                    this._cDal.ExecuteScalar<bool>(
+                    "Select LogGradingEnabled FROM Sale LIMIT 1;");
             }            
             finally
             {

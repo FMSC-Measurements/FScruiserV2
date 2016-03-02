@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using CruiseDAL.DataObjects;
 using System.ComponentModel;
@@ -469,30 +470,31 @@ namespace FSCruiser.Core.DataEntry
                 if (stratum.Method == "3PPNT")
                 {
                     //no need to initialize any counts or samplegroup info for 3PPNT
-
                 }
                 else
                 {
-                    List<SampleGroupVM> sgList = this.Database.Read<SampleGroupVM>("WHERE Stratum_CN = ?"
-                        , stratum.Stratum_CN);
+                    List<SampleGroupVM> sgList = this.Database.From<SampleGroupVM>()
+                        .Where("Stratum_CN = ?")
+                        .Read(stratum.Stratum_CN).ToList();
                     view.MakeSGList(sgList, container);
                 }
             }
             else
             {
                 var counts = new List<CountTreeVM>();
-                List<TallySettingsDO> tallySettings = this.Database.Read<TallySettingsDO>(
-                    @"JOIN SampleGroup USING (SampleGroup_CN) 
-                    WHERE SampleGroup.Stratum_CN = ? 
-                    GROUP BY CountTree.SampleGroup_CN, CountTree.TreeDefaultValue_CN, CountTree.Tally_CN",
-                    stratum.Stratum_CN);
+                var tallySettings = this.Database.From<TallySettingsDO>()
+                    .Join("SampleGroup" ,"USING (SampleGroup_CN)")
+                    .Where("SampleGroup.Stratum_CN = ?")
+                    .GroupBy("CountTree.SampleGroup_CN", "CountTree.TreeDefaultValue_CN", "CountTree.Tally_CN")
+                    .Read(stratum.Stratum_CN);
 
                 foreach (TallySettingsDO ts in tallySettings)
                 {
-                    CountTreeVM count = this.Database.ReadSingleRow<CountTreeVM>("WHERE CuttingUnit_CN = ? AND SampleGroup_CN = ? AND Tally_CN = ?"
-                        , this.Unit.CuttingUnit_CN
+                    CountTreeVM count = this.Database.From<CountTreeVM>()
+                        .Where("CuttingUnit_CN = ? AND SampleGroup_CN = ? AND Tally_CN = ?")
+                        .Read(this.Unit.CuttingUnit_CN
                         , ts.SampleGroup_CN
-                        , ts.Tally_CN);
+                        , ts.Tally_CN).FirstOrDefault();
                     if (count == null)
                     {
                         count = new CountTreeVM(this.Database);

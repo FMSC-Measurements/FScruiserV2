@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL;
-using FMSC.ORM.Core.EntityAttributes;
-using FMSC.ORM.Core.EntityModel;
+using FMSC.ORM.EntityModel.Attributes;
+using FMSC.ORM.EntityModel;
 using FMSC.ORM.Core;
 
 
@@ -13,8 +13,8 @@ namespace FSCruiser.Core.Models
     /// What is the purpose of this class? It is a place holder of sorts. I figure that the CountTree table needs to be broken up into seperate data/settings tables
     /// </summary>
     /// TODO this class probably doen't need to inharet from DataObject
-    [SQLEntity(SourceName = "CountTree")]
-    public class TallySettingsDO : DataObject
+    [EntitySource(SourceName = "CountTree")]
+    public class TallySettingsDO : DataObject_Base
     {
         public TallySettingsDO() 
             : base() 
@@ -26,21 +26,15 @@ namespace FSCruiser.Core.Models
             : base(db)
         { }
 
-        [Field(FieldName = "SampleGroup_CN")]
+        [Field(Name = "SampleGroup_CN")]
         public long? SampleGroup_CN { get; set; }
 
 
-        [Field(FieldName= "TreeDefaultValue_CN")]
+        [Field(Name = "TreeDefaultValue_CN")]
         public long? TreeDefaultValue_CN { get; set; }
 
-        [Field(FieldName= "Tally_CN")]
+        [Field(Name = "Tally_CN")]
         public long? Tally_CN { get; set; }
 
-
-        public override void SetValues(DataObject obj)
-        {
-            throw new NotSupportedException();
-            //throw new NotImplementedException();
-        }
     }
 }

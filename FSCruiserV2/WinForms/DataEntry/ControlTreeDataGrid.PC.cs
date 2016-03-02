@@ -93,11 +93,11 @@ namespace FSCruiser.WinForms.DataEntry
 
             if (_speciesColumn != null)
             {
-                _speciesColumn.DataSource = Controller._cDal.Read<TreeDefaultValueDO>((WhereClause)null);
+                _speciesColumn.DataSource = Controller._cDal.From<TreeDefaultValueDO>().Read().ToList();
             }
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = Controller._cDal.Read<SampleGroupVM>((WhereClause)null);
+                _sgColumn.DataSource = Controller._cDal.From<SampleGroupVM>().Read().ToList();
             }
             if (_stratumColumn != null)
             {

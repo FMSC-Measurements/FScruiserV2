@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL;
-using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {

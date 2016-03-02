@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.DataObjects;
@@ -6,7 +7,7 @@ using System.ComponentModel;
 using CruiseDAL;
 using CruiseDAL.Schema;
 using System.Diagnostics;
-using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
@@ -135,10 +136,12 @@ namespace FSCruiser.Core.Models
         {
             if (!_isTreeDataPopulated)
             {
-                List<TreeVM> tList = base.DAL.Read<TreeVM>("WHERE Stratum_CN = ? AND CuttingUnit_CN = ? AND Plot_CN = ? ORDER BY TreeNumber"
-                    , base.Stratum.Stratum_CN
+                List<TreeVM> tList = base.DAL.From<TreeVM>()
+                    .Where("Stratum_CN = ? AND CuttingUnit_CN = ? AND Plot_CN = ?")
+                    .OrderBy("TreeNumber")
+                    .Read(base.Stratum.Stratum_CN
                     , base.CuttingUnit.CuttingUnit_CN
-                    , base.Plot_CN);
+                    , base.Plot_CN).ToList();
                 this._trees = new BindingList<TreeVM>(tList);
                 //this._trees = tList;
 
@@ -183,8 +186,9 @@ namespace FSCruiser.Core.Models
             //extrapolate sample group
             if (assumedSG == null)//if we have a stratum but no sample group, pick the first one
             {
-                List<SampleGroupVM> samplegroups = this.DAL.Read<SampleGroupVM>("WHERE Stratum_CN = ?", 
-                    this.Stratum.Stratum_CN);
+                List<SampleGroupVM> samplegroups = this.DAL.From<SampleGroupVM>()
+                    .Where("Stratum_CN = ?")
+                    .Read(this.Stratum.Stratum_CN).ToList();
                 if (samplegroups.Count == 1)
                 {
                     assumedSG = samplegroups[0];

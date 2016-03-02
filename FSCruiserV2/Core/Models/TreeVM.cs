@@ -2,7 +2,7 @@
 using CruiseDAL;
 using FMSC.ORM.Core;
 using System;
-using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {

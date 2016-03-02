@@ -253,8 +253,10 @@ namespace FSCruiser.WinForms
 
         public static List<DataGridViewColumn> MakeLogColumns(DAL dal, long stratum_CN)
         {
-            List<LogFieldSetupDO> fieldSetups = dal.Read<LogFieldSetupDO>("WHERE Stratum_CN = ? ORDER BY FieldOrder"
-                , (object)stratum_CN);
+            var fieldSetups = dal.From<LogFieldSetupDO>()
+                .Where("Stratum_CN = ?")
+                .OrderBy("FieldOrder")
+                .Query(stratum_CN).ToList();
 
             if (fieldSetups.Count == 0)
             {

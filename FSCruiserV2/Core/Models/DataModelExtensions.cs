@@ -32,10 +32,11 @@ namespace FSCruiser.Core.Models
             Debug.Assert(unit != null);
             Debug.Assert(unit.DAL != null);
 
-            IList<StratumVM> list = unit.DAL.Read<StratumVM>(
-@"JOIN CuttingUnitStratum USING (Stratum_CN) 
-WHERE CuttingUnitStratum.CuttingUnit_CN = ? 
-AND Method IN ( '100', 'STR', '3P', 'S3P')", (object)unit.CuttingUnit_CN);
+            IList<StratumVM> list = unit.DAL.From<StratumVM>()
+                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
+                .Where("CuttingUnitStratum.CuttingUnit_CN = ?" +
+                        "AND Method IN ( '100', 'STR', '3P', 'S3P')")
+                .Read(unit.CuttingUnit_CN).ToList();
 
             foreach (StratumVM s in list)
             {
@@ -189,10 +190,11 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", (object)unit.CuttingUnit_CN);
     {
         public static CountTreeVM FindCountRecord(this TreeDO tree)
         {
-            return tree.DAL.ReadSingleRow<CountTreeVM>("WHERE SampleGroup_CN = ? AND CuttingUnit_CN = ? AND (TreeDefaultValue_CN = ? OR ifnull(TreeDefaultValue_CN, 0) = 0)"
-                ,tree.SampleGroup_CN
+            return tree.DAL.From<CountTreeVM>()
+                .Where("SampleGroup_CN = ? AND CuttingUnit_CN = ? AND (TreeDefaultValue_CN = ? OR ifnull(TreeDefaultValue_CN, 0) = 0)")
+                .Read(tree.SampleGroup_CN
                 ,tree.CuttingUnit_CN
-                ,tree.TreeDefaultValue_CN);
+                ,tree.TreeDefaultValue_CN).FirstOrDefault();
         }
 
         public static int ReadHighestLogNumber(this TreeDO tree)
@@ -226,8 +228,9 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", (object)unit.CuttingUnit_CN);
                 return Constants.EMPTY_SG_LIST;
             }
 
-            return tree.DAL.Read<SampleGroupVM>("WHERE Stratum_CN = ?"
-                , tree.Stratum_CN);
+            return tree.DAL.From<SampleGroupVM>()
+                .Where("Stratum_CN = ?")
+                .Read(tree.Stratum_CN).ToList();
         }
 
         public static ICollection<TreeDefaultValueDO> ReadValidTDVs(this TreeVM tree)
@@ -240,8 +243,10 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", (object)unit.CuttingUnit_CN);
             {
                 if (tree.DAL.GetRowCount("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN) == 1)
                 {
-                    tree.SampleGroup = tree.DAL.ReadSingleRow<SampleGroupVM>("WHERE Stratum_CN = ?"
-                        , (object)tree.Stratum_CN);
+                    tree.SampleGroup = tree.DAL.From<SampleGroupVM>()
+                        .Where("Stratum_CN = ?")
+                        .Read(tree.Stratum_CN)
+                        .FirstOrDefault();
                 }
                 if (tree.SampleGroup == null)
                 {
@@ -250,9 +255,10 @@ AND Method IN ( '100', 'STR', '3P', 'S3P')", (object)unit.CuttingUnit_CN);
             }
 
 
-            List<TreeDefaultValueDO> tdvs = tree.DAL.Read<TreeDefaultValueDO>("JOIN SampleGroupTreeDefaultValue USING (TreeDefaultValue_CN) WHERE SampleGroup_CN = ?"
-                , tree.SampleGroup_CN);
-
+            List<TreeDefaultValueDO> tdvs = tree.DAL.From<TreeDefaultValueDO>()
+                .Join("SampleGroupTreeDefaultValue", "USING (TreeDefaultValue_CN)")
+                .Where("SampleGroup_CN = ?")
+                .Read(tree.SampleGroup_CN).ToList();
 
             return tdvs;
 
