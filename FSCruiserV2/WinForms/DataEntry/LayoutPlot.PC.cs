@@ -73,7 +73,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = AppController._cDal.From<SampleGroupVM>().Read();
+                _sgColumn.DataSource = AppController._cDal.From<SampleGroupVM>().Read().ToList();
             }
             if (_initialsColoumn != null)
             {

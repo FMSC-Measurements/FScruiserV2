@@ -67,7 +67,7 @@ namespace FSCruiser.Core
         {
             //create a list of all samplegroups in the unit
             _unit.SampleGroups = _unit.DAL.From<SampleGroupVM>()
-                .Join("Stratum", "USING (Stratum_CM)")
+                .Join("Stratum", "USING (Stratum_CN)")
                 .Join("CuttingUnitStratum", "USING (Stratum_CN)")
                 .Where("CuttingUnitStratum.CuttingUnit_CN = ?")
                 .Read(_unit.CuttingUnit_CN).ToList();
