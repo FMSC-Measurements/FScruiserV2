@@ -183,37 +183,44 @@ namespace FSCruiser.WinForms.DataEntry
         protected override void OnCellValidating(DataGridViewCellValidatingEventArgs e)
         {
             base.OnCellValidating(e);
-            DataGridViewComboBoxCell cell = base[e.ColumnIndex,e.RowIndex] as DataGridViewComboBoxCell;
+            var cell = base[e.ColumnIndex,e.RowIndex];
             if (cell == null) { return; }
-            if (cell.FormattedValue == e.FormattedValue) { return; }//are there any changes 
-            bool cancel = e.Cancel;
+            if (cell.FormattedValue == e.FormattedValue) { return; }//are there any changes? 
 
             TreeVM curTree = null;
             try
             {
                 curTree = this._BS_trees[e.RowIndex] as TreeVM;
             }
-            catch (SystemException) { return; }//ignore posible out of bound exceptions
+            catch (ArgumentOutOfRangeException) { return; }//ignore posible out of bound exceptions
             if (curTree == null) { return; }
 
             object cellValue = e.FormattedValue;
             cellValue = cell.ParseFormattedValue(cellValue, cell.InheritedStyle, null, null);
-            
 
-            if (_sgColumn != null && cell.ColumnIndex == _sgColumn.Index)
+            if (_treeNumberColumn != null && e.ColumnIndex == _treeNumberColumn.Index)
+            {
+                var newTreeNum = (long)cellValue;
+                if (curTree.TreeNumber != newTreeNum
+                    && !this.DataEntryController.Unit.IsTreeNumberAvalible(newTreeNum))
+                {
+                    MessageBox.Show("Tree Number already exists");
+                    e.Cancel = true;
+                }
+            }
+            else if (_sgColumn != null && e.ColumnIndex == _sgColumn.Index)
             {
                 SampleGroupVM sg = cellValue as SampleGroupVM;
+                bool cancel = e.Cancel;
                 this.DataEntryController.HandleSampleGroupChanging(curTree, sg, out cancel);
-                //e.Cancel = !ProcessSampleGroupChanging(curTree, sg);
+                e.Cancel = cancel;
 
             }
-            if (_speciesColumn != null && cell.ColumnIndex == _speciesColumn.Index)
+            else if (_speciesColumn != null && e.ColumnIndex == _speciesColumn.Index)
             {
                 TreeDefaultValueDO tdv = cellValue as TreeDefaultValueDO;
-                cancel = !this.DataEntryController.HandleSpeciesChanged(curTree, tdv);
-                //e.Cancel = !ProcessSpeciesChanged(curTree, tdv);
+                e.Cancel = !this.DataEntryController.HandleSpeciesChanged(curTree, tdv);
             }
-            e.Cancel = cancel;
         }
 
 

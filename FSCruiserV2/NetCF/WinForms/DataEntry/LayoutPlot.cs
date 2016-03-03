@@ -480,8 +480,13 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 try
                 {
-                    long treeNumber = (long)e.Value;
-                    this.ViewLogicController.HandleTreeNumberChanging(treeNumber, out cancel);
+                    long newTreeNum = (long)e.Value;
+                    if (tree.TreeNumber != newTreeNum
+                    && !this.ViewLogicController.CurrentPlot.IsTreeNumberAvalible(newTreeNum))
+                    {
+                        MessageBox.Show("Tree Number already exists");
+                        e.Cancel = true;
+                    }
                 }
                 catch
                 {

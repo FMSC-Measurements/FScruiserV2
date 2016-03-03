@@ -337,16 +337,20 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void _dataGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            DataGridViewComboBoxCell cell = _dataGrid[e.ColumnIndex, e.RowIndex] as DataGridViewComboBoxCell;
+            var cell = _dataGrid[e.ColumnIndex, e.RowIndex];
             if (cell == null) { return; }
             if (cell.FormattedValue == e.FormattedValue) { return; }//are there any changes 
 
-
             TreeVM curTree = null;
+            object cellValue = null;
             try
             {
+                
+
                 curTree = this.ViewLogicController.CurrentTree;
                 if (curTree == null) { return; }
+
+                cellValue = cell.ParseFormattedValue(e.FormattedValue, cell.InheritedStyle, null, null);
             }
             catch
             {
@@ -354,17 +358,16 @@ namespace FSCruiser.WinForms.DataEntry
                 return;
             }
 
-            //TreeVM curTree = null;
-            //try
-            //{
-
-            //    curTree = this._BS_Trees[e.RowIndex] as TreeVM;
-            //}
-            //catch (SystemException) { return; }//ignore posible out of bound exceptions
-            //if (curTree == null) { return; }
-
-            object cellValue = e.FormattedValue;
-            cellValue = cell.ParseFormattedValue(cellValue, cell.InheritedStyle, null, null);
+            if (_treeNumberColumn != null && e.ColumnIndex == _treeNumberColumn.Index)
+            {
+                var newTreeNum = (long)cellValue;
+                if (curTree.TreeNumber != newTreeNum
+                    && !this.ViewLogicController.CurrentPlot.IsTreeNumberAvalible(newTreeNum))
+                {
+                    MessageBox.Show("Tree Number already exists");
+                    e.Cancel = true;
+                }
+            }
 
             if (_sgColumn != null && cell.ColumnIndex == _sgColumn.Index)
             {
