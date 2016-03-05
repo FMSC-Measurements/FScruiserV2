@@ -135,7 +135,7 @@
             this._tallyDescription_TB.Name = "_tallyDescription_TB";
             this._tallyDescription_TB.ReadOnly = true;
             this._tallyDescription_TB.Size = new System.Drawing.Size(240, 23);
-            this._tallyDescription_TB.TabIndex = 1;
+            this._tallyDescription_TB.TabIndex = 0;
             // 
             // _frequencyTB
             // 
@@ -162,7 +162,7 @@
             this._SumKPI_TB.Location = new System.Drawing.Point(0, 420);
             this._SumKPI_TB.Name = "_SumKPI_TB";
             this._SumKPI_TB.Size = new System.Drawing.Size(240, 23);
-            this._SumKPI_TB.TabIndex = 4;
+            this._SumKPI_TB.TabIndex = 9;
             // 
             // _bigBAFTB
             // 
@@ -171,7 +171,7 @@
             this._bigBAFTB.Name = "_bigBAFTB";
             this._bigBAFTB.ReadOnly = true;
             this._bigBAFTB.Size = new System.Drawing.Size(240, 23);
-            this._bigBAFTB.TabIndex = 5;
+            this._bigBAFTB.TabIndex = 4;
             // 
             // _iFreqTB
             // 
@@ -180,7 +180,7 @@
             this._iFreqTB.Name = "_iFreqTB";
             this._iFreqTB.ReadOnly = true;
             this._iFreqTB.Size = new System.Drawing.Size(240, 23);
-            this._iFreqTB.TabIndex = 6;
+            this._iFreqTB.TabIndex = 5;
             // 
             // _tallyCount_TB
             // 
@@ -188,7 +188,7 @@
             this._tallyCount_TB.Location = new System.Drawing.Point(0, 278);
             this._tallyCount_TB.Name = "_tallyCount_TB";
             this._tallyCount_TB.Size = new System.Drawing.Size(240, 23);
-            this._tallyCount_TB.TabIndex = 7;
+            this._tallyCount_TB.TabIndex = 6;
             // 
             // _totalTreeCount_TB
             // 
@@ -197,7 +197,7 @@
             this._totalTreeCount_TB.Name = "_totalTreeCount_TB";
             this._totalTreeCount_TB.ReadOnly = true;
             this._totalTreeCount_TB.Size = new System.Drawing.Size(240, 23);
-            this._totalTreeCount_TB.TabIndex = 9;
+            this._totalTreeCount_TB.TabIndex = 8;
             // 
             // _countsFromTrees_TB
             // 
@@ -206,7 +206,7 @@
             this._countsFromTrees_TB.Name = "_countsFromTrees_TB";
             this._countsFromTrees_TB.ReadOnly = true;
             this._countsFromTrees_TB.Size = new System.Drawing.Size(240, 23);
-            this._countsFromTrees_TB.TabIndex = 8;
+            this._countsFromTrees_TB.TabIndex = 7;
             // 
             // label3
             // 
@@ -223,7 +223,7 @@
             this._SGDescription_TB.Name = "_SGDescription_TB";
             this._SGDescription_TB.ReadOnly = true;
             this._SGDescription_TB.Size = new System.Drawing.Size(240, 23);
-            this._SGDescription_TB.TabIndex = 20;
+            this._SGDescription_TB.TabIndex = 1;
             // 
             // label4
             // 
@@ -240,7 +240,7 @@
             this._measureTrees_TB.Name = "_measureTrees_TB";
             this._measureTrees_TB.ReadOnly = true;
             this._measureTrees_TB.Size = new System.Drawing.Size(240, 23);
-            this._measureTrees_TB.TabIndex = 22;
+            this._measureTrees_TB.TabIndex = 10;
             // 
             // label2
             // 
@@ -257,7 +257,7 @@
             this._samplingMethod_TB.Name = "_samplingMethod_TB";
             this._samplingMethod_TB.ReadOnly = true;
             this._samplingMethod_TB.Size = new System.Drawing.Size(240, 23);
-            this._samplingMethod_TB.TabIndex = 35;
+            this._samplingMethod_TB.TabIndex = 11;
             // 
             // FormTallySettings
             // 
