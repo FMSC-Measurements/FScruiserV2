@@ -29,7 +29,7 @@ namespace FSCruiser.WinForms
             using (ViewController viewController = new ViewController())
             using (ApplicationController controller = new ApplicationController(viewController))
             {
-                controller.Run();
+                viewController.Run();
             }
             Debug.Close();
             Application.Exit();// forces any extra forms (splash screen) to close

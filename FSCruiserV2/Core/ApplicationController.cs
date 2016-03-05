@@ -9,6 +9,7 @@ using System.IO;
 using System.Reflection;
 using CruiseDAL;
 using FSCruiser.Core.Models;
+using System.Diagnostics;
 
 
 namespace FSCruiser.Core
@@ -155,13 +156,16 @@ namespace FSCruiser.Core
 
         protected void LoadDatabase(String path)
         {
+            Debug.Assert(!string.IsNullOrEmpty(path));
+
+            if (_cDal != null)
+            {
+                _cDal.Dispose();
+            }
             try
             {
                 this.ViewController.ShowWait();
-                if (_cDal != null)
-                {
-                    _cDal.Dispose();
-                }
+                
                 _cDal = new CruiseDAL.DAL(path);
                 _cDal.LogMessage(string.Format("Opened By FSCruiser ({0})", Constants.FSCRUISER_VERSION), "I");
                 //read all cutting units
@@ -171,10 +175,18 @@ namespace FSCruiser.Core
                 this.CuttingUnits = units;
 
                 //read the sale, to see if log grading is enabled
-                this.ViewController.EnableLogGrading = 
+                this.ViewController.EnableLogGrading =
                     this._cDal.ExecuteScalar<bool>(
                     "Select LogGradingEnabled FROM Sale LIMIT 1;");
-            }            
+
+                var fileName = System.IO.Path.GetFileName(path);
+                this.ViewController.MainView.Text = fileName;
+            }
+            catch
+            {
+                this.ViewController.MainView.Text = FSCruiser.Core.Constants.APP_TITLE;
+                throw;
+            }
             finally
             {
                 this.ViewController.HideWait();

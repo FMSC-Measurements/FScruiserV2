@@ -118,7 +118,11 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-
+        public void Run()
+        {
+            BeginShowSplash();
+            Application.Run(MainView);
+        }
 
         public void BeginShowSplash()
         {
