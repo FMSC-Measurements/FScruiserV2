@@ -151,7 +151,7 @@
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
-            this.Text = "FSCruiser";
+            this.Text = FSCruiser.Core.Constants.APP_TITLE;
             panel1.ResumeLayout(false);
             this._viewContentPanel.ResumeLayout(false);
             this._viewNavPanel.ResumeLayout(false);
