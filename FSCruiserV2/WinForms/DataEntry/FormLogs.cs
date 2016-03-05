@@ -42,7 +42,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._treeDesLbl.Text = tree.GetLogLevelDescription();
 
             this._logs = new BindingList<LogDO>(tree.QueryLogs());
-            this._logNumIndex = tree.ReadHighestLogNumber();
+            //this._logNumIndex = tree.ReadHighestLogNumber();
             //if (_logs.Count == 0)
             //{
             //    _logNumIndex = 0;
@@ -63,6 +63,37 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.Focus();
             tree.LogCountDirty = true;
             return this.ShowDialog();
+        }
+
+        int GetHighestLogNum()
+        {
+            int highest = 0;
+            foreach (var log in _logs)
+            {
+                int logNum = 0;
+                if(int.TryParse(log.LogNumber,out logNum))
+                {
+                    highest = Math.Max(highest, logNum);
+                }
+            }
+            return highest;
+        }
+
+        bool IsLogNumAvalible(int newLogNum)
+        {
+            foreach (var log in _logs)
+            {
+                int logNum = 0;
+                if (int.TryParse(log.LogNumber, out logNum))
+                {
+                    if (newLogNum == logNum)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -89,40 +120,17 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
 
-
         private LogDO AddLogRec()
         {
             LogDO newLog = new LogDO(this.Controller._cDal);
             newLog.Tree_CN = _currentTree.Tree_CN;
-            newLog.LogNumber = (++_logNumIndex).ToString();
+            newLog.LogNumber = (GetHighestLogNum() + 1).ToString();
 
             this._logs.Add(newLog);
             this._dataGrid.GoToLastRow();
             this._dataGrid.GoToFirstColumn();
             return newLog;
         }
-
-        private bool SetLogNumberSequance(int start)
-        {
-            foreach (LogDO log in this._logs)
-            {
-                if (log.LogNumber == start.ToString())
-                {
-                    return false;
-                }
-            }
-            if (start > this._logNumIndex)
-            {
-                this._logNumIndex = start;
-
-            }
-            return true;
-        }
-
-        //private void _BS_Logs_AddingNew(object sender, AddingNewEventArgs e)
-        //{
-        //    e.NewObject = AddLogRec();
-        //}
 
         void _dataGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
@@ -131,15 +139,20 @@ namespace FSCruiser.WinForms.DataEntry
                 try
                 {
                     var cell = _dataGrid[e.ColumnIndex, e.RowIndex];
-                    var cellValue = cell.ParseFormattedValue(e.FormattedValue, cell.Style, null, null);
-                    if (cellValue == null || !(cellValue is Int32))
-                    {
-                        e.Cancel = true;
-                        return;
-                    }
+                    var cellValue = cell.ParseFormattedValue(
+                        e.FormattedValue
+                        , cell.Style
+                        , null, null) as string;
 
-                    int newLogNumber = (int)cellValue ;
-                    if (!this.SetLogNumberSequance(newLogNumber))
+                    int newLogNumber;
+                    if (int.TryParse(cellValue, out newLogNumber))
+                    {
+                        if (!this.IsLogNumAvalible(newLogNumber))
+                        {
+                            e.Cancel = true;
+                        }
+                    }
+                    else
                     {
                         e.Cancel = true;
                     }
@@ -156,15 +169,6 @@ namespace FSCruiser.WinForms.DataEntry
             if (this._dataGrid.CurrentRow == null) { return; }
             LogDO log = this._dataGrid.CurrentRow.DataBoundItem as LogDO;
             if (log == null) { return; }
-
-            try
-            {
-                if (Convert.ToInt32(log.LogNumber) == _logNumIndex - 1)
-                {
-                    _logNumIndex--;
-                }
-            }
-            catch (System.FormatException) { }//do nothing}
 
             log.Delete();
             this._logs.Remove(log);

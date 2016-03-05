@@ -58,17 +58,85 @@ namespace FSCruiser.WinForms.DataEntry
             
         }
 
+        int GetHighestLogNum()
+        {
+            int highest = 0;
+            foreach (var log in _logs)
+            {
+                int logNum = 0;
+                if (TryParseInt(log.LogNumber, out logNum))
+                {
+                    highest = Math.Max(highest, logNum);
+                }
+            }
+            return highest;
+        }
+
+        bool IsLogNumAvalible(int newLogNum)
+        {
+            foreach (var log in _logs)
+            {
+                int logNum = 0;
+                if (TryParseInt(log.LogNumber, out logNum))
+                {
+                    if (newLogNum == logNum)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+
+        }
+
+        bool TryParseInt(string s, out int result)
+        {
+            try
+            {
+                result = int.Parse(s);
+                return true;
+            }
+            catch
+            {
+                result = default(int);
+                return false;
+            }
+
+        }
+
         void _dataGrid_CellValidating(object sender, EditableDataGridCellValidatingEventArgs e)
         {
             if (e.Column == this._logNumColumn)
             {
+                //try
+                //{
+                //    int newLogNumber = (int)e.Value;
+                //    if (!this.SetLogNumberSequance(newLogNumber))
+                //    {
+                //        e.Cancel = true;
+                //    }
+                //}
+                //catch
+                //{
+                //    e.Cancel = true;
+                //}
+
                 try
                 {
-                    int newLogNumber = (int)e.Value;
-                    if (!this.SetLogNumberSequance(newLogNumber))
+                    var cellValue = e.Value as string;
+
+                    int newLogNumber;
+                    if (TryParseInt(cellValue, out newLogNumber))
+                    {
+                        if (!this.IsLogNumAvalible(newLogNumber))
+                        {
+                            e.Cancel = true;
+                        }
+                    }
+                    else
                     {
                         e.Cancel = true;
-                    }
+                    }         
                 }
                 catch
                 {
