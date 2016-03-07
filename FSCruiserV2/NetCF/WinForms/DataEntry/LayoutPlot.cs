@@ -930,7 +930,8 @@ namespace FSCruiser.WinForms.DataEntry
 
             TreeVM tree = null;
             //see if the user is in the DBH column 
-            if (this._dataGrid.CurrentCollumn.MappingName == "DBH")
+            if (this._dataGrid.CurrentCollumn != null
+                && this._dataGrid.CurrentCollumn.MappingName == "DBH")
             {
                 //is a tree selected and if so grab it and take its dbh
                 TreeVM curTree = this.ViewLogicController.CurrentTree;
