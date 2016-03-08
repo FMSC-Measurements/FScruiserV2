@@ -1,6 +1,13 @@
 
 Background:
-GIVEN active view is plotlayout 
+GIVEN the following Plots exist:
+    |plot#  |IsNull |
+    |1      |true   |
+    |2      |false  |
+AND the following tallys are set up
+    |hotkey |
+    |x      |
+AND active view is plotlayout 
 
 
 GIVEN tally bar is visable
@@ -43,6 +50,12 @@ GIVEN current plot is a null plot
 WHEN user clicks the "Add Tree" button 
 THEN no tree is added to current plot 
 AND message is shown to user //pass
+
+GIVEN current plot is a null plot
+THEN the current plot display ends with "-Null"
+
+GIVEN current plot is not a null plot
+THEN the current plot display doesn't end with "-Null"
 
 
 GIVEN one or more trees has an error
