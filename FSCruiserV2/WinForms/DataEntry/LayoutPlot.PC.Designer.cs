@@ -122,9 +122,10 @@
             // toolStripComboBox1
             // 
             this.toolStripComboBox1.AccessibleName = "Position";
+            this.toolStripComboBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.toolStripComboBox1.Name = "toolStripComboBox1";
             this.toolStripComboBox1.Size = new System.Drawing.Size(75, 25);
-            this.toolStripComboBox1.ToolTipText = "Current position";
+            this.toolStripComboBox1.ToolTipText = "Current Plot";
             // 
             // bindingNavigatorSeparator1
             // 

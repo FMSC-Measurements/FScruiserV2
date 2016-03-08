@@ -516,7 +516,7 @@ namespace FSCruiser.WinForms.DataEntry
         public void BindPlotData(BindingSource plotBS)
         {
             this._bindingNavigator.BindingSource = plotBS;
-            this.toolStripComboBox1.ComboBox.DisplayMember = "PlotNumber";
+            this.toolStripComboBox1.ComboBox.DisplayMember = "Self";
             this.toolStripComboBox1.ComboBox.DataSource = plotBS;
         }
 
