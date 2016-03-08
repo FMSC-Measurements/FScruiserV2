@@ -102,41 +102,46 @@ namespace FSCruiser.WinForms
             List<TreeFieldSetupDO> fieldSetups = GetTreeFieldSetups(db, unit, stratum);
             List<DataGridViewColumn> columns = new List<DataGridViewColumn>();
 
-            DataGridViewColumn col;
-            for (int i = 0; i < fieldSetups.Count; i++)
+            foreach (var fieldSetup in fieldSetups)
             {
-                string columnType = fieldSetups[i].ColumnType;
-                col = null;
-
-                switch (fieldSetups[i].Field)
+                DataGridViewColumn col = null;
+                switch (fieldSetup.Field)
                 {
                     case "Species":
                         {
-                            col = new DataGridViewComboBoxColumn();
-                            ((DataGridViewComboBoxColumn)col).DisplayMember = "Species";
-                            ((DataGridViewComboBoxColumn)col).ValueMember = "Self";
-                            //col.DataPropertyName = "TreeDefaultValue";
+                            col = new DataGridViewComboBoxColumn()
+                            {
+                                DisplayMember = "Species",
+                                ValueMember = "Self"
+                            };
                             break;
                         }
                     case "CountOrMeasure":
                         {
-                            col = new DataGridViewComboBoxColumn();
-                            ((DataGridViewComboBoxColumn)col).DataSource = new string[] { "C", "M", "I" };
+                            col = new DataGridViewComboBoxColumn()
+                            {
+                                DataSource = new string[] { "C", "M", "I" }
+                            };
                             break;
                         }
                     case "LiveDead":
                         {
-                            col = new DataGridViewComboBoxColumn();
-                            ((DataGridViewComboBoxColumn)col).DataSource = new string[] { "L", "D" };
+                            col = new DataGridViewComboBoxColumn()
+                            {
+                                DataSource = new string[] { "L", "D" }
+                            };
+
                             break;
                         }
                     case "Stratum":
                         {
                             if (unit != null && unit.Strata.Count > 1)
                             {
-                                col = new DataGridViewComboBoxColumn();
-                                ((DataGridViewComboBoxColumn)col).DisplayMember = "Code";
-                                ((DataGridViewComboBoxColumn)col).ValueMember = "Self";
+                                col = new DataGridViewComboBoxColumn()
+                                {
+                                    DisplayMember = "Code",
+                                    ValueMember = "Self"
+                                };
                                 break;
                             }
                             else
@@ -146,27 +151,30 @@ namespace FSCruiser.WinForms
                         }
                     case "SampleGroup":
                         {
-                            col = new DataGridViewComboBoxColumn();
-                            ((DataGridViewComboBoxColumn)col).DisplayMember = "Code";
-                            ((DataGridViewComboBoxColumn)col).ValueMember = "Self";
+                            col = new DataGridViewComboBoxColumn()
+                            {
+                                DisplayMember = "Code",
+                                ValueMember = "Self"
+                            };
                             break;
                         }
                     case "KPI":
                         {
-                            col = MakeColumn(columnType);
+                            col = MakeColumn(fieldSetup.ColumnType);
                             // col.ReadOnly = true;
                             break;
                         }
-                    //case "Initials":
-                    //    {
-                    //        col = new DataGridViewComboBoxColumn();
-                    //        ((DataGridViewComboBoxColumn)col).DisplayMember = "Initials";
-                    //        ((DataGridViewComboBoxColumn)col).ValueMember = "Initials";
-                    //        break;
-                    //    }
+                    case "Initials":
+                        {
+                            col = new DataGridViewTextBoxColumn()
+                            {
+                                MaxInputLength = 3
+                            };
+                            break;
+                        }
                     default:
                         {
-                            col = MakeColumn(columnType);
+                            col = MakeColumn(fieldSetup.ColumnType);
                             break;
                         }
 
@@ -174,21 +182,22 @@ namespace FSCruiser.WinForms
 
                 if (String.IsNullOrEmpty(col.DataPropertyName)) //see if we have already set the Mapping Name
                 {
-                    col.DataPropertyName = fieldSetups[i].Field;
+                    col.DataPropertyName = fieldSetup.Field;
                 }
                 col.Name = col.DataPropertyName;
 
                 if (String.IsNullOrEmpty(col.HeaderText))
                 {
-                    col.HeaderText = fieldSetups[i].Heading;
+                    col.HeaderText = fieldSetup.Heading;
                 }
                 
-                if ((col.DefaultCellStyle == null || string.IsNullOrEmpty(col.DefaultCellStyle.Format)) //if format not alread defined (has no default cell style or default cell style has no format)
-                    && (!string.IsNullOrEmpty(fieldSetups[i].Format)))                                  // AND field has format 
+                if (!string.IsNullOrEmpty(fieldSetup.Format)    //field has format 
+                    && (col.DefaultCellStyle == null            //and column doesn't have format set yet
+                    || string.IsNullOrEmpty(col.DefaultCellStyle.Format)))
                 {
                     col.DefaultCellStyle = new DataGridViewCellStyle()
                         {
-                            Format = fieldSetups[i].Format
+                            Format = fieldSetup.Format
                         };
                 }
 
