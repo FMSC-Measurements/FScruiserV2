@@ -136,7 +136,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                return true;
+                return !this._dataGrid.IsCurrentCellInEditMode;
             }
         }
         public Dictionary<char, CountTreeVM> HotKeyLookup

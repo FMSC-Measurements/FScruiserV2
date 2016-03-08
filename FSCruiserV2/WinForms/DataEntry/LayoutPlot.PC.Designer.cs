@@ -59,6 +59,7 @@
             this._dataGrid.AllowUserToDeleteRows = false;
             this._dataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this._dataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._dataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnF2;
             this._dataGrid.Location = new System.Drawing.Point(0, 25);
             this._dataGrid.Margin = new System.Windows.Forms.Padding(0);
             this._dataGrid.Name = "_dataGrid";
@@ -180,7 +181,7 @@
             this._plotInfoBTN.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this._plotInfoBTN.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._plotInfoBTN.Name = "_plotInfoBTN";
-            this._plotInfoBTN.Size = new System.Drawing.Size(35, 19);
+            this._plotInfoBTN.Size = new System.Drawing.Size(35, 22);
             this._plotInfoBTN.Text = " Info";
             this._plotInfoBTN.Click += new System.EventHandler(this._plotInfoBTN_Click);
             // 
