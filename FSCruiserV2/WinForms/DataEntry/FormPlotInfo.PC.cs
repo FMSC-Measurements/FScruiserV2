@@ -22,7 +22,8 @@ namespace FSCruiser.WinForms.DataEntry
         protected override void OnShowing(PlotVM plotInfo, bool allowEdit)
         {
             base.OnShowing(plotInfo, allowEdit);
-            this._plotNumTB.Enabled = allowEdit;
+            this._plotNumTB.Enabled = true;
+            //this._plotNumTB.Enabled = allowEdit;
             //this._plotStatsTB.Text = ApplicationController.GetPlotInfo(plotInfo);
 
             

@@ -43,7 +43,8 @@ namespace FSCruiser.WinForms.DataEntry
             this.DialogResult = DialogResult.OK;
             _currentPlotInfo = plotInfo;
             //PlotDO plot = plotInfo.Plot;
-            this._plotNumTB.Enabled = allowEdit;
+            this._plotNumTB.Enabled = true;
+            //this._plotNumTB.Enabled = allowEdit;
             //this._isNullCB.Checked = plotInfo.IsNull;//Hack, binding isn't working 
             //this._slope.Enabled = allowEdit;
             //this._aspect.Enabled = allowEdit;
