@@ -64,7 +64,10 @@ namespace FSCruiser.Core
 
         public static readonly String[] UOM_CODES = new string[] { "01", "02", "03", "04", "05"};
 
-
+        public static readonly char[] HOTKEY_KEYS = new char[] {'A','B','C','D','E','F'
+            ,'G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+            ,'1','2','3','4','5','6','7','8','9','0'
+            ,'*','.' };
 
     }
 }
