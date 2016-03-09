@@ -221,6 +221,12 @@
     <Compile Include="Core\Models\TallySettingsDO.cs" />
     <Compile Include="Core\Models\TreeVM.cs" />
     <Compile Include="NetCF\WinForms\ViewController.cs" />
+    <Compile Include="WinForms.Common\TallyRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\TallyRow.Designer.cs">
+      <DependentUpon>TallyRow.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms.Common\TreeBasedTallyView_Base.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -284,12 +290,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="NetCF\WinForms\DataEntry\TallyRow.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="NetCF\WinForms\DataEntry\TallyRow.Designer.cs">
-      <DependentUpon>TallyRow.cs</DependentUpon>
-    </Compile>
     <Compile Include="NetCF\Win32.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -338,9 +338,8 @@
       <DependentUpon>FormTallySetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NetCF\WinForms\DataEntry\TallyRow.resx">
+    <EmbeddedResource Include="WinForms.Common\TallyRow.resx">
       <DependentUpon>TallyRow.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\TreeBasedTallyView_Base.resx">
       <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>

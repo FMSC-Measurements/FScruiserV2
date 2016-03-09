@@ -184,20 +184,20 @@ namespace FSCruiser.WinForms.DataEntry
 
         public Control MakeTallyRow(Control container, CountTreeVM count)
         {
-            TallyRow row = new TallyRow();
+            TallyRow row = new TallyRow(count);
             row.SuspendLayout();
 
-            row.DiscriptionLabel.Text = count.Tally.Description;
-            row.TallyButton.Click += new EventHandler(this.HandleTallyButtonClick);
-            row.SettingsButton.Click += new EventHandler(this.HandleSettingsButtonClick);
-            if (count.Tally.Hotkey != null && count.Tally.Hotkey.Length > 0)
-            {
-                row.HotKeyLabel.Text = count.Tally.Hotkey.Substring(0, 1);
-            }
+            //row.DiscriptionLabel.Text = count.Tally.Description;
+            row.TallyButtonClicked += new EventHandler(this.HandleTallyButtonClick);
+            row.SettingsButtonClicked += new EventHandler(this.HandleSettingsButtonClick);
+            //if (count.Tally.Hotkey != null && count.Tally.Hotkey.Length > 0)
+            //{
+            //    row.HotKeyLabel.Text = count.Tally.Hotkey.Substring(0, 1);
+            //}
 
-            row.TallyButton.DataBindings.Add(new Binding("Text", count, "TreeCount"));
+            //row.TallyButton.DataBindings.Add(new Binding("Text", count, "TreeCount"));
 
-            row.Tag = count;
+            //row.Tag = count;
             row.Parent = container;
 
 
@@ -228,11 +228,11 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void HandleSettingsButtonClick(object sender, EventArgs e)
         {
-            Button settingsbutton = (Button)sender;
-            TallyRow row = (TallyRow)settingsbutton.Parent.Parent;
-            CountTreeVM count = (CountTreeVM)row.Tag;
+            var settingsbutton = (Button)sender;
+            var row = (TallyRow)settingsbutton.Parent.Parent;
+            var count = row.Count;
             this.ViewLogicController.ViewController.ShowTallySettings(count);
-            row.DiscriptionLabel.Text = count.Tally.Description;
+            //row.DiscriptionLabel.Text = count.Tally.Description;
         }
 
         public void OnTally(CountTreeVM count)

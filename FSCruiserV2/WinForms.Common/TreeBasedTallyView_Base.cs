@@ -184,7 +184,7 @@ namespace FSCruiser.WinForms
             TallyRow row = (TallyRow)sender;
             CountTreeVM count = row.Count;
             Controller.ViewController.ShowTallySettings(count);
-            row.DiscriptionLabel.Text = count.Tally.Description;
+            //row.DiscriptionLabel.Text = count.Tally.Description;
         }
 
         protected void OnTallyButtonClicked(object sender, EventArgs e)
@@ -307,21 +307,21 @@ namespace FSCruiser.WinForms
 
         public Control MakeTallyRow(Control container, CountTreeVM count)
         {
-            TallyRow row = new TallyRow();
+            TallyRow row = new TallyRow(count);
             row.SuspendLayout();
-            row.DiscriptionLabel.Text = count.Tally.Description;
+            //row.DiscriptionLabel.Text = count.Tally.Description;
 
             row.TallyButtonClicked += new EventHandler(this.OnTallyButtonClicked);
             row.SettingsButtonClicked += new EventHandler(this.OnTallySettingsClicked);
 
-            if (count.Tally.Hotkey != null && count.Tally.Hotkey.Length > 0)
-            {
-                row.HotKeyLabel.Text = count.Tally.Hotkey.Substring(0, 1);
-            }
+            //if (count.Tally.Hotkey != null && count.Tally.Hotkey.Length > 0)
+            //{
+            //    row.HotKeyLabel.Text = count.Tally.Hotkey.Substring(0, 1);
+            //}
 
-            row.TallyButton.DataBindings.Add(new Binding("Text", count, "TreeCount"));
+            //row.TallyButton.DataBindings.Add(new Binding("Text", count, "TreeCount"));
 
-            row.Count = count;
+            //row.Count = count;
             row.Parent = container;
 
 

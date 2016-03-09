@@ -107,6 +107,12 @@
     <Compile Include="WinForms.Common\FormDataEntryBase.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="WinForms.Common\TallyRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\TallyRow.Designer.cs">
+      <DependentUpon>TallyRow.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms.Common\TreeBasedTallyView_Base.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -193,12 +199,6 @@
     <Compile Include="WinForms\DataEntry\LayoutTreeBased.PC.Designer.cs">
       <DependentUpon>LayoutTreeBased.PC.cs</DependentUpon>
     </Compile>
-    <Compile Include="WinForms\DataEntry\TallyRow.PC.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\TallyRow.PC.Designer.cs">
-      <DependentUpon>TallyRow.PC.cs</DependentUpon>
-    </Compile>
     <Compile Include="WinForms\DataGridAjuster.PC.cs" />
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="WinForms\ViewController.PC.cs" />
@@ -208,6 +208,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormDataEntryBase.resx">
       <DependentUpon>FormDataEntryBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\TallyRow.resx">
+      <DependentUpon>TallyRow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\TreeBasedTallyView_Base.resx">
       <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>
@@ -261,10 +265,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\DataEntry\LayoutTreeBased.PC.resx">
       <DependentUpon>LayoutTreeBased.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\TallyRow.PC.resx">
-      <DependentUpon>TallyRow.PC.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
