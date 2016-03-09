@@ -635,35 +635,53 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public bool HandleHotKeyFirst(char key)
-        {
-            //TODO handle non-tally hot keys such as species for single stage stuff
+        //public bool HandleHotKeyFirst(char key)
+        //{
+        //    //TODO handle non-tally hot keys such as species for single stage stuff
+        //    if (key == '+')
+        //    {
+        //        this._addPlotButton_Click(null, null);
+        //        return true;
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
-        public bool HandleEscKey()
+        //public bool HandleEscKey()
+        //{
+        //    if (_viewLoading) { return false; }
+        //    IsGridExpanded = !IsGridExpanded;
+        //    return true;            
+        //}
+
+        public bool PreviewKeypress(string key)
         {
             if (_viewLoading) { return false; }
-            IsGridExpanded = !IsGridExpanded;
-            return true;
-            //if (!this.IsGridExpanded)
-            //{
-            //    this.IsGridExpanded = true;
-            //    return true;
-            //}
-            //return false;
-            
+            switch (key)
+            {
+                case "Add":
+                    {
+                        this._addPlotButton_Click(null, null);
+                        return true;
+                    }
+                case "Escape":
+                    {
+                        IsGridExpanded = !IsGridExpanded;
+                        return true;
+                    }
+                default:
+                    return false;
+            }
         }
 
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
-            base.OnKeyUp(e);
-            if (e.Handled == true) { return; }
-            char key = (char)e.KeyValue;
-            if (_viewLoading) { return; }
-            e.Handled = this.ViewLogicController.DataEntryController.ProcessHotKey(key, this);
-        }
+        //protected override void OnKeyUp(KeyEventArgs e)
+        //{
+        //    base.OnKeyUp(e);
+        //    if (e.Handled == true) { return; }
+        //    char key = (char)e.KeyValue;
+        //    if (_viewLoading) { return; }
+        //    e.Handled = this.ViewLogicController.DataEntryController.ProcessHotKey(key, this);
+        //}
 
         private void _expandGridButton_Click(object sender, EventArgs e)
         {

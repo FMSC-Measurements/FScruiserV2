@@ -206,8 +206,6 @@ namespace FSCruiser.WinForms.Common
             base.OnKeyDown(e);
             if (e.Handled) { return; }
 
-            char key = (char)e.KeyValue;
-
             // HACK when the escape key is pressed on some controls 
             // the device will make a invalid key press sound if OnKeyDown is not handled
             // we handle the key press in OnKeyUp
@@ -222,20 +220,24 @@ namespace FSCruiser.WinForms.Common
             base.OnKeyUp(e);
             if (e.Handled) { return; }
 
-            switch(e.KeyData)
-            {
-                case Keys.Escape:
-                    {
-                        e.Handled = this.LogicController.HandleEscKey();
-                        break;
-                    }
-                default:
-                    {
-                        char key = (char)e.KeyValue;
-                        e.Handled = this.LogicController.HandleHotKey(key);
-                        break;
-                    }
-            }
+            var key = e.KeyData.ToString();
+            e.Handled = this.LogicController.HandleKeyPress(key);
+
+            //switch(e.KeyData)
+            //{
+            //    case Keys.Escape:
+            //        {
+            //            e.Handled = this.LogicController.HandleEscKey();
+            //            break;
+            //        }
+                
+            //    default:
+            //        {
+            //            char key = (char)e.KeyValue;
+            //            e.Handled = this.LogicController.HandleHotKey(key);
+            //            break;
+            //        }
+            //}
         }
 
 

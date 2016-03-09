@@ -537,55 +537,105 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public bool ProcessHotKey(char key, ITallyView view)
-        {
-            //if no tally view or not accepting hotkeys, jump out
-            if (view == null || view.HotKeyEnabled == false)
-            {
-                return false;
-            }
-            else if (view.HandleHotKeyFirst(key))//pass off to tally view to handle
-            {
-                return true; //if handled return
-            }
+        //public bool ProcessHotKey(char key, ITallyView view)
+        //{
+        //    //if no tally view or not accepting hotkeys, jump out
+        //    if (view == null || view.HotKeyEnabled == false)
+        //    {
+        //        return false;
+        //    }
+        //    //else if (view.HandleHotKeyFirst(key))//pass off to tally view to handle
+        //    //{
+        //    //    return true; //if handled return
+        //    //}
 
-            //if valid stratm hot key, go to view that stratum belongs to
-            if (this.StratumHotKeyLookup.ContainsKey(key))
+        //    //if valid stratm hot key, go to view that stratum belongs to
+        //    if (this.StratumHotKeyLookup.ContainsKey(key))
+        //    {
+        //        this.View.GoToPageIndex(this.StratumHotKeyLookup[key]);
+        //        return true;
+        //    }
+        //    else//not a stratum hotkey 
+        //    {
+        //        if (view.HotKeyLookup != null && view.HotKeyLookup.ContainsKey(key))//maybe a tally hotkey
+        //        {
+        //            CountTreeVM count = view.HotKeyLookup[key];
+        //            view.OnTally(count);
+        //            return true;
+        //        }
+        //        else//not valid hotkey, get angry
+        //        {
+        //            this.ViewController.SignalInvalidAction();
+        //            return true;
+        //        }
+        //    }
+        //}
+
+
+
+        //public bool HandleHotKey(char key)
+        //{
+        //    ITallyView view = this.View.FocusedLayout as ITallyView;
+        //    return this.ProcessHotKey(key, view);
+        //}
+
+        public bool HandleKeyPress(string key)
+        {
+            var view = this.View.FocusedLayout;
+
+            if (view != null 
+                && view.PreviewKeypress(key))
             {
-                this.View.GoToPageIndex(this.StratumHotKeyLookup[key]);
                 return true;
             }
-            else//not a stratum hotkey 
+
+            var tallyView = this.View.FocusedLayout as ITallyView;
+            if (tallyView != null)
             {
-                if (view.HotKeyLookup != null && view.HotKeyLookup.ContainsKey(key))//maybe a tally hotkey
+                if (key.Length != 1) { return false; }
+                var keyChar = char.ToUpper(key[0]);
+
+                if (!IsHotkeyKey(keyChar)) { return false; }
+
+                if (tallyView.HotKeyEnabled == false) { return false; }
+                //if valid stratm hot key, go to view that stratum belongs to
+                if (this.StratumHotKeyLookup.ContainsKey(keyChar))
                 {
-                    CountTreeVM count = view.HotKeyLookup[key];
-                    view.OnTally(count);
+                    this.View.GoToPageIndex(this.StratumHotKeyLookup[keyChar]);
                     return true;
                 }
-                else//not valid hotkey, get angry
+                else if (tallyView.HotKeyLookup != null && tallyView.HotKeyLookup.ContainsKey(keyChar))//maybe a tally hotkey
+                {
+                    CountTreeVM count = tallyView.HotKeyLookup[keyChar];
+                    tallyView.OnTally(count);
+                    return true;
+                }
+                else//not valid hotkey, get grumpy
                 {
                     this.ViewController.SignalInvalidAction();
                     return true;
                 }
             }
-        }
-
-        public bool HandleHotKey(char key)
-        {
-            ITallyView view = this.View.FocusedLayout as ITallyView;
-            return this.ProcessHotKey(key, view);
-        }
-
-        public bool HandleEscKey()
-        {
-            IDataEntryPage view = this.View.FocusedLayout;
-            if (view != null)
+            else
             {
-                return view.HandleEscKey();
+                return false;
             }
-            return false;
         }
+
+        bool IsHotkeyKey(char c)
+        {
+            return Array.IndexOf(Constants.HOTKEY_KEYS, c) != -1;
+        }
+
+        //public bool HandleEscKey()
+        //{
+        //    IDataEntryPage view = this.View.FocusedLayout;
+        //    if (view != null)
+        //    {
+        //        return view.HandleEscKey();
+        //    }
+        //    return false;
+        //}
 
 
         public void HandleKPIChanging(TreeVM tree, float newKPI, bool doSample, out bool cancel)

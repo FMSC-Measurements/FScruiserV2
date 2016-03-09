@@ -324,11 +324,25 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public bool HandleEscKey()
+        public bool PreviewKeypress(string key)
         {
-            this.DataEntryController.View.GoToTallyPage();
-            return true;
+            switch (key)
+            {
+                case "Escape": //esc
+                    {
+                        this.DataEntryController.View.GoToTallyPage();
+                        return true;
+                    }
+                default:
+                    { return false; }
+            }
         }
+
+        //public bool HandleEscKey()
+        //{
+        //    this.DataEntryController.View.GoToTallyPage();
+        //    return true;
+        //}
 
         public void HandleLoad()
         {

@@ -139,12 +139,12 @@ namespace FSCruiser.WinForms
         }
 
         #region overrid methods
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
-            base.OnKeyUp(e);
-            char key = (char)e.KeyValue;
-            e.Handled = this.DataEntryController.ProcessHotKey(key, this);
-        }
+        //protected override void OnKeyUp(KeyEventArgs e)
+        //{
+        //    base.OnKeyUp(e);
+        //    char key = (char)e.KeyValue;
+        //    e.Handled = this.DataEntryController.ProcessHotKey(key, this);
+        //}
 
         #endregion
 
@@ -281,19 +281,19 @@ namespace FSCruiser.WinForms
             get { return true; }
         }
 
-        public bool HandleHotKeyFirst(char key)
-        {
-            key = char.ToUpper(key);
-            if (StrataHotKeyLookup.ContainsKey(key))
-            {
-                DisplayTallyPanel(StrataHotKeyLookup[key]);
-                return true;
-            }
-            return false;
+        //public bool HandleHotKeyFirst(char key)
+        //{
+        //    key = char.ToUpper(key);
+        //    if (StrataHotKeyLookup.ContainsKey(key))
+        //    {
+        //        DisplayTallyPanel(StrataHotKeyLookup[key]);
+        //        return true;
+        //    }
+        //    return false;
 
 
-            //return Controller.ProcessHotKey(key, this);
-        }
+        //    //return Controller.ProcessHotKey(key, this);
+        //}
 
         public virtual void MakeSGList(List<FSCruiser.Core.Models.SampleGroupVM> list, Panel container)
         {
@@ -399,11 +399,31 @@ namespace FSCruiser.WinForms
             this._viewLoading = false;
         }
 
-        public bool HandleEscKey()
+        public bool PreviewKeypress(string key)
         {
-            this.DataEntryController.View.GotoTreePage();
-            return true;
+            if (key == "Escape")//esc
+            {
+                this.DataEntryController.View.GotoTreePage();
+                return true;
+            }
+
+            if (key.Length == 1)
+            {
+                var keyChar = char.ToUpper(key[0]);
+                if (StrataHotKeyLookup.ContainsKey(keyChar))
+                {
+                    DisplayTallyPanel(StrataHotKeyLookup[keyChar]);
+                    return true;
+                }
+            }
+            return false;
         }
+
+        //public bool HandleEscKey()
+        //{
+        //    this.DataEntryController.View.GotoTreePage();
+        //    return true;
+        //}
 
         #endregion
     }

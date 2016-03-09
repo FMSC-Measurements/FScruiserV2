@@ -148,16 +148,29 @@ namespace FSCruiser.WinForms.DataEntry
 
         }
 
-        public bool HandleHotKeyFirst(char key)
-        {
-            return false;//TODO not implemented
-        }
 
-        public bool HandleEscKey()
+        public bool PreviewKeypress(string key)
         {
-            return false;//TODO not implemented
-        }
+            if (_viewLoading) { return false; }
+            switch (key)
+            {
+                case "Add":
+                    {
+                        this._addPlotButton_Click(null, null);
+                        return true;
+                    }
+                case "Escape":
+                    {
+                        #warning not implemented
+                        return false;
+                        //IsGridExpanded = !IsGridExpanded;
+                        //return true;
+                    }
+                default:
+                    return false;
+            }
 
+        }
 
         public void MakeSGList(List<SampleGroupVM> list, Panel container)
         {
@@ -546,14 +559,14 @@ namespace FSCruiser.WinForms.DataEntry
             this.ViewLogicController.UpdateCurrentPlot();
         }
 
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
-            base.OnKeyUp(e);
-            if (e.Handled == true) { return; }
-            char key = (char)e.KeyValue;
-            if (_viewLoading) { return; }
-            e.Handled = this.ViewLogicController.DataEntryController.ProcessHotKey(key, this);
-        }
+        //protected override void OnKeyUp(KeyEventArgs e)
+        //{
+        //    base.OnKeyUp(e);
+        //    if (e.Handled == true) { return; }
+        //    char key = (char)e.KeyValue;
+        //    if (_viewLoading) { return; }
+        //    e.Handled = this.ViewLogicController.DataEntryController.ProcessHotKey(key, this);
+        //}
 
         private void _plotInfoBTN_Click(object sender, EventArgs e)
         {
