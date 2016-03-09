@@ -220,9 +220,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void HandleTallyButtonClick(object sender, EventArgs e)
         {
-            Control button = (Control)sender;
-            TallyRow row = (TallyRow)button.Parent.Parent;
-            CountTreeVM count = (CountTreeVM)row.Tag;
+            var row = (TallyRow)sender;
+            var count = row.Count;
             OnTally(count);
 
         }
