@@ -45,6 +45,17 @@ WHEN user presses 'x'
 THEN no tree is added to current plot 
 AND message is shown to user //pass
 
+GIVEN the current cell accepts string values 
+AND the dataGrid is in edit mode
+WHEN user presses 'x'
+THEN the current cell contains the value 'x'
+AND tally with 'x' hotkey is not incremented
+
+GIVEN the current cell accepts string values 
+AND the dataGrid is NOT in edit mode
+WHEN user presses 'x'
+THEN tally with 'x' hotkey is incremented
+
 
 GIVEN current plot is a null plot 
 WHEN user clicks the "Add Tree" button 
