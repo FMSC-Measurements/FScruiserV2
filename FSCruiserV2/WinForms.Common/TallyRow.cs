@@ -12,10 +12,18 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class TallyRow : UserControl
     {
+        protected class TallyRowButton
+#if NetCF        
+            : FMSC.Controls.Mobile.ButtonPanel
+#else
+            : Button
+#endif
+        {
+            public TallyRowButton() : base() { }
+        }
+
         public event EventHandler TallyButtonClicked;
         public event EventHandler SettingsButtonClicked; 
-
-        public Button SettingsButton { get { return this._settingsBTN; } }
 
         CountTreeVM _count;
         public CountTreeVM Count 
@@ -29,14 +37,10 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        TallyRow()
-        {
-            InitializeComponent();
-        }
-
         public TallyRow(CountTreeVM count)
         {
             InitializeComponent();
+
             _tallyBTN.Click += new EventHandler(this.OnTallyButtonClicked);
             _settingsBTN.Click += new EventHandler(this.OnSettingsButtonClicked);
             this.Count = count;
@@ -51,7 +55,7 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 buttonText = "[" + Count.Tally.Hotkey.Substring(0, 1) +"] ";
             }
-            buttonText += string.Format("{0}\r\n Tree Count:{1}", Count.Tally.Description, Count.TreeCount);
+            buttonText += string.Format("{0}\r\n Count:{1}", Count.Tally.Description, Count.TreeCount);
 
             this._tallyBTN.Text = buttonText;
         }

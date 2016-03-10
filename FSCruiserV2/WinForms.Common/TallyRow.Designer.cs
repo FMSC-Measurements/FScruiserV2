@@ -32,8 +32,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this._settingsBTN = new System.Windows.Forms.Button();
-            this._tallyBTN = new System.Windows.Forms.Button();
+            this._tallyBTN = new TallyRowButton();
+            this._settingsBTN = new TallyRowButton();
             this.SuspendLayout();
             // 
             // _settingsBTN
@@ -71,8 +71,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Button _settingsBTN;
-        private System.Windows.Forms.Button _tallyBTN;
+        private TallyRowButton _settingsBTN;
+        private TallyRowButton _tallyBTN;
 
     }
 }
