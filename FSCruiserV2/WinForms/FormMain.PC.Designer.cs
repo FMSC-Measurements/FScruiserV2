@@ -69,10 +69,10 @@
             panel1.Controls.Add(this._viewContentPanel);
             panel1.Controls.Add(this._viewNavPanel);
             panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            panel1.Location = new System.Drawing.Point(0, 24);
+            panel1.Location = new System.Drawing.Point(0, 28);
             panel1.Name = "panel1";
             panel1.Padding = new System.Windows.Forms.Padding(3);
-            panel1.Size = new System.Drawing.Size(752, 442);
+            panel1.Size = new System.Drawing.Size(752, 438);
             panel1.TabIndex = 3;
             // 
             // _viewContentPanel
@@ -85,7 +85,7 @@
             this._viewContentPanel.Location = new System.Drawing.Point(154, 3);
             this._viewContentPanel.Margin = new System.Windows.Forms.Padding(0);
             this._viewContentPanel.Name = "_viewContentPanel";
-            this._viewContentPanel.Size = new System.Drawing.Size(595, 436);
+            this._viewContentPanel.Size = new System.Drawing.Size(595, 432);
             this._viewContentPanel.TabIndex = 2;
             // 
             // _cuttingUnitSelectView
@@ -93,8 +93,9 @@
             this._cuttingUnitSelectView.Controller = null;
             this._cuttingUnitSelectView.Dock = System.Windows.Forms.DockStyle.Left;
             this._cuttingUnitSelectView.Location = new System.Drawing.Point(0, 0);
+            this._cuttingUnitSelectView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._cuttingUnitSelectView.Name = "_cuttingUnitSelectView";
-            this._cuttingUnitSelectView.Size = new System.Drawing.Size(250, 436);
+            this._cuttingUnitSelectView.Size = new System.Drawing.Size(250, 432);
             this._cuttingUnitSelectView.TabIndex = 0;
             // 
             // _viewNavPanel
@@ -105,13 +106,13 @@
             this._viewNavPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this._viewNavPanel.Location = new System.Drawing.Point(3, 3);
             this._viewNavPanel.Name = "_viewNavPanel";
-            this._viewNavPanel.Size = new System.Drawing.Size(151, 436);
+            this._viewNavPanel.Size = new System.Drawing.Size(151, 432);
             this._viewNavPanel.TabIndex = 1;
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(119, 24);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.HandleOpenCruiseFileClick);
             // 
@@ -121,13 +122,13 @@
             this.openToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(119, 24);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -137,13 +138,13 @@
             this.fileToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(752, 24);
+            this.menuStrip.Size = new System.Drawing.Size(752, 28);
             this.menuStrip.TabIndex = 2;
             this.menuStrip.Text = "menuStrip1";
             // 
             // FormMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(752, 466);
             this.Controls.Add(panel1);
@@ -151,7 +152,7 @@
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
-            this.Text = FSCruiser.Core.Constants.APP_TITLE;
+            this.Text = "FScruiser";
             panel1.ResumeLayout(false);
             this._viewContentPanel.ResumeLayout(false);
             this._viewNavPanel.ResumeLayout(false);
