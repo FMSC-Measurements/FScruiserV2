@@ -51,9 +51,7 @@ namespace FSCruiser.WinForms.Common
 
 
         protected FormDataEntryBase():base() 
-        {
-            this.KeyPreview = true;
-        }
+        {}
 
         protected virtual TabControl MakePageContainer()
         {

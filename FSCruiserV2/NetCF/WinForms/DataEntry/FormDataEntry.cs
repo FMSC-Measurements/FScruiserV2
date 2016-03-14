@@ -26,10 +26,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected FormDataEntry():base()
         {
-            //this.KeyPreview = true;// set in CustomForm class
-            //this.HotKeyLookup = new Dictionary<char, CountTreeDO>();
-            //this.StratumHotKeyLookup = new Dictionary<char, int>();
-
             InitializeComponent();
 
             //this.Controls.Add(this._pageContainer);
