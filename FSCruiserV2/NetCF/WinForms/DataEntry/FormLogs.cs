@@ -8,7 +8,7 @@ using FSCruiser.Core.Models;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public partial class FormLogs : Form
+    public partial class FormLogs : FMSC.Controls.CustomForm
     {
 //        public FormLogs(IApplicationController controller)
 //        {
@@ -29,7 +29,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.InitializeComponent();
         }
 
-        public FormLogs(IApplicationController controller, long stratum_cn)
+        public FormLogs(IApplicationController controller, long stratum_cn) : base()
         {
             this.Controller = controller;
             InitializeComponent();
