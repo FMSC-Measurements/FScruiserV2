@@ -77,6 +77,7 @@
     <Compile Include="Core\Models\DataEntryMode.cs" />
     <Compile Include="Core\Models\DataModelExtensions.cs" />
     <Compile Include="Core\Models\ITreeContaningModel.cs" />
+    <Compile Include="Core\Models\Plot3PPNT.cs" />
     <Compile Include="Core\Models\PlotInfo.cs" />
     <Compile Include="Core\Models\PlotStratum.cs" />
     <Compile Include="Core\Models\SampleGroupVM.cs" />
@@ -178,7 +179,7 @@
     <Compile Include="WinForms\DataEntry\FormPlotInfo3PPNT.PC.Designer.cs">
       <DependentUpon>FormPlotInfo3PPNT.PC.cs</DependentUpon>
     </Compile>
-    <Compile Include="WinForms\DataEntry\FormPlotInfoBase.cs">
+    <Compile Include="WinForms.Common\FormPlotInfoBase.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinForms\DataEntry\FormTallySettings.PC.cs">
@@ -251,7 +252,7 @@
       <DependentUpon>FormPlotInfo3PPNT.PC.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\FormPlotInfoBase.resx">
+    <EmbeddedResource Include="WinForms.Common\FormPlotInfoBase.resx">
       <DependentUpon>FormPlotInfoBase.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -282,9 +283,10 @@
     <None Include="Core\ViewInterfaces\FSCruiser.Core.ViewInterfaces.cd" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.TreeDO.datasource" />
+    <None Include="Properties\DataSources\FSCruiser.Core.Models.Plot3PPNT.datasource" />
     <None Include="Properties\DataSources\FSCruiserV2.Logic.CuttingUnitVM.datasource" />
-    <None Include="Properties\DataSources\FSCruiserV2.Logic.PlotInfo1.datasource" />
-    <None Include="Properties\DataSources\FSCruiserV2.Logic.TallyAction2.datasource" />
+    <None Include="Properties\DataSources\FSCruiserV2.Logic.PlotInfo.datasource" />
+    <None Include="Properties\DataSources\FSCruiserV2.Logic.TallyAction.datasource" />
     <None Include="Properties\DataSources\FSCruiserV2.Logic.TreeVM.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

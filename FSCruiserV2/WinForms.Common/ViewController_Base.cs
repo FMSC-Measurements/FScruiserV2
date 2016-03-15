@@ -240,29 +240,24 @@ namespace FSCruiser.WinForms.Common
         //    return this.NumPadDialog.UserEnteredValue;
         //}
 
-        public DialogResult ShowPlotInfo( PlotVM plotInfo, bool is3PPNT, bool allowEdit)
+        public DialogResult ShowPlotInfo(PlotVM plot, PlotStratum stratum, bool isNewPlot)
         {
-            if (plotInfo == null) { return DialogResult.None; }
+            System.Diagnostics.Debug.Assert(plot != null);
+            System.Diagnostics.Debug.Assert(stratum != null);
 
-            
-
-            IPlotInfoDialog view = null;
-            try
+            if (stratum.Is3PPNT && isNewPlot)
             {
-                if (is3PPNT && allowEdit)
+                using (var view = new Form3PPNTPlotInfo(this))
                 {
-                    view = new Form3PPNTPlotInfo(this.ApplicationController);
+                    return view.ShowDialog(plot, stratum, isNewPlot);
                 }
-                else
-                {
-                    view = new FormPlotInfo(this.ApplicationController);
-                }
-
-                return view.ShowDialog(plotInfo, allowEdit);
             }
-            finally
+            else
             {
-                ((Form)view).Dispose();
+                using (var view = new FormPlotInfo())
+                {
+                    return view.ShowDialog(plot, stratum, isNewPlot);
+                }
             }
         }
 

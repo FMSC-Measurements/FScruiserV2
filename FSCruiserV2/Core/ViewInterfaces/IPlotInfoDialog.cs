@@ -5,6 +5,6 @@ namespace FSCruiser.Core.ViewInterfaces
 {
     interface IPlotInfoDialog
     {
-        DialogResult ShowDialog(PlotVM plotInfo, bool allowEdit);
+        DialogResult ShowDialog(PlotVM plot, PlotStratum stratum, bool isNewPlot);
     }
 }

@@ -14,30 +14,9 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormPlotInfo : FormPlotInfoBase
     {
-        public FormPlotInfo(IApplicationController controller)
+        public FormPlotInfo(): base()
         {
             InitializeComponent();
-        }
-
-        protected override void OnShowing(PlotVM plotInfo, bool allowEdit)
-        {
-            base.OnShowing(plotInfo, allowEdit);
-            this._plotNumTB.Enabled = true;
-            //this._plotNumTB.Enabled = allowEdit;
-            //this._plotStatsTB.Text = ApplicationController.GetPlotInfo(plotInfo);
-
-            
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            
-            base.OnClosing(e);
-            if (this.CurrentPlotInfo.IsNull && this.CurrentPlotInfo.Trees.Count > 0)
-            {
-                MessageBox.Show("Null plot can not contain trees");
-                e.Cancel = true;
-            }
         }
     }
 }

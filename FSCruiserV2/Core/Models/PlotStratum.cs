@@ -10,7 +10,39 @@ namespace FSCruiser.Core.Models
     public class PlotStratum : StratumVM
     {
         [IgnoreField]
+        public bool Is3PPNT
+        {
+            get
+            {
+                return Method == CruiseDAL.Schema.CruiseMethods.THREEPPNT;
+            }
+        }
+
+        [IgnoreField]
         public IList<PlotVM> Plots { get; protected set; }
+
+
+        public PlotVM MakePlot(CuttingUnitVM cuttingUnit)
+        {
+            if (this.Is3PPNT)
+            {
+                return new Plot3PPNT(this.DAL)
+                {
+                    CuttingUnit = cuttingUnit,
+                    Stratum = this,
+                    PlotNumber = GetNextPlotNumber(cuttingUnit.CuttingUnit_CN.Value)
+                };
+            }
+            else
+            {
+                return new PlotVM(this.DAL)
+                {
+                    CuttingUnit = cuttingUnit,
+                    Stratum = this,
+                    PlotNumber = GetNextPlotNumber(cuttingUnit.CuttingUnit_CN.Value)
+                };
+            }
+        }
 
         public void PopulatePlots(long cuttingUnit_CN)
         {
@@ -24,7 +56,7 @@ namespace FSCruiser.Core.Models
             //            , cuttingUnit_CN);
         }
 
-        public int GetNextPlotNumber(long cuttingUnit_CN)
+        int GetNextPlotNumber(long cuttingUnit_CN)
         {
             try
             {
@@ -51,6 +83,19 @@ namespace FSCruiser.Core.Models
                 Logger.Log.E("Unable to establish next plot number", e);
                 return 0;
             }
+        }
+
+        public bool IsPlotNumberAvailable(long plotNumber)
+        {
+            System.Diagnostics.Debug.Assert(this.Plots != null);
+            foreach (PlotVM pi in Plots)
+            {
+                if (pi.PlotNumber == plotNumber)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
     }

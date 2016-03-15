@@ -307,7 +307,15 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                return this.ViewLogicController.CurrentPlotTreeList;
+                var curPlot = this.ViewLogicController.CurrentPlot;
+                if (curPlot != null)
+                {
+                    return curPlot.Trees;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 

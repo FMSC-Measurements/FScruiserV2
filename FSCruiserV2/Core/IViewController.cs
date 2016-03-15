@@ -52,7 +52,7 @@ namespace FSCruiser.Core
         DialogResult ShowOpenCruiseFileDialog(out string fileName);
         
         void ShowDataEntry(CuttingUnitVM unit);
-        DialogResult ShowPlotInfo(PlotVM plotInfo, bool is3PPNT, bool allowEdit);        
+        DialogResult ShowPlotInfo(PlotVM plotInfo, PlotStratum stratum, bool allowEdit);        
         void ShowTallySettings(CountTreeVM count);
 
         void ShowMessage(String message, String caption, MessageBoxIcon icon);

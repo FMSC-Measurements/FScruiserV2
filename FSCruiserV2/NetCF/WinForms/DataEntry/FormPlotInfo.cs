@@ -12,18 +12,15 @@ using FSCruiser.Core.Models;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public partial class FormPlotInfo : Form, IPlotInfoDialog
+    public partial class FormPlotInfo : FormPlotInfoBase
     {
-        public IApplicationController Controller { get; set; }
+        //private PlotDO _initialState; 
+        //private PlotVM _currentPlotInfo;
+        //public PlotVM CurrentPlotInfo { get { return _currentPlotInfo; } }
 
-        private PlotDO _initialState; 
-        private PlotVM _currentPlotInfo;
-        public PlotVM CurrentPlotInfo { get { return _currentPlotInfo; } }
-
-        public FormPlotInfo(IApplicationController controller)
+        public FormPlotInfo() : base()
         {
             this.KeyPreview = true;
-            this.Controller = controller;
             InitializeComponent();
 
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
@@ -37,54 +34,54 @@ namespace FSCruiser.WinForms.DataEntry
 
         }
 
-        public DialogResult ShowDialog(PlotVM plotInfo, bool allowEdit)
-        {
-            if (plotInfo == null) { return DialogResult.None; }
-            this.DialogResult = DialogResult.OK;
-            _currentPlotInfo = plotInfo;
-            //PlotDO plot = plotInfo.Plot;
-            this._plotNumTB.Enabled = true;
-            //this._plotNumTB.Enabled = allowEdit;
-            //this._isNullCB.Checked = plotInfo.IsNull;//Hack, binding isn't working 
-            //this._slope.Enabled = allowEdit;
-            //this._aspect.Enabled = allowEdit;
+        //public DialogResult ShowDialog(PlotVM plotInfo, PlotStratum stratum, bool allowEdit)
+        //{
+        //    if (plotInfo == null) { return DialogResult.None; }
+        //    this.DialogResult = DialogResult.OK;
+        //    _currentPlotInfo = plotInfo;
+        //    //PlotDO plot = plotInfo.Plot;
+        //    this._plotNumTB.Enabled = true;
+        //    //this._plotNumTB.Enabled = allowEdit;
+        //    //this._isNullCB.Checked = plotInfo.IsNull;//Hack, binding isn't working 
+        //    //this._slope.Enabled = allowEdit;
+        //    //this._aspect.Enabled = allowEdit;
 
-            this._BS_Plot.DataSource = plotInfo;
-            if(this._BS_Plot.IsBindingSuspended)
-            {
-                this._BS_Plot.ResumeBinding();
-            }
-            if (allowEdit == true)//only if we allow edits do we need to save the initial state
-            {
-                _initialState = new PlotDO(plotInfo);
-            }
-            else
-            {
-                _initialState = null;
-            }
-            this._plotStatsTB.Text = plotInfo.GetDescription();
-            return this.ShowDialog();
-        }
+        //    this._BS_Plot.DataSource = plotInfo;
+        //    if(this._BS_Plot.IsBindingSuspended)
+        //    {
+        //        this._BS_Plot.ResumeBinding();
+        //    }
+        //    if (allowEdit == true)//only if we allow edits do we need to save the initial state
+        //    {
+        //        _initialState = new PlotDO(plotInfo);
+        //    }
+        //    else
+        //    {
+        //        _initialState = null;
+        //    }
+        //    this._plotStatsTB.Text = plotInfo.GetDescription();
+        //    return this.ShowDialog();
+        //}
 
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            base.OnClosing(e);
-            this._BS_Plot.EndEdit();
-            if (this.DialogResult == DialogResult.Cancel) 
-            {
-                if (_initialState != null)
-                {
-                    _currentPlotInfo.SetValues(_initialState);
-                }
-                return; 
-            }
-            if (this.CurrentPlotInfo.IsNull && this.CurrentPlotInfo.Trees.Count > 0)
-            {
-                MessageBox.Show("Null plot can not contain trees");
-                e.Cancel = true;
-            }
+        //protected override void OnClosing(CancelEventArgs e)
+        //{
+        //    base.OnClosing(e);
+        //    this._BS_Plot.EndEdit();
+        //    if (this.DialogResult == DialogResult.Cancel) 
+        //    {
+        //        if (_initialState != null)
+        //        {
+        //            _currentPlotInfo.SetValues(_initialState);
+        //        }
+        //        return; 
+        //    }
+        //    if (this.CurrentPlotInfo.IsNull && this.CurrentPlotInfo.Trees.Count > 0)
+        //    {
+        //        MessageBox.Show("Null plot can not contain trees");
+        //        e.Cancel = true;
+        //    }
 
-        }
+        //}
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
@@ -99,12 +96,7 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         protected override void OnClosed(EventArgs e)
-        {
-            
-            //if (this.DialogResult == DialogResult.OK)
-            //{
-            //    CurrentPlotInfo.Plot.Save();
-            //}
+        {            
             this._BS_Plot.SuspendBinding();
             base.OnClosed(e);
         }

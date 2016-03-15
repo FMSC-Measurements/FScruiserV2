@@ -5,6 +5,6 @@
     Renaming the file extension or editing the content of this file may   
     cause the file to be unrecognizable by the program.
 -->
-<GenericObjectDataSource DisplayName="TallyDO" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>CruiseDAL.DataObjects.TallyDO, CruiseDAL_CF35WM6, Version=1.0.5380.22406, Culture=neutral, PublicKeyToken=null</TypeInfo>
+<GenericObjectDataSource DisplayName="Plot3PPNT" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+   <TypeInfo>FSCruiser.Core.Models.Plot3PPNT, FSCruiserV2CE_CF20, Version=2016.2.9.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
 </GenericObjectDataSource>

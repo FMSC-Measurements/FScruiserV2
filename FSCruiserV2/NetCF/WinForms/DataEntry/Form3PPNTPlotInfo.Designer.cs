@@ -32,6 +32,8 @@
             this._plotNumNUD = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this._kz3ppnt_lbl = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this._aveHtBTN = new System.Windows.Forms.Button();
             this._treeCntBTN = new System.Windows.Forms.Button();
@@ -46,8 +48,6 @@
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
             this._getGPSMI = new System.Windows.Forms.MenuItem();
             this._cancelMI = new System.Windows.Forms.MenuItem();
-            this.label6 = new System.Windows.Forms.Label();
-            this._kz3ppnt_lbl = new System.Windows.Forms.Label();
             this._BS_plot = new System.Windows.Forms.BindingSource(this.components);
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -93,6 +93,22 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(240, 24);
             // 
+            // _kz3ppnt_lbl
+            // 
+            this._kz3ppnt_lbl.Dock = System.Windows.Forms.DockStyle.Left;
+            this._kz3ppnt_lbl.Location = new System.Drawing.Point(167, 0);
+            this._kz3ppnt_lbl.Name = "_kz3ppnt_lbl";
+            this._kz3ppnt_lbl.Size = new System.Drawing.Size(49, 24);
+            this._kz3ppnt_lbl.Text = "###";
+            // 
+            // label6
+            // 
+            this.label6.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label6.Location = new System.Drawing.Point(119, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(48, 24);
+            this.label6.Text = "     KZ:";
+            // 
             // panel2
             // 
             this.panel2.Controls.Add(this._aveHtBTN);
@@ -110,6 +126,7 @@
             // 
             // _aveHtBTN
             // 
+            this._aveHtBTN.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_plot, "AverageHeight", true));
             this._aveHtBTN.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
             this._aveHtBTN.Location = new System.Drawing.Point(122, 64);
             this._aveHtBTN.Name = "_aveHtBTN";
@@ -119,6 +136,7 @@
             // 
             // _treeCntBTN
             // 
+            this._treeCntBTN.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_plot, "TreeCount", true));
             this._treeCntBTN.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
             this._treeCntBTN.Location = new System.Drawing.Point(122, 38);
             this._treeCntBTN.Name = "_treeCntBTN";
@@ -128,6 +146,7 @@
             // 
             // _kpiLBL
             // 
+            this._kpiLBL.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_plot, "KPI", true));
             this._kpiLBL.Location = new System.Drawing.Point(122, 90);
             this._kpiLBL.Name = "_kpiLBL";
             this._kpiLBL.Size = new System.Drawing.Size(63, 20);
@@ -142,22 +161,23 @@
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(19, 66);
+            this.label4.Location = new System.Drawing.Point(3, 66);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(94, 20);
+            this.label4.Size = new System.Drawing.Size(110, 20);
             this.label4.Text = "Average Height:";
             this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(44, 38);
+            this.label3.Location = new System.Drawing.Point(33, 38);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(69, 20);
+            this.label3.Size = new System.Drawing.Size(80, 20);
             this.label3.Text = "Tree Count:";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // _volFactorTB
             // 
+            this._volFactorTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_plot, "VolFactor", true));
             this._volFactorTB.Enabled = false;
             this._volFactorTB.Location = new System.Drawing.Point(122, 9);
             this._volFactorTB.Name = "_volFactorTB";
@@ -166,9 +186,9 @@
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(26, 10);
+            this.label2.Location = new System.Drawing.Point(12, 10);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(87, 20);
+            this.label2.Size = new System.Drawing.Size(101, 20);
             this.label2.Text = "Volume Factor:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -190,7 +210,6 @@
             this._OKBtn.TabIndex = 7;
             this._OKBtn.Text = "OK";
             this._OKBtn.Visible = false;
-            this._OKBtn.Click += new System.EventHandler(this._OKBtn_Click);
             // 
             // mainMenu1
             // 
@@ -207,25 +226,9 @@
             this._cancelMI.Text = "Cancel";
             this._cancelMI.Click += new System.EventHandler(this._cancelButton_Click);
             // 
-            // label6
-            // 
-            this.label6.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label6.Location = new System.Drawing.Point(119, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(48, 24);
-            this.label6.Text = "     KZ:";
-            // 
-            // _kz3ppnt_lbl
-            // 
-            this._kz3ppnt_lbl.Dock = System.Windows.Forms.DockStyle.Left;
-            this._kz3ppnt_lbl.Location = new System.Drawing.Point(167, 0);
-            this._kz3ppnt_lbl.Name = "_kz3ppnt_lbl";
-            this._kz3ppnt_lbl.Size = new System.Drawing.Size(49, 24);
-            this._kz3ppnt_lbl.Text = "###";
-            // 
             // _BS_plot
             // 
-            this._BS_plot.DataSource = typeof(CruiseDAL.DataObjects.PlotDO);
+            this._BS_plot.DataSource = typeof(FSCruiser.Core.Models.Plot3PPNT);
             // 
             // Form3PPNTPlotInfo
             // 
@@ -264,11 +267,11 @@
         private System.Windows.Forms.Label _kpiLBL;
         private System.Windows.Forms.Button _treeCntBTN;
         private System.Windows.Forms.Button _aveHtBTN;
-        private System.Windows.Forms.BindingSource _BS_plot;
         private System.Windows.Forms.MainMenu mainMenu1;
         private System.Windows.Forms.MenuItem _getGPSMI;
         private System.Windows.Forms.MenuItem _cancelMI;
         private System.Windows.Forms.Label _kz3ppnt_lbl;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.BindingSource _BS_plot;
     }
 }

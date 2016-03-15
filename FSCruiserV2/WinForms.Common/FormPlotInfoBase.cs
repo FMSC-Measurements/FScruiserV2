@@ -15,39 +15,29 @@ namespace FSCruiser.WinForms.DataEntry
     {
         protected BindingSource _BS_Plot;
         private IContainer components;
+        PlotStratum _stratum; 
         protected PlotDO _initialState;
 
-        public IApplicationController Controller { get; set; }
-        public PlotVM CurrentPlotInfo { get; protected set; }
-
+        public PlotVM Plot { get; protected set; }
 
         protected FormPlotInfoBase()
         {
             this.InitializeComponent();
         }
 
-        protected virtual void OnShowing(PlotVM plotInfo, bool allowEdit)
+        public virtual DialogResult ShowDialog(PlotVM plot, PlotStratum stratum, bool isNewPlot)
         {
-            if (allowEdit == true)//only if we allow edits do we need to save the initial state
+            if (plot == null) { return DialogResult.None; }
+            _stratum = stratum;
+            Plot = plot;
+            if (!isNewPlot)
             {
-                _initialState = new PlotDO(plotInfo);
+                _initialState = new PlotDO(plot);
             }
-            else
-            {
-                _initialState = null;
-            }
-        }
 
-
-        public DialogResult ShowDialog(PlotVM plotInfo, bool allowEdit)
-        {
-            if (plotInfo == null) { return DialogResult.None; }
-            CurrentPlotInfo = plotInfo;
-
-            this.OnShowing(plotInfo, allowEdit);
             this.DialogResult = DialogResult.OK;
 
-            this._BS_Plot.DataSource = plotInfo;
+            this._BS_Plot.DataSource = plot;
             if (this._BS_Plot.IsBindingSuspended)
             {
                 this._BS_Plot.ResumeBinding();
@@ -61,16 +51,33 @@ namespace FSCruiser.WinForms.DataEntry
         {
             base.OnClosing(e);
             this._BS_Plot.EndEdit();
-            if (this.DialogResult == DialogResult.Cancel) 
+
+            if (DialogResult == DialogResult.OK)
+            {
+                if (Plot.PlotNumber <= 0L)
+                {
+                    MessageBox.Show("Plot Number Must Be Greater Than 0");
+                    e.Cancel = true;
+                }
+                else if (!_stratum.IsPlotNumberAvailable(Plot.PlotNumber))
+                {
+                    MessageBox.Show("Plot Number Already Exists");
+                    e.Cancel = true;
+                }
+                else if (this.Plot.IsNull && this.Plot.Trees.Count > 0)
+                {
+                    MessageBox.Show("Null plot can not contain trees");
+                    e.Cancel = true;
+                }
+            }
+            else if (this.DialogResult == DialogResult.Cancel) 
             {
                 if (_initialState != null)
                 {
-                    CurrentPlotInfo.SetValues(_initialState);
+                    Plot.SetValues(_initialState);
                 }
-                return; 
-            }
-            
-
+                return;
+            }           
         }
 
         private void InitializeComponent()

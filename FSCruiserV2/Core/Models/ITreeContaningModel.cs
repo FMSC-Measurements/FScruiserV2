@@ -7,8 +7,8 @@ namespace FSCruiser.Core.Models
 {
     public interface ITreeContaningModel
     {
-        ITreeContaningModel Parent { get; set; }
-        IList<ITreeContaningModel> Children { get; }
+        //ITreeContaningModel Parent { get; set; }
+        //IList<ITreeContaningModel> Children { get; }
 
         IList<TreeVM> Trees { get; }
 

@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this._plotNumNUD = new System.Windows.Forms.NumericUpDown();
-            this._aveHtBTN = new System.Windows.Forms.Button();
-            this._treeCntBTN = new System.Windows.Forms.Button();
+            this._BS_plot = new System.Windows.Forms.BindingSource(this.components);
             this.panel3 = new System.Windows.Forms.Panel();
             this._OKBtn = new System.Windows.Forms.Button();
             this._getGPSMI = new System.Windows.Forms.MenuItem();
@@ -38,16 +38,18 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this._avgHt_TB = new System.Windows.Forms.TextBox();
+            this._treeCnt_TB = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this._volFactorTB = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this._kz_lbl = new System.Windows.Forms.Label();
+            this._kz3ppnt_lbl = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this._cancelMI = new System.Windows.Forms.MenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this._BS_Plot)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._plotNumNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._BS_plot)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -55,7 +57,7 @@
             // 
             // _plotNumNUD
             // 
-            this._plotNumNUD.DataBindings.Add(new System.Windows.Forms.Binding("Value", this._BS_Plot, "PlotNumber", true));
+            this._plotNumNUD.DataBindings.Add(new System.Windows.Forms.Binding("Value", this._BS_plot, "PlotNumber", true));
             this._plotNumNUD.Dock = System.Windows.Forms.DockStyle.Left;
             this._plotNumNUD.Location = new System.Drawing.Point(43, 0);
             this._plotNumNUD.Maximum = new decimal(new int[] {
@@ -72,21 +74,9 @@
             0,
             0});
             // 
-            // _aveHtBTN
+            // _BS_plot
             // 
-            this._aveHtBTN.Font = new System.Drawing.Font("Tahoma", 9F);
-            this._aveHtBTN.Location = new System.Drawing.Point(122, 64);
-            this._aveHtBTN.Name = "_aveHtBTN";
-            this._aveHtBTN.Size = new System.Drawing.Size(40, 20);
-            this._aveHtBTN.TabIndex = 14;
-            // 
-            // _treeCntBTN
-            // 
-            this._treeCntBTN.Font = new System.Drawing.Font("Tahoma", 9F);
-            this._treeCntBTN.Location = new System.Drawing.Point(122, 38);
-            this._treeCntBTN.Name = "_treeCntBTN";
-            this._treeCntBTN.Size = new System.Drawing.Size(40, 20);
-            this._treeCntBTN.TabIndex = 8;
+            this._BS_plot.DataSource = typeof(FSCruiser.Core.Models.Plot3PPNT);
             // 
             // panel3
             // 
@@ -106,7 +96,6 @@
             this._OKBtn.Size = new System.Drawing.Size(284, 22);
             this._OKBtn.TabIndex = 7;
             this._OKBtn.Text = "OK";
-            this._OKBtn.Visible = false;
             // 
             // _getGPSMI
             // 
@@ -115,6 +104,7 @@
             // 
             // _kpiLBL
             // 
+            this._kpiLBL.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_plot, "KPI", true));
             this._kpiLBL.Location = new System.Drawing.Point(122, 90);
             this._kpiLBL.Name = "_kpiLBL";
             this._kpiLBL.Size = new System.Drawing.Size(63, 20);
@@ -140,8 +130,8 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this._aveHtBTN);
-            this.panel2.Controls.Add(this._treeCntBTN);
+            this.panel2.Controls.Add(this._avgHt_TB);
+            this.panel2.Controls.Add(this._treeCnt_TB);
             this.panel2.Controls.Add(this._kpiLBL);
             this.panel2.Controls.Add(this.label5);
             this.panel2.Controls.Add(this.label4);
@@ -153,6 +143,26 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(284, 137);
             this.panel2.TabIndex = 4;
+            // 
+            // _avgHt_TB
+            // 
+            this._avgHt_TB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_plot, "AverageHeight", true));
+            this._avgHt_TB.Location = new System.Drawing.Point(122, 63);
+            this._avgHt_TB.MaxLength = 3;
+            this._avgHt_TB.Name = "_avgHt_TB";
+            this._avgHt_TB.Size = new System.Drawing.Size(40, 20);
+            this._avgHt_TB.TabIndex = 21;
+            this._avgHt_TB.TextChanged += new System.EventHandler(this.TB_TextChanged);
+            // 
+            // _treeCnt_TB
+            // 
+            this._treeCnt_TB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_plot, "TreeCount", true));
+            this._treeCnt_TB.Location = new System.Drawing.Point(122, 38);
+            this._treeCnt_TB.MaxLength = 3;
+            this._treeCnt_TB.Name = "_treeCnt_TB";
+            this._treeCnt_TB.Size = new System.Drawing.Size(40, 20);
+            this._treeCnt_TB.TabIndex = 20;
+            this._treeCnt_TB.TextChanged += new System.EventHandler(this.TB_TextChanged);
             // 
             // label4
             // 
@@ -174,11 +184,13 @@
             // 
             // _volFactorTB
             // 
+            this._volFactorTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_plot, "VolFactor", true));
             this._volFactorTB.Enabled = false;
             this._volFactorTB.Location = new System.Drawing.Point(122, 9);
             this._volFactorTB.Name = "_volFactorTB";
             this._volFactorTB.Size = new System.Drawing.Size(40, 20);
             this._volFactorTB.TabIndex = 1;
+            this._volFactorTB.TextChanged += new System.EventHandler(this.TB_TextChanged);
             // 
             // label2
             // 
@@ -191,7 +203,7 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this._kz_lbl);
+            this.panel1.Controls.Add(this._kz3ppnt_lbl);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this._plotNumNUD);
             this.panel1.Controls.Add(this.label1);
@@ -201,15 +213,15 @@
             this.panel1.Size = new System.Drawing.Size(284, 24);
             this.panel1.TabIndex = 5;
             // 
-            // _kz_lbl
+            // _kz3ppnt_lbl
             // 
-            this._kz_lbl.AutoSize = true;
-            this._kz_lbl.Location = new System.Drawing.Point(146, 2);
-            this._kz_lbl.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this._kz_lbl.Name = "_kz_lbl";
-            this._kz_lbl.Size = new System.Drawing.Size(28, 13);
-            this._kz_lbl.TabIndex = 15;
-            this._kz_lbl.Text = "###";
+            this._kz3ppnt_lbl.AutoSize = true;
+            this._kz3ppnt_lbl.Location = new System.Drawing.Point(146, 2);
+            this._kz3ppnt_lbl.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this._kz3ppnt_lbl.Name = "_kz3ppnt_lbl";
+            this._kz3ppnt_lbl.Size = new System.Drawing.Size(28, 13);
+            this._kz3ppnt_lbl.TabIndex = 15;
+            this._kz3ppnt_lbl.Text = "###";
             // 
             // label6
             // 
@@ -237,8 +249,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "Form3PPNTPlotInfo";
             this.Text = "FormPlotInfo3PPNT";
-            ((System.ComponentModel.ISupportInitialize)(this._BS_Plot)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._plotNumNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._BS_plot)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
@@ -251,8 +263,6 @@
         #endregion
 
         private System.Windows.Forms.NumericUpDown _plotNumNUD;
-        private System.Windows.Forms.Button _aveHtBTN;
-        private System.Windows.Forms.Button _treeCntBTN;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button _OKBtn;
         private System.Windows.Forms.MenuItem _getGPSMI;
@@ -266,7 +276,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.MenuItem _cancelMI;
-        private System.Windows.Forms.Label _kz_lbl;
+        private System.Windows.Forms.Label _kz3ppnt_lbl;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox _avgHt_TB;
+        private System.Windows.Forms.TextBox _treeCnt_TB;
+        private System.Windows.Forms.BindingSource _BS_plot;
     }
 }

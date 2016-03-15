@@ -40,7 +40,12 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                return this.ViewLogicController.CurrentPlotTreeList;
+                var curPlot = this.ViewLogicController.CurrentPlot;
+                if (curPlot != null)
+                {
+                    return curPlot.Trees;
+                }
+                return null;
             }
         }
 
@@ -399,7 +404,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             DataGridViewComboBoxCell cell = _dataGrid[e.ColumnIndex, e.RowIndex] as DataGridViewComboBoxCell;
             if (cell == null) { return; }
-            TreeVM curTree = this.ViewLogicController.CurrentPlotTreeList[e.RowIndex] as TreeVM;
+            TreeVM curTree = this.Trees[e.RowIndex] as TreeVM;
             if (curTree == null) { return; }
 
             if (_sgColumn != null && e.ColumnIndex == _sgColumn.Index)

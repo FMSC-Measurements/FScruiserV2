@@ -36,14 +36,6 @@ namespace FSCruiser.Core.DataEntry
 
         public PlotStratum Stratum { get; set; }
 
-        public IList<PlotVM> Plots 
-        {
-            get
-            {
-                return (IList<PlotVM>)_BS_Plots.List;
-            }
-        }
-
         public PlotVM CurrentPlot
         {
             get
@@ -54,19 +46,6 @@ namespace FSCruiser.Core.DataEntry
             {
                 int i = _BS_Plots.IndexOf(value);
                 _BS_Plots.Position = i;
-            }
-        }
-
-        public IList<TreeVM> CurrentPlotTreeList
-        {
-            get
-            {
-                PlotVM plotInfo = _BS_Plots.Current as PlotVM;
-                if (plotInfo != null)
-                {
-                    return plotInfo.Trees;
-                }
-                return null;
             }
         }
 
@@ -126,7 +105,6 @@ namespace FSCruiser.Core.DataEntry
 
         public void HandleViewLoad()
         {
-            
             this.View.BindPlotData(this._BS_Plots);
             this.UpdateCurrentPlot();
             this.View.BindTreeData(this._BS_Trees);
@@ -196,7 +174,7 @@ namespace FSCruiser.Core.DataEntry
             this.EndEdit();
             if (CurrentPlot != null)
             {
-                CurrentPlot.PopulateTreeData();
+                CurrentPlot.PopulateTrees();
                 this._BS_Trees.DataSource = CurrentPlot.Trees;
             }
             else
@@ -240,38 +218,30 @@ namespace FSCruiser.Core.DataEntry
         /// <returns>reference to newly created plot</returns>
         protected PlotVM AddPlot()
         {
-            PlotVM newPlot = new PlotVM(this.DataEntryController.Database);
-            newPlot.CuttingUnit = this.DataEntryController.Unit;
-            newPlot.Stratum = this.Stratum;
-            newPlot.PlotNumber = this.Stratum.GetNextPlotNumber(this.DataEntryController.Unit.CuttingUnit_CN.Value);
+            PlotVM newPlot = Stratum.MakePlot(this.DataEntryController.Unit);
 
-            //PlotInfo plotInfo = new PlotInfo(newPlot, stratum);
-            //newPlot.NextPlotTreeNum = 1;
-            if (this.ViewController.ShowPlotInfo(newPlot, Is3PPNT, true) == DialogResult.OK)
+            if (this.ViewController.ShowPlotInfo(newPlot, Stratum, true) == DialogResult.OK)
             {
-                foreach (PlotVM pi in this.Stratum.Plots)
+                if (this.Stratum.IsPlotNumberAvailable(newPlot.PlotNumber))
                 {
-                    if (pi.PlotNumber == newPlot.PlotNumber)
+                    MessageBox.Show(String.Format("Plot Number {0} Already Exists", newPlot.PlotNumber));
+                    return this.AddPlot();
+                }
+                else
+                {
+                    newPlot.Save();
+                    this.Stratum.Plots.Add(newPlot);
+
+                    if (!String.IsNullOrEmpty(newPlot.IsEmpty) && String.Compare(newPlot.IsEmpty.Trim(), "True", true) == 0)
                     {
-                        MessageBox.Show(String.Format("Plot Number {0} Already Exists", newPlot.PlotNumber));
-                        return this.AddPlot();
+                        return this.AddPlot() ?? newPlot;//add plot may return null, in that case return most recently created plot
                     }
+                    else if (Stratum.Is3PPNT && newPlot.Trees.Count == 0)
+                    {
+                        return this.AddPlot() ?? newPlot;//add plot may return null, in that case return most recently created plot
+                    }
+                    return newPlot;
                 }
-
-
-                newPlot.Save();
-                this.Stratum.Plots.Add(newPlot);
-                newPlot.CheckDataState();
-
-                if (!String.IsNullOrEmpty(newPlot.IsEmpty) && String.Compare(newPlot.IsEmpty.Trim(), "True", true) == 0)
-                {
-                    return this.AddPlot() ?? newPlot;//add plot may return null, in that case return most recently created plot
-                }
-                else if (Is3PPNT && newPlot.Trees.Count == 0)
-                {
-                    return this.AddPlot() ?? newPlot;//add plot may return null, in that case return most recently created plot
-                }
-                return newPlot;
             }
             return null;
         }
@@ -542,7 +512,6 @@ namespace FSCruiser.Core.DataEntry
             this.View.MoveHomeField();
         }
 
-
         public void ShowCurrentPlotInfo()
         {
             if (CurrentPlot == null)
@@ -551,14 +520,13 @@ namespace FSCruiser.Core.DataEntry
                 return;
             }
 
-            if (Controller.ViewController.ShowPlotInfo(CurrentPlot, Is3PPNT, false) == DialogResult.OK)
+            if (Controller.ViewController.ShowPlotInfo(CurrentPlot, Stratum, false) == DialogResult.OK)
             {
                 CurrentPlot.Save();
                 this._BS_Plots.ResetCurrentItem();
                 this.UpdateCurrentPlot();
             }
         }
-
 
         public void Save()
         {
