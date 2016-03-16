@@ -61,6 +61,7 @@
     <Compile Include="Core\ApplicationSettings.cs" />
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\CountTreeExtensions.cs" />
+    <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\Exceptions.cs" />
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="Core\LoadCuttingUnitWorker.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Core\Models\ITreeContaningModel.cs" />
     <Compile Include="Core\Models\Plot3PPNT.cs" />
     <Compile Include="Core\Models\PlotStratum.cs" />
+    <Compile Include="Core\Models\RecentProject.cs" />
     <Compile Include="Core\Models\TallyHistoryCollection.cs" />
     <Compile Include="Core\SaveTreesWorker.cs" />
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
@@ -209,7 +211,6 @@
     <Compile Include="Core\Models\CruiserVM.cs" />
     <Compile Include="Core\Models\CuttingUnitInfo.cs" />
     <Compile Include="NetCF\DataGridAdjuster.cs" />
-    <Compile Include="Core\DataEntry\FomrDataEntry.Logic.cs" />
     <Compile Include="Core\IApplicationController.cs" />
     <Compile Include="Core\ViewInterfaces\ITreeView.cs" />
     <Compile Include="Core\IViewController.cs" />
