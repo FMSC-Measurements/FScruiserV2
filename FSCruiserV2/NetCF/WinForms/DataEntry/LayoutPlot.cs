@@ -819,9 +819,9 @@ namespace FSCruiser.WinForms.DataEntry
 
         void SettingsButton_Click(object sender, EventArgs e)
         {
-            Button button = (Button)sender;
+            TallyRow row = (TallyRow)sender;
+            CountTreeVM count = row.Count;
 
-            CountTreeVM count = (CountTreeVM)button.Tag;
             this.ViewLogicController.SavePlotTrees();
             AppController.ViewController.ShowTallySettings(count);            
 

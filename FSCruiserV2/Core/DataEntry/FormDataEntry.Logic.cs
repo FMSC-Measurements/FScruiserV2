@@ -583,43 +583,46 @@ namespace FSCruiser.Core.DataEntry
         {
             var view = this.View.FocusedLayout;
 
-            if (view != null 
-                && view.PreviewKeypress(key))
+            if (view != null)
             {
-                return true;
-            }
-
-            var tallyView = this.View.FocusedLayout as ITallyView;
-            if (tallyView != null)
-            {
-                if (key.Length != 1) { return false; }
-                var keyChar = char.ToUpper(key[0]);
-
-                if (!IsHotkeyKey(keyChar)) { return false; }
-
-                if (tallyView.HotKeyEnabled == false) { return false; }
-                //if valid stratm hot key, go to view that stratum belongs to
-                if (this.StratumHotKeyLookup.ContainsKey(keyChar))
+                if (view.PreviewKeypress(key))
                 {
-                    this.View.GoToPageIndex(this.StratumHotKeyLookup[keyChar]);
                     return true;
                 }
-                else if (tallyView.HotKeyLookup != null && tallyView.HotKeyLookup.ContainsKey(keyChar))//maybe a tally hotkey
+                else
                 {
-                    CountTreeVM count = tallyView.HotKeyLookup[keyChar];
-                    tallyView.OnTally(count);
-                    return true;
-                }
-                else//not valid hotkey, get grumpy
-                {
-                    this.ViewController.SignalInvalidAction();
-                    return true;
+                    var tallyView = view as ITallyView;
+                    if (tallyView != null)
+                    {
+                        if (key.Length != 1) { return false; }
+                        var keyChar = char.ToUpper(key[0]);
+
+                        if (!IsHotkeyKey(keyChar)) { return false; }
+
+                        if (tallyView.HotKeyEnabled == false) { return false; }
+
+                        //if valid stratm hot key, go to view that stratum belongs to
+                        if (this.StratumHotKeyLookup.ContainsKey(keyChar))
+                        {
+                            this.View.GoToPageIndex(this.StratumHotKeyLookup[keyChar]);
+                            return true;
+                        }
+                        else if (tallyView.HotKeyLookup != null && tallyView.HotKeyLookup.ContainsKey(keyChar))//maybe a tally hotkey
+                        {
+                            CountTreeVM count = tallyView.HotKeyLookup[keyChar];
+                            tallyView.OnTally(count);
+                            return true;
+                        }
+                        else//not valid hotkey, get grumpy
+                        {
+                            this.ViewController.SignalInvalidAction();
+                            return true;
+                        }
+                    }
                 }
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         bool IsHotkeyKey(char c)

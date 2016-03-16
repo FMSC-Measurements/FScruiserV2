@@ -76,6 +76,7 @@ namespace FSCruiser.WinForms.Common
                 {
                     _main = new FormMain(this.ApplicationController);
                     _main.Closing += new CancelEventHandler(OnApplicationClosing);
+                    _main.StartPosition = FormStartPosition.CenterScreen;
 
                 }
                 return _main;
@@ -126,18 +127,25 @@ namespace FSCruiser.WinForms.Common
 
         public void BeginShowSplash()
         {
-            _splashThread = new Thread(ViewController.ShowSplash);//TODO ensure thread gets killed when not needed
-            _splashThread.Name = "Splash";
-            _splashThread.Start();
-        }
-
-        private static void ShowSplash()
-        {
             using (FormAbout a = new FormAbout())
             {
-                Application.Run(a);
+                a.StartPosition = FormStartPosition.CenterScreen;
+                a.ShowDialog();
+                //Application.Run(a);
             }
+            //_splashThread = new Thread(ViewController.ShowSplash);//TODO ensure thread gets killed when not needed
+            //_splashThread.Name = "Splash";
+            //_splashThread.Start();
         }
+
+        //private static void ShowSplash()
+        //{
+        //    using (FormAbout a = new FormAbout())
+        //    {
+        //        a.ShowDialog();
+        //        //Application.Run(a);
+        //    }
+        //}
 
 
         public FormLogs GetLogsView(StratumDO stratum)

@@ -233,9 +233,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void HandleSettingsButtonClick(object sender, EventArgs e)
         {
-            var settingsbutton = (Button)sender;
-            var row = (TallyRow)settingsbutton.Parent.Parent;
-            var count = row.Count;
+            TallyRow row = (TallyRow)sender;
+            CountTreeVM count = row.Count;
             this.ViewLogicController.ViewController.ShowTallySettings(count);
             //row.DiscriptionLabel.Text = count.Tally.Description;
         }

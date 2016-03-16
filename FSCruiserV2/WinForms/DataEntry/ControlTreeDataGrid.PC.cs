@@ -56,6 +56,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public ControlTreeDataGrid(IApplicationController controller, FormDataEntryLogic dataEntryController)
         {
+            this.EditMode = DataGridViewEditMode.EditOnEnter;
             this.AutoGenerateColumns = false;
             this.AllowUserToDeleteRows = false;
             this.AllowUserToAddRows = false;

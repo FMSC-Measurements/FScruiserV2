@@ -35,6 +35,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public bool EnableSumKPI
         {
+            get { return this._SumKPI_TB.Visible; }
             set
             {
                 this._SumKPI_TB.Visible = value;
@@ -176,6 +177,20 @@ namespace FSCruiser.WinForms.DataEntry
                     _SumKPI_TB.Text = this._count.SumKPI.ToString();
                     e.Cancel = true;
                     return;
+                }
+
+                if (this._count.TreeCount != newTreeCount || this._count.SumKPI != newSumKPI)
+                {
+                    bool skpi = EnableSumKPI;
+                    if (MessageBox.Show(String.Format("Please confirm the following.\nTree Count: {0}{1}",
+                            newTreeCount,
+                            skpi ? String.Format("Sum KPI: {0}", newSumKPI) : String.Empty),
+                            String.Format("Confirm {0}", skpi ? "Values" : "Tree Count"),
+                        MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
                 }
 
                 if (this._count.TreeCount != newTreeCount)

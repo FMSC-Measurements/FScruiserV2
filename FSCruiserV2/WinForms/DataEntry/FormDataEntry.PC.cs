@@ -27,7 +27,6 @@ namespace FSCruiser.WinForms.DataEntry
         FormDataEntry()
         {
             InitializeComponent();
-
             //this._pageContainer = MakePageContainer();
             //this.Controls.Add(this._pageContainer);
         }
