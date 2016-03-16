@@ -117,7 +117,7 @@ namespace FSCruiser.Core
             return false;
         }
 
-        protected bool OpenFile(string path)
+        public bool OpenFile(string path)
         {
             try
             {
@@ -134,6 +134,9 @@ namespace FSCruiser.Core
                 //{
                 //    _allowBackup = true;
                 //}
+
+                Settings.AddRecentProject(new RecentProject(Path.GetFileName(path), path));
+                SaveAppSettings();
 
                 return true;
             }

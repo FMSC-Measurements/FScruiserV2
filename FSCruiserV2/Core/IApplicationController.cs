@@ -51,6 +51,7 @@ namespace FSCruiser.Core
         //CruiserVM[] GetCruiserList();
 
         bool OpenFile();
+        bool OpenFile(String path);
 
         //int GetLogNumerIndexStart(TreeVM tree);
         void HandleNonCriticalException(Exception ex, string optMessage);

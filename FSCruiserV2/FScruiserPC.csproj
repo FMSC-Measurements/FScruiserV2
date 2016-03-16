@@ -80,6 +80,7 @@
     <Compile Include="Core\Models\Plot3PPNT.cs" />
     <Compile Include="Core\Models\PlotInfo.cs" />
     <Compile Include="Core\Models\PlotStratum.cs" />
+    <Compile Include="Core\Models\RecentProject.cs" />
     <Compile Include="Core\Models\SampleGroupVM.cs" />
     <Compile Include="Core\Models\StratumInfo.cs" />
     <Compile Include="Core\Models\SubPopInfo.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 using FSCruiser.Core.Models;
+using System.Linq;
 
 namespace FSCruiser.Core
 {
@@ -11,9 +12,11 @@ namespace FSCruiser.Core
     {
         string _backupDir;
         List<CruiserVM> _cruisers;
+        public List<RecentProject> RecentProjects { get; set; }
 
         public ApplicationSettings()
         {
+            RecentProjects = new List<RecentProject>();
         }
 
         [XmlAttribute]
@@ -89,5 +92,27 @@ namespace FSCruiser.Core
         }
         #endregion
 
+
+        #region Recent Files
+
+        public void AddRecentProject(RecentProject project)
+        {
+            if (RecentProjects == null)
+                RecentProjects = new List<RecentProject>();
+
+            if (RecentProjects.Contains(project))
+                RecentProjects.Remove(project);
+
+            RecentProjects.Insert(0, project);
+        }
+
+        public void ClearRecentProjects()
+        {
+            if (RecentProjects != null)
+            {
+                RecentProjects.Clear();
+            }
+        }
+        #endregion
     }
 }
