@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9568C413-05B2-4672-AD7B-E4101537AB26}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -64,7 +64,7 @@
     <Compile Include="Core\ApplicationController.cs" />
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\CountTreeExtensions.cs" />
-    <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
+    <Compile Include="Core\DataEntry\FomrDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="Core\Exceptions.cs" />
     <Compile Include="Core\FormCruiserSelection.Logic.cs" />
@@ -109,6 +109,9 @@
     <Compile Include="WinForms.Common\FormDataEntryBase.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="WinForms.Common\SpeciesRow.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WinForms.Common\TallyRow.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -142,6 +145,12 @@
     </Compile>
     <Compile Include="WinForms\DataEntry\FormLogs.Designer.cs">
       <DependentUpon>FormLogs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\DataEntry\SampleGroupRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms\DataEntry\SampleGroupRow.Designer.cs">
+      <DependentUpon>SampleGroupRow.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms\DataGridExtentions.cs" />
     <Compile Include="WinForms\FormAbout.PC.cs">
@@ -228,6 +237,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\DataEntry\FormLogs.resx">
       <DependentUpon>FormLogs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\DataEntry\SampleGroupRow.resx">
+      <DependentUpon>SampleGroupRow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\FormAbout.PC.resx">
       <DependentUpon>FormAbout.PC.cs</DependentUpon>

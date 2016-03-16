@@ -1,0 +1,14 @@
+Feature: Single stage plot cruising 
+
+Background:
+GIVEN the following strata exist:
+    |Code   |Method |FPS/BAF    |
+    |01     |FIX    |10         |
+    |02     |PCM    |10         |
+AND the following Sample Groups exist:
+    |St     |Code   |Sp     |
+    |01     |A      |1 & 2  |
+    |01     |B      |1 & 2  |    
+    |02     |C      |1 & 2  |    
+    |02     |D      |1 & 2  |
+

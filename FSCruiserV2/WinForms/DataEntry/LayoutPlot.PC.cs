@@ -179,12 +179,29 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void MakeSGList(List<SampleGroupVM> list, Panel container)
         {
-            try
+            foreach (SampleGroupVM sg in list.Reverse<SampleGroupVM>())
             {
-                throw new NotImplementedException();
+                var sgRow = new SampleGroupRow()
+                {
+                    Text = sg.Code,
+                    Dock = DockStyle.Top
+                };
+                sgRow.SpeciesClicked += new SampleGroupRow.SpeciesClickedEventHandler(sgRow_SpeciesClicked);
+
+                sg.TreeDefaultValues.Populate();
+                var subPops = (from TreeDefaultValueDO tdv in sg.TreeDefaultValues
+                               select new SubPop(sg, tdv));
+
+                sgRow.AddSupPops(subPops);
+
+                container.Controls.Add(sgRow);
             }
-            catch (NotImplementedException)
-            { }
+        }
+
+        void sgRow_SpeciesClicked(object sender, SubPop sp)
+        {
+            #warning not implemented
+            throw new NotImplementedException();
         }
 
         public Control MakeTallyRow(Control container, CountTreeVM count)
@@ -214,12 +231,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         public Control MakeTallyRow(Control container, SubPop subPop)
         {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch (NotImplementedException)
-            { }
             return null;
         }
 

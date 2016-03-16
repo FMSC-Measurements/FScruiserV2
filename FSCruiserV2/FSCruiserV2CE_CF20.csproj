@@ -225,6 +225,9 @@
     <Compile Include="WinForms.Common\FormPlotInfoBase.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="WinForms.Common\SpeciesRow.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WinForms.Common\TallyRow.cs">
       <SubType>UserControl</SubType>
     </Compile>
