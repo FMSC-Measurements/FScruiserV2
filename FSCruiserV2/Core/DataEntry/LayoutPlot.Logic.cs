@@ -222,26 +222,18 @@ namespace FSCruiser.Core.DataEntry
 
             if (this.ViewController.ShowPlotInfo(newPlot, Stratum, true) == DialogResult.OK)
             {
-                if (!this.Stratum.IsPlotNumberAvailable(newPlot.PlotNumber))
-                {
-                    MessageBox.Show(String.Format("Plot Number {0} Already Exists", newPlot.PlotNumber));
-                    return this.AddPlot();
-                }
-                else
-                {
-                    newPlot.Save();
-                    this.Stratum.Plots.Add(newPlot);
+                newPlot.Save();
+                this.Stratum.Plots.Add(newPlot);
 
-                    if (!String.IsNullOrEmpty(newPlot.IsEmpty) && String.Compare(newPlot.IsEmpty.Trim(), "True", true) == 0)
-                    {
-                        return this.AddPlot() ?? newPlot;//add plot may return null, in that case return most recently created plot
-                    }
-                    else if (Stratum.Is3PPNT && newPlot.Trees.Count == 0)
-                    {
-                        return this.AddPlot() ?? newPlot;//add plot may return null, in that case return most recently created plot
-                    }
-                    return newPlot;
+                if (!String.IsNullOrEmpty(newPlot.IsEmpty) && String.Compare(newPlot.IsEmpty.Trim(), "True", true) == 0)
+                {
+                    return this.AddPlot() ?? newPlot;//add plot may return null, in that case return most recently created plot
                 }
+                else if (Stratum.Is3PPNT && newPlot.Trees.Count == 0)
+                {
+                    return this.AddPlot() ?? newPlot;//add plot may return null, in that case return most recently created plot
+                }
+                return newPlot;
             }
             return null;
         }

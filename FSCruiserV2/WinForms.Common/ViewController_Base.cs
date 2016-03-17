@@ -76,8 +76,9 @@ namespace FSCruiser.WinForms.Common
                 {
                     _main = new FormMain(this.ApplicationController);
                     _main.Closing += new CancelEventHandler(OnApplicationClosing);
+#if !NetCF
                     _main.StartPosition = FormStartPosition.CenterScreen;
-
+#endif
                 }
                 return _main;
             }
