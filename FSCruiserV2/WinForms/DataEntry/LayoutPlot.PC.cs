@@ -231,8 +231,9 @@ namespace FSCruiser.WinForms.DataEntry
 
         void sgRow_SpeciesClicked(object sender, SubPop sp)
         {
-            #warning not implemented
-            throw new NotImplementedException();
+            if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
+
+            this.ViewLogicController.AddTree(sp.SG, sp.TDV);
         }
 
         public Control MakeTallyRow(Control container, CountTreeVM count)
