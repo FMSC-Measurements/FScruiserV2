@@ -17,6 +17,8 @@
             {
                 components.Dispose();
             }
+            LayoutPlot.SplitterMoved -= LayoutPlot_SplitterMoved;
+
             base.Dispose(disposing);
         }
 
@@ -30,12 +32,15 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutPlot));
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this._tallyListPanel = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
             this._dataGrid = new System.Windows.Forms.DataGridView();
             this._bindingNavigator = new System.Windows.Forms.BindingNavigator(this.components);
             this.bindingNavigatorMoveFirstItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMovePreviousItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
+            this._plotSelect_CB = new System.Windows.Forms.ToolStripComboBox();
             this.bindingNavigatorSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.bindingNavigatorMoveNextItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
@@ -43,15 +48,53 @@
             this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
             this._plotInfoBTN = new System.Windows.Forms.ToolStripButton();
-            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this._tallyListPanel = new System.Windows.Forms.Panel();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._dataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._bindingNavigator)).BeginInit();
             this._bindingNavigator.SuspendLayout();
-            this.tableLayoutPanel.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this._tallyListPanel);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.panel1);
+            this.splitContainer1.Size = new System.Drawing.Size(484, 283);
+            this.splitContainer1.SplitterDistance = 150;
+            this.splitContainer1.TabIndex = 3;
+            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.HandleSplitterMoved);
+            // 
+            // _tallyListPanel
+            // 
+            this._tallyListPanel.AutoScroll = true;
+            this._tallyListPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._tallyListPanel.Location = new System.Drawing.Point(0, 0);
+            this._tallyListPanel.Margin = new System.Windows.Forms.Padding(0);
+            this._tallyListPanel.Name = "_tallyListPanel";
+            this._tallyListPanel.Size = new System.Drawing.Size(150, 283);
+            this._tallyListPanel.TabIndex = 2;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this._dataGrid);
+            this.panel1.Controls.Add(this._bindingNavigator);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(330, 283);
+            this.panel1.TabIndex = 1;
             // 
             // _dataGrid
             // 
@@ -63,9 +106,10 @@
             this._dataGrid.Location = new System.Drawing.Point(0, 25);
             this._dataGrid.Margin = new System.Windows.Forms.Padding(0);
             this._dataGrid.Name = "_dataGrid";
-            this._dataGrid.Size = new System.Drawing.Size(284, 258);
+            this._dataGrid.Size = new System.Drawing.Size(330, 258);
             this._dataGrid.TabIndex = 0;
             this._dataGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this._dataGrid_CellValidating);
+            this._dataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this._dataGrid_CellClick);
             this._dataGrid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this._dataGrid_DataError);
             this._dataGrid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this._datagrid_CellEnter);
             // 
@@ -78,7 +122,7 @@
             this.bindingNavigatorMoveFirstItem,
             this.bindingNavigatorMovePreviousItem,
             this.bindingNavigatorSeparator,
-            this.toolStripComboBox1,
+            this._plotSelect_CB,
             this.bindingNavigatorSeparator1,
             this.bindingNavigatorMoveNextItem,
             this.bindingNavigatorMoveLastItem,
@@ -93,7 +137,7 @@
             this._bindingNavigator.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
             this._bindingNavigator.Name = "_bindingNavigator";
             this._bindingNavigator.PositionItem = null;
-            this._bindingNavigator.Size = new System.Drawing.Size(284, 25);
+            this._bindingNavigator.Size = new System.Drawing.Size(330, 25);
             this._bindingNavigator.TabIndex = 1;
             this._bindingNavigator.Text = "bindingNavigator1";
             // 
@@ -120,13 +164,13 @@
             this.bindingNavigatorSeparator.Name = "bindingNavigatorSeparator";
             this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolStripComboBox1
+            // _plotSelect_CB
             // 
-            this.toolStripComboBox1.AccessibleName = "Position";
-            this.toolStripComboBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.toolStripComboBox1.Name = "toolStripComboBox1";
-            this.toolStripComboBox1.Size = new System.Drawing.Size(75, 25);
-            this.toolStripComboBox1.ToolTipText = "Current Plot";
+            this._plotSelect_CB.AccessibleName = "Position";
+            this._plotSelect_CB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this._plotSelect_CB.Name = "_plotSelect_CB";
+            this._plotSelect_CB.Size = new System.Drawing.Size(75, 25);
+            this._plotSelect_CB.ToolTipText = "Current Plot";
             // 
             // bindingNavigatorSeparator1
             // 
@@ -185,79 +229,46 @@
             this._plotInfoBTN.Text = " Info";
             this._plotInfoBTN.Click += new System.EventHandler(this._plotInfoBTN_Click);
             // 
-            // tableLayoutPanel
-            // 
-            this.tableLayoutPanel.ColumnCount = 2;
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel.Controls.Add(this.panel1, 1, 0);
-            this.tableLayoutPanel.Controls.Add(this._tallyListPanel, 0, 0);
-            this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel.Name = "tableLayoutPanel";
-            this.tableLayoutPanel.RowCount = 1;
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(484, 283);
-            this.tableLayoutPanel.TabIndex = 2;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this._dataGrid);
-            this.panel1.Controls.Add(this._bindingNavigator);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(200, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(284, 283);
-            this.panel1.TabIndex = 0;
-            // 
-            // _tallyListPanel
-            // 
-            this._tallyListPanel.AutoScroll = true;
-            this._tallyListPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._tallyListPanel.Location = new System.Drawing.Point(0, 0);
-            this._tallyListPanel.Margin = new System.Windows.Forms.Padding(0);
-            this._tallyListPanel.Name = "_tallyListPanel";
-            this._tallyListPanel.Size = new System.Drawing.Size(200, 283);
-            this._tallyListPanel.TabIndex = 1;
-            // 
             // LayoutPlot
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.Controls.Add(this.tableLayoutPanel);
+            this.Controls.Add(this.splitContainer1);
             this.Name = "LayoutPlot";
             this.Size = new System.Drawing.Size(484, 283);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this._dataGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._bindingNavigator)).EndInit();
             this._bindingNavigator.ResumeLayout(false);
             this._bindingNavigator.PerformLayout();
-            this.tableLayoutPanel.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Panel _tallyListPanel;
+        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.DataGridView _dataGrid;
         private System.Windows.Forms.BindingNavigator _bindingNavigator;
-        private System.Windows.Forms.ToolStripButton bindingNavigatorAddNewItem;
-        private System.Windows.Forms.ToolStripButton bindingNavigatorDeleteItem;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveFirstItem;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMovePreviousItem;
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator;
+        private System.Windows.Forms.ToolStripComboBox _plotSelect_CB;
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator1;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveNextItem;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveLastItem;
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
+        private System.Windows.Forms.ToolStripButton bindingNavigatorAddNewItem;
+        private System.Windows.Forms.ToolStripButton bindingNavigatorDeleteItem;
         private System.Windows.Forms.ToolStripButton _plotInfoBTN;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel _tallyListPanel;
-        private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
+
         //private System.Windows.Forms.BindingSource _BS_Trees;
         //private System.Windows.Forms.BindingSource _BS_Plots;
     }

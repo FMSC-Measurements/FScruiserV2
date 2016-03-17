@@ -19,7 +19,14 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class LayoutPlot : UserControl , ITallyView , ITreeView, IPlotLayout
     {
+        private delegate void SplitterMovedEventHandler(object sender, int newPosition);
+
+
         private bool _viewLoading = true;
+
+        
+
+        static event SplitterMovedEventHandler SplitterMoved;
 
         private DataEntryMode _mode;
 
@@ -55,6 +62,8 @@ namespace FSCruiser.WinForms.DataEntry
             this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController, dataEntryController.ViewController);
             this.Dock = DockStyle.Fill;            
             InitializeComponent();
+
+            LayoutPlot.SplitterMoved +=new SplitterMovedEventHandler(LayoutPlot_SplitterMoved);
 
             this._dataGrid.CellClick += new DataGridViewCellEventHandler(_dataGrid_CellClick);
 
@@ -93,17 +102,31 @@ namespace FSCruiser.WinForms.DataEntry
             
         }
 
-        void _dataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        void HandleSplitterMoved(object sender, SplitterEventArgs e)
         {
-            if (_logsColumn != null && e.ColumnIndex == _logsColumn.Index)
+
+            if (this.ViewLoading 
+                ||suppressSplitterEvents) {return;} 
+            if (LayoutPlot.SplitterMoved != null)
             {
-                TreeVM curTree = this.Trees[e.RowIndex] as TreeVM;
-                if (curTree != null)
-                {
-                    this.DataEntryController.ShowLogs(curTree);
-                }
+                LayoutPlot.SplitterMoved(this, splitContainer1.SplitterDistance);
             }
         }
+
+        bool suppressSplitterEvents;
+        void  LayoutPlot_SplitterMoved(object sender, int newPosition)
+        {
+ 	        if (sender == this) {return; }
+            else
+            {
+                suppressSplitterEvents = true;
+                try { this.splitContainer1.SplitterDistance = newPosition; }
+                finally { suppressSplitterEvents = false; }
+
+            }
+        }
+
+        
 
         #region IPlotLayout members
         private bool _isGridExpanded = false;
@@ -356,6 +379,18 @@ namespace FSCruiser.WinForms.DataEntry
 
         #endregion
         #region DataGrid events
+        void _dataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (_logsColumn != null && e.ColumnIndex == _logsColumn.Index)
+            {
+                TreeVM curTree = this.Trees[e.RowIndex] as TreeVM;
+                if (curTree != null)
+                {
+                    this.DataEntryController.ShowLogs(curTree);
+                }
+            }
+        }
+
         private void _dataGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             
@@ -484,9 +519,6 @@ namespace FSCruiser.WinForms.DataEntry
             return tree.TrySave();
         }
 
-
-
-
         protected bool ProcessSpeciesChanged(TreeVM tree, TreeDefaultValueDO tdv)
         {
             if (tree == null) { return true; }
@@ -543,8 +575,8 @@ namespace FSCruiser.WinForms.DataEntry
         public void BindPlotData(BindingSource plotBS)
         {
             this._bindingNavigator.BindingSource = plotBS;
-            this.toolStripComboBox1.ComboBox.DisplayMember = "Self";
-            this.toolStripComboBox1.ComboBox.DataSource = plotBS;
+            this._plotSelect_CB.ComboBox.DisplayMember = "Self";
+            this._plotSelect_CB.ComboBox.DataSource = plotBS;
         }
 
         public void BindTreeData(BindingSource treeBS)
