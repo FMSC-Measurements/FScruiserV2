@@ -166,7 +166,7 @@ namespace FSCruiser.WinForms.DataEntry
                     }
                 case "Escape":
                     {
-                        #warning not implemented
+                        //#warning not implemented
                         return false;
                         //IsGridExpanded = !IsGridExpanded;
                         //return true;
