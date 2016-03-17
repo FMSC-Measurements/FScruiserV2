@@ -126,28 +126,7 @@ namespace FSCruiser.WinForms.Common
             Application.Run(MainView);
         }
 
-        public void BeginShowSplash()
-        {
-            using (FormAbout a = new FormAbout())
-            {
-                a.StartPosition = FormStartPosition.CenterScreen;
-                a.ShowDialog();
-                //Application.Run(a);
-            }
-            //_splashThread = new Thread(ViewController.ShowSplash);//TODO ensure thread gets killed when not needed
-            //_splashThread.Name = "Splash";
-            //_splashThread.Start();
-        }
-
-        //private static void ShowSplash()
-        //{
-        //    using (FormAbout a = new FormAbout())
-        //    {
-        //        a.ShowDialog();
-        //        //Application.Run(a);
-        //    }
-        //}
-
+        public abstract void BeginShowSplash();
 
         public FormLogs GetLogsView(StratumDO stratum)
         {

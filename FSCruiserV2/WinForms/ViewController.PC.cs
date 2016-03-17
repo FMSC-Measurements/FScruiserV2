@@ -25,6 +25,16 @@ namespace FSCruiser.WinForms
 
         #region IViewController Members
 
+        public override void BeginShowSplash()
+        {
+            //using (FormAbout a = new FormAbout())
+            //{
+            //    a.StartPosition = FormStartPosition.CenterScreen;
+            //    a.Show();
+            //    //Application.Run(a);
+            //}
+        }
+
         public override DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage)
         {
             throw new NotImplementedException();
