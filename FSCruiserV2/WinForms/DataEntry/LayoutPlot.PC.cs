@@ -64,8 +64,16 @@ namespace FSCruiser.WinForms.DataEntry
             InitializeComponent();
 
             LayoutPlot.SplitterMoved +=new SplitterMovedEventHandler(LayoutPlot_SplitterMoved);
+            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.HandleSplitterMoved);
 
             this._dataGrid.CellClick += new DataGridViewCellEventHandler(_dataGrid_CellClick);
+            this._dataGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this._dataGrid_CellValidating);
+            this._dataGrid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this._dataGrid_DataError);
+            this._dataGrid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this._datagrid_CellEnter);
+
+            this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this._addPlotButton_Click);
+            this.bindingNavigatorDeleteItem.Click += new System.EventHandler(this._deletePlotButton_Click);
+            this._plotInfoBTN.Click += new System.EventHandler(this._plotInfoBTN_Click);
 
             this._dataGrid.AutoGenerateColumns = false;
             //this._dataGrid.DataSource = _BS_Trees;

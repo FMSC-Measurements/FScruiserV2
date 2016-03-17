@@ -73,7 +73,7 @@
             this.splitContainer1.Size = new System.Drawing.Size(484, 283);
             this.splitContainer1.SplitterDistance = 150;
             this.splitContainer1.TabIndex = 3;
-            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.HandleSplitterMoved);
+            
             // 
             // _tallyListPanel
             // 
@@ -108,10 +108,6 @@
             this._dataGrid.Name = "_dataGrid";
             this._dataGrid.Size = new System.Drawing.Size(330, 258);
             this._dataGrid.TabIndex = 0;
-            this._dataGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this._dataGrid_CellValidating);
-            this._dataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this._dataGrid_CellClick);
-            this._dataGrid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this._dataGrid_DataError);
-            this._dataGrid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this._datagrid_CellEnter);
             // 
             // _bindingNavigator
             // 
@@ -208,7 +204,7 @@
             this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
             this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(23, 22);
             this.bindingNavigatorAddNewItem.Text = "Add new";
-            this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this._addPlotButton_Click);
+            
             // 
             // bindingNavigatorDeleteItem
             // 
@@ -218,7 +214,7 @@
             this.bindingNavigatorDeleteItem.RightToLeftAutoMirrorImage = true;
             this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(23, 22);
             this.bindingNavigatorDeleteItem.Text = "Delete";
-            this.bindingNavigatorDeleteItem.Click += new System.EventHandler(this._deletePlotButton_Click);
+            
             // 
             // _plotInfoBTN
             // 
@@ -227,7 +223,7 @@
             this._plotInfoBTN.Name = "_plotInfoBTN";
             this._plotInfoBTN.Size = new System.Drawing.Size(35, 22);
             this._plotInfoBTN.Text = " Info";
-            this._plotInfoBTN.Click += new System.EventHandler(this._plotInfoBTN_Click);
+            
             // 
             // LayoutPlot
             // 
