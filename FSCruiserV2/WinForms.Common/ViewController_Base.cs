@@ -237,6 +237,10 @@ namespace FSCruiser.WinForms.Common
             {
                 using (var view = new Form3PPNTPlotInfo(this))
                 {
+#if !NetCF
+                    view.Owner = this._dataEntryView;
+                    view.StartPosition = FormStartPosition.CenterParent;
+#endif
                     return view.ShowDialog(plot, stratum, isNewPlot);
                 }
             }
@@ -244,6 +248,10 @@ namespace FSCruiser.WinForms.Common
             {
                 using (var view = new FormPlotInfo())
                 {
+#if !NetCF 
+                    view.Owner = this._dataEntryView;
+                    view.StartPosition = FormStartPosition.CenterParent;
+#endif
                     return view.ShowDialog(plot, stratum, isNewPlot);
                 }
             }
