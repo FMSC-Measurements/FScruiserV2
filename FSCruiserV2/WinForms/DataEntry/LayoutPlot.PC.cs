@@ -56,6 +56,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.Dock = DockStyle.Fill;            
             InitializeComponent();
 
+            this._dataGrid.EditMode = DataGridViewEditMode.EditOnEnter;
             this._dataGrid.CellClick += new DataGridViewCellEventHandler(_dataGrid_CellClick);
 
             this._dataGrid.AutoGenerateColumns = false;

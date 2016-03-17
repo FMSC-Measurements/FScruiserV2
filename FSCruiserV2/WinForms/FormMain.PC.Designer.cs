@@ -32,12 +32,13 @@
             System.Windows.Forms.Panel panel1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this._viewContentPanel = new System.Windows.Forms.Panel();
-            this._cuttingUnitSelectView = new FSCruiser.WinForms.CuttingUnitSelectView();
             this._viewNavPanel = new System.Windows.Forms.Panel();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._cuttingUnitSelectView = new FSCruiser.WinForms.CuttingUnitSelectView();
             ExampleButton = new System.Windows.Forms.Button();
             panel1 = new System.Windows.Forms.Panel();
             panel1.SuspendLayout();
@@ -88,16 +89,6 @@
             this._viewContentPanel.Size = new System.Drawing.Size(595, 432);
             this._viewContentPanel.TabIndex = 2;
             // 
-            // _cuttingUnitSelectView
-            // 
-            this._cuttingUnitSelectView.Controller = null;
-            this._cuttingUnitSelectView.Dock = System.Windows.Forms.DockStyle.Left;
-            this._cuttingUnitSelectView.Location = new System.Drawing.Point(0, 0);
-            this._cuttingUnitSelectView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this._cuttingUnitSelectView.Name = "_cuttingUnitSelectView";
-            this._cuttingUnitSelectView.Size = new System.Drawing.Size(250, 432);
-            this._cuttingUnitSelectView.TabIndex = 0;
-            // 
             // _viewNavPanel
             // 
             this._viewNavPanel.BackColor = System.Drawing.Color.Transparent;
@@ -120,7 +111,8 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.aboutToolStripMenuItem,
+            this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
             this.fileToolStripMenuItem.Text = "File";
@@ -142,6 +134,23 @@
             this.menuStrip.TabIndex = 2;
             this.menuStrip.Text = "menuStrip1";
             // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(119, 24);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // _cuttingUnitSelectView
+            // 
+            this._cuttingUnitSelectView.Controller = null;
+            this._cuttingUnitSelectView.Dock = System.Windows.Forms.DockStyle.Left;
+            this._cuttingUnitSelectView.Location = new System.Drawing.Point(0, 0);
+            this._cuttingUnitSelectView.Margin = new System.Windows.Forms.Padding(4);
+            this._cuttingUnitSelectView.Name = "_cuttingUnitSelectView";
+            this._cuttingUnitSelectView.Size = new System.Drawing.Size(200, 432);
+            this._cuttingUnitSelectView.TabIndex = 0;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
@@ -151,6 +160,7 @@
             this.Controls.Add(this.menuStrip);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(500, 300);
             this.Name = "FormMain";
             this.Text = "FScruiser";
             panel1.ResumeLayout(false);
@@ -173,5 +183,6 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.MenuStrip menuStrip;
         private CuttingUnitSelectView _cuttingUnitSelectView;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     }
 }

@@ -222,7 +222,7 @@ namespace FSCruiser.Core.DataEntry
 
             if (this.ViewController.ShowPlotInfo(newPlot, Stratum, true) == DialogResult.OK)
             {
-                if (this.Stratum.IsPlotNumberAvailable(newPlot.PlotNumber))
+                if (!this.Stratum.IsPlotNumberAvailable(newPlot.PlotNumber))
                 {
                     MessageBox.Show(String.Format("Plot Number {0} Already Exists", newPlot.PlotNumber));
                     return this.AddPlot();

@@ -131,5 +131,10 @@ namespace FSCruiser.WinForms
         {
             this.Controller.ViewController.ShowAbout();
         }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

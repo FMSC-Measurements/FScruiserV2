@@ -104,6 +104,9 @@ namespace FSCruiser.Core
                 RecentProjects.Remove(project);
 
             RecentProjects.Insert(0, project);
+
+            if (RecentProjects.Count > 5)
+                RecentProjects.RemoveAt(5);
         }
 
         public void ClearRecentProjects()
