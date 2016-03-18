@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this._plotNumNUD = new System.Windows.Forms.NumericUpDown();
-            this._BS_plot = new System.Windows.Forms.BindingSource(this.components);
             this.panel3 = new System.Windows.Forms.Panel();
             this._OKBtn = new System.Windows.Forms.Button();
             this._getGPSMI = new System.Windows.Forms.MenuItem();
@@ -48,11 +47,12 @@
             this._kz3ppnt_lbl = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this._cancelMI = new System.Windows.Forms.MenuItem();
+            this._BS_plot = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this._plotNumNUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this._BS_plot)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._BS_plot)).BeginInit();
             this.SuspendLayout();
             // 
             // _plotNumNUD
@@ -73,10 +73,6 @@
             0,
             0,
             0});
-            // 
-            // _BS_plot
-            // 
-            this._BS_plot.DataSource = typeof(FSCruiser.Core.Models.Plot3PPNT);
             // 
             // panel3
             // 
@@ -152,7 +148,6 @@
             this._avgHt_TB.Name = "_avgHt_TB";
             this._avgHt_TB.Size = new System.Drawing.Size(40, 20);
             this._avgHt_TB.TabIndex = 21;
-            this._avgHt_TB.TextChanged += new System.EventHandler(this.TB_TextChanged);
             // 
             // _treeCnt_TB
             // 
@@ -162,7 +157,6 @@
             this._treeCnt_TB.Name = "_treeCnt_TB";
             this._treeCnt_TB.Size = new System.Drawing.Size(40, 20);
             this._treeCnt_TB.TabIndex = 20;
-            this._treeCnt_TB.TextChanged += new System.EventHandler(this.TB_TextChanged);
             // 
             // label4
             // 
@@ -238,6 +232,11 @@
             this._cancelMI.Index = -1;
             this._cancelMI.Text = "Cancel";
             // 
+            // _BS_plot
+            // 
+            this._BS_plot.DataSource = typeof(FSCruiser.Core.Models.Plot3PPNT);
+            this._BS_plot.CurrentItemChanged += new System.EventHandler(this._BS_plot_CurrentItemChanged);
+            // 
             // Form3PPNTPlotInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -250,12 +249,12 @@
             this.Name = "Form3PPNTPlotInfo";
             this.Text = "FormPlotInfo3PPNT";
             ((System.ComponentModel.ISupportInitialize)(this._plotNumNUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this._BS_plot)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._BS_plot)).EndInit();
             this.ResumeLayout(false);
 
         }

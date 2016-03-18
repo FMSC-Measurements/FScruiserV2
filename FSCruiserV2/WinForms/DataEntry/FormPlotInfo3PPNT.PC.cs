@@ -66,7 +66,9 @@ namespace FSCruiser.WinForms.DataEntry
                 e.Cancel = true;
                 return;
             }
-            else if (_plot.TreeCount == 0 && _plot.AverageHeight == 0)
+
+            _plot.StoreUserEnteredValues();
+            if (_plot.TreeCount == 0 && _plot.AverageHeight == 0)
             {
                 if (MessageBox.Show("Empty Plot?", null, MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button1)
                     == DialogResult.Yes)
@@ -130,6 +132,11 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         private void TB_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void _BS_plot_CurrentItemChanged(object sender, EventArgs e)
         {
             _plot.KPI = _plot.CalculateKPI();
         }        

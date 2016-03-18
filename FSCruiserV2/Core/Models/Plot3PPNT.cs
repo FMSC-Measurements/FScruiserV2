@@ -75,5 +75,10 @@ namespace FSCruiser.Core.Models
                 return (float)Math.Round((Decimal)(this.TreeCount * Stratum.BasalAreaFactor * this.AverageHeight) * this.VolFactor);
             }
         }
+
+        public void StoreUserEnteredValues()
+        {
+            this.Remarks += string.Format("|Tree Cnt = {0}, Avg Ht = {1}, KPI = {2}|", TreeCount, AverageHeight, KPI);
+        }
     }
 }
