@@ -48,10 +48,11 @@
             // 
             this._speciesContainer.AutoSize = true;
             this._speciesContainer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this._speciesContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._speciesContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this._speciesContainer.Location = new System.Drawing.Point(0, 30);
             this._speciesContainer.Name = "_speciesContainer";
-            this._speciesContainer.Size = new System.Drawing.Size(50, 0);
+            this._speciesContainer.Size = new System.Drawing.Size(50, 2);
             this._speciesContainer.TabIndex = 1;
             // 
             // SampleGroupRow
@@ -64,7 +65,7 @@
             this.Controls.Add(this._expand_BTN);
             this.MinimumSize = new System.Drawing.Size(50, 30);
             this.Name = "SampleGroupRow";
-            this.Size = new System.Drawing.Size(50, 30);
+            this.Size = new System.Drawing.Size(50, 32);
             this.ResumeLayout(false);
             this.PerformLayout();
 

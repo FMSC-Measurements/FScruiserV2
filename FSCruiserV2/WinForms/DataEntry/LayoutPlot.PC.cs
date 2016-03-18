@@ -214,7 +214,7 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 var sgRow = new SampleGroupRow()
                 {
-                    Text = sg.Code,
+                    Text = "SG: " + sg.Code,
                     Dock = DockStyle.Top
                 };
                 sgRow.SpeciesClicked += new SampleGroupRow.SpeciesClickedEventHandler(sgRow_SpeciesClicked);
