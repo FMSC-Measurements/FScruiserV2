@@ -34,6 +34,9 @@ namespace FSCruiser.WinForms
         {
             this.Controller = controller;
             InitializeComponent();
+
+            this.Text = "FScruiser - " + FSCruiser.Core.Constants.FSCRUISER_VERSION;
+
             this.ClearNavPanel();
             
             this._dataEntryButton = this.AddNavButton("Data Entry", this.HandleDataEntryClick);
@@ -52,10 +55,9 @@ namespace FSCruiser.WinForms
             newNavButton.AutoSize = true;
             newNavButton.BackColor = System.Drawing.Color.Yellow;
             newNavButton.Dock = System.Windows.Forms.DockStyle.Top;
-            newNavButton.FlatAppearance.BorderColor = System.Drawing.Color.Gold;
-            newNavButton.FlatAppearance.BorderSize = 2;
-            newNavButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            //newNavButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            newNavButton.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
+            newNavButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Gold;
+            newNavButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             newNavButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             newNavButton.ForeColor = System.Drawing.SystemColors.ControlText;
             newNavButton.Location = new System.Drawing.Point(0, 0);

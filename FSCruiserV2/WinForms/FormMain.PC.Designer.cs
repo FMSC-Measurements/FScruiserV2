@@ -36,10 +36,10 @@
             this._viewNavPanel = new System.Windows.Forms.Panel();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
-            this.recentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ExampleButton = new System.Windows.Forms.Button();
             panel1 = new System.Windows.Forms.Panel();
             panel1.SuspendLayout();
@@ -53,10 +53,10 @@
             ExampleButton.AutoSize = true;
             ExampleButton.BackColor = System.Drawing.Color.Yellow;
             ExampleButton.Dock = System.Windows.Forms.DockStyle.Top;
-            ExampleButton.FlatAppearance.BorderColor = System.Drawing.Color.Gold;
-            ExampleButton.FlatAppearance.BorderSize = 2;
-            ExampleButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            ExampleButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ExampleButton.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
+            ExampleButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Gold;
+            ExampleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            ExampleButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ExampleButton.ForeColor = System.Drawing.SystemColors.ControlText;
             ExampleButton.Location = new System.Drawing.Point(0, 0);
             ExampleButton.Name = "ExampleButton";
@@ -106,6 +106,7 @@
             this._viewNavPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this._viewNavPanel.Controls.Add(ExampleButton);
             this._viewNavPanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this._viewNavPanel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._viewNavPanel.Location = new System.Drawing.Point(3, 3);
             this._viewNavPanel.Name = "_viewNavPanel";
             this._viewNavPanel.Size = new System.Drawing.Size(151, 436);
@@ -114,7 +115,7 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.HandleOpenCruiseFileClick);
             // 
@@ -130,17 +131,23 @@
             this.fileToolStripMenuItem.Text = "File";
             this.fileToolStripMenuItem.DropDownOpened += new System.EventHandler(this.fileToolStripMenuItem_DropDownOpened);
             // 
+            // recentToolStripMenuItem
+            // 
+            this.recentToolStripMenuItem.Name = "recentToolStripMenuItem";
+            this.recentToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.recentToolStripMenuItem.Text = "Recent";
+            // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -154,12 +161,6 @@
             this.menuStrip.TabIndex = 2;
             this.menuStrip.Text = "menuStrip1";
             // 
-            // recentToolStripMenuItem
-            // 
-            this.recentToolStripMenuItem.Name = "recentToolStripMenuItem";
-            this.recentToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.recentToolStripMenuItem.Text = "Recent";
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -171,7 +172,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(500, 300);
             this.Name = "FormMain";
-            this.Text = "FScruiser";
+            this.Text = "FScruiser - 2016.02.09";
             panel1.ResumeLayout(false);
             this._viewContentPanel.ResumeLayout(false);
             this._viewNavPanel.ResumeLayout(false);
