@@ -112,7 +112,8 @@ namespace FSCruiser.WinForms
                             col = new DataGridViewComboBoxColumn()
                             {
                                 DisplayMember = "Species",
-                                ValueMember = "Self"
+                                ValueMember = "Self",
+                                FlatStyle = FlatStyle.Flat
                             };
                             break;
                         }
@@ -120,7 +121,8 @@ namespace FSCruiser.WinForms
                         {
                             col = new DataGridViewComboBoxColumn()
                             {
-                                DataSource = new string[] { "C", "M", "I" }
+                                DataSource = new string[] { "C", "M", "I" },
+                                FlatStyle = FlatStyle.Flat
                             };
                             break;
                         }
@@ -128,7 +130,8 @@ namespace FSCruiser.WinForms
                         {
                             col = new DataGridViewComboBoxColumn()
                             {
-                                DataSource = new string[] { "L", "D" }
+                                DataSource = new string[] { "L", "D" },
+                                FlatStyle = FlatStyle.Flat
                             };
 
                             break;
@@ -140,7 +143,8 @@ namespace FSCruiser.WinForms
                                 col = new DataGridViewComboBoxColumn()
                                 {
                                     DisplayMember = "Code",
-                                    ValueMember = "Self"
+                                    ValueMember = "Self",
+                                    FlatStyle = FlatStyle.Flat
                                 };
                                 break;
                             }
@@ -154,7 +158,8 @@ namespace FSCruiser.WinForms
                             col = new DataGridViewComboBoxColumn()
                             {
                                 DisplayMember = "Code",
-                                ValueMember = "Self"
+                                ValueMember = "Self",
+                                FlatStyle = FlatStyle.Flat
                             };
                             break;
                         }
@@ -229,13 +234,9 @@ namespace FSCruiser.WinForms
         {
             switch (columnType)
             {
-                case "Text":
-                    {
-                        return new DataGridViewTextBoxColumn();
-                    }
                 case "Combo":
                     {
-                        return new DataGridViewComboBoxColumn();
+                        return new DataGridViewComboBoxColumn() { FlatStyle = FlatStyle.Flat };
                     }
                 case "Button":
                     {
@@ -245,14 +246,9 @@ namespace FSCruiser.WinForms
                     {
                         return new DataGridViewCheckBoxColumn();
                     }
-                case "UpDown":
-                    {
-                        return new DataGridViewTextBoxColumn();
-                    }
+                case "Text":
                 case "DateTime":
-                    {
-                        return new DataGridViewTextBoxColumn();
-                    }
+                case "UpDown":
                 default:
                     {
                         return new DataGridViewTextBoxColumn();
