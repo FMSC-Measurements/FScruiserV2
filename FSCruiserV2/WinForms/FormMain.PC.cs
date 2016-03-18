@@ -117,19 +117,14 @@ namespace FSCruiser.WinForms
 
         private void recentFileSelected(object sender, EventArgs e)
         {
+            var tsmi = sender as ToolStripMenuItem;
+            if (tsmi == null) { return; }
             if (sender != null)
             {
-                ToolStripMenuItem tsmi = (ToolStripMenuItem)sender;
+                var path = tsmi.ToolTipText;
 
-                if (tsmi != null && tsmi.ToolTipText != null)
-                {
-                    this._dataEntryButton.Enabled = this.Controller.OpenFile(tsmi.ToolTipText);
-                    this.CuttingUnitSelectView.OnCuttingUnitsChanged();
-                }
-                else
-                {
-                    MessageBox.Show("File not found");
-                }
+                this._dataEntryButton.Enabled = this.Controller.OpenFile(tsmi.ToolTipText);
+                this.CuttingUnitSelectView.OnCuttingUnitsChanged();
             }
         }
     }
