@@ -34,6 +34,10 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _initialState = new PlotDO(plot);
             }
+            else
+            {
+                _initialState = null;
+            }
 
             this.DialogResult = DialogResult.OK;
 
@@ -52,6 +56,12 @@ namespace FSCruiser.WinForms.DataEntry
             base.OnClosing(e);
             this._BS_Plot.EndEdit();
 
+            bool plotNumberChanged = false;            
+            if (_initialState != null) 
+            { 
+                plotNumberChanged = _initialState.PlotNumber != Plot.PlotNumber;
+            }
+
             if (DialogResult == DialogResult.OK)
             {
                 if (Plot.PlotNumber <= 0L)
@@ -59,7 +69,8 @@ namespace FSCruiser.WinForms.DataEntry
                     MessageBox.Show("Plot Number Must Be Greater Than 0");
                     e.Cancel = true;
                 }
-                else if (!_stratum.IsPlotNumberAvailable(Plot.PlotNumber))
+                else if (plotNumberChanged
+                    && !_stratum.IsPlotNumberAvailable(Plot.PlotNumber))
                 {
                     MessageBox.Show("Plot Number Already Exists");
                     e.Cancel = true;
