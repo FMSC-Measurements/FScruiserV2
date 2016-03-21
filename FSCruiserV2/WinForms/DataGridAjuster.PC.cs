@@ -24,18 +24,32 @@ namespace FSCruiser.WinForms
         public static List<TreeFieldSetupDO> GetTreeFieldSetupByStratum(DAL dal, long stratum_cn)
         {
             //   return base.DAL.Read<TreeFieldSetupDO>(TREEFIELDSETUP._NAME, TREEFIELDSETUP.STRATUM_CN + " = ?", new string[] { stratum_cn });
-            return dal.Read<TreeFieldSetupDO>(CruiseDAL.Schema.TREEFIELDSETUP._NAME, "WHERE " + CruiseDAL.Schema.TREEFIELDSETUP.STRATUM_CN + " = ?  ORDER BY " + CruiseDAL.Schema.TREEFIELDSETUP.FIELDORDER, stratum_cn);
+
+            return dal.From<TreeFieldSetupDO>()
+                .Where("Stratum_CN = ?")
+                .OrderBy("FieldOrder")
+                .Read(stratum_cn)
+                .ToList();
+
+            //return dal.Read<TreeFieldSetupDO>(CruiseDAL.Schema.TREEFIELDSETUP._NAME, "WHERE " + CruiseDAL.Schema.TREEFIELDSETUP.STRATUM_CN + " = ?  ORDER BY " + CruiseDAL.Schema.TREEFIELDSETUP.FIELDORDER, stratum_cn);
 
         }
 
         public static List<TreeFieldSetupDO> GetTreeFieldSetupByUnit(DAL dal, long unit_cn)
         {
-            return dal.Read<TreeFieldSetupDO>(CruiseDAL.Schema.TREEFIELDSETUP._NAME,
-                    @"JOIN CuttingUnitStratum 
-                    ON TreeFieldSetup.Stratum_CN = CuttingUnitStratum.Stratum_CN 
-                    WHERE CuttingUnitStratum.CuttingUnit_CN = ?  
-                    Group BY TreeFieldSetup.Field 
-                    ORDER BY TreeFieldSetup.FieldOrder;", unit_cn);
+            return dal.From<TreeFieldSetupDO>()
+                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
+                .Where("CuttingUnit_CN = ?")
+                .GroupBy("Field")
+                .OrderBy("FieldOrder")
+                .Read(unit_cn).ToList();
+
+//            return dal.Read<TreeFieldSetupDO>(CruiseDAL.Schema.TREEFIELDSETUP._NAME,
+//                    @"JOIN CuttingUnitStratum 
+//                    ON TreeFieldSetup.Stratum_CN = CuttingUnitStratum.Stratum_CN 
+//                    WHERE CuttingUnitStratum.CuttingUnit_CN = ?  
+//                    Group BY TreeFieldSetup.Field 
+//                    ORDER BY TreeFieldSetup.FieldOrder;", unit_cn);
 
         }
 

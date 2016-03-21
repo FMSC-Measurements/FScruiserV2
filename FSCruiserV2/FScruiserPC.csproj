@@ -67,6 +67,7 @@
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="Core\Exceptions.cs" />
+    <Compile Include="Core\Workers\FileLoadWorker.cs" />
     <Compile Include="Core\FormCruiserSelection.Logic.cs" />
     <Compile Include="Core\IApplicationController.cs" />
     <Compile Include="Core\IViewController.cs" />
@@ -100,6 +101,11 @@
     <Compile Include="Core\ViewInterfaces\IPlotLayout.cs" />
     <Compile Include="Core\ViewInterfaces\ITallyView.cs" />
     <Compile Include="Core\ViewInterfaces\ITreeView.cs" />
+    <Compile Include="Core\Workers\CancelWorkerException.cs" />
+    <Compile Include="Core\Workers\IWorker.cs" />
+    <Compile Include="Core\Workers\Worker.cs" />
+    <Compile Include="Core\Workers\WorkerExceptionThrownEventArgs.cs" />
+    <Compile Include="Core\Workers\WorkerProgressChangedEventArgs.cs" />
     <Compile Include="WinForms.Common\FormCruiserSelection.cs">
       <SubType>Form</SubType>
     </Compile>

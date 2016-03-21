@@ -28,6 +28,7 @@ namespace FSCruiser.Core
         //FSCruiserV2.Forms.FormDataEntry GetTreeBasedView(CruiseDAL.DataObjects.CuttingUnitDO unit);
         //void HandleCuttingUnitDataLoaded();
         void HandleCruisersChanged();
+        void HandleFileStateChanged();
 
         void SignalInvalidAction();
         //FSCruiserV2.Forms.Form3PPNTPlotInfo PlotInfo3PPNTView { get; }

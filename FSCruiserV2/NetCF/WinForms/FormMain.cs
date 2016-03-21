@@ -77,17 +77,49 @@ namespace FSCruiser.WinForms
 
         private void OpenButton_Click(object sender, EventArgs e)
         {
-            bool success = this.Controller.OpenFile();
-            OnFileStateChanged(success);
+            this.Controller.OpenFile();
         }
 
-        void OnFileStateChanged(bool isOpened)
+        public void HandleFileStateChanged()
         {
-            this._cuttingUnitCB.Enabled = isOpened;
-            this._fileNameTB.Text = (isOpened) ? Controller._cDal.Path : String.Empty;
-            if (isOpened)
+            if (this.InvokeRequired)
             {
-                this._BS_cuttingUnits.DataSource = Controller.CuttingUnits;
+                this.Invoke(new Action(HandleFileStateChanged));
+            }
+            else
+            {
+
+                if (Controller._cDal != null && Controller._cDal.Exists)
+                {
+                    var fileName = System.IO.Path.GetFileName(Controller._cDal.Path);
+                    this._dataEntryMI.Enabled = true;
+                    Text = "FScruiser - " + fileName;
+                    this._fileNameTB.Text = Controller._cDal.Path;
+                }
+                else
+                {
+                    this._dataEntryMI.Enabled = false;
+                    Text = FSCruiser.Core.Constants.APP_TITLE;
+                    this._fileNameTB.Text = string.Empty;
+                }
+                UpdateCuttingUnits();
+            }
+        }
+
+        void UpdateCuttingUnits()
+        {
+            if (this.Controller.CuttingUnits != null)
+            {
+                var units = new CuttingUnitVM[Controller.CuttingUnits.Count + 1];
+                Controller.CuttingUnits.CopyTo(units, 1);
+                units[0] = new CuttingUnitVM();
+                this._BS_cuttingUnits.DataSource = units;
+                this._cuttingUnitCB.Enabled = true;
+            }
+            else
+            {
+                this._BS_cuttingUnits.DataSource = new CuttingUnitVM[0];
+                this._cuttingUnitCB.Enabled = false;
             }
         }
 
@@ -215,8 +247,7 @@ namespace FSCruiser.WinForms
             var tsmi = sender as RecentFilesMenuItem;
             if (tsmi == null) return;
 
-            var success = this.Controller.OpenFile(tsmi.FilePath);
-            this.OnFileStateChanged(success);
+            this.Controller.OpenFile(tsmi.FilePath);
         }
 
         

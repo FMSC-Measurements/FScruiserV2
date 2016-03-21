@@ -14,7 +14,7 @@ namespace FSCruiser.Core
         //System.Collections.Generic.List<CruiserVM> Cruisers { get; }
         CruiseDAL.DAL _cDal { get; }
 
-        System.Collections.Generic.List<CuttingUnitVM> CuttingUnits { get; }
+        IList<CuttingUnitVM> CuttingUnits { get; }
         //CuttingUnitVM CurrentUnit { get; set; }
         //System.ComponentModel.BindingList<TallyAction> TallyHistory { get; }
         //System.Collections.Generic.List<TreeVM> CurrentUnitTreeList { get; }
@@ -50,8 +50,8 @@ namespace FSCruiser.Core
         //void RemoveCruiser(CruiserVM cruiser);
         //CruiserVM[] GetCruiserList();
 
-        bool OpenFile();
-        bool OpenFile(String path);
+        void OpenFile();
+        void OpenFile(String path);
 
         //int GetLogNumerIndexStart(TreeVM tree);
         void HandleNonCriticalException(Exception ex, string optMessage);
@@ -67,7 +67,7 @@ namespace FSCruiser.Core
         void PerformBackup(string path);
         void PerformBackup(bool incluedTimeStamp);
         //void PopulateTallies(StratumVM stratumInfo, DataEntryMode stratumMode, CuttingUnitVM unit, System.Windows.Forms.Panel container, FSCruiserV2.Forms.ITallyView view);
-        void Run();
+        //void Run();
         bool Save();
         //void SaveCounts();
         //bool TrySaveTree(TreeVM tree);

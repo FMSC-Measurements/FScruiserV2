@@ -42,7 +42,17 @@ namespace FSCruiser.WinForms
 
         public void OnCuttingUnitsChanged()
         {
-            this._BS_CuttingUnits.DataSource = Controller.CuttingUnits;
+            if (this.Controller.CuttingUnits != null)
+            {
+                var units = new CuttingUnitVM[Controller.CuttingUnits.Count + 1];
+                Controller.CuttingUnits.CopyTo(units, 1);
+                units[0] = new CuttingUnitVM();
+                this._BS_CuttingUnits.DataSource = units;
+            }
+            else
+            {
+                this._BS_CuttingUnits.DataSource = new CuttingUnitVM[0];
+            }
             //this._cuttingUnitCB.Update();
         }
 

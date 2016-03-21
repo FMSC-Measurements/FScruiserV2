@@ -71,6 +71,30 @@ namespace FSCruiser.WinForms
             return newNavButton;
         }
 
+        public void HandleFileStateChanged()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(HandleFileStateChanged));
+            }
+            else
+            {
+
+                if (Controller._cDal != null && Controller._cDal.Exists)
+                {
+                    var fileName = System.IO.Path.GetFileName(Controller._cDal.Path);
+                    this._dataEntryButton.Enabled = true;
+                    Text = "FScruiser - " + fileName;
+                }
+                else
+                {
+                    this._dataEntryButton.Enabled = false;
+                    Text = FSCruiser.Core.Constants.APP_TITLE;
+                }
+                this.CuttingUnitSelectView.OnCuttingUnitsChanged();
+            }
+        }
+
         public void ClearNavPanel()
         {
             this.ViewNavPanel.Controls.Clear();
@@ -78,8 +102,7 @@ namespace FSCruiser.WinForms
 
         public void HandleOpenCruiseFileClick(Object sender, EventArgs e)
         {
-            this._dataEntryButton.Enabled = this.Controller.OpenFile();
-            this.CuttingUnitSelectView.OnCuttingUnitsChanged();
+            this.Controller.OpenFile();
         }
 
         public void HandleDataEntryClick(Object sender, EventArgs e)
@@ -125,8 +148,7 @@ namespace FSCruiser.WinForms
             {
                 var path = tsmi.ToolTipText;
 
-                this._dataEntryButton.Enabled = this.Controller.OpenFile(tsmi.ToolTipText);
-                this.CuttingUnitSelectView.OnCuttingUnitsChanged();
+                this.Controller.OpenFile(tsmi.ToolTipText);
             }
         }
     }

@@ -23,12 +23,25 @@ namespace FSCruiser.WinForms
 #endif
         static void Main()
         {
-            
+
+            //read command line arguments 
+            var args = Environment.GetCommandLineArgs();
+            string dalPath = null;
+            if (args.Length > 1)
+            {
+                dalPath = args[1];
+            }
+
             AppDomain.CurrentDomain.UnhandledException += FMSC.Utility.ErrorHandling.ErrorHandlers.UnhandledException;
             //PreJit();
             using (ViewController viewController = new ViewController())
-            using (ApplicationController controller = new ApplicationController(viewController))
+            using (ApplicationController appController = new ApplicationController(viewController))
             {
+                if (dalPath != null)
+                {
+                    appController.OpenFile(dalPath);
+                }
+
                 viewController.Run();
             }
             Debug.Close();

@@ -75,6 +75,12 @@
     <Compile Include="Core\SaveTreesWorker.cs" />
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
+    <Compile Include="Core\Workers\CancelWorkerException.cs" />
+    <Compile Include="Core\Workers\FileLoadWorker.cs" />
+    <Compile Include="Core\Workers\IWorker.cs" />
+    <Compile Include="Core\Workers\Worker.cs" />
+    <Compile Include="Core\Workers\WorkerExceptionThrownEventArgs.cs" />
+    <Compile Include="Core\Workers\WorkerProgressChangedEventArgs.cs" />
     <Compile Include="NetCF\NamedMutex.cs" />
     <Compile Include="NetCF\WinForms\DataEntry\ControlTreeDataGrid.cs">
       <SubType>Component</SubType>

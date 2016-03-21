@@ -163,6 +163,14 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
+        public void HandleFileStateChanged()
+        {
+            if (this.MainView != null)
+            {
+                this.MainView.HandleFileStateChanged();
+            }
+        }
+
         public abstract void SignalInvalidAction();
 
 
