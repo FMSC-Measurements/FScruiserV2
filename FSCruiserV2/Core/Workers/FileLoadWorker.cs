@@ -21,14 +21,6 @@ namespace FSCruiser.Core.Workers
         public DAL DataStore { get; set; }
         public IList<CuttingUnitVM> CuttingUnits { get; set; }
 
-
-        protected override void InitializeWorkerState()
-        {
-            base.InitializeWorkerState();
-
-            this.UnitsOfWorkExpected = 2;            
-        }
-
         protected override void WorkerMain()
         {
             this.DataStore = new DAL(Path);
@@ -52,6 +44,13 @@ namespace FSCruiser.Core.Workers
 
             base.OnExceptionThrown(e);
 
+        }
+
+        protected override void OnStarting(WorkerProgressChangedEventArgs e)
+        {
+            this.UnitsOfWorkExpected = 2;
+
+            base.OnStarting(e);
         }
 
         #region IDisposable Members

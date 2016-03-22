@@ -20,6 +20,7 @@ namespace FSCruiser.Core.Workers
         public event EventHandler<WorkerExceptionThrownEventArgs> ExceptionThrown;
         public event EventHandler<WorkerProgressChangedEventArgs> ProgressChanged;
         public event EventHandler<WorkerProgressChangedEventArgs> Ended;
+        public event EventHandler<WorkerProgressChangedEventArgs> Starting;
 
         protected int UnitsOfWorkExpected { get; set; }
         protected int UnitsOfWorkCompleated { get; set; }
@@ -107,8 +108,7 @@ namespace FSCruiser.Core.Workers
 
         protected virtual void DoWork()
         {
-            InitializeWorkerState();
-            NotifyProgressChanged("Starting");
+            NotifyWorkStarting();
             try
             {
                 WorkerMain();
@@ -137,13 +137,6 @@ namespace FSCruiser.Core.Workers
         }
 
         protected abstract void WorkerMain();
-
-        protected virtual void InitializeWorkerState()
-        {
-            this.IsCanceled = false;
-            this.IsDone = false;
-            this.UnitsOfWorkCompleated = 0;
-        }
 
         /// <summary>
         /// 
@@ -193,6 +186,16 @@ namespace FSCruiser.Core.Workers
             this.OnProgressChanged(eArg);
         }
 
+        protected void NotifyWorkStarting()
+        {
+            var eArg = new WorkerProgressChangedEventArgs(0)
+            {
+                Message = "Start " + Name
+            };
+            OnProgressChanged(eArg);
+            OnStarting(eArg);
+        }
+
         protected void NotifyWorkEnded(string message)
         {
             var percentDone = CalcPercentDone(UnitsOfWorkExpected, UnitsOfWorkCompleated);
@@ -227,6 +230,19 @@ namespace FSCruiser.Core.Workers
             {
                 this.Ended(this, e);
             }
+        }
+
+        protected virtual void OnStarting(WorkerProgressChangedEventArgs e)
+        {
+            this.IsCanceled = false;
+            this.IsDone = false;
+            this.UnitsOfWorkCompleated = 0;
+
+            if (this.Starting != null)
+            {
+                this.Starting(this, e);
+            }
+
         }
 
         protected void CheckCanceled()

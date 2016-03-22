@@ -135,10 +135,10 @@ namespace FSCruiser.Core
                 FileLoadWorker.Dispose();
             }
 
-            ViewController.ShowWait();
             var worker = new FileLoadWorker(path, this);
             worker.ExceptionThrown += this.HandleFileLoadError;
             worker.Ended += this.HandleFileLoadEnd;
+            worker.Starting += this.HandleFileLoadStart;
             worker.BeginWork();
 
             this.FileLoadWorker = worker;
@@ -183,7 +183,7 @@ namespace FSCruiser.Core
             //}
         }
 
-        protected void HandleFileLoadError(object sender, WorkerExceptionThrownEventArgs e)
+        void HandleFileLoadError(object sender, WorkerExceptionThrownEventArgs e)
         {
             var ex = e.Exception;
             if (ex is FMSC.ORM.ReadOnlyException)
@@ -205,7 +205,14 @@ namespace FSCruiser.Core
             ViewController.HandleFileStateChanged();
         }
 
-        protected void HandleFileLoadEnd(object sender
+        void HandleFileLoadStart(object sender
+            , FSCruiser.Core.Workers.WorkerProgressChangedEventArgs e)
+        {
+            ViewController.ShowWait();
+        }
+
+
+        void HandleFileLoadEnd(object sender
             , FSCruiser.Core.Workers.WorkerProgressChangedEventArgs e)
         {
             //var worker = sender as FSCruiser.Core.Workers.FileLoadWorker;
