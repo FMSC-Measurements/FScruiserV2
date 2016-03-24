@@ -227,9 +227,6 @@
     <Compile Include="WinForms.Common\FormPlotInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WinForms.Common\FormPlotInfoBase.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="WinForms.Common\SpeciesRow.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -348,9 +345,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormPlotInfo.resx">
       <DependentUpon>FormPlotInfo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\FormPlotInfoBase.resx">
-      <DependentUpon>FormPlotInfoBase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\TallyRow.resx">
       <DependentUpon>TallyRow.cs</DependentUpon>
