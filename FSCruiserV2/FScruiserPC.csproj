@@ -67,6 +67,7 @@
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="Core\Exceptions.cs" />
+    <Compile Include="Core\System\FloatExtentions.cs" />
     <Compile Include="Core\Workers\FileLoadWorker.cs" />
     <Compile Include="Core\FormCruiserSelection.Logic.cs" />
     <Compile Include="Core\IApplicationController.cs" />
@@ -113,6 +114,9 @@
       <DependentUpon>FormCruiserSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms.Common\FormDataEntryBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FormPlotInfo.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinForms.Common\SpeciesRow.cs">
@@ -183,20 +187,11 @@
     <Compile Include="WinForms\DataEntry\FormNumPad.PC.Designer.cs">
       <DependentUpon>FormNumPad.PC.cs</DependentUpon>
     </Compile>
-    <Compile Include="WinForms\DataEntry\FormPlotInfo.PC.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormPlotInfo.PC.Designer.cs">
-      <DependentUpon>FormPlotInfo.PC.cs</DependentUpon>
-    </Compile>
     <Compile Include="WinForms\DataEntry\FormPlotInfo3PPNT.PC.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinForms\DataEntry\FormPlotInfo3PPNT.PC.Designer.cs">
       <DependentUpon>FormPlotInfo3PPNT.PC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms.Common\FormPlotInfoBase.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinForms\DataEntry\FormTallySettings.PC.cs">
       <SubType>Form</SubType>
@@ -225,6 +220,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormDataEntryBase.resx">
       <DependentUpon>FormDataEntryBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\FormPlotInfo.resx">
+      <DependentUpon>FormPlotInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\TallyRow.resx">
       <DependentUpon>TallyRow.cs</DependentUpon>
@@ -263,16 +261,8 @@
       <DependentUpon>FormNumPad.PC.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\FormPlotInfo.PC.resx">
-      <DependentUpon>FormPlotInfo.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="WinForms\DataEntry\FormPlotInfo3PPNT.PC.resx">
       <DependentUpon>FormPlotInfo3PPNT.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\FormPlotInfoBase.resx">
-      <DependentUpon>FormPlotInfoBase.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\DataEntry\FormTallySettings.PC.resx">
@@ -303,6 +293,7 @@
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.TreeDO.datasource" />
     <None Include="Properties\DataSources\FSCruiser.Core.Models.Plot3PPNT.datasource" />
+    <None Include="Properties\DataSources\FSCruiser.WinForms.DataEntry.FormPlotInfo.datasource" />
     <None Include="Properties\DataSources\FSCruiserV2.Logic.CuttingUnitVM.datasource" />
     <None Include="Properties\DataSources\FSCruiserV2.Logic.PlotInfo.datasource" />
     <None Include="Properties\DataSources\FSCruiserV2.Logic.TallyAction.datasource" />

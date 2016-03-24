@@ -73,6 +73,7 @@
     <Compile Include="Core\Models\RecentProject.cs" />
     <Compile Include="Core\Models\TallyHistoryCollection.cs" />
     <Compile Include="Core\SaveTreesWorker.cs" />
+    <Compile Include="Core\System\FloatExtentions.cs" />
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
     <Compile Include="Core\Workers\CancelWorkerException.cs" />
@@ -180,12 +181,6 @@
     <Compile Include="NetCF\WinForms\DataEntry\FormNumPad.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NetCF\WinForms\DataEntry\FormPlotInfo.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NetCF\WinForms\DataEntry\FormPlotInfo.Designer.cs">
-      <DependentUpon>FormPlotInfo.cs</DependentUpon>
-    </Compile>
     <Compile Include="NetCF\WinForms\DataEntry\FormTallySettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -229,6 +224,9 @@
     <Compile Include="Core\Models\TallySettingsDO.cs" />
     <Compile Include="Core\Models\TreeVM.cs" />
     <Compile Include="NetCF\WinForms\ViewController.cs" />
+    <Compile Include="WinForms.Common\FormPlotInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="WinForms.Common\FormPlotInfoBase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -276,10 +274,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormNumPad.resx">
       <DependentUpon>FormNumPad.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormPlotInfo.resx">
-      <DependentUpon>FormPlotInfo.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormTallySettings.resx">
@@ -351,6 +345,9 @@
     <EmbeddedResource Include="NetCF\WinForms\FormTallySetup.resx">
       <DependentUpon>FormTallySetup.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\FormPlotInfo.resx">
+      <DependentUpon>FormPlotInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormPlotInfoBase.resx">
       <DependentUpon>FormPlotInfoBase.cs</DependentUpon>
