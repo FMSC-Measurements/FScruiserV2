@@ -63,8 +63,15 @@ namespace FSCruiser.WinForms.DataEntry
             this.Dock = DockStyle.Fill;            
             InitializeComponent();
 
-            LayoutPlot.SplitterMoved +=new SplitterMovedEventHandler(LayoutPlot_SplitterMoved);
-            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.HandleSplitterMoved);
+            if (stratum.Is3PPNT == false)
+            {
+                LayoutPlot.SplitterMoved += new SplitterMovedEventHandler(LayoutPlot_SplitterMoved);
+                this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.HandleSplitterMoved);
+            }
+            else
+            {
+                this.splitContainer1.Panel1Collapsed = true;
+            }
 
             this._dataGrid.CellClick += new DataGridViewCellEventHandler(_dataGrid_CellClick);
             this._dataGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this._dataGrid_CellValidating);
