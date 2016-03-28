@@ -2,11 +2,10 @@
 using System.Windows.Forms;
 namespace FSCruiser.Core.ViewInterfaces
 {
-    public interface IDataEntryPage
+    public interface IDataEntryPage : IView
     {
         bool ViewLoading { get; }
         void HandleLoad();
-        //bool HandleEscKey();
 
         bool PreviewKeypress(string key);
     }

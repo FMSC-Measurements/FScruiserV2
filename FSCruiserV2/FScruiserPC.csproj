@@ -68,6 +68,7 @@
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="Core\Exceptions.cs" />
     <Compile Include="Core\System\FloatExtentions.cs" />
+    <Compile Include="Core\ViewInterfaces\IView.cs" />
     <Compile Include="Core\Workers\FileLoadWorker.cs" />
     <Compile Include="Core\FormCruiserSelection.Logic.cs" />
     <Compile Include="Core\IApplicationController.cs" />

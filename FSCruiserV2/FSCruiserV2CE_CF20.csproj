@@ -76,6 +76,7 @@
     <Compile Include="Core\System\FloatExtentions.cs" />
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
+    <Compile Include="Core\ViewInterfaces\IView.cs" />
     <Compile Include="Core\Workers\CancelWorkerException.cs" />
     <Compile Include="Core\Workers\FileLoadWorker.cs" />
     <Compile Include="Core\Workers\IWorker.cs" />
