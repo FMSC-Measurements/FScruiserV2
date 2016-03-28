@@ -212,9 +212,21 @@ namespace FSCruiser.WinForms.DataEntry
             else if (_sgColumn != null && e.ColumnIndex == _sgColumn.Index)
             {
                 SampleGroupVM sg = cellValue as SampleGroupVM;
-                bool cancel = e.Cancel;
-                this.DataEntryController.HandleSampleGroupChanging(curTree, sg, out cancel);
-                e.Cancel = cancel;
+                if (curTree.HandleSampleGroupChanging(sg, this))
+                {
+                    curTree.SampleGroup = sg;
+                    curTree.HandleSampleGroupChanged();
+                    e.Cancel = false;
+                }
+                else
+                {
+                    e.Cancel = true;
+                }
+
+                //SampleGroupVM sg = cellValue as SampleGroupVM;
+                //bool cancel = e.Cancel;
+                //this.DataEntryController.HandleSampleGroupChanging(curTree, sg, out cancel);
+                //e.Cancel = cancel;
 
             }
             else if (_speciesColumn != null && e.ColumnIndex == _speciesColumn.Index)
@@ -222,50 +234,65 @@ namespace FSCruiser.WinForms.DataEntry
                 TreeDefaultValueDO tdv = cellValue as TreeDefaultValueDO;
                 e.Cancel = !this.DataEntryController.HandleSpeciesChanged(curTree, tdv);
             }
-        }
-
-
-        protected bool ProcessSampleGroupChanging(TreeVM tree, SampleGroupVM newSG)
-        {
-            if (tree == null || newSG == null) {  return true; }
-            //if (tree.SampleGroup == newSG) { return false; }
-            if (tree.SampleGroup != null)
+            else if (_stratumColumn != null && e.ColumnIndex == _stratumColumn.Index)
             {
-                if (MessageBox.Show("You are changing the Sample Group of a tree, are you sure you want to do this?", "!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2)
-                    == DialogResult.No)
+                StratumVM newSt = cellValue as StratumVM;
+                if (curTree.HandleStratumChanging(newSt, this))
                 {
-                    return false;
+                    curTree.Stratum = newSt;
+                    curTree.HandleStratumChanged();
+                    e.Cancel = false;
                 }
                 else
                 {
-
-                    this.Controller._cDal.LogMessage(String.Format("Tree Sample Group Changed (Cu:{0} St:{1} Sg:{2} -> {3} Tdv_CN:{4} T#: {5}",
-                        tree.CuttingUnit.Code,
-                        tree.Stratum.Code,
-                        (tree.SampleGroup != null) ? tree.SampleGroup.Code : "?",
-                        newSG.Code,
-                        (tree.TreeDefaultValue != null) ? tree.TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?",
-                        tree.TreeNumber), "high");
-                    tree.SampleGroup = newSG;
+                    e.Cancel = true;
                 }
             }
-            if (!tree.SampleGroup.TreeDefaultValues.Contains(tree.TreeDefaultValue))
-            {
-                tree.SetTreeTDV(null);
-            }
-            return tree.TrySave();
         }
 
 
 
+        //protected bool ProcessSampleGroupChanging(TreeVM tree, SampleGroupVM newSG)
+        //{
+        //    if (tree == null || newSG == null) {  return true; }
+        //    //if (tree.SampleGroup == newSG) { return false; }
+        //    if (tree.SampleGroup != null)
+        //    {
+        //        if (MessageBox.Show("You are changing the Sample Group of a tree, are you sure you want to do this?", "!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2)
+        //            == DialogResult.No)
+        //        {
+        //            return false;
+        //        }
+        //        else
+        //        {
 
-        protected bool ProcessSpeciesChanged(TreeVM tree, TreeDefaultValueDO tdv)
-        {
-            if (tree == null) { return true; }
-            if (tree.TreeDefaultValue == tdv) { return true; }
-            tree.SetTreeTDV(tdv);
-            return tree.TrySave();
-        }
+        //            this.Controller._cDal.LogMessage(String.Format("Tree Sample Group Changed (Cu:{0} St:{1} Sg:{2} -> {3} Tdv_CN:{4} T#: {5}",
+        //                tree.CuttingUnit.Code,
+        //                tree.Stratum.Code,
+        //                (tree.SampleGroup != null) ? tree.SampleGroup.Code : "?",
+        //                newSG.Code,
+        //                (tree.TreeDefaultValue != null) ? tree.TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?",
+        //                tree.TreeNumber), "high");
+        //            tree.SampleGroup = newSG;
+        //        }
+        //    }
+        //    if (!tree.SampleGroup.TreeDefaultValues.Contains(tree.TreeDefaultValue))
+        //    {
+        //        tree.SetTreeTDV(null);
+        //    }
+        //    return tree.TrySave();
+        //}
+
+
+
+
+        //protected bool ProcessSpeciesChanged(TreeVM tree, TreeDefaultValueDO tdv)
+        //{
+        //    if (tree == null) { return true; }
+        //    if (tree.TreeDefaultValue == tdv) { return true; }
+        //    tree.SetTreeTDV(tdv);
+        //    return tree.TrySave();
+        //}
 
         public void UpdateSampleGroupColumn(TreeVM tree)
         {

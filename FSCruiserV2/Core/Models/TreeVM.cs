@@ -90,7 +90,7 @@ namespace FSCruiser.Core.Models
             return DAL.ReadSingleRow<SampleGroupVM>(this.SampleGroup_CN);
         }
 
-        public bool NotifySampleGroupChanging(SampleGroupDO newSG, IView view)
+        public bool HandleSampleGroupChanging(SampleGroupDO newSG, IView view)
         {
             if (newSG == null) { return false; }
             if (SampleGroup != null 
@@ -124,7 +124,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public bool NotifySampleGroupChanged()
+        public bool HandleSampleGroupChanged()
         {
             if (TreeDefaultValue != null)
             {
@@ -133,6 +133,50 @@ namespace FSCruiser.Core.Models
                     SetTreeTDV(null);
                 }
             }
+            return TrySave();
+        }
+
+        public bool HandleStratumChanging(StratumDO newStratum, IView view)
+        {
+            if (newStratum == null) { return false; }
+            if (Stratum != null 
+                && Stratum.Stratum_CN == newStratum.Stratum_CN) 
+            { return false; }
+
+            if (Stratum != null)
+            {
+                if (!view.AskYesNo("You are changing the stratum of a tree" +
+                    ", are you sure you want to do this?"
+                    , "!", System.Windows.Forms.MessageBoxIcon.Asterisk))
+                {
+                    return false;//do not change stratum
+                }
+                else
+                {
+                    //log stratum changed
+                    DAL.LogMessage(String.Format("Tree Stratum Changed (Cu:{0} St:{1} -> {2} Sg:{3} Tdv_CN:{4} T#: {5} P#:{6}"
+                        , CuttingUnit.Code
+                        , Stratum.Code
+                        , newStratum.Code
+                        , (SampleGroup != null) ? SampleGroup.Code : "?"
+                        , (TreeDefaultValue != null) ? TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?"
+                        , TreeNumber
+                        , (Plot != null) ? Plot.PlotNumber.ToString() : "-"), "I");
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
+
+        }
+
+        public bool HandleStratumChanged()
+        {
+            Species = null;
+            SampleGroup = null;
+            SetTreeTDV(null);
             return TrySave();
         }
 

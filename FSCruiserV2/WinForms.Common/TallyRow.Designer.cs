@@ -53,7 +53,7 @@
             this._tallyBTN.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular);
             this._tallyBTN.Location = new System.Drawing.Point(0, 0);
             this._tallyBTN.Name = "_tallyBTN";
-            this._tallyBTN.Size = new System.Drawing.Size(258, 56);
+            //this._tallyBTN.Size = new System.Drawing.Size(258, 56);
             this._tallyBTN.TabIndex = 3;
             this._tallyBTN.Text = "[_] <---->\r\n cnt:###";
             //this._tallyBTN.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -64,7 +64,7 @@
             this.Controls.Add(this._tallyBTN);
             this.Controls.Add(this._settingsBTN);
             this.Name = "TallyRow";
-            this.Size = new System.Drawing.Size(275, 56);
+            //this.Size = new System.Drawing.Size(275, 56);
             this.ResumeLayout(false);
 
         }

@@ -309,21 +309,12 @@ namespace FSCruiser.WinForms
         {
             TallyRow row = new TallyRow(count);
             row.SuspendLayout();
-            //row.DiscriptionLabel.Text = count.Tally.Description;
 
             row.TallyButtonClicked += new EventHandler(this.OnTallyButtonClicked);
             row.SettingsButtonClicked += new EventHandler(this.OnTallySettingsClicked);
 
-            //if (count.Tally.Hotkey != null && count.Tally.Hotkey.Length > 0)
-            //{
-            //    row.HotKeyLabel.Text = count.Tally.Hotkey.Substring(0, 1);
-            //}
-
-            //row.TallyButton.DataBindings.Add(new Binding("Text", count, "TreeCount"));
-
-            //row.Count = count;
+            row.Height = 56;
             row.Parent = container;
-
 
             row.Dock = DockStyle.Top;
             row.ResumeLayout(false);

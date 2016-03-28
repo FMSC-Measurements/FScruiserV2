@@ -162,12 +162,13 @@ namespace FSCruiser.WinForms.DataEntry
         protected override void OnCellValidating(EditableDataGridCellValidatingEventArgs e)
         {
             base.OnCellValidating(e);
-            bool cancel = false;
-            TreeVM curTree = (TreeVM)this._BS_trees[e.RowIndex];
+            TreeVM tree = (TreeVM)this._BS_trees[e.RowIndex];
             if (e.Column == _sgColumn)
             {
-                this.DataEntryController.HandleSampleGroupChanging(curTree, e.Value as SampleGroupDO, out cancel);
-                //this.HandleSampleGroupChanging(currTree, e.Value as SampleGroupDO, out cancel);
+                var newSG = e.Value as SampleGroupDO;
+                e.Cancel = !tree.HandleSampleGroupChanging(newSG, this);
+
+                //this.DataEntryController.HandleSampleGroupChanging(curTree, e.Value as SampleGroupDO, out cancel);
             }
             else if (e.Column == _speciesColumn)
             {
@@ -176,7 +177,10 @@ namespace FSCruiser.WinForms.DataEntry
             }
             else if (e.Column == _stratumColumn)
             {
-                this.DataEntryController.HandleStratumChanging(curTree, e.Value as StratumDO, out cancel);
+                var newSt = e.Value as StratumDO;
+                e.Cancel = !tree.HandleStratumChanging(newSt, this);
+
+                //this.DataEntryController.HandleStratumChanging(tree, e.Value as StratumDO, out cancel);
                 //this.HandleStratumChanging(currTree, e.Value as StratumDO, out cancel);
             }
             else if (e.Column == _treeNumberColumn)
@@ -185,7 +189,7 @@ namespace FSCruiser.WinForms.DataEntry
                 {
                     long newTreeNum = (long)e.Value;
 
-                    if (curTree.TreeNumber != newTreeNum
+                    if (tree.TreeNumber != newTreeNum
                     && !this.DataEntryController.Unit.IsTreeNumberAvalible(newTreeNum))
                     {
                         MessageBox.Show("Tree Number already exists");
@@ -194,18 +198,16 @@ namespace FSCruiser.WinForms.DataEntry
                 }
                 catch
                 {
-                    cancel = true;
+                    e.Cancel = true;
                 }
             }
             else if (e.Column == _kpiColumn)
             {
-                this.DataEntryController.HandleKPIChanging(curTree, (float)e.Value, false, out cancel);
+                bool cancel = false;
+
+                this.DataEntryController.HandleKPIChanging(tree, (float)e.Value, false, out cancel);
                 //this.HandleKPIChanging(currTree, (float)e.Value, out cancel);
-
-                //MessageBox.Show("Bam!");
             }
-
-            e.Cancel = cancel;
         }
 
         protected override void OnCellValueChanged(EditableDataGridCellEventArgs e)
@@ -215,8 +217,10 @@ namespace FSCruiser.WinForms.DataEntry
             TreeVM tree = (TreeVM)this._BS_trees[e.RowIndex];
             if (e.Column == _sgColumn)
             {
-                this.DataEntryController.HandleSampleGroupChanged(this, tree);
-                //this.HandleSampleGroupChanged(tree);
+                tree.HandleSampleGroupChanged();
+                this.UpdateSpeciesColumn(tree);
+
+                //this.DataEntryController.HandleSampleGroupChanged(this, tree);
             }
             else if (e.Column == _speciesColumn)
             {
@@ -224,17 +228,15 @@ namespace FSCruiser.WinForms.DataEntry
                 if (col == null) { return; }
 
                 this.DataEntryController.HandleSpeciesChanged(tree, col.EditComboBox.SelectedItem as TreeDefaultValueDO);
-                //this.HandleSpeciesChanged(tree, col.EditComboBox.SelectedItem as TreeDefaultValueDO);
             }
             else if (e.Column == _stratumColumn)
             {
-                this.DataEntryController.HandleStratumChanged(this, tree);
-                //this.HandleStratumChanged(tree);
+                tree.HandleStratumChanged();
+                this.UpdateSampleGroupColumn(tree);
+                this.UpdateSpeciesColumn(tree);
+
+                //this.DataEntryController.HandleStratumChanged(this, tree);
             }
-            //else if (e.Column == _kpiColumn)
-            //{
-            //    MessageBox.Show("Bam!");
-            //}
         }
 
         void LogsClicked(ButtonCellClickEventArgs e)
