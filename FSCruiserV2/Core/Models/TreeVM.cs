@@ -3,6 +3,7 @@ using CruiseDAL;
 using FMSC.ORM.Core;
 using System;
 using FMSC.ORM.EntityModel.Attributes;
+using FSCruiser.Core.ViewInterfaces;
 
 namespace FSCruiser.Core.Models
 {
@@ -89,7 +90,51 @@ namespace FSCruiser.Core.Models
             return DAL.ReadSingleRow<SampleGroupVM>(this.SampleGroup_CN);
         }
 
-        
+        public bool NotifySampleGroupChanging(SampleGroupDO newSG, IView view)
+        {
+            if (newSG == null) { return false; }
+            if (SampleGroup != null 
+                && SampleGroup.SampleGroup_CN == newSG.SampleGroup_CN) { return true; }
+
+            if (SampleGroup != null)
+            {
+                if (!view.AskYesNo("You are changing the Sample Group of a tree, are you sure you want to do this?"
+                    , "!"
+                    , System.Windows.Forms.MessageBoxIcon.Asterisk
+                    , true))
+                {
+                    return false;
+                }
+                else
+                {
+
+                    DAL.LogMessage(String.Format("Tree Sample Group Changed (Cu:{0} St:{1} Sg:{2} -> {3} Tdv_CN:{4} T#: {5}",
+                        CuttingUnit.Code,
+                        Stratum.Code,
+                        (SampleGroup != null) ? SampleGroup.Code : "?",
+                        newSG.Code,
+                        (TreeDefaultValue != null) ? TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?",
+                        TreeNumber), "high");
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public bool NotifySampleGroupChanged()
+        {
+            if (TreeDefaultValue != null)
+            {
+                if (!SampleGroup.HasTreeDefault(TreeDefaultValue))
+                {
+                    SetTreeTDV(null);
+                }
+            }
+            return TrySave();
+        }
 
         //public override PlotDO GetPlot()
         //{
@@ -105,6 +150,7 @@ namespace FSCruiser.Core.Models
                 if (cachedLogCount == -1 || this.LogCountDirty)
                 {
                     cachedLogCount = (int)this.DAL.GetRowCount("Log", "WHERE Tree_CN = ?", this.Tree_CN);
+                    LogCountDirty = false;
                 }
                 return cachedLogCount;
             }
