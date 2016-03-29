@@ -46,6 +46,20 @@ namespace FSCruiser.Core.Models
         }
 
 
+        public override float TreeCount
+        {
+            get
+            {
+                return base.TreeCount;
+            }
+            set
+            {
+                if (!base.PropertyChangedEventsDisabled // if not being inflated 
+                    && value < 0) { return; }
+                base.TreeCount = value;
+            }
+        }
+
         //public override float HiddenPrimary
         //{
         //    get
