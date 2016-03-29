@@ -76,7 +76,9 @@ namespace FSCruiser.WinForms.Common
                 {
                     _main = new FormMain(this.ApplicationController);
                     _main.Closing += new CancelEventHandler(OnApplicationClosing);
-
+#if !NetCF
+                    _main.StartPosition = FormStartPosition.CenterScreen;
+#endif
                 }
                 return _main;
             }
@@ -118,23 +120,13 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-
-
-        public void BeginShowSplash()
+        public void Run()
         {
-            _splashThread = new Thread(ViewController.ShowSplash);//TODO ensure thread gets killed when not needed
-            _splashThread.Name = "Splash";
-            _splashThread.Start();
+            BeginShowSplash();
+            Application.Run(MainView);
         }
 
-        private static void ShowSplash()
-        {
-            using (FormAbout a = new FormAbout())
-            {
-                Application.Run(a);
-            }
-        }
-
+        public abstract void BeginShowSplash();
 
         public FormLogs GetLogsView(StratumDO stratum)
         {
@@ -168,6 +160,14 @@ namespace FSCruiser.WinForms.Common
                 {
                     _dataEntryView.HandleCruisersChanged();
                 }
+            }
+        }
+
+        public void HandleFileStateChanged()
+        {
+            if (this.MainView != null)
+            {
+                this.MainView.HandleFileStateChanged();
             }
         }
 
@@ -236,29 +236,32 @@ namespace FSCruiser.WinForms.Common
         //    return this.NumPadDialog.UserEnteredValue;
         //}
 
-        public DialogResult ShowPlotInfo( PlotVM plotInfo, bool is3PPNT, bool allowEdit)
+        public DialogResult ShowPlotInfo(PlotVM plot, PlotStratum stratum, bool isNewPlot)
         {
-            if (plotInfo == null) { return DialogResult.None; }
+            System.Diagnostics.Debug.Assert(plot != null);
+            System.Diagnostics.Debug.Assert(stratum != null);
 
-            
-
-            IPlotInfoDialog view = null;
-            try
+            if (stratum.Is3PPNT && isNewPlot)
             {
-                if (is3PPNT && allowEdit)
+                using (var view = new Form3PPNTPlotInfo(this))
                 {
-                    view = new Form3PPNTPlotInfo(this.ApplicationController);
+#if !NetCF
+                    view.Owner = this._dataEntryView;
+                    view.StartPosition = FormStartPosition.CenterParent;
+#endif
+                    return view.ShowDialog(plot, stratum, isNewPlot);
                 }
-                else
-                {
-                    view = new FormPlotInfo(this.ApplicationController);
-                }
-
-                return view.ShowDialog(plotInfo, allowEdit);
             }
-            finally
+            else
             {
-                ((Form)view).Dispose();
+                using (var view = new FormPlotInfo())
+                {
+#if !NetCF 
+                    view.Owner = this._dataEntryView;
+                    view.StartPosition = FormStartPosition.CenterParent;
+#endif
+                    return view.ShowDialog(plot, stratum, isNewPlot);
+                }
             }
         }
 

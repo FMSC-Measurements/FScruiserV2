@@ -5,6 +5,14 @@ namespace FSCruiser.Core.ViewInterfaces
 {
     interface IPlotInfoDialog
     {
-        DialogResult ShowDialog(PlotVM plotInfo, bool allowEdit);
+        //uint PlotNumber { get; set; }
+        //bool IsNull { get; set; }
+        //float Slope { get; set; }
+        //float Aspect { get; set; }
+        //string Remarks { get; set; }
+
+        //PlotVM Plot { get; }
+
+        DialogResult ShowDialog(PlotVM plot, PlotStratum stratum, bool isNewPlot);
     }
 }

@@ -28,6 +28,7 @@ namespace FSCruiser.Core
         //FSCruiserV2.Forms.FormDataEntry GetTreeBasedView(CruiseDAL.DataObjects.CuttingUnitDO unit);
         //void HandleCuttingUnitDataLoaded();
         void HandleCruisersChanged();
+        void HandleFileStateChanged();
 
         void SignalInvalidAction();
         //FSCruiserV2.Forms.Form3PPNTPlotInfo PlotInfo3PPNTView { get; }
@@ -52,7 +53,7 @@ namespace FSCruiser.Core
         DialogResult ShowOpenCruiseFileDialog(out string fileName);
         
         void ShowDataEntry(CuttingUnitVM unit);
-        DialogResult ShowPlotInfo(PlotVM plotInfo, bool is3PPNT, bool allowEdit);        
+        DialogResult ShowPlotInfo(PlotVM plotInfo, PlotStratum stratum, bool allowEdit);        
         void ShowTallySettings(CountTreeVM count);
 
         void ShowMessage(String message, String caption, MessageBoxIcon icon);

@@ -7,7 +7,7 @@ using CruiseDAL.Schema;
 using FMSC.Sampling;
 using System.Xml.Serialization;
 using System.IO;
-using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
@@ -40,7 +40,13 @@ namespace FSCruiser.Core.Models
             return DAL.ReadSingleRow<StratumVM>(this.Stratum_CN);
         }
 
-        
+        public bool HasTreeDefault(TreeDefaultValueDO tdv)
+        {
+            return DAL.ExecuteScalar<bool>("SELECT count(1) " +
+                    "FROM SampleGroupTreeDefaultValue " +
+                    "WHERE TreeDefaultValue_CN = ? AND SampleGroup_CN = ?"
+                    , tdv.TreeDefaultValue_CN, SampleGroup_CN);
+        }
 
         #region Sample Selecter Methods
         public void SerializeSamplerState()

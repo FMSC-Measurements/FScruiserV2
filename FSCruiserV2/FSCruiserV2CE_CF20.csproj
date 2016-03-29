@@ -61,20 +61,29 @@
     <Compile Include="Core\ApplicationSettings.cs" />
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\CountTreeExtensions.cs" />
+    <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\Exceptions.cs" />
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="Core\LoadCuttingUnitWorker.cs" />
     <Compile Include="Core\Models\DataEntryMode.cs" />
     <Compile Include="Core\Models\DataModelExtensions.cs" />
     <Compile Include="Core\Models\ITreeContaningModel.cs" />
+    <Compile Include="Core\Models\Plot3PPNT.cs" />
     <Compile Include="Core\Models\PlotStratum.cs" />
+    <Compile Include="Core\Models\RecentProject.cs" />
     <Compile Include="Core\Models\TallyHistoryCollection.cs" />
     <Compile Include="Core\SaveTreesWorker.cs" />
+    <Compile Include="Core\System\FloatExtentions.cs" />
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
+    <Compile Include="Core\ViewInterfaces\IView.cs" />
+    <Compile Include="Core\Workers\CancelWorkerException.cs" />
+    <Compile Include="Core\Workers\FileLoadWorker.cs" />
+    <Compile Include="Core\Workers\IWorker.cs" />
+    <Compile Include="Core\Workers\Worker.cs" />
+    <Compile Include="Core\Workers\WorkerExceptionThrownEventArgs.cs" />
+    <Compile Include="Core\Workers\WorkerProgressChangedEventArgs.cs" />
     <Compile Include="NetCF\NamedMutex.cs" />
-    <Compile Include="NetCF\System\Action.cs" />
-    <Compile Include="NetCF\System\IEnumerableExtensions.cs" />
     <Compile Include="NetCF\WinForms\DataEntry\ControlTreeDataGrid.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -173,12 +182,6 @@
     <Compile Include="NetCF\WinForms\DataEntry\FormNumPad.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NetCF\WinForms\DataEntry\FormPlotInfo.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NetCF\WinForms\DataEntry\FormPlotInfo.Designer.cs">
-      <DependentUpon>FormPlotInfo.cs</DependentUpon>
-    </Compile>
     <Compile Include="NetCF\WinForms\DataEntry\FormTallySettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -210,7 +213,6 @@
     <Compile Include="Core\Models\CruiserVM.cs" />
     <Compile Include="Core\Models\CuttingUnitInfo.cs" />
     <Compile Include="NetCF\DataGridAdjuster.cs" />
-    <Compile Include="Core\DataEntry\FomrDataEntry.Logic.cs" />
     <Compile Include="Core\IApplicationController.cs" />
     <Compile Include="Core\ViewInterfaces\ITreeView.cs" />
     <Compile Include="Core\IViewController.cs" />
@@ -223,6 +225,18 @@
     <Compile Include="Core\Models\TallySettingsDO.cs" />
     <Compile Include="Core\Models\TreeVM.cs" />
     <Compile Include="NetCF\WinForms\ViewController.cs" />
+    <Compile Include="WinForms.Common\FormPlotInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\SpeciesRow.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\TallyRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\TallyRow.Designer.cs">
+      <DependentUpon>TallyRow.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms.Common\TreeBasedTallyView_Base.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -260,10 +274,6 @@
       <DependentUpon>FormNumPad.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormPlotInfo.resx">
-      <DependentUpon>FormPlotInfo.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormTallySettings.resx">
       <DependentUpon>FormTallySettings.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -285,12 +295,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="NetCF\WinForms\DataEntry\TallyRow.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="NetCF\WinForms\DataEntry\TallyRow.Designer.cs">
-      <DependentUpon>TallyRow.cs</DependentUpon>
     </Compile>
     <Compile Include="NetCF\Win32.cs" />
   </ItemGroup>
@@ -340,9 +344,11 @@
       <DependentUpon>FormTallySetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NetCF\WinForms\DataEntry\TallyRow.resx">
+    <EmbeddedResource Include="WinForms.Common\FormPlotInfo.resx">
+      <DependentUpon>FormPlotInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\TallyRow.resx">
       <DependentUpon>TallyRow.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\TreeBasedTallyView_Base.resx">
       <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>
@@ -358,7 +364,13 @@
   <ItemGroup>
     <None Include="Core\FSCruiser.Core.cd" />
     <None Include="Core\Models\FMSC.Core.Models.cd" />
-    <None Include="CruiseDAL.DataObjects.SampleGroupDO.datasource" />
+    <None Include="Properties\DataSources\FSCruiser.Core.Models.Plot3PPNT.datasource" />
+    <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />
+    <None Include="Properties\DataSources\CruiseDAL.DataObjects.TreeDO.datasource" />
+    <None Include="Properties\DataSources\FSCruiserV2.Logic.CuttingUnitVM.datasource" />
+    <None Include="Properties\DataSources\FSCruiserV2.Logic.PlotInfo.datasource" />
+    <None Include="Properties\DataSources\FSCruiserV2.Logic.TallyAction.datasource" />
+    <None Include="Properties\DataSources\FSCruiserV2.Logic.TreeVM.datasource" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CruiseDAL\CruiseDAL\CruiseDAL_CF20.csproj">

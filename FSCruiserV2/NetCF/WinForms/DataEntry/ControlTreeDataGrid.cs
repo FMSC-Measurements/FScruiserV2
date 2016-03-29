@@ -162,12 +162,13 @@ namespace FSCruiser.WinForms.DataEntry
         protected override void OnCellValidating(EditableDataGridCellValidatingEventArgs e)
         {
             base.OnCellValidating(e);
-            bool cancel = false;
-            TreeVM currTree = (TreeVM)this._BS_trees[e.RowIndex];
+            TreeVM tree = (TreeVM)this._BS_trees[e.RowIndex];
             if (e.Column == _sgColumn)
             {
-                this.DataEntryController.HandleSampleGroupChanging(currTree, e.Value as SampleGroupDO, out cancel);
-                //this.HandleSampleGroupChanging(currTree, e.Value as SampleGroupDO, out cancel);
+                var newSG = e.Value as SampleGroupDO;
+                e.Cancel = !tree.HandleSampleGroupChanging(newSG, this);
+
+                //this.DataEntryController.HandleSampleGroupChanging(curTree, e.Value as SampleGroupDO, out cancel);
             }
             else if (e.Column == _speciesColumn)
             {
@@ -176,30 +177,37 @@ namespace FSCruiser.WinForms.DataEntry
             }
             else if (e.Column == _stratumColumn)
             {
-                this.DataEntryController.HandleStratumChanging(currTree, e.Value as StratumDO, out cancel);
+                var newSt = e.Value as StratumDO;
+                e.Cancel = !tree.HandleStratumChanging(newSt, this);
+
+                //this.DataEntryController.HandleStratumChanging(tree, e.Value as StratumDO, out cancel);
                 //this.HandleStratumChanging(currTree, e.Value as StratumDO, out cancel);
             }
             else if (e.Column == _treeNumberColumn)
             {
                 try
                 {
-                    long treeNumber = (long)e.Value;
-                    this.HandleTreeNumberChanging(treeNumber, out cancel);
+                    long newTreeNum = (long)e.Value;
+
+                    if (tree.TreeNumber != newTreeNum
+                    && !this.DataEntryController.Unit.IsTreeNumberAvalible(newTreeNum))
+                    {
+                        MessageBox.Show("Tree Number already exists");
+                        e.Cancel = true;
+                    }
                 }
                 catch
                 {
-                    cancel = true;
+                    e.Cancel = true;
                 }
             }
             else if (e.Column == _kpiColumn)
             {
-                this.DataEntryController.HandleKPIChanging(currTree, (float)e.Value, false, out cancel);
+                bool cancel = false;
+
+                this.DataEntryController.HandleKPIChanging(tree, (float)e.Value, false, out cancel);
                 //this.HandleKPIChanging(currTree, (float)e.Value, out cancel);
-
-                //MessageBox.Show("Bam!");
             }
-
-            e.Cancel = cancel;
         }
 
         protected override void OnCellValueChanged(EditableDataGridCellEventArgs e)
@@ -209,8 +217,10 @@ namespace FSCruiser.WinForms.DataEntry
             TreeVM tree = (TreeVM)this._BS_trees[e.RowIndex];
             if (e.Column == _sgColumn)
             {
-                this.DataEntryController.HandleSampleGroupChanged(this, tree);
-                //this.HandleSampleGroupChanged(tree);
+                tree.HandleSampleGroupChanged();
+                this.UpdateSpeciesColumn(tree);
+
+                //this.DataEntryController.HandleSampleGroupChanged(this, tree);
             }
             else if (e.Column == _speciesColumn)
             {
@@ -218,153 +228,16 @@ namespace FSCruiser.WinForms.DataEntry
                 if (col == null) { return; }
 
                 this.DataEntryController.HandleSpeciesChanged(tree, col.EditComboBox.SelectedItem as TreeDefaultValueDO);
-                //this.HandleSpeciesChanged(tree, col.EditComboBox.SelectedItem as TreeDefaultValueDO);
             }
             else if (e.Column == _stratumColumn)
             {
-                this.DataEntryController.HandleStratumChanged(this, tree);
-                //this.HandleStratumChanged(tree);
+                tree.HandleStratumChanged();
+                this.UpdateSampleGroupColumn(tree);
+                this.UpdateSpeciesColumn(tree);
+
+                //this.DataEntryController.HandleStratumChanged(this, tree);
             }
-            //else if (e.Column == _kpiColumn)
-            //{
-            //    MessageBox.Show("Bam!");
-            //}
         }
-
-
-        //protected void HandleKPIChanging(TreeVM tree, float newKPI, out bool cancel)
-        //{
-        //    if (tree == null) 
-        //    {
-        //        cancel = true;
-        //        return; 
-        //    }
-        //    if (tree.SampleGroup == null)
-        //    {
-        //        MessageBox.Show("Select Sample Group before entering KPI");
-        //        cancel = true;
-        //        return;
-        //    }
-        //    if (tree.KPI != 0.0F)
-        //    {
-        //        string message = string.Format("Tree RecID:{0} KPI changed from {1} to {2}", tree.Tree_CN, tree.KPI, newKPI);
-        //        this.Controller._cDal.LogMessage(message, "I");
-        //    }
-        //    cancel = false;
-        //}
-
-
-        protected void HandleTreeNumberChanging(long newTreeNumber, out bool cancel)
-        {
-            try
-            {
-
-                if (!this.DataEntryController.Unit.IsTreeNumberAvalible(newTreeNumber))
-                {
-                    cancel = true;
-                    return;
-                }
-            }
-            catch
-            {
-                cancel = true;
-                return;
-            }
-            cancel = false;
-        }
-
-
-
-        //protected void HandleStratumChanging(TreeVM tree, StratumDO st, out bool cancel)
-        //{
-        //    if (tree == null || st == null) { cancel = true; return; }
-        //    if (tree.Stratum != null && tree.Stratum.Stratum_CN == st.Stratum_CN) { cancel = true; return; }
-        //    if (tree.Stratum != null)
-        //    {
-        //        if (MessageBox.Show("You are changing the stratum of a tree, are you sure you want to do this?", "!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2)
-        //            == DialogResult.No)
-        //        {
-        //            cancel = true;//do not change stratum
-        //        }
-        //        else
-        //        {
-        //            //log stratum changed
-        //            this.Controller._cDal.LogMessage(String.Format("Tree Stratum Changed (Cu:{0} St:{1} -> {2} Sg:{3} Tdv_CN:{4} T#: {5}",
-        //                tree.CuttingUnit.Code,
-        //                tree.Stratum.Code,
-        //                st.Code,
-        //                (tree.SampleGroup != null) ? tree.SampleGroup.Code : "?",
-        //                (tree.TreeDefaultValue != null) ? tree.TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?",
-        //                tree.TreeNumber), "high");
-        //        }
-        //    }
-        //    cancel = false;
-        //}
-
-        //protected void HandleStratumChanged(TreeVM tree)
-        //{
-        //    if (tree == null) { return; }
-
-        //    tree.Species = null;
-        //    tree.SampleGroup = null;
-        //    this.Controller.SetTreeTDV(tree, null);
-        //    this.UpdateSampleGroupColumn(tree);
-        //    this.UpdateSpeciesColumn(tree);
-        //    this.Controller.TrySaveTree(tree);
-        //}
-
-         
-
-         //protected void HandleSampleGroupChanging(TreeVM tree, SampleGroupDO newSG, out bool cancel)
-         //{
-         //    if (tree == null || newSG == null) { cancel = true; return; }
-         //    if (tree.SampleGroup != null && tree.SampleGroup_CN == newSG.SampleGroup_CN) { cancel = true; return; } 
-         //    if (tree.SampleGroup != null)
-         //    {
-         //        if (MessageBox.Show("You are changing the Sample Group of a tree, are you sure you want to do this?", "!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2)
-         //            == DialogResult.No)
-         //        {
-         //            cancel = true;//disregard changes
-         //            return;
-         //        }
-         //        else
-         //        {
-
-         //            this.Controller._cDal.LogMessage(String.Format("Tree Sample Group Changed (Cu:{0} St:{1} Sg:{2} -> {3} Tdv_CN:{4} T#: {5}",
-         //                tree.CuttingUnit.Code,
-         //                tree.Stratum.Code,
-         //                (tree.SampleGroup != null) ? tree.SampleGroup.Code : "?",
-         //                newSG.Code,
-         //                (tree.TreeDefaultValue != null) ? tree.TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?",
-         //                tree.TreeNumber), "high");
-         //        }
-         //    }
-         //    cancel = false;
-         //}
-
-        //protected void HandleSampleGroupChanged(TreeVM tree)
-        //{
-        //    if(tree == null) { return; }
-        //    if (!tree.SampleGroup.TreeDefaultValues.Contains(tree.TreeDefaultValue))
-        //    {
-        //        this.Controller.SetTreeTDV(tree, null);
-        //    }
-        //    this.UpdateSpeciesColumn(tree);
-        //    this.Controller.TrySaveTree(tree);
-        //}
-
-        //protected void HandleSpeciesChanging(TreeDefaultValueDO newTDV, out bool cancel)
-        //{
-        //    //no action required
-        //}
-
-        //protected void HandleSpeciesChanged(TreeVM tree, TreeDefaultValueDO tdv)
-        //{
-        //    if (tree == null) { return; }
-        //    this.Controller.SetTreeTDV(tree, tdv);
-        //    this.Controller.TrySaveTree(tree);
-        //}
-
 
         void LogsClicked(ButtonCellClickEventArgs e)
         {
@@ -477,11 +350,24 @@ namespace FSCruiser.WinForms.DataEntry
             _viewLoading = false;
         }
 
-        public bool HandleEscKey()
+        public bool PreviewKeypress(string key)
         {
+            if (key == "Escape")//esc
+            {
                 this.DataEntryController.View.GoToTallyPage();
                 return true;
+            }
+            else
+            {
+                return false;
+            }
         }
+
+        //public bool HandleEscKey()
+        //{
+        //        this.DataEntryController.View.GoToTallyPage();
+        //        return true;
+        //}
 
         public void HandleEnableLogGradingChanged()
         {

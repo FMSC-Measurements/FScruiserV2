@@ -27,7 +27,6 @@ namespace FSCruiser.WinForms.DataEntry
         FormDataEntry()
         {
             InitializeComponent();
-
             //this._pageContainer = MakePageContainer();
             //this.Controls.Add(this._pageContainer);
         }
@@ -164,7 +163,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
-            if (e.KeyData == Keys.F2)
+            if (e.KeyData == Keys.F3)
             {
                 this.LogicController.HandleAddTreeClick();
                 e.Handled = true;
@@ -173,8 +172,6 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 base.OnKeyUp(e);
             }
-
-
         }
 
         private void _deleteTreeBTN_Click(object sender, EventArgs e)

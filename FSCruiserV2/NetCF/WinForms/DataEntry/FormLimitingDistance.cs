@@ -287,9 +287,9 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
 
-        public DialogResult ShowDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage)
+        public DialogResult ShowDialog(float bafOrFPS, bool isVariableRadius, TreeVM optTree, out string logMessage)
         {
-            this.BAForFPSize = baf;
+            this.BAForFPSize = bafOrFPS;
             this.IsVariableRadius = isVariableRadius;
 
             //initailize form state

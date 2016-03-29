@@ -16,6 +16,11 @@ namespace FSCruiser.WinForms
 
     public partial class FormMain : Form
     {
+        class RecentFilesMenuItem : MenuItem
+        {
+            public string FilePath { get; set; }
+        }
+
         private int _fontHeight = 0;
 
         public FormMain(IApplicationController controller)
@@ -72,31 +77,61 @@ namespace FSCruiser.WinForms
 
         private void OpenButton_Click(object sender, EventArgs e)
         {
-            bool success = this.Controller.OpenFile();
-            if (success)
+            this.Controller.OpenFile();
+        }
+
+        public void HandleFileStateChanged()
+        {
+            if (this.InvokeRequired)
             {
-                this._cuttingUnitCB.Enabled = success;
-                this._fileNameTB.Text = (success) ? Controller._cDal.Path : String.Empty;
-                if (success)
+                this.Invoke(new Action(HandleFileStateChanged));
+            }
+            else
+            {
+
+                if (Controller._cDal != null && Controller._cDal.Exists)
                 {
-                    this._BS_cuttingUnits.DataSource = Controller.CuttingUnits;
+                    var fileName = System.IO.Path.GetFileName(Controller._cDal.Path);
+                    this._dataEntryMI.Enabled = true;
+                    Text = "FScruiser - " + fileName;
+                    this._fileNameTB.Text = Controller._cDal.Path;
                 }
+                else
+                {
+                    this._dataEntryMI.Enabled = false;
+                    Text = FSCruiser.Core.Constants.APP_TITLE;
+                    this._fileNameTB.Text = string.Empty;
+                }
+                UpdateCuttingUnits();
             }
         }
 
-        private void menuItem3_Click(object sender, EventArgs e)
+        void UpdateCuttingUnits()
         {
-            //Controller.ShowTallies();
+            if (this.Controller.CuttingUnits != null)
+            {
+                var units = new CuttingUnitVM[Controller.CuttingUnits.Count + 1];
+                Controller.CuttingUnits.CopyTo(units, 1);
+                units[0] = new CuttingUnitVM();
+                this._BS_cuttingUnits.DataSource = units;
+                this._cuttingUnitCB.Enabled = true;
+            }
+            else
+            {
+                this._BS_cuttingUnits.DataSource = new CuttingUnitVM[0];
+                this._cuttingUnitCB.Enabled = false;
+            }
         }
 
-        private void menuItem4_Click(object sender, EventArgs e)
+
+        private void _cruiseInfo_MI_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Option not available yet. Check back later");
             //FormCruiseInfo ci = new FormCruiseInfo();
             //ci.ShowDialog();
         }
 
-        private void menuItem5_Click(object sender, EventArgs e)
+        private void _deviceInfo_MI_Click(object sender, EventArgs e)
         {
             using (FormDeviceInfo di = new FormDeviceInfo())
             {
@@ -104,12 +139,12 @@ namespace FSCruiser.WinForms
             }
         }
 
-        private void menuItem6_Click(object sender, EventArgs e)
+        private void _utilities_MI_Click(object sender, EventArgs e)
         {
             // do nothing. this only had sub-menus
         }
 
-        private void menuItem7_Click(object sender, EventArgs e)
+        private void _about_MI_Click(object sender, EventArgs e)
         {
             this.Controller.ViewController.ShowAbout();
         }
@@ -120,7 +155,7 @@ namespace FSCruiser.WinForms
             this.Controller.ViewController.ShowBackupUtil();
         }
 
-        private void menuItem9_Click(object sender, EventArgs e)
+        private void _addPopulation_MI_Click(object sender, EventArgs e)
         {
             Controller.ViewController.ShowAddPopulation();
         }
@@ -189,6 +224,33 @@ namespace FSCruiser.WinForms
         {
             this.Controller.ViewController.ShowManageCruisers();
         }
+
+        private void _menu_MI_Popup(object sender, EventArgs e)
+        {
+            _recentFiles_MI.MenuItems.Clear();
+
+            foreach(RecentProject rp in Controller.Settings.RecentProjects)
+            {
+                var mi = new RecentFilesMenuItem()
+                { 
+                    Text = rp.ProjectName,
+                    FilePath = rp.FilePath
+                };
+                mi.Click += recentFileSelected;
+                _recentFiles_MI.MenuItems.Add(mi);
+            }
+
+        }
+
+        private void recentFileSelected(object sender, EventArgs e)
+        {
+            var tsmi = sender as RecentFilesMenuItem;
+            if (tsmi == null) return;
+
+            this.Controller.OpenFile(tsmi.FilePath);
+        }
+
+        
     }
 
 }

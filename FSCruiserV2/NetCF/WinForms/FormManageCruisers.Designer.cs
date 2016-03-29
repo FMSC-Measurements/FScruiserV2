@@ -90,6 +90,7 @@
             // 
             // _cruiserListContainer
             // 
+            this._cruiserListContainer.AutoScroll = true;
             this._cruiserListContainer.BackColor = System.Drawing.Color.LightGray;
             this._cruiserListContainer.Controls.Add(this.panel3);
             this._cruiserListContainer.Dock = System.Windows.Forms.DockStyle.Fill;

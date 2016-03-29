@@ -11,122 +11,40 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class Form3PPNTPlotInfo : Form, IPlotInfoDialog
     {
-        public IApplicationController Controller { get; set; }
-
-        //public readonly decimal DEFAULT_VOL_FACTOR = new Decimal(333, 0, 0, false, 3);
+        public IViewController _viewController;
         
 
-        public Form3PPNTPlotInfo(IApplicationController controller)
+        public Form3PPNTPlotInfo(IViewController viewController)
         {
+            _viewController = viewController;
             InitializeComponent();
 
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
             {
                 this.WindowState = FormWindowState.Maximized;
                 this._OKBtn.Visible = true;
-            }
-
-            this.Controller = controller;
-            this.VolFactor = Constants.DEFAULT_VOL_FACTOR; 
-            
+            }            
         }
-
 
 
         private bool _blockTBClick = false;
-
-
-        private PlotVM _currentPlotInfo;
+        Plot3PPNT _plot;
+        PlotStratum _stratum;
         
-        private decimal _volFactor;
-        public decimal VolFactor 
+
+
+        public DialogResult ShowDialog(PlotVM plot, PlotStratum stratum, bool allowEdit)
         {
-            get { return _volFactor; }
-            set
-            {
-                this._volFactor = value;
-                this._volFactorTB.Text = value.ToString();
-            }
-        }
-
-        public float KPI
-        {
-            get
-            {
-                return _currentPlotInfo.KPI;
-            }
-
-            protected set
-            {
-                
-                _currentPlotInfo.KPI = (value >= 0) ? value : 0;
-                this._kpiLBL.Text = (value >= 0) ? value.ToString() : string.Empty;
-            }
-        }
-
-        private int _treeCount;
-        public int TreeCount 
-        { 
-            get
-            {
-
-                return _treeCount;
-            }
-            set
-            {
-                _treeCntBTN.Text = (value >= 0) ? value.ToString() : string.Empty;
-                _treeCount = value;
-            }
-        }
-
-        private int _aveHgt;
-        public int AverageHgt 
-        { 
-            get 
-            {
-                return _aveHgt;
-            }
-            set
-            {
-                _aveHgt = value;
-                _aveHtBTN.Text = (value >= 0) ? value.ToString() : string.Empty;
-            }
-        }
-
-
-        public DialogResult ShowDialog(PlotVM plotInfo, bool allowEdit)
-        {
-            
-            this._currentPlotInfo = plotInfo;
-
-            this._kz3ppnt_lbl.Text = plotInfo.Stratum.KZ3PPNT.ToString();
-            this._BS_plot.DataSource = plotInfo;
-
-            this.TreeCount = -1;
-            this.AverageHgt = -1;
-            this.KPI = -1;
+            _plot = plot as Plot3PPNT;
+            _BS_plot.DataSource = _plot;
+            _stratum = stratum;
 
             this.DialogResult = DialogResult.OK;
- 
+
+            this._kz3ppnt_lbl.Text = stratum.KZ3PPNT.ToString();
+
             return this.ShowDialog();
         }
-
-        private void _OKBtn_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void _cancelButton_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
-        }
-
-        private void _gpsButton_Click(object sender, EventArgs e)
-        {
-
-        }
-
 
         protected override void OnClosing(CancelEventArgs e)
         {
@@ -135,41 +53,72 @@ namespace FSCruiser.WinForms.DataEntry
             if (e.Cancel == true) { return; }
             if (this.DialogResult == DialogResult.Cancel) { return; }
 
-            if (this.TreeCount < 0 && this.AverageHgt < 0)
+            if (_plot.PlotNumber <= 0L)
             {
-                MessageBox.Show("You havn't entered anything");
+                MessageBox.Show("Plot Number Must Be Greater Than 0");
                 e.Cancel = true;
-                return;
             }
-
-            if ((this.TreeCount <= 0 && this.AverageHgt > 0) || (this.AverageHgt == 0 && this.TreeCount > 0))
+            else if (!_stratum.IsPlotNumberAvailable(_plot.PlotNumber))
+            {
+                MessageBox.Show("Plot Number Already Exists");
+                e.Cancel = true;
+            }
+            if ((_plot.TreeCount == 0 && _plot.AverageHeight > 0)
+                || (_plot.AverageHeight == 0 && _plot.TreeCount > 0))
             {
                 MessageBox.Show("Invalid Tree Count or Average Height");
                 e.Cancel = true;
-                return; 
-            }
-
-            if (this.TreeCount <= 0)
-            {
-                
-                this._currentPlotInfo.IsNull = true;
-                this._currentPlotInfo.Save();
-                this.SignalCountPlot();//if it's an empty plot then it will be a count plot
                 return;
             }
 
-            this._currentPlotInfo.Save();
-
-            ThreePItem item = (ThreePItem)this._currentPlotInfo.Stratum.SampleSelecter.NextItem();
-            if (this.KPI >= item.KPI)
+            _plot.StoreUserEnteredValues();
+            if (_plot.TreeCount == 0 && _plot.AverageHeight == 0)
             {
-                
-                CreateTrees();
-                SignalMeasurePlot();
+                if (MessageBox.Show("Empty Plot?", null, MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button1)
+                    == DialogResult.Yes)
+                {
+                    _plot.IsNull = true;
+                    _plot.Save();
+                    return;
+                }
+                else
+                {
+                    e.Cancel = true;
+                    return;
+                }
             }
             else
             {
-                this.SignalCountPlot();
+                _plot.KPI = _plot.CalculateKPI();
+
+                lock (_plot.DAL.TransactionSyncLock)
+                {
+
+                    _plot.DAL.BeginTransaction();
+                    try
+                    {
+                        _plot.Save();
+
+                        ThreePItem item = (ThreePItem)_plot.Stratum.SampleSelecter.NextItem();
+
+                        if (_plot.KPI >= item.KPI)
+                        {
+                            _plot.CreateTrees();
+                            SignalMeasurePlot();
+                        }
+                        else
+                        {
+                            this.SignalCountPlot();
+                        }
+
+                        _plot.DAL.CommitTransaction();
+                    }
+                    catch
+                    {
+                        _plot.DAL.RollbackTransaction();
+                        throw;
+                    }
+                }
             }
         }
 
@@ -185,51 +134,15 @@ namespace FSCruiser.WinForms.DataEntry
             MessageBox.Show("Count Plot");
         }
 
-
-        private void CreateTrees()
+        private void _cancelButton_Click(object sender, EventArgs e)
         {
-            TreeVM[] newTrees = new TreeVM[this.TreeCount];
-            lock (_currentPlotInfo.DAL.TransactionSyncLock)
-            {
-                _currentPlotInfo.DAL.BeginTransaction();
-                try
-                {
-
-                    for (long i = 0; i < this.TreeCount; i++)
-                    {
-                        TreeVM t = _currentPlotInfo.CreateNewTreeEntry((SampleGroupVM)null, (TreeDefaultValueDO)null, false);
-                        t.TreeCount = 1;
-                        t.CountOrMeasure = "M";
-                        t.TreeNumber = i + 1;
-                        newTrees[i] = t;
-                        t.Save();
-                    }
-                    _currentPlotInfo.DAL.CommitTransaction();
-                }
-                catch (Exception e)
-                {
-                    _currentPlotInfo.DAL.RollbackTransaction();
-                    throw e;
-                }
-            }
-
-            foreach (TreeVM tree in newTrees)
-            {
-                this._currentPlotInfo.AddTree(tree);
-                //this._currentPlotInfo.Trees.Add(tree);
-            }
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
         }
 
-        private void CalculateKPI()
+        private void _gpsButton_Click(object sender, EventArgs e)
         {
-            if (this.TreeCount <= 0 || this.AverageHgt <= 0)
-            {
-                this.KPI = 0;
-            }
-            else
-            {
-                this.KPI =(float)Math.Round((Decimal)(this.TreeCount * _currentPlotInfo.Stratum.BasalAreaFactor * this.AverageHgt) * this.VolFactor);
-            }
+
         }
 
         private void _aveHtBTN_Click(object sender, EventArgs e)
@@ -237,14 +150,12 @@ namespace FSCruiser.WinForms.DataEntry
             if (_blockTBClick == true) { return; }
             _blockTBClick = true;
 
-            var viewController = this.Controller.ViewController;
-
-            int? initialValue = (this.AverageHgt <= 0) ? (int?)null : (int?)this.AverageHgt;
-            viewController.NumPadDialog.ShowDialog(0, 999, initialValue, true);
-            AverageHgt = viewController.NumPadDialog.UserEnteredValue ?? -1;
+            int? initialValue = (_plot.AverageHeight <= 0) ? (int?)null : (int?)_plot.AverageHeight;
+            _viewController.NumPadDialog.ShowDialog(0, 999, initialValue, true);
+            _plot.AverageHeight = (uint)_viewController.NumPadDialog.UserEnteredValue.GetValueOrDefault();
 
             //this.AverageHgt = (int)(Controller.ShowNumericValueInput(0, 999, (this.AverageHgt <= 0) ? (int?)null : (int?)this.AverageHgt, true) ?? -1);
-            CalculateKPI();
+            _plot.KPI = _plot.CalculateKPI();
             _blockTBClick = false;
         }
 
@@ -253,13 +164,11 @@ namespace FSCruiser.WinForms.DataEntry
             if (_blockTBClick == true) { return; }
             _blockTBClick = true;
 
-            var viewController = this.Controller.ViewController;
-
-            int? initialValue = (this.TreeCount <= 0) ? (int?)null : (int?)this.TreeCount;
-            viewController.NumPadDialog.ShowDialog(0, 999, initialValue, true);
-            TreeCount = viewController.NumPadDialog.UserEnteredValue ?? -1;
+            int? initialValue = (_plot.TreeCount <= 0) ? (int?)null : (int?)_plot.TreeCount;
+            _viewController.NumPadDialog.ShowDialog(0, 999, initialValue, true);
+            _plot.TreeCount = (uint)_viewController.NumPadDialog.UserEnteredValue.GetValueOrDefault();
             //this.TreeCount = (int)(Controller.ShowNumericValueInput(0, 999, (this.TreeCount <= 0) ? (int?)null : (int?)this.TreeCount, true) ?? -1);
-            CalculateKPI();
+            _plot.KPI = _plot.CalculateKPI();
             _blockTBClick = false;
         }
 

@@ -122,6 +122,23 @@ namespace FSCruiser.WinForms
             }
         }
 
+        Thread _splashThread;
+
+        public override void BeginShowSplash()
+        {
+            _splashThread = new Thread(ShowSplash);//TODO ensure thread gets killed when not needed
+            _splashThread.Name = "Splash";
+            _splashThread.Start();
+        }
+
+        private void ShowSplash()
+        {
+            using (FormAbout a = new FormAbout())
+            {
+                a.ShowDialog();
+                //Application.Run(a);
+            }
+        }
         
 
         public override void ShowDataEntry(CuttingUnitVM unit)

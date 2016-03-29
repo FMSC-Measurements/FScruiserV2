@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -96,7 +97,7 @@ namespace FSCruiser.WinForms
             if (this.SampleGroup == null)
             {
                 this._populationSelectPanel.Enabled = true;
-                this._strataCB.DataSource = this.Controller._cDal.Read<StType>((string)null);
+                this._strataCB.DataSource = this.Controller._cDal.From<StType>().Read().ToList();
             }
             else
             {
@@ -207,8 +208,9 @@ namespace FSCruiser.WinForms
             Cursor.Current = Cursors.WaitCursor;
             if (newStratum != null)
             {
-                List<SGType> list = this.Controller._cDal.Read<SGType>("WHERE Stratum_CN = ?"
-                    , newStratum.Stratum_CN);
+                List<SGType> list = this.Controller._cDal.From<SGType>()
+                    .Where("Stratum_CN = ?")
+                    .Read(newStratum.Stratum_CN).ToList();
                 foreach (SGType sg in list)
                 {
                     sg.TallyMethod = sg.GetSampleGroupTallyMode();
@@ -243,8 +245,9 @@ namespace FSCruiser.WinForms
 
             if (sg != null)
             {
-                List<TreeDefaultValueDO> treeDefaults = this.Controller._cDal.Read<TreeDefaultValueDO>("WHERE PrimaryProduct = ?"
-                    , (object)sg.PrimaryProduct);
+                List<TreeDefaultValueDO> treeDefaults = this.Controller._cDal.From<TreeDefaultValueDO>()
+                    .Where("PrimaryProduct = ?")
+                    .Read(sg.PrimaryProduct).ToList();
                 foreach (TreeDefaultValueDO tdv in treeDefaults)
                 {
                     CheckBox cb = new CheckBox();

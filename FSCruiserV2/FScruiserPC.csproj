@@ -64,9 +64,12 @@
     <Compile Include="Core\ApplicationController.cs" />
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\CountTreeExtensions.cs" />
-    <Compile Include="Core\DataEntry\FomrDataEntry.Logic.cs" />
+    <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="Core\Exceptions.cs" />
+    <Compile Include="Core\System\FloatExtentions.cs" />
+    <Compile Include="Core\ViewInterfaces\IView.cs" />
+    <Compile Include="Core\Workers\FileLoadWorker.cs" />
     <Compile Include="Core\FormCruiserSelection.Logic.cs" />
     <Compile Include="Core\IApplicationController.cs" />
     <Compile Include="Core\IViewController.cs" />
@@ -77,8 +80,10 @@
     <Compile Include="Core\Models\DataEntryMode.cs" />
     <Compile Include="Core\Models\DataModelExtensions.cs" />
     <Compile Include="Core\Models\ITreeContaningModel.cs" />
+    <Compile Include="Core\Models\Plot3PPNT.cs" />
     <Compile Include="Core\Models\PlotInfo.cs" />
     <Compile Include="Core\Models\PlotStratum.cs" />
+    <Compile Include="Core\Models\RecentProject.cs" />
     <Compile Include="Core\Models\SampleGroupVM.cs" />
     <Compile Include="Core\Models\StratumInfo.cs" />
     <Compile Include="Core\Models\SubPopInfo.cs" />
@@ -98,6 +103,11 @@
     <Compile Include="Core\ViewInterfaces\IPlotLayout.cs" />
     <Compile Include="Core\ViewInterfaces\ITallyView.cs" />
     <Compile Include="Core\ViewInterfaces\ITreeView.cs" />
+    <Compile Include="Core\Workers\CancelWorkerException.cs" />
+    <Compile Include="Core\Workers\IWorker.cs" />
+    <Compile Include="Core\Workers\Worker.cs" />
+    <Compile Include="Core\Workers\WorkerExceptionThrownEventArgs.cs" />
+    <Compile Include="Core\Workers\WorkerProgressChangedEventArgs.cs" />
     <Compile Include="WinForms.Common\FormCruiserSelection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +116,18 @@
     </Compile>
     <Compile Include="WinForms.Common\FormDataEntryBase.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FormPlotInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\SpeciesRow.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\TallyRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\TallyRow.Designer.cs">
+      <DependentUpon>TallyRow.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms.Common\TreeBasedTallyView_Base.cs">
       <SubType>UserControl</SubType>
@@ -135,6 +157,12 @@
     <Compile Include="WinForms\DataEntry\FormLogs.Designer.cs">
       <DependentUpon>FormLogs.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinForms\DataEntry\SampleGroupRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms\DataEntry\SampleGroupRow.Designer.cs">
+      <DependentUpon>SampleGroupRow.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms\DataGridExtentions.cs" />
     <Compile Include="WinForms\FormAbout.PC.cs">
       <SubType>Form</SubType>
@@ -160,20 +188,11 @@
     <Compile Include="WinForms\DataEntry\FormNumPad.PC.Designer.cs">
       <DependentUpon>FormNumPad.PC.cs</DependentUpon>
     </Compile>
-    <Compile Include="WinForms\DataEntry\FormPlotInfo.PC.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormPlotInfo.PC.Designer.cs">
-      <DependentUpon>FormPlotInfo.PC.cs</DependentUpon>
-    </Compile>
     <Compile Include="WinForms\DataEntry\FormPlotInfo3PPNT.PC.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinForms\DataEntry\FormPlotInfo3PPNT.PC.Designer.cs">
       <DependentUpon>FormPlotInfo3PPNT.PC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormPlotInfoBase.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinForms\DataEntry\FormTallySettings.PC.cs">
       <SubType>Form</SubType>
@@ -193,12 +212,6 @@
     <Compile Include="WinForms\DataEntry\LayoutTreeBased.PC.Designer.cs">
       <DependentUpon>LayoutTreeBased.PC.cs</DependentUpon>
     </Compile>
-    <Compile Include="WinForms\DataEntry\TallyRow.PC.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\TallyRow.PC.Designer.cs">
-      <DependentUpon>TallyRow.PC.cs</DependentUpon>
-    </Compile>
     <Compile Include="WinForms\DataGridAjuster.PC.cs" />
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="WinForms\ViewController.PC.cs" />
@@ -208,6 +221,13 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormDataEntryBase.resx">
       <DependentUpon>FormDataEntryBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\FormPlotInfo.resx">
+      <DependentUpon>FormPlotInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\TallyRow.resx">
+      <DependentUpon>TallyRow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\TreeBasedTallyView_Base.resx">
       <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>
@@ -222,6 +242,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\DataEntry\FormLogs.resx">
       <DependentUpon>FormLogs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\DataEntry\SampleGroupRow.resx">
+      <DependentUpon>SampleGroupRow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\FormAbout.PC.resx">
       <DependentUpon>FormAbout.PC.cs</DependentUpon>
@@ -239,16 +262,8 @@
       <DependentUpon>FormNumPad.PC.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\FormPlotInfo.PC.resx">
-      <DependentUpon>FormPlotInfo.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="WinForms\DataEntry\FormPlotInfo3PPNT.PC.resx">
       <DependentUpon>FormPlotInfo3PPNT.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\FormPlotInfoBase.resx">
-      <DependentUpon>FormPlotInfoBase.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\DataEntry\FormTallySettings.PC.resx">
@@ -261,10 +276,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\DataEntry\LayoutTreeBased.PC.resx">
       <DependentUpon>LayoutTreeBased.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\TallyRow.PC.resx">
-      <DependentUpon>TallyRow.PC.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -282,9 +293,11 @@
     <None Include="Core\ViewInterfaces\FSCruiser.Core.ViewInterfaces.cd" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.TreeDO.datasource" />
+    <None Include="Properties\DataSources\FSCruiser.Core.Models.Plot3PPNT.datasource" />
+    <None Include="Properties\DataSources\FSCruiser.WinForms.DataEntry.FormPlotInfo.datasource" />
     <None Include="Properties\DataSources\FSCruiserV2.Logic.CuttingUnitVM.datasource" />
-    <None Include="Properties\DataSources\FSCruiserV2.Logic.PlotInfo1.datasource" />
-    <None Include="Properties\DataSources\FSCruiserV2.Logic.TallyAction2.datasource" />
+    <None Include="Properties\DataSources\FSCruiserV2.Logic.PlotInfo.datasource" />
+    <None Include="Properties\DataSources\FSCruiserV2.Logic.TallyAction.datasource" />
     <None Include="Properties\DataSources\FSCruiserV2.Logic.TreeVM.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

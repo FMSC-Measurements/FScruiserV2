@@ -22,7 +22,7 @@ namespace FSCruiser.WinForms
 #else
         [STAThread]
 #endif
-        static void Main()
+        static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += FMSC.Utility.ErrorHandling.ErrorHandlers.UnhandledException;
 
@@ -34,9 +34,14 @@ namespace FSCruiser.WinForms
                    
                     //PreJit();
                     using (ViewController viewController = new ViewController())
-                    using (ApplicationController controller = new ApplicationController(viewController))
+                    using (ApplicationController appController = new ApplicationController(viewController))
                     {
-                        controller.Run();
+                        if (args.Length > 1)
+                        {
+                            appController.OpenFile(args[1]);
+                        }
+
+                        viewController.Run();
                     }
                     Debug.Close();
                 }

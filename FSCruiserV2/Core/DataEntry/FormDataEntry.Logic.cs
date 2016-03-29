@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using CruiseDAL.DataObjects;
 using System.ComponentModel;
@@ -469,30 +470,31 @@ namespace FSCruiser.Core.DataEntry
                 if (stratum.Method == "3PPNT")
                 {
                     //no need to initialize any counts or samplegroup info for 3PPNT
-
                 }
                 else
                 {
-                    List<SampleGroupVM> sgList = this.Database.Read<SampleGroupVM>("WHERE Stratum_CN = ?"
-                        , stratum.Stratum_CN);
+                    List<SampleGroupVM> sgList = this.Database.From<SampleGroupVM>()
+                        .Where("Stratum_CN = ?")
+                        .Read(stratum.Stratum_CN).ToList();
                     view.MakeSGList(sgList, container);
                 }
             }
             else
             {
                 var counts = new List<CountTreeVM>();
-                List<TallySettingsDO> tallySettings = this.Database.Read<TallySettingsDO>(
-                    @"JOIN SampleGroup USING (SampleGroup_CN) 
-                    WHERE SampleGroup.Stratum_CN = ? 
-                    GROUP BY CountTree.SampleGroup_CN, CountTree.TreeDefaultValue_CN, CountTree.Tally_CN",
-                    stratum.Stratum_CN);
+                var tallySettings = this.Database.From<TallySettingsDO>()
+                    .Join("SampleGroup" ,"USING (SampleGroup_CN)")
+                    .Where("SampleGroup.Stratum_CN = ?")
+                    .GroupBy("CountTree.SampleGroup_CN", "CountTree.TreeDefaultValue_CN", "CountTree.Tally_CN")
+                    .Read(stratum.Stratum_CN);
 
                 foreach (TallySettingsDO ts in tallySettings)
                 {
-                    CountTreeVM count = this.Database.ReadSingleRow<CountTreeVM>("WHERE CuttingUnit_CN = ? AND SampleGroup_CN = ? AND Tally_CN = ?"
-                        , this.Unit.CuttingUnit_CN
+                    CountTreeVM count = this.Database.From<CountTreeVM>()
+                        .Where("CuttingUnit_CN = ? AND SampleGroup_CN = ? AND Tally_CN = ?")
+                        .Read(this.Unit.CuttingUnit_CN
                         , ts.SampleGroup_CN
-                        , ts.Tally_CN);
+                        , ts.Tally_CN).FirstOrDefault();
                     if (count == null)
                     {
                         count = new CountTreeVM(this.Database);
@@ -535,55 +537,108 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public bool ProcessHotKey(char key, ITallyView view)
-        {
-            //if no tally view or not accepting hotkeys, jump out
-            if (view == null || view.HotKeyEnabled == false)
-            {
-                return false;
-            }
-            else if (view.HandleHotKeyFirst(key))//pass off to tally view to handle
-            {
-                return true; //if handled return
-            }
+        //public bool ProcessHotKey(char key, ITallyView view)
+        //{
+        //    //if no tally view or not accepting hotkeys, jump out
+        //    if (view == null || view.HotKeyEnabled == false)
+        //    {
+        //        return false;
+        //    }
+        //    //else if (view.HandleHotKeyFirst(key))//pass off to tally view to handle
+        //    //{
+        //    //    return true; //if handled return
+        //    //}
 
-            //if valid stratm hot key, go to view that stratum belongs to
-            if (this.StratumHotKeyLookup.ContainsKey(key))
-            {
-                this.View.GoToPageIndex(this.StratumHotKeyLookup[key]);
-                return true;
-            }
-            else//not a stratum hotkey 
-            {
-                if (view.HotKeyLookup != null && view.HotKeyLookup.ContainsKey(key))//maybe a tally hotkey
-                {
-                    CountTreeVM count = view.HotKeyLookup[key];
-                    view.OnTally(count);
-                    return true;
-                }
-                else//not valid hotkey, get angry
-                {
-                    this.ViewController.SignalInvalidAction();
-                    return true;
-                }
-            }
-        }
+        //    //if valid stratm hot key, go to view that stratum belongs to
+        //    if (this.StratumHotKeyLookup.ContainsKey(key))
+        //    {
+        //        this.View.GoToPageIndex(this.StratumHotKeyLookup[key]);
+        //        return true;
+        //    }
+        //    else//not a stratum hotkey 
+        //    {
+        //        if (view.HotKeyLookup != null && view.HotKeyLookup.ContainsKey(key))//maybe a tally hotkey
+        //        {
+        //            CountTreeVM count = view.HotKeyLookup[key];
+        //            view.OnTally(count);
+        //            return true;
+        //        }
+        //        else//not valid hotkey, get angry
+        //        {
+        //            this.ViewController.SignalInvalidAction();
+        //            return true;
+        //        }
+        //    }
+        //}
 
-        public bool HandleHotKey(char key)
-        {
-            ITallyView view = this.View.FocusedLayout as ITallyView;
-            return this.ProcessHotKey(key, view);
-        }
 
-        public bool HandleEscKey()
+
+        //public bool HandleHotKey(char key)
+        //{
+        //    ITallyView view = this.View.FocusedLayout as ITallyView;
+        //    return this.ProcessHotKey(key, view);
+        //}
+
+        public bool HandleKeyPress(string key)
         {
-            IDataEntryPage view = this.View.FocusedLayout;
+            var view = this.View.FocusedLayout;
+
             if (view != null)
             {
-                return view.HandleEscKey();
+                if (view.PreviewKeypress(key))
+                {
+                    return true;
+                }
+                else
+                {
+                    var tallyView = view as ITallyView;
+                    if (tallyView != null)
+                    {
+                        if (key.Length != 1) { return false; }
+                        var keyChar = char.ToUpper(key[0]);
+
+                        if (!IsHotkeyKey(keyChar)) { return false; }
+
+                        if (tallyView.HotKeyEnabled == false) { return false; }
+
+                        //if valid stratm hot key, go to view that stratum belongs to
+                        if (this.StratumHotKeyLookup.ContainsKey(keyChar))
+                        {
+                            this.View.GoToPageIndex(this.StratumHotKeyLookup[keyChar]);
+                            return true;
+                        }
+                        else if (tallyView.HotKeyLookup != null && tallyView.HotKeyLookup.ContainsKey(keyChar))//maybe a tally hotkey
+                        {
+                            CountTreeVM count = tallyView.HotKeyLookup[keyChar];
+                            tallyView.OnTally(count);
+                            return true;
+                        }
+                        else//not valid hotkey, get grumpy
+                        {
+                            this.ViewController.SignalInvalidAction();
+                            return true;
+                        }
+                    }
+                }
             }
+
             return false;
         }
+
+        bool IsHotkeyKey(char c)
+        {
+            return Array.IndexOf(Constants.HOTKEY_KEYS, c) != -1;
+        }
+
+        //public bool HandleEscKey()
+        //{
+        //    IDataEntryPage view = this.View.FocusedLayout;
+        //    if (view != null)
+        //    {
+        //        return view.HandleEscKey();
+        //    }
+        //    return false;
+        //}
 
 
         public void HandleKPIChanging(TreeVM tree, float newKPI, bool doSample, out bool cancel)
@@ -626,44 +681,46 @@ namespace FSCruiser.Core.DataEntry
             cancel = false;
         }
 
-        public void HandleSampleGroupChanged(ITreeView view, TreeVM tree)
-        {
-            if (tree == null) { return; }
-            if (!tree.SampleGroup.TreeDefaultValues.Contains(tree.TreeDefaultValue))
-            {
-                tree.SetTreeTDV(null);
-            }
-            view.UpdateSpeciesColumn(tree);
-            tree.TrySave();
-        }
+        //public void HandleSampleGroupChanged(ITreeView view, TreeVM tree)
+        //{
+        //    if (tree == null) { return; }
+        //    if (!tree.SampleGroup.TreeDefaultValues.Contains(tree.TreeDefaultValue))
+        //    {
+        //        tree.SetTreeTDV(null);
+        //    }
+        //    view.UpdateSpeciesColumn(tree);
+        //    tree.TrySave();
+        //}
 
-        public void HandleSampleGroupChanging(TreeVM tree, SampleGroupDO newSG, out bool cancel)
-        {
-            if (tree == null || newSG == null) { cancel = true; return; }
-            if (tree.SampleGroup != null && tree.SampleGroup_CN == newSG.SampleGroup_CN) { cancel = true; return; }
-            if (tree.SampleGroup != null)
-            {
-                if (MessageBox.Show("You are changing the Sample Group of a tree, are you sure you want to do this?", "!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2)
-                    == DialogResult.No)
-                {
-                    cancel = true;//disregard changes
-                    return;
-                }
-                else
-                {
+        //public void HandleSampleGroupChanging(TreeVM tree, SampleGroupDO newSG, out bool cancel)
+        //{
+        //    if (tree == null || newSG == null) { cancel = true; return; }
+        //    cancel =  !tree.NotifySampleGroupChanging(newSG, View);
 
-                    this.Database.LogMessage(String.Format("Tree Sample Group Changed (Cu:{0} St:{1} Sg:{2} -> {3} Tdv_CN:{4} T#: {5} P#:{6}",
-                        tree.CuttingUnit.Code,
-                        tree.Stratum.Code,
-                        (tree.SampleGroup != null) ? tree.SampleGroup.Code : "?",
-                        newSG.Code,
-                        (tree.TreeDefaultValue != null) ? tree.TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?",
-                        tree.TreeNumber,
-                        (tree.Plot != null)? tree.Plot.PlotNumber.ToString() : "-"), "high");
-                }
-            }
-            cancel = false;
-        }
+        //    //if (tree.SampleGroup != null && tree.SampleGroup_CN == newSG.SampleGroup_CN) { cancel = true; return; }
+        //    //if (tree.SampleGroup != null)
+        //    //{
+        //    //    if (MessageBox.Show("You are changing the Sample Group of a tree, are you sure you want to do this?", "!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2)
+        //    //        == DialogResult.No)
+        //    //    {
+        //    //        cancel = true;//disregard changes
+        //    //        return;
+        //    //    }
+        //    //    else
+        //    //    {
+
+        //    //        this.Database.LogMessage(String.Format("Tree Sample Group Changed (Cu:{0} St:{1} Sg:{2} -> {3} Tdv_CN:{4} T#: {5} P#:{6}",
+        //    //            tree.CuttingUnit.Code,
+        //    //            tree.Stratum.Code,
+        //    //            (tree.SampleGroup != null) ? tree.SampleGroup.Code : "?",
+        //    //            newSG.Code,
+        //    //            (tree.TreeDefaultValue != null) ? tree.TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?",
+        //    //            tree.TreeNumber,
+        //    //            (tree.Plot != null)? tree.Plot.PlotNumber.ToString() : "-"), "high");
+        //    //    }
+        //    //}
+        //    //cancel = false;
+        //}
 
         public bool HandleSpeciesChanged(TreeVM tree, TreeDefaultValueDO tdv)
         {

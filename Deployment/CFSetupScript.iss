@@ -2,8 +2,8 @@
 ; #defines require the ISPP add-on: http://sourceforge.net/projects/ispp/
 #define APP "FSCruiserV2"
 
-#define APP_VERSION "2016.01.28"
-#define SETUPVERSION "20160128"
+#define APP_VERSION "2016.03.29"
+#define SETUPVERSION "20160329"
 #define SPECIALTAG "Production"
 #define BASEURL "http://www.fs.fed.us/fmsc/measure"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"

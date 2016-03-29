@@ -5,6 +5,6 @@
     Renaming the file extension or editing the content of this file may   
     cause the file to be unrecognizable by the program.
 -->
-<GenericObjectDataSource DisplayName="TreeDefaultValueDO" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>CruiseDAL.DataObjects.TreeDefaultValueDO, CruiseDAL_CF35WM5, Version=1.0.4783.25545, Culture=neutral, PublicKeyToken=null</TypeInfo>
+<GenericObjectDataSource DisplayName="Plot3PPNT" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+   <TypeInfo>FSCruiser.Core.Models.Plot3PPNT, FSCruiserV2CE_CF20, Version=2016.2.9.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
 </GenericObjectDataSource>

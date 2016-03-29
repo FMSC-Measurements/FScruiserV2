@@ -1,19 +1,16 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using System.ComponentModel;
 using System.Collections.Generic;
-using System.Collections;
-using FMSC.Sampling;
 using System.Xml.Serialization;
 using System.IO;
-using System.Threading;
-using System.Text;
 using System.Reflection;
 using CruiseDAL;
-using CruiseDAL.Schema;
 using FSCruiser.Core.Models;
-using FMSC.ORM.Core.SQL;
+using System.Diagnostics;
+using FSCruiser.Core.Workers;
 
 
 namespace FSCruiser.Core
@@ -30,12 +27,27 @@ namespace FSCruiser.Core
         
         //private List<CruiserVM> _cruisers;
         //private bool _allowBackup; 
-        
+
+        FileLoadWorker FileLoadWorker { get; set; }
 
         public ApplicationSettings Settings { get; set; }
         //public List<CruiserVM> Cruisers { get { return _cruisers; } }
-        public CruiseDAL.DAL _cDal { get; set; }
-        public List<CuttingUnitVM> CuttingUnits { get; protected set; }
+        public CruiseDAL.DAL _cDal 
+        {
+            get
+            {
+                if (FileLoadWorker == null) { return null; }
+                else { return FileLoadWorker.DataStore; }
+            }
+        }
+        public IList<CuttingUnitVM> CuttingUnits 
+        {
+            get
+            {
+                if (FileLoadWorker == null) { return null; }
+                else { return FileLoadWorker.CuttingUnits; }
+            }
+        }
 
 
         
@@ -70,11 +82,7 @@ namespace FSCruiser.Core
             
         }
 
-        public void Run()
-        {
-            ViewController.BeginShowSplash();
-            Application.Run(ViewController.MainView);
-        }
+
 
 
 
@@ -111,82 +119,157 @@ namespace FSCruiser.Core
         }
         #endregion
 
-        public bool OpenFile()
+        public void OpenFile()
         {
-            string fileName;
-            if (this.ViewController.ShowOpenCruiseFileDialog(out fileName) == DialogResult.OK)
+            string filePath;
+            if (this.ViewController.ShowOpenCruiseFileDialog(out filePath) == DialogResult.OK)
             {
-                return OpenFile(fileName);
-            }
-            return false;
-        }
-
-        protected bool OpenFile(string path)
-        {
-            try
-            {
-                this.LoadDatabase(path);
-
-                //var fileName = Path.GetFileName(path);
-                //if (fileName.StartsWith("BACK_"))
-                //{
-                //    _allowBackup = false;
-                //    this.ViewController.ShowMessage("The file you have opened is marked as a backup\r\n" +
-                //        "Its recomended you don't modify your backup files", "Warning", MessageBoxIcon.Hand);
-                //}
-                //else
-                //{
-                //    _allowBackup = true;
-                //}
-
-                return true;
-            }
-            catch (FMSC.ORM.ReadOnlyException ex)
-            {
-                this.HandleException(ex, "Unable to open file becaus it is read only", false, true);
-                return false;
-            }
-            catch (FMSC.ORM.SQLException ex)
-            {
-                this.HandleException(ex, "Unable to open file : " + ex.GetType().Name, false, true);
-                return false;
-            }
-            catch (System.IO.IOException ex)
-            {
-                this.HandleException(ex, "Unable to open file : " + ex.GetType().Name, false, true);
-                return false;
+                OpenFile(filePath);
             }
         }
 
-        protected void LoadDatabase(String path)
+        public void OpenFile(string path)
         {
-            try
+            if (this.FileLoadWorker != null)
             {
-                this.ViewController.ShowWait();
-                if (_cDal != null)
-                {
-                    _cDal.Dispose();
-                }
-                _cDal = new CruiseDAL.DAL(path);
-                _cDal.LogMessage(string.Format("Opened By FSCruiser ({0})", Constants.FSCRUISER_VERSION), "I");
-                //read all cutting units
-                var units = this._cDal.Read<CuttingUnitVM>((WhereClause)null);
-                //HACK insert dummy unit for unit dropdown, this needs to be done by main form 
-                units.Insert(0, new CuttingUnitVM());
-                this.CuttingUnits = units;
-
-                //read the sale, to see if log grading is enabled
-                SaleDO sale = this._cDal.ReadSingleRow<SaleDO>((WhereClause)null);
-                if (sale != null)
-                {
-                    this.ViewController.EnableLogGrading = sale.LogGradingEnabled;
-                }
-            }            
-            finally
-            {
-                this.ViewController.HideWait();
+                FileLoadWorker.Dispose();
             }
+
+            var worker = new FileLoadWorker(path, this);
+            worker.ExceptionThrown += this.HandleFileLoadError;
+            worker.Ended += this.HandleFileLoadEnd;
+            worker.Starting += this.HandleFileLoadStart;
+            worker.BeginWork();
+
+            this.FileLoadWorker = worker;
+
+            //Debug.Assert(!string.IsNullOrEmpty(path));
+
+            //try
+            //{
+            //    this.LoadDatabase(path);
+
+            //    //var fileName = Path.GetFileName(path);
+            //    //if (fileName.StartsWith("BACK_"))
+            //    //{
+            //    //    _allowBackup = false;
+            //    //    this.ViewController.ShowMessage("The file you have opened is marked as a backup\r\n" +
+            //    //        "Its recomended you don't modify your backup files", "Warning", MessageBoxIcon.Hand);
+            //    //}
+            //    //else
+            //    //{
+            //    //    _allowBackup = true;
+            //    //}
+
+            //    Settings.AddRecentProject(new RecentProject(Path.GetFileName(path), path));
+            //    SaveAppSettings();
+
+            //    return true;
+            //}
+            //catch (FMSC.ORM.ReadOnlyException ex)
+            //{
+            //    this.HandleException(ex, "Unable to open file becaus it is read only", false, true);
+            //    return false;
+            //}
+            //catch (FMSC.ORM.SQLException ex)
+            //{
+            //    this.HandleException(ex, "Unable to open file : " + ex.GetType().Name, false, true);
+            //    return false;
+            //}
+            //catch (System.IO.IOException ex)
+            //{
+            //    this.HandleException(ex, "Unable to open file : " + ex.GetType().Name, false, true);
+            //    return false;
+            //}
         }
+
+        void HandleFileLoadError(object sender, WorkerExceptionThrownEventArgs e)
+        {
+            var ex = e.Exception;
+            if (ex is FMSC.ORM.ReadOnlyException)
+            {
+                HandleException(ex, "Unable to open file because it is read only", false, true);
+                e.Handled = true;
+            }
+            else if (ex is FMSC.ORM.SQLException)
+            {
+                HandleException(ex, "File Read Error : " + ex.GetType().Name, false, true);
+                e.Handled = true;
+            }
+            else if (ex is System.IO.IOException)
+            {
+                HandleException(ex, "Unable to open file : " + ex.GetType().Name, false, true);
+                e.Handled = true;
+            }
+
+            ViewController.HandleFileStateChanged();
+        }
+
+        void HandleFileLoadStart(object sender
+            , FSCruiser.Core.Workers.WorkerProgressChangedEventArgs e)
+        {
+            ViewController.ShowWait();
+        }
+
+
+        void HandleFileLoadEnd(object sender
+            , FSCruiser.Core.Workers.WorkerProgressChangedEventArgs e)
+        {
+            //var worker = sender as FSCruiser.Core.Workers.FileLoadWorker;
+            //if (worker == null) { return; }
+
+            ViewController.HideWait();
+            ViewController.HandleFileStateChanged();
+            if (this.FileLoadWorker.IsDone)
+            {
+                var filePath = _cDal.Path;
+                var fileName = System.IO.Path.GetFileName(this._cDal.Path);
+
+                Settings.AddRecentProject(new RecentProject(fileName, filePath));
+                SaveAppSettings();
+            }
+            
+
+        }
+
+        //protected void LoadDatabase(String path)
+        //{
+        //    Debug.Assert(!string.IsNullOrEmpty(path));
+
+        //    if (_cDal != null)
+        //    {
+        //        _cDal.Dispose();
+        //    }
+        //    try
+        //    {
+        //        this.ViewController.ShowWait();
+                
+        //        _cDal = new CruiseDAL.DAL(path);
+        //        _cDal.LogMessage(string.Format("Opened By FSCruiser ({0})", Constants.FSCRUISER_VERSION), "I");
+        //        //read all cutting units
+        //        var units = this._cDal.From<CuttingUnitVM>().Read().ToList();
+        //        //HACK insert dummy unit for unit dropdown, this needs to be done by main form 
+        //        units.Insert(0, new CuttingUnitVM());
+        //        this.CuttingUnits = units;
+
+        //        //read the sale, to see if log grading is enabled
+        //        this.ViewController.EnableLogGrading =
+        //            this._cDal.ExecuteScalar<bool>(
+        //            "Select LogGradingEnabled FROM Sale LIMIT 1;");
+
+        //        var fileName = System.IO.Path.GetFileName(path);
+        //        this.ViewController.MainView.Text = fileName;
+        //    }
+        //    catch
+        //    {
+        //        this.ViewController.MainView.Text = FSCruiser.Core.Constants.APP_TITLE;
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        this.ViewController.HideWait();
+        //    }
+        //}
 
         #region load CuttingUnit
 
@@ -536,30 +619,17 @@ namespace FSCruiser.Core
             if (disposing)
             {
                 // free managed resources
-                if (this._cDal != null)
+                if (FileLoadWorker != null)
                 {
-                    this._cDal.Dispose();
+                    FileLoadWorker.Dispose();
+                    FileLoadWorker = null;
                 }
                 if (this.ViewController != null)
                 {
                     this.ViewController.Dispose();
                     this.ViewController = null;
                 }
-                //if (this._loadCuttingUnitDataThread != null)
-                //{
-                //    this._loadCuttingUnitDataThread.Abort();
-                //    this._loadCuttingUnitDataThread = null;
-                //}
-                //if (this._saveTreesWorkerThread != null)
-                //{
-                //    this._saveTreesWorkerThread.Abort();
-                //    this._saveTreesWorkerThread = null;
-                //}
-                //if (this._validateTreesWorkerThread != null)
-                //{
-                //    this._validateTreesWorkerThread.Abort();
-                //    this._validateTreesWorkerThread = null;
-                //}
+
             }
         }
 

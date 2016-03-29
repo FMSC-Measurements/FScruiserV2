@@ -7,7 +7,7 @@ namespace FSCruiser.WinForms
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.MainMenu mainMenu1;
+        private System.Windows.Forms.MainMenu mainMenu;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -35,19 +35,17 @@ namespace FSCruiser.WinForms
             System.Windows.Forms.Splitter splitter1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this._userInfoLBL = new System.Windows.Forms.Label();
-            this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this.menuItem3 = new System.Windows.Forms.MenuItem();
-            this.menuItem4 = new System.Windows.Forms.MenuItem();
-            this.menuItem5 = new System.Windows.Forms.MenuItem();
-            this._backupMI = new System.Windows.Forms.MenuItem();
-            this.menuItem6 = new System.Windows.Forms.MenuItem();
-            this.menuItem9 = new System.Windows.Forms.MenuItem();
-            this.menuItem11 = new System.Windows.Forms.MenuItem();
-            this.menuItem7 = new System.Windows.Forms.MenuItem();
+            this.mainMenu = new System.Windows.Forms.MainMenu();
+            this._menu_MI = new System.Windows.Forms.MenuItem();
+            this._cruiseInfo_MI = new System.Windows.Forms.MenuItem();
+            this._deviceInfo_MI = new System.Windows.Forms.MenuItem();
+            this._backup_MI = new System.Windows.Forms.MenuItem();
+            this._utilities_MI = new System.Windows.Forms.MenuItem();
+            this._addPopulation_MI = new System.Windows.Forms.MenuItem();
+            this._about_MI = new System.Windows.Forms.MenuItem();
             this._manageCruisersMI = new System.Windows.Forms.MenuItem();
+            this._recentFiles_MI = new System.Windows.Forms.MenuItem();
             this._dataEntryMI = new System.Windows.Forms.MenuItem();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.OpenButton = new System.Windows.Forms.Button();
             this._BS_cuttingUnits = new System.Windows.Forms.BindingSource(this.components);
             this.panel4 = new System.Windows.Forms.Panel();
@@ -89,77 +87,68 @@ namespace FSCruiser.WinForms
             this._userInfoLBL.Text = "Device Model and Serial Number";
             this._userInfoLBL.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // mainMenu1
+            // mainMenu
             // 
-            this.mainMenu1.MenuItems.Add(this.menuItem3);
-            this.mainMenu1.MenuItems.Add(this._dataEntryMI);
+            this.mainMenu.MenuItems.Add(this._menu_MI);
+            this.mainMenu.MenuItems.Add(this._dataEntryMI);
             // 
-            // menuItem3
+            // _menu_MI
             // 
-            this.menuItem3.MenuItems.Add(this.menuItem4);
-            this.menuItem3.MenuItems.Add(this.menuItem5);
-            this.menuItem3.MenuItems.Add(this._backupMI);
-            this.menuItem3.MenuItems.Add(this.menuItem6);
-            this.menuItem3.MenuItems.Add(this.menuItem7);
-            this.menuItem3.MenuItems.Add(this._manageCruisersMI);
-            this.menuItem3.Text = "Menu";
+            this._menu_MI.MenuItems.Add(this._cruiseInfo_MI);
+            this._menu_MI.MenuItems.Add(this._deviceInfo_MI);
+            this._menu_MI.MenuItems.Add(this._backup_MI);
+            this._menu_MI.MenuItems.Add(this._utilities_MI);
+            this._menu_MI.MenuItems.Add(this._about_MI);
+            this._menu_MI.MenuItems.Add(this._manageCruisersMI);
+            this._menu_MI.MenuItems.Add(this._recentFiles_MI);
+            this._menu_MI.Text = "Menu";
+            this._menu_MI.Popup += new System.EventHandler(this._menu_MI_Popup);
             // 
-            // menuItem4
+            // _cruiseInfo_MI
             // 
-            this.menuItem4.Enabled = false;
-            this.menuItem4.Text = "&Cruise Info";
-            this.menuItem4.Click += new System.EventHandler(this.menuItem4_Click);
+            this._cruiseInfo_MI.Enabled = false;
+            this._cruiseInfo_MI.Text = "&Cruise Info";
+            this._cruiseInfo_MI.Click += new System.EventHandler(this._cruiseInfo_MI_Click);
             // 
-            // menuItem5
+            // _deviceInfo_MI
             // 
-            this.menuItem5.Text = "&Device Info";
-            this.menuItem5.Click += new System.EventHandler(this.menuItem5_Click);
+            this._deviceInfo_MI.Text = "&Device Info";
+            this._deviceInfo_MI.Click += new System.EventHandler(this._deviceInfo_MI_Click);
             // 
-            // _backupMI
+            // _backup_MI
             // 
-            this._backupMI.Text = "&Backup";
-            this._backupMI.Click += new System.EventHandler(this.backupMI_Click);
+            this._backup_MI.Text = "&Backup";
+            this._backup_MI.Click += new System.EventHandler(this.backupMI_Click);
             // 
-            // menuItem6
+            // _utilities_MI
             // 
-            this.menuItem6.MenuItems.Add(this.menuItem9);
-            this.menuItem6.MenuItems.Add(this.menuItem11);
-            this.menuItem6.Text = "&Utilities";
-            this.menuItem6.Click += new System.EventHandler(this.menuItem6_Click);
+            this._utilities_MI.MenuItems.Add(this._addPopulation_MI);
+            this._utilities_MI.Text = "&Utilities";
+            this._utilities_MI.Click += new System.EventHandler(this._utilities_MI_Click);
             // 
-            // menuItem9
+            // _addPopulation_MI
             // 
-            this.menuItem9.Text = "&Add Population";
-            this.menuItem9.Click += new System.EventHandler(this.menuItem9_Click);
+            this._addPopulation_MI.Text = "&Add Population";
+            this._addPopulation_MI.Click += new System.EventHandler(this._addPopulation_MI_Click);
             // 
-            // menuItem11
+            // _about_MI
             // 
-            this.menuItem11.Enabled = false;
-            this.menuItem11.Text = "&Supervisor Mode";
-            // 
-            // menuItem7
-            // 
-            this.menuItem7.Text = "&About";
-            this.menuItem7.Click += new System.EventHandler(this.menuItem7_Click);
+            this._about_MI.Text = "&About";
+            this._about_MI.Click += new System.EventHandler(this._about_MI_Click);
             // 
             // _manageCruisersMI
             // 
             this._manageCruisersMI.Text = "&Manage Cruisers";
             this._manageCruisersMI.Click += new System.EventHandler(this._manageCruisersMI_Click);
             // 
+            // _recentFiles_MI
+            // 
+            this._recentFiles_MI.Text = "Recent Files";
+            // 
             // _dataEntryMI
             // 
             this._dataEntryMI.Text = "Data Entry";
             this._dataEntryMI.Click += new System.EventHandler(this.dataEntryButton_Click);
-            // 
-            // menuItem2
-            // 
-            this.menuItem2.Text = "Units";
-            // 
-            // menuItem1
-            // 
-            this.menuItem1.MenuItems.Add(this.menuItem2);
-            this.menuItem1.Text = "View";
             // 
             // OpenButton
             // 
@@ -173,7 +162,7 @@ namespace FSCruiser.WinForms
             // 
             // _BS_cuttingUnits
             // 
-            this._BS_cuttingUnits.DataSource = typeof(CuttingUnitVM);
+            this._BS_cuttingUnits.DataSource = typeof(FSCruiser.Core.Models.CuttingUnitVM);
             this._BS_cuttingUnits.CurrentChanged += new System.EventHandler(this._BS_cuttingUnits_CurrentChanged);
             // 
             // panel4
@@ -243,7 +232,7 @@ namespace FSCruiser.WinForms
             this.Controls.Add(this._fileNameTB);
             this.Controls.Add(this._userInfoLBL);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Menu = this.mainMenu1;
+            this.Menu = this.mainMenu;
             this.MinimizeBox = false;
             this.Name = "FormMain";
             this.Text = "FScruiser Main";
@@ -256,18 +245,15 @@ namespace FSCruiser.WinForms
 
         #endregion
 
-        private System.Windows.Forms.MenuItem menuItem2;
-        private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.Button OpenButton;
         private System.Windows.Forms.BindingSource _BS_cuttingUnits;
-        private System.Windows.Forms.MenuItem menuItem3;
-        private System.Windows.Forms.MenuItem menuItem4;
-        private System.Windows.Forms.MenuItem menuItem5;
-        private System.Windows.Forms.MenuItem menuItem6;
-        private System.Windows.Forms.MenuItem menuItem7;
-        private System.Windows.Forms.MenuItem _backupMI;
-        private System.Windows.Forms.MenuItem menuItem9;
-        private System.Windows.Forms.MenuItem menuItem11;
+        private System.Windows.Forms.MenuItem _menu_MI;
+        private System.Windows.Forms.MenuItem _cruiseInfo_MI;
+        private System.Windows.Forms.MenuItem _deviceInfo_MI;
+        private System.Windows.Forms.MenuItem _utilities_MI;
+        private System.Windows.Forms.MenuItem _about_MI;
+        private System.Windows.Forms.MenuItem _backup_MI;
+        private System.Windows.Forms.MenuItem _addPopulation_MI;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox _fileNameTB;
@@ -277,6 +263,7 @@ namespace FSCruiser.WinForms
         private System.Windows.Forms.MenuItem _manageCruisersMI;
         private System.Windows.Forms.MenuItem _dataEntryMI;
         private System.Windows.Forms.Panel _strataView;
+        private System.Windows.Forms.MenuItem _recentFiles_MI;
 
     }
 }

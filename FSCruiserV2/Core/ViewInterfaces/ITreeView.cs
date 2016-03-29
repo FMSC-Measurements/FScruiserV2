@@ -23,8 +23,5 @@ namespace FSCruiser.Core.ViewInterfaces
 
         void UpdateSpeciesColumn(TreeVM tree);
         void UpdateSampleGroupColumn(TreeVM tree);
-
-        
-
     }
 }

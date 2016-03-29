@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using System.ComponentModel;
 using System.Threading;
-using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
@@ -99,7 +100,7 @@ namespace FSCruiser.Core.Models
             //extrapolate sample group
             if (knownStratum != null && assumedSG == null)//if we have a stratum but no sample group, pick the first one
             {
-                List<SampleGroupVM> samplegroups = DAL.Read<SampleGroupVM>("WHERE Stratum_CN = ?", (object)knownStratum.Stratum_CN);
+                List<SampleGroupVM> samplegroups = DAL.From<SampleGroupVM>().Where("Stratum_CN = ?").Read(knownStratum.Stratum_CN).ToList();
                 if (samplegroups.Count == 1)
                 {
                     assumedSG = samplegroups[0];

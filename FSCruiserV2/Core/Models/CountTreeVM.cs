@@ -4,7 +4,7 @@ using System.Text;
 using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
 using CruiseDAL;
-using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {

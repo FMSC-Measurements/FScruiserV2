@@ -6,7 +6,7 @@ using FSCruiser.Core.Models;
 
 namespace FSCruiser.Core.ViewInterfaces
 {
-    public interface IDataEntryView
+    public interface IDataEntryView : IView
     {
         IDataEntryPage FocusedLayout { get; }
         List<IDataEntryPage> Layouts { get; }

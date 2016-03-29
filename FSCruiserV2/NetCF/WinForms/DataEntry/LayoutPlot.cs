@@ -42,27 +42,22 @@ namespace FSCruiser.WinForms.DataEntry
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutPlot));
+            this.components = new System.ComponentModel.Container();            
             this._plotNavPanel = new System.Windows.Forms.Panel();
-            //this._BS_Plots = new System.Windows.Forms.BindingSource(this.components);
             this._plotSelectCB = new System.Windows.Forms.ComboBox();
             this._nextPlotButton = new FMSC.Controls.Mobile.ButtonPanel();
-            this._imageList = new System.Windows.Forms.ImageList();
+            
             this._gotoLastPlotButton = new FMSC.Controls.Mobile.ButtonPanel();
             this._addPlotButton = new FMSC.Controls.Mobile.ButtonPanel();
             this._deletePlotButton = new FMSC.Controls.Mobile.ButtonPanel();
             this._plotInfoButton = new FMSC.Controls.Mobile.ButtonPanel();
             this._prevPlotButton = new FMSC.Controls.Mobile.ButtonPanel();
             this._gotoFirstPlotButton = new FMSC.Controls.Mobile.ButtonPanel();
-            //this._BS_Trees = new System.Windows.Forms.BindingSource(this.components);
             this._dataGrid = new FMSC.Controls.EditableDataGrid();
             this._expandGridButton = new FMSC.Controls.Mobile.ButtonPanel();
             this._tallyListPanel = new System.Windows.Forms.Panel();
             this._BS_TDV = new System.Windows.Forms.BindingSource(this.components);
             this._plotNavPanel.SuspendLayout();
-            //((System.ComponentModel.ISupportInitialize)(this._BS_Plots)).BeginInit();
-            //((System.ComponentModel.ISupportInitialize)(this._BS_Trees)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._dataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._BS_TDV)).BeginInit();
             this.SuspendLayout();
@@ -81,46 +76,32 @@ namespace FSCruiser.WinForms.DataEntry
             this._plotNavPanel.Location = new System.Drawing.Point(0, 0);
             this._plotNavPanel.Name = "_plotNavPanel";
             this._plotNavPanel.Size = new System.Drawing.Size(240, 22);
-            //// 
-            //// _BS_Plots
-            //// 
-            //this._BS_Plots.DataSource = typeof(FSCruiserV2.Logic.PlotVM);
-            //this._BS_Plots.CurrentChanged += new System.EventHandler(this._BS_Plots_CurrentChanged);
             // 
             // _plotSelectCB
             // 
-            //this._plotSelectCB.DataSource = this._BS_Plots;
             this._plotSelectCB.Dock = System.Windows.Forms.DockStyle.Fill;
             this._plotSelectCB.Location = new System.Drawing.Point(55, 0);
             this._plotSelectCB.Name = "_plotSelectCB";
-            this._plotSelectCB.Size = new System.Drawing.Size(61, 22);
+            this._plotSelectCB.Size = new System.Drawing.Size(61, 23);
             this._plotSelectCB.TabIndex = 2;
             // 
             // _nextPlotButton
             // 
             this._nextPlotButton.Dock = System.Windows.Forms.DockStyle.Right;
             this._nextPlotButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular);
-            this._nextPlotButton.ImageIndex = 2;
-            this._nextPlotButton.ImageList = this._imageList;
+            
             this._nextPlotButton.Location = new System.Drawing.Point(116, 0);
             this._nextPlotButton.Name = "_nextPlotButton";
             this._nextPlotButton.Size = new System.Drawing.Size(27, 22);
             this._nextPlotButton.TabIndex = 6;
             this._nextPlotButton.Click += new System.EventHandler(this._nextPlotButton_Click);
-            this._imageList.Images.Clear();
-            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource"))));
-            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource1"))));
-            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource2"))));
-            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource3"))));
-            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource4"))));
-            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource5"))));
+            
             // 
             // _gotoLastPlotButton
             // 
             this._gotoLastPlotButton.Dock = System.Windows.Forms.DockStyle.Right;
             this._gotoLastPlotButton.Font = new System.Drawing.Font("Courier New", 14F, System.Drawing.FontStyle.Bold);
-            this._gotoLastPlotButton.ImageIndex = 4;
-            this._gotoLastPlotButton.ImageList = this._imageList;
+            
             this._gotoLastPlotButton.Location = new System.Drawing.Point(143, 0);
             this._gotoLastPlotButton.Name = "_gotoLastPlotButton";
             this._gotoLastPlotButton.Size = new System.Drawing.Size(28, 22);
@@ -164,8 +145,7 @@ namespace FSCruiser.WinForms.DataEntry
             // 
             this._prevPlotButton.Dock = System.Windows.Forms.DockStyle.Left;
             this._prevPlotButton.Font = new System.Drawing.Font("Courier New", 10F, System.Drawing.FontStyle.Bold);
-            this._prevPlotButton.ImageIndex = 1;
-            this._prevPlotButton.ImageList = this._imageList;
+            
             this._prevPlotButton.Location = new System.Drawing.Point(28, 0);
             this._prevPlotButton.Name = "_prevPlotButton";
             this._prevPlotButton.Size = new System.Drawing.Size(27, 22);
@@ -176,18 +156,12 @@ namespace FSCruiser.WinForms.DataEntry
             // 
             this._gotoFirstPlotButton.Dock = System.Windows.Forms.DockStyle.Left;
             this._gotoFirstPlotButton.Font = new System.Drawing.Font("Courier New", 14F, System.Drawing.FontStyle.Bold);
-            this._gotoFirstPlotButton.ImageIndex = 5;
-            this._gotoFirstPlotButton.ImageList = this._imageList;
+            
             this._gotoFirstPlotButton.Location = new System.Drawing.Point(0, 0);
             this._gotoFirstPlotButton.Name = "_gotoFirstPlotButton";
             this._gotoFirstPlotButton.Size = new System.Drawing.Size(28, 22);
             this._gotoFirstPlotButton.TabIndex = 0;
             this._gotoFirstPlotButton.Click += new System.EventHandler(this._gotoFirstPlotButton_Click);
-            //// 
-            //// _BS_Trees
-            //// 
-            //this._BS_Trees.DataSource = typeof(FSCruiserV2.Logic.TreeVM);
-            //this._BS_Trees.CurrentChanged += new System.EventHandler(this._BS_Trees_CurrentChanged);
             // 
             // _dataGrid
             // 
@@ -201,8 +175,7 @@ namespace FSCruiser.WinForms.DataEntry
             // 
             this._expandGridButton.Dock = System.Windows.Forms.DockStyle.Bottom;
             this._expandGridButton.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular);
-            this._expandGridButton.ImageIndex = -1;
-            this._expandGridButton.ImageList = this._imageList;
+            
             this._expandGridButton.Location = new System.Drawing.Point(0, 170);
             this._expandGridButton.Name = "_expandGridButton";
             this._expandGridButton.Size = new System.Drawing.Size(240, 15);
@@ -232,8 +205,6 @@ namespace FSCruiser.WinForms.DataEntry
             this.Name = "LayoutPlot";
             this.Size = new System.Drawing.Size(240, 245);
             this._plotNavPanel.ResumeLayout(false);
-            //((System.ComponentModel.ISupportInitialize)(this._BS_Plots)).EndInit();
-            //((System.ComponentModel.ISupportInitialize)(this._BS_Trees)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._dataGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._BS_TDV)).EndInit();
             this.ResumeLayout(false);
@@ -259,18 +230,18 @@ namespace FSCruiser.WinForms.DataEntry
         private System.Windows.Forms.BindingSource _BS_TDV;
         #endregion
 
-        private bool _viewLoading = true;
+        bool _viewLoading = true;
         //private bool _disableCheckPlot = false;
-        private const int SUB_POP_BUTTON_WIDTH = 48;
-        private DataEntryMode _mode;
-        //private bool _changingTree = false;
-        private EditableComboBoxColumn _speciesColumn;
-        private EditableComboBoxColumn _sgColumn;
-        private EditableTextBoxColumn _treeNumberColumn;
-        private EditableComboBoxColumn _initialsColoumn;
-        private DataGridButtonColumn _logsColumn;
-        private EditableTextBoxColumn _kpiColumn;
-        private DataGridTableStyle _tableStyle; 
+        const int SUB_POP_BUTTON_WIDTH = 48;
+
+        ImageList _imageList;
+        EditableComboBoxColumn _speciesColumn;
+        EditableComboBoxColumn _sgColumn;
+        EditableTextBoxColumn _treeNumberColumn;
+        EditableComboBoxColumn _initialsColoumn;
+        DataGridButtonColumn _logsColumn;
+        EditableTextBoxColumn _kpiColumn;
+        DataGridTableStyle _tableStyle; 
         //private String[] _visableFields;
 
 
@@ -280,46 +251,10 @@ namespace FSCruiser.WinForms.DataEntry
         //public static readonly string DEFLATE_GRID_BUTTON_TEXT = "";//"<6><6><6>";//"▲ ▲ ▲";
         //public static readonly TreeDefaultValueDO[] EMPTY_SPECIES_LIST = new TreeDefaultValueDO[] { };
 
-        public IApplicationController AppController { get { return this.ViewLogicController.Controller; } }
-        public FormDataEntryLogic DataEntryController { get { return this.ViewLogicController.DataEntryController; } }
-
-        public LayoutPlotLogic ViewLogicController { get; set; }
-        public bool ViewLoading { get { return this._viewLoading; } }
-
-        //public StratumVM StratumInfo { get { return this.ViewLogicController.StratumInfo; } }
-        public bool HotKeyEnabled 
-        {
-            get
-            {
-                return !this._isGridExpanded;
-            }
-        }
-        public Dictionary<char, CountTreeVM> HotKeyLookup 
-        {
-            get
-            {
-                return this.ViewLogicController.Stratum.HotKeyLookup;
-            }
-             
-        }
-
-        public IList<TreeVM> Trees
-        {
-            get
-            {
-                return this.ViewLogicController.CurrentPlotTreeList;
-            }
-        }
-
-        public bool UserCanAddTrees
-        {
-            get { return this.ViewLogicController.UserCanAddTrees; }
-            set { this.ViewLogicController.UserCanAddTrees = value; }
-        }
-
-        private ImageList _imageList;
-        private bool _isGridExpanded = false;
         
+        DataEntryMode _mode;
+        
+        bool _isGridExpanded = false;        
         public bool IsGridExpanded
         {
             get
@@ -351,15 +286,16 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
+        public IApplicationController AppController { get { return this.ViewLogicController.Controller; } }
+        public FormDataEntryLogic DataEntryController { get { return this.ViewLogicController.DataEntryController; } }
+        public LayoutPlotLogic ViewLogicController { get; set; }
+
         public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, PlotStratum stratum, InputPanel sip)
         {
-            //this.HotKeyLookup = new Dictionary<char, CountTreeDO>();
-
-            //this.DataEntryController = dataEntryController;
-            //this.StratumInfo = stInfo;
-            //this.Controller = controller;
             this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController, dataEntryController.ViewController);
+            
             InitializeComponent();
+            InitializePlotNavIcons();
 
 
             //Setup Plot Nav Bar
@@ -370,9 +306,6 @@ namespace FSCruiser.WinForms.DataEntry
             this._expandGridButton.ButtonImageLayout = ImageLayout.Tile;
             this._nextPlotButton.ButtonImageLayout = ImageLayout.Zoom;
             this._gotoLastPlotButton.ButtonImageLayout = ImageLayout.Zoom;
-            //this._addPlotButton.ButtonImageLayout = ImageLayout.Tile;
-            //this._deletePlotButton.ButtonImageLayout = ImageLayout.Zoom;
-            //this._plotInfoButton.ButtonImageLayout = ImageLayout.Zoom;
             this._prevPlotButton.ButtonImageLayout = ImageLayout.Zoom;
             this._gotoFirstPlotButton.ButtonImageLayout = ImageLayout.Zoom;
 
@@ -426,31 +359,57 @@ namespace FSCruiser.WinForms.DataEntry
             
         }
 
-        public void SaveCounts()
+        void InitializePlotNavIcons()
         {
-            this.ViewLogicController.SaveCounts();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutPlot));
+            this._imageList = new System.Windows.Forms.ImageList();
+
+            this._imageList.Images.Clear();
+            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource"))));
+            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource1"))));
+            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource2"))));
+            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource3"))));
+            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource4"))));
+            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource5"))));
+
+            this._gotoLastPlotButton.ImageIndex = 4;
+            this._gotoLastPlotButton.ImageList = this._imageList;
+
+            this._prevPlotButton.ImageIndex = 1;
+            this._prevPlotButton.ImageList = this._imageList;
+
+            this._nextPlotButton.ImageIndex = 2;
+            this._nextPlotButton.ImageList = this._imageList;
+
+            this._gotoFirstPlotButton.ImageIndex = 5;
+            this._gotoFirstPlotButton.ImageList = this._imageList;
+
+            this._expandGridButton.ImageIndex = -1;
+            this._expandGridButton.ImageList = this._imageList;
         }
 
-        public bool TrySaveCounts()
+        #region event handlers
+
+        void _expandGridButton_Click(object sender, EventArgs e)
         {
-            if (!this.ViewLogicController.TrySaveCounts())
+            IsGridExpanded = !IsGridExpanded;
+        }
+
+        protected void LogsClicked(ButtonCellClickEventArgs e)
+        {
+            TreeVM tree;
+
+            try
             {
-                MessageBox.Show("Stratum:" + this.ViewLogicController.Stratum.Code
-                    + " Unable to save Counts");
-                return false;
+                tree = this.ViewLogicController.CurrentTree;
             }
-            return true;
-        }
+            catch { return; }
+            if (tree == null) { return; }
 
-        //protected void RefreshColumnReferences()
-        //{
-        //    _speciesColumn = _tableStyle.GridColumnStyles["TreeDefaultValue"] as EditableComboBoxColumn;
-        //    _sgColumn = _tableStyle.GridColumnStyles["SampleGroup"] as EditableComboBoxColumn;
-        //    _treeNumberColumn = _tableStyle.GridColumnStyles["TreeNumber"] as EditableTextBoxColumn;
-        //    _initialsColoumn = _tableStyle.GridColumnStyles["Initials"] as EditableComboBoxColumn;
-        //    _logsColumn = _tableStyle.GridColumnStyles["LogCount"] as DataGridButtonColumn;
-        //    _kpiColumn = _tableStyle.GridColumnStyles["KPI"] as EditableTextBoxColumn;
-        //}
+            //this.LogsView.ShowDialog(tree);
+            //this.Controller.ViewController.ShowLogsView(this.StratumInfo, tree);
+            this.DataEntryController.ShowLogs(tree);
+        }
 
         private void _dataGrid_CellValidating(object sender, EditableDataGridCellValidatingEventArgs e)
         {
@@ -460,7 +419,7 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 tree = this.ViewLogicController.CurrentTree;
             }
-            catch 
+            catch
             {
                 e.Cancel = true;
                 return;
@@ -468,7 +427,9 @@ namespace FSCruiser.WinForms.DataEntry
 
             if (e.Column == _sgColumn)
             {
-                this.ViewLogicController.DataEntryController.HandleSampleGroupChanging(tree, e.Value as SampleGroupDO, out cancel);
+                var newSG = e.Value as SampleGroupDO;
+                tree.HandleSampleGroupChanging(newSG, this);
+
                 //this.HandleSampleGroupChanging(tree, e.Value as SampleGroupDO, out cancel);
             }
             else if (e.Column == _speciesColumn)
@@ -480,8 +441,13 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 try
                 {
-                    long treeNumber = (long)e.Value;
-                    this.ViewLogicController.HandleTreeNumberChanging(treeNumber, out cancel);
+                    long newTreeNum = (long)e.Value;
+                    if (tree.TreeNumber != newTreeNum
+                    && !this.ViewLogicController.CurrentPlot.IsTreeNumberAvalible(newTreeNum))
+                    {
+                        this.ShowMessage("Tree Number already exists");
+                        e.Cancel = true;
+                    }
                 }
                 catch
                 {
@@ -502,14 +468,13 @@ namespace FSCruiser.WinForms.DataEntry
             if (tree == null || e.Column == null) { return; }
             if (e.Column == _sgColumn)
             {
-                this.ViewLogicController.DataEntryController.HandleSampleGroupChanged(this, tree);
-                //this.HandleSampleGroupChanged(tree);
+                tree.HandleSampleGroupChanged();
+                this.UpdateSpeciesColumn(tree);
             }
             else if (e.Column == _speciesColumn)
             {
-
-                this.ViewLogicController.DataEntryController.HandleSpeciesChanged(tree, _speciesColumn.EditComboBox.SelectedItem as TreeDefaultValueDO);
-                //this.HandleSpeciesChanged(tree, col.EditComboBox.SelectedItem as TreeDefaultValueDO);
+                var newTDV = _speciesColumn.EditComboBox.SelectedItem as TreeDefaultValueDO;
+                this.ViewLogicController.DataEntryController.HandleSpeciesChanged(tree, newTDV);
             }
         }
 
@@ -522,149 +487,136 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-
-        public void HandleLoad()
+        //ocures during a FIX or PNT cruise, when user clicks a Sample Group.
+        //Expands a list of species in the sample group
+        void sgButton_Click(object sender, EventArgs e)
         {
-            _viewLoading = false;
-            this.ViewLogicController.HandleViewLoad();
-            //this.RefreshColumnReferences();
-            //_BS_Plots.DataSource = this.StratumInfo.Plots;
-            
+            Button sgButton = (Button)sender;
+            Panel spContainer = (Panel)sgButton.Tag;
+            spContainer.Visible = !spContainer.Visible;
+
+            //Controller.OnTally();
         }
 
-        protected void LogsClicked(ButtonCellClickEventArgs e)
+        void SettingsButton_Click(object sender, EventArgs e)
         {
-            TreeVM tree;
+            TallyRow row = (TallyRow)sender;
+            CountTreeVM count = row.Count;
 
-            try
+            this.ViewLogicController.SavePlotTrees();
+            AppController.ViewController.ShowTallySettings(count);
+
+        }
+
+        void SpeciesButton_Click(object sender, EventArgs e)
+        {
+            if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
+
+            Button button = (Button)sender;
+            SubPop subPop = (SubPop)button.Tag;
+
+            this.ViewLogicController.AddTree(subPop.SG, subPop.TDV);
+        }
+
+
+        void TallyButton_Click(object sender, EventArgs e)
+        {
+            if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
+
+            Button button = (Button)sender;
+            //TallyRow row = (TallyRow)button.Parent;
+            CountTreeVM count = (CountTreeVM)button.Tag;
+            this.ViewLogicController.OnTally(count);
+        }
+
+        #region plot nav events
+        void _gotoFirstPlotButton_Click(object sender, EventArgs e)
+        {
+            this.ViewLogicController.SelectFirstPlot();
+        }
+
+        void _prevPlotButton_Click(object sender, EventArgs e)
+        {
+            this.ViewLogicController.SelectPreviousPlot();
+
+        }
+
+        void _nextPlotButton_Click(object sender, EventArgs e)
+        {
+            this.ViewLogicController.SelectNextPlot();
+        }
+
+        void _gotoLastPlotButton_Click(object sender, EventArgs e)
+        {
+            this.ViewLogicController.SelectLastPlot();
+        }
+
+        private void _addPlotButton_Click(object sender, EventArgs e)
+        {
+            this.ViewLogicController.HandleAddPlot();
+            this.IsGridExpanded = false;
+        }
+
+        private void _deletePlotButton_Click(object sender, EventArgs e)
+        {
+            this.ViewLogicController.HandleDeletePlot();
+        }
+
+        private void _plotInfoButton_Click(object sender, EventArgs e)
+        {
+            this.ViewLogicController.ShowCurrentPlotInfo();
+        }
+        #endregion
+
+        #endregion
+
+
+        #region IPlotLayout
+
+        public bool AskContinueOnCurrnetPlotTreeError()
+        {
+            return this.AppController.ViewController.AskYesNo("Error(s) found on tree records in current plot, Would you like to continue?", "Continue?", MessageBoxIcon.Question, true);
+        }
+
+        public void ShowNoPlotSelectedMessage()
+        {
+            MessageBox.Show("No Plot Selected");
+        }
+
+        public void ShowNullPlotMessage()
+        {
+            MessageBox.Show("Can't perform action on null plot");
+        }
+
+        public void ShowLimitingDistanceDialog()
+        {
+            if (this.ViewLogicController.CurrentPlot == null)
             {
-                tree = this.ViewLogicController.CurrentTree;
+                ShowNoPlotSelectedMessage();
+                return;
             }
-            catch { return; }
-            if (tree == null) { return; }
 
-            //this.LogsView.ShowDialog(tree);
-            //this.Controller.ViewController.ShowLogsView(this.StratumInfo, tree);
-            this.DataEntryController.ShowLogs(tree);
-        }
-
-        public void HandleStratumLoaded(Control container)
-        {
-            //do nothing
-            return;
-        }
-
-        public void HandleEnableLogGradingChanged()
-        {
-            if (_logsColumn == null) { return; }
-            if ((_logsColumn.Width > 0) == this.AppController.ViewController.EnableLogGrading) { return; }
-            if (this.AppController.ViewController.EnableLogGrading)
+            TreeVM tree = null;
+            //see if the user is in the DBH column 
+            if (this._dataGrid.CurrentCollumn != null
+                && this._dataGrid.CurrentCollumn.MappingName == "DBH")
             {
-                _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
-            }
-            else
-            {
-                _logsColumn.Width = -1;
-            }
-        }
-
-        public void HandleCruisersChanged()
-        {
-            if (this._initialsColoumn != null)
-            {
-                this._initialsColoumn.DataSource = this.AppController.Settings.Cruisers.ToArray();
-            }
-        }
-
-
-        public TreeVM UserAddTree()
-        {            
-            return this.ViewLogicController.UserAddTree();      
-        }
-
-        public void MakeSGList(List<SampleGroupVM> list, Panel container)
-        {
-            if (list.Count == 1)
-            {
-                SampleGroupVM sg = list[0];
-
-                if (sg.TreeDefaultValues.IsPopulated == false)
+                //is a tree selected and if so grab it and take its dbh
+                TreeVM curTree = this.ViewLogicController.CurrentTree;
+                if (curTree != null && curTree.DBH == 0)
                 {
-                    sg.TreeDefaultValues.Populate();
-                }
-                foreach (TreeDefaultValueDO tdv in sg.TreeDefaultValues)
-                {
-                    SubPop subPop = new SubPop(sg, tdv);
-                    MakeTallyRow(container, subPop);
+                    tree = curTree;
                 }
             }
-            else
-            {
-                foreach (SampleGroupVM sg in list)
-                {
-                    Button sgButton = new Button();
-                    Panel spContainer = new Panel();
-                    
-                    if (sg.TreeDefaultValues.IsPopulated == false)
-                    {
-                        sg.TreeDefaultValues.Populate();
-                    }
-                    foreach (TreeDefaultValueDO tdv in sg.TreeDefaultValues)
-                    {
-                        SubPop subPop = new SubPop(sg, tdv);
-                        MakeTallyRow(spContainer, subPop);
-                    }
-                    
-                    spContainer.Parent = container;
-                    spContainer.Dock = DockStyle.Left;
-                    spContainer.Width = (SUB_POP_BUTTON_WIDTH * sg.TreeDefaultValues.Count) + 10;
-                    spContainer.Visible = false;
 
-                    sgButton.Text = sg.Code;
-                    sgButton.Tag = spContainer;
-                    sgButton.Parent = container;
-                    sgButton.BackColor = System.Drawing.SystemColors.ControlDark;
-                    sgButton.Dock = DockStyle.Left;
-                    sgButton.Click += new EventHandler(sgButton_Click);
-                }
-            }
+            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot, tree);
         }
 
-        public bool HandleHotKeyFirst(char key)
+        public void HandleCurrentTreeChanged(TreeVM tree)
         {
-            //TODO handle non-tally hot keys such as species for single stage stuff
-
-            return false;
+            UpdateSampleGroupColumn(tree);
+            UpdateSpeciesColumn(tree);
         }
-
-        public bool HandleEscKey()
-        {
-            if (_viewLoading) { return false; }
-            IsGridExpanded = !IsGridExpanded;
-            return true;
-            //if (!this.IsGridExpanded)
-            //{
-            //    this.IsGridExpanded = true;
-            //    return true;
-            //}
-            //return false;
-            
-        }
-
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
-            base.OnKeyUp(e);
-            if (e.Handled == true) { return; }
-            char key = (char)e.KeyValue;
-            if (_viewLoading) { return; }
-            e.Handled = this.ViewLogicController.DataEntryController.ProcessHotKey(key, this);
-        }
-
-        private void _expandGridButton_Click(object sender, EventArgs e)
-        {
-            IsGridExpanded = !IsGridExpanded;
-        }
-
 
         public void RefreshTreeView(PlotVM currentPlot)
         {
@@ -703,10 +655,209 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.DataSource = treeBS;
         }
 
+        public void ViewEndEdit()
+        {
+            this._dataGrid.EndEdit();
+        }
+
+        #endregion
 
 
+        #region IDataEntryPage
+
+        public bool ViewLoading { get { return this._viewLoading; } }
+
+        public void HandleLoad()
+        {
+            _viewLoading = false;
+            this.ViewLogicController.HandleViewLoad();
+            //this.RefreshColumnReferences();
+            //_BS_Plots.DataSource = this.StratumInfo.Plots;
+
+        }
+
+        public bool PreviewKeypress(string key)
+        {
+            if (_viewLoading) { return false; }
+            switch (key)
+            {
+                case "Add":
+                    {
+                        this._addPlotButton_Click(null, null);
+                        return true;
+                    }
+                case "Escape":
+                    {
+                        IsGridExpanded = !IsGridExpanded;
+                        return true;
+                    }
+                default:
+                    return false;
+            }
+        }
+
+        #endregion
 
 
+        #region ITreeView 
+        public bool UserCanAddTrees
+        {
+            get { return this.ViewLogicController.UserCanAddTrees; }
+            set { this.ViewLogicController.UserCanAddTrees = value; }
+        }
+
+        public IList<TreeVM> Trees
+        {
+            get
+            {
+                var curPlot = this.ViewLogicController.CurrentPlot;
+                if (curPlot != null)
+                {
+                    return curPlot.Trees;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public void ShowHideErrorCol()
+        {
+            DataGridAdjuster.ShowHideErrorCol(this._dataGrid);
+        }
+
+        public void HandleEnableLogGradingChanged()
+        {
+            if (_logsColumn == null) { return; }
+            if ((_logsColumn.Width > 0) == this.AppController.ViewController.EnableLogGrading) { return; }
+            if (this.AppController.ViewController.EnableLogGrading)
+            {
+                _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
+            }
+            else
+            {
+                _logsColumn.Width = -1;
+            }
+        }
+
+        public void HandleCruisersChanged()
+        {
+            if (this._initialsColoumn != null)
+            {
+                this._initialsColoumn.DataSource = this.AppController.Settings.Cruisers.ToArray();
+            }
+        }
+
+        public void DeleteRow()
+        {
+
+            this.ViewLogicController.HandleDeleteCurrentTree();
+        }
+
+        public void EndEdit()
+        {
+            this.ViewLogicController.EndEdit();
+        }
+
+        public void MoveLast()
+        {
+            this.ViewLogicController.SelectLastTree();
+        }
+
+        public void MoveHomeField()
+        {
+            this._dataGrid.MoveFirstEmptyCell();
+        }
+
+        public TreeVM UserAddTree()
+        {
+            return this.ViewLogicController.UserAddTree();
+        }
+
+        public void UpdateSpeciesColumn(TreeVM tree)
+        {
+            if (_speciesColumn != null)
+            {
+                _speciesColumn.DataSource = tree.ReadValidTDVs();
+            }
+        }
+
+        public void UpdateSampleGroupColumn(TreeVM tree)
+        {
+            if (_sgColumn != null)
+            {
+                _sgColumn.DataSource = tree.ReadValidSampleGroups();
+            }
+        }
+        #endregion
+
+
+        #region ITallyView
+        public Dictionary<char, CountTreeVM> HotKeyLookup
+        {
+            get
+            {
+                return this.ViewLogicController.Stratum.HotKeyLookup;
+            }
+
+        }
+
+        public bool HotKeyEnabled
+        {
+            get
+            {
+                return !this._isGridExpanded;
+            }
+        }
+
+        public void MakeSGList(List<SampleGroupVM> list, Panel container)
+        {
+            if (list.Count == 1)
+            {
+                SampleGroupVM sg = list[0];
+
+                if (sg.TreeDefaultValues.IsPopulated == false)
+                {
+                    sg.TreeDefaultValues.Populate();
+                }
+                foreach (TreeDefaultValueDO tdv in sg.TreeDefaultValues)
+                {
+                    SubPop subPop = new SubPop(sg, tdv);
+                    MakeTallyRow(container, subPop);
+                }
+            }
+            else
+            {
+                foreach (SampleGroupVM sg in list)
+                {
+                    Button sgButton = new Button();
+                    Panel spContainer = new Panel();
+
+                    if (sg.TreeDefaultValues.IsPopulated == false)
+                    {
+                        sg.TreeDefaultValues.Populate();
+                    }
+                    foreach (TreeDefaultValueDO tdv in sg.TreeDefaultValues)
+                    {
+                        SubPop subPop = new SubPop(sg, tdv);
+                        MakeTallyRow(spContainer, subPop);
+                    }
+
+                    spContainer.Parent = container;
+                    spContainer.Dock = DockStyle.Left;
+                    spContainer.Width = (SUB_POP_BUTTON_WIDTH * sg.TreeDefaultValues.Count) + 10;
+                    spContainer.Visible = false;
+
+                    sgButton.Text = sg.Code;
+                    sgButton.Tag = spContainer;
+                    sgButton.Parent = container;
+                    sgButton.BackColor = System.Drawing.SystemColors.ControlDark;
+                    sgButton.Dock = DockStyle.Left;
+                    sgButton.Click += new EventHandler(sgButton_Click);
+                }
+            }
+        }
 
         public Control MakeTallyRow(Control container, SubPop subPop)
         {
@@ -751,142 +902,8 @@ namespace FSCruiser.WinForms.DataEntry
             row.Parent = container;
             row.Dock = DockStyle.Left;
 
-            
+
             return row;
-        }
-
-
-
-        
-        public bool AskContinueOnCurrnetPlotTreeError()
-        {
-            return this.AppController.ViewController.AskYesNo("Error(s) found on tree records in current plot, Would you like to continue?", "Continue?", MessageBoxIcon.Question, true);
-        }
-
-        public void ShowNoPlotSelectedMessage()
-        {
-            MessageBox.Show("No Plot Selected");
-        }
-
-        public void ShowNullPlotMessage()
-        {
-            MessageBox.Show("Can't perform action on null plot");
-        }
-
-        #region event handlers
-
-        //ocures during a FIX or PNT cruise, when user clicks a Sample Group.
-        //Expands a list of species in the sample group
-        void sgButton_Click(object sender, EventArgs e)
-        {
-            Button sgButton = (Button)sender;
-            Panel spContainer = (Panel)sgButton.Tag;
-            spContainer.Visible = !spContainer.Visible;
-
-            //Controller.OnTally();
-        }
-
-        void SettingsButton_Click(object sender, EventArgs e)
-        {
-            Button button = (Button)sender;
-
-            CountTreeVM count = (CountTreeVM)button.Tag;
-            this.ViewLogicController.SavePlotTrees();
-            AppController.ViewController.ShowTallySettings(count);            
-
-        }
-
-        void SpeciesButton_Click(object sender, EventArgs e)
-        {
-            if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
-
-            Button button = (Button)sender;
-            SubPop subPop = (SubPop)button.Tag;
-
-            this.ViewLogicController.AddTree(subPop.SG, subPop.TDV);
-        }
-
-
-        void TallyButton_Click(object sender, EventArgs e)
-        {
-            if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
-
-            Button button = (Button)sender;
-            //TallyRow row = (TallyRow)button.Parent;
-            CountTreeVM count = (CountTreeVM)button.Tag;
-            this.ViewLogicController.OnTally(count);
-        }
-
-        private void _gotoFirstPlotButton_Click(object sender, EventArgs e)
-        {
-            this.ViewLogicController.SelectFirstPlot();
-        }
-
-        private void _prevPlotButton_Click(object sender, EventArgs e)
-        {
-            this.ViewLogicController.SelectPreviousPlot();
-
-        }
-
-        private void _nextPlotButton_Click(object sender, EventArgs e)
-        {
-            this.ViewLogicController.SelectNextPlot();
-        }
-
-        private void _gotoLastPlotButton_Click(object sender, EventArgs e)
-        {
-            this.ViewLogicController.SelectLastPlot();
-        }
-
-        private void _addPlotButton_Click(object sender, EventArgs e)
-        {
-            this.ViewLogicController.HandleAddPlot();
-            this.IsGridExpanded = false;
-        }
-
-        private void _deletePlotButton_Click(object sender, EventArgs e)
-        {
-            this.ViewLogicController.HandleDeletePlot();
-        }
-
-        private void _plotInfoButton_Click(object sender, EventArgs e)
-        {
-            this.ViewLogicController.ShowCurrentPlotInfo();
-        }
-
-        #endregion
-
-
-        public void ViewEndEdit()
-        {
-            this._dataGrid.EndEdit();
-        }
-
-        public void EndEdit()
-        {
-            this.ViewLogicController.EndEdit();
-        }
-
-        public void HandleCurrentTreeChanged(TreeVM tree)
-        {
-            UpdateSampleGroupColumn(tree);
-            UpdateSpeciesColumn(tree);            
-        }
-
-        public void UpdateSpeciesColumn(TreeVM tree)
-        {
-            if (_speciesColumn != null)
-            {
-                _speciesColumn.DataSource = tree.ReadValidTDVs();
-            }
-        }
-
-        public void UpdateSampleGroupColumn(TreeVM tree)
-        {
-            if (_sgColumn != null)
-            {
-                _sgColumn.DataSource = tree.ReadValidSampleGroups();
-            }
         }
 
         public void OnTally(CountTreeVM count)
@@ -894,51 +911,28 @@ namespace FSCruiser.WinForms.DataEntry
             this.ViewLogicController.OnTally(count);
         }
 
-        public void DeleteRow()
+        public void HandleStratumLoaded(Control container)
         {
-
-            this.ViewLogicController.HandleDeleteCurrentTree();
+            //do nothing
+            return;
         }
 
-        public void MoveLast()
+        public void SaveCounts()
         {
-            this.ViewLogicController.SelectLastTree();
+            this.ViewLogicController.SaveCounts();
         }
 
-        public void MoveHomeField()
+        public bool TrySaveCounts()
         {
-            this._dataGrid.MoveFirstEmptyCell();
-        }
-
-        public void ShowHideErrorCol()
-        {
-            DataGridAdjuster.ShowHideErrorCol(this._dataGrid);
-        }
-
-        public void ShowLimitingDistanceDialog()
-        {
-            if (this.ViewLogicController.CurrentPlot == null)
+            if (!this.ViewLogicController.TrySaveCounts())
             {
-                ShowNoPlotSelectedMessage();
-                return;
+                MessageBox.Show("Stratum:" + this.ViewLogicController.Stratum.Code
+                    + " Unable to save Counts");
+                return false;
             }
-
-            TreeVM tree = null;
-            //see if the user is in the DBH column 
-            if (this._dataGrid.CurrentCollumn.MappingName == "DBH")
-            {
-                //is a tree selected and if so grab it and take its dbh
-                TreeVM curTree = this.ViewLogicController.CurrentTree;
-                if (curTree != null && curTree.DBH == 0)
-                {
-                    tree = curTree;
-                }
-            }
-
-            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot, tree);
+            return true;
         }
-
-
+        #endregion
 
     }
 }

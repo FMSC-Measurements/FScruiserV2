@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.DataObjects;
@@ -6,7 +7,7 @@ using System.ComponentModel;
 using CruiseDAL;
 using CruiseDAL.Schema;
 using System.Diagnostics;
-using FMSC.ORM.Core.EntityAttributes;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
@@ -67,7 +68,7 @@ namespace FSCruiser.Core.Models
         }
 
         [IgnoreField]
-        public long NextPlotTreeNum
+        public long HighestTreeNum
         {
             get
             {
@@ -131,28 +132,18 @@ namespace FSCruiser.Core.Models
         }
 
 
-        public void PopulateTreeData()
+        public void PopulateTrees()
         {
-            if (!_isTreeDataPopulated)
+            if (this._trees == null)
             {
-                List<TreeVM> tList = base.DAL.Read<TreeVM>("WHERE Stratum_CN = ? AND CuttingUnit_CN = ? AND Plot_CN = ? ORDER BY TreeNumber"
-                    , base.Stratum.Stratum_CN
+                List<TreeVM> tList = base.DAL.From<TreeVM>()
+                    .Where("Stratum_CN = ? AND CuttingUnit_CN = ? AND Plot_CN = ?")
+                    .OrderBy("TreeNumber")
+                    .Read(base.Stratum.Stratum_CN
                     , base.CuttingUnit.CuttingUnit_CN
-                    , base.Plot_CN);
+                    , base.Plot_CN).ToList();
                 this._trees = new BindingList<TreeVM>(tList);
                 //this._trees = tList;
-
-                //long? value = base.DAL.ExecuteScalar(String.Format("Select MAX(TreeNumber) FROM Tree WHERE Plot_CN = {0}", base.Plot_CN)) as long?;
-                //this.NextPlotTreeNum = (value.HasValue) ? (int)value.Value : 0;
-                _isTreeDataPopulated = true;
-            }
-        }
-
-        public void CheckDataState()//TODO perhaps there needs to be a better way to control the _isTreeDataPopulated state
-        {
-            if (this.Trees.Count > 0)
-            {
-                this._isTreeDataPopulated = true;
             }
         }
 
@@ -183,8 +174,9 @@ namespace FSCruiser.Core.Models
             //extrapolate sample group
             if (assumedSG == null)//if we have a stratum but no sample group, pick the first one
             {
-                List<SampleGroupVM> samplegroups = this.DAL.Read<SampleGroupVM>("WHERE Stratum_CN = ?", 
-                    this.Stratum.Stratum_CN);
+                List<SampleGroupVM> samplegroups = this.DAL.From<SampleGroupVM>()
+                    .Where("Stratum_CN = ?")
+                    .Read(this.Stratum.Stratum_CN).ToList();
                 if (samplegroups.Count == 1)
                 {
                     assumedSG = samplegroups[0];
@@ -222,7 +214,7 @@ namespace FSCruiser.Core.Models
             var newTree = this.CuttingUnit.CreateNewTreeEntryInternal(this.Stratum, sg, tdv, isMeasure);
 
             newTree.Plot = this;
-            newTree.TreeNumber = this.NextPlotTreeNum + 1;
+            newTree.TreeNumber = this.HighestTreeNum + 1;
             newTree.TreeCount = 1;
 
             return newTree;

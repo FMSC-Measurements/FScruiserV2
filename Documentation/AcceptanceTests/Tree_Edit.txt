@@ -1,0 +1,45 @@
+Feature: edit tree record
+
+Background:
+GIVEN the following units exist:
+    |code   |
+    |01     |
+AND the following strata exist
+    |code   |unit   |method |
+    |01     |01     |STR    |
+    |02     |01     |STR    |
+    |03     |01     |FIX    |
+
+AND the following sampleGroups exist
+    |code   |stratum    |TreeDefaults   |
+    |01     |01         |204 & 015      |
+    |02     |01         |108 & 122      |
+    |03     |02         |017 & 070      |
+    |04     |03         |A & B          |
+    |05     |03         |A & C          |    
+    
+AND the folling trees exist
+    |tree#  |stratum    |sampleGroup    |treeDefault    |
+    |1      |01         |01             |null           |
+    |2      |01         |null           |null           |
+    |3      |01         |02             |null           |
+    |4      |02         |03             |null           |
+    |5      |02         |null           |null           |
+    
+Senario: user changes tree number on a tree
+    GIVEN tree 1 is selected 
+    WHEN the tree number is set to 2
+    THEN the message "Tree Number already exists" is displayed
+    AND the tree number on the record is not changed
+    
+Senario: user changes the stratum on a tree
+    GIVEN the selected tree has a stratum 
+    WHEN the stratum is changed on the selected tree
+    THEN the message "You are changing the stratum of a tree, are you sure you want to do this?" is displayed
+    
+Senario: user changes the sampleGroup on a tree
+    GIVEN the selected tree has a sampleGroup selected
+    WHEN the sampleGroup is changed on the selected tree
+    THEN the message "You are changing the Sample Group of a tree, are you sure you want to do this?" is displayed
+    
+    

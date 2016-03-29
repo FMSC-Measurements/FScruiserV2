@@ -34,10 +34,14 @@ namespace FSCruiser.WinForms
         {
             this.Controller = controller;
             InitializeComponent();
+
+            this.Text = "FScruiser - " + FSCruiser.Core.Constants.FSCRUISER_VERSION;
+
             this.ClearNavPanel();
             
             this._dataEntryButton = this.AddNavButton("Data Entry", this.HandleDataEntryClick);
             this._dataEntryButton.Enabled = false;
+
             this.AddNavButton("Open Cruise File", this.HandleOpenCruiseFileClick);
 
             this._cuttingUnitSelectView.Controller = controller;
@@ -51,10 +55,9 @@ namespace FSCruiser.WinForms
             newNavButton.AutoSize = true;
             newNavButton.BackColor = System.Drawing.Color.Yellow;
             newNavButton.Dock = System.Windows.Forms.DockStyle.Top;
-            newNavButton.FlatAppearance.BorderColor = System.Drawing.Color.Gold;
-            newNavButton.FlatAppearance.BorderSize = 2;
-            newNavButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            //newNavButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            newNavButton.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
+            newNavButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Gold;
+            newNavButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             newNavButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             newNavButton.ForeColor = System.Drawing.SystemColors.ControlText;
             newNavButton.Location = new System.Drawing.Point(0, 0);
@@ -68,6 +71,30 @@ namespace FSCruiser.WinForms
             return newNavButton;
         }
 
+        public void HandleFileStateChanged()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(HandleFileStateChanged));
+            }
+            else
+            {
+
+                if (Controller._cDal != null && Controller._cDal.Exists)
+                {
+                    var fileName = System.IO.Path.GetFileName(Controller._cDal.Path);
+                    this._dataEntryButton.Enabled = true;
+                    Text = "FScruiser - " + fileName;
+                }
+                else
+                {
+                    this._dataEntryButton.Enabled = false;
+                    Text = FSCruiser.Core.Constants.APP_TITLE;
+                }
+                this.CuttingUnitSelectView.OnCuttingUnitsChanged();
+            }
+        }
+
         public void ClearNavPanel()
         {
             this.ViewNavPanel.Controls.Clear();
@@ -75,8 +102,7 @@ namespace FSCruiser.WinForms
 
         public void HandleOpenCruiseFileClick(Object sender, EventArgs e)
         {
-            this._dataEntryButton.Enabled = this.Controller.OpenFile();
-            this.CuttingUnitSelectView.OnCuttingUnitsChanged();
+            this.Controller.OpenFile();
         }
 
         public void HandleDataEntryClick(Object sender, EventArgs e)
@@ -92,6 +118,38 @@ namespace FSCruiser.WinForms
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Controller.ViewController.ShowAbout();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void fileToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
+        {
+            recentToolStripMenuItem.DropDownItems.Clear();
+
+            ToolStripMenuItem[] items =
+                Controller.Settings.RecentProjects.Select(
+                r => new ToolStripMenuItem(r.ProjectName, null, recentFileSelected)
+                    {
+                        ToolTipText = r.FilePath
+                    }
+                ).ToArray();
+
+            recentToolStripMenuItem.DropDownItems.AddRange(items);
+        }
+
+        private void recentFileSelected(object sender, EventArgs e)
+        {
+            var tsmi = sender as ToolStripMenuItem;
+            if (tsmi == null) { return; }
+            if (sender != null)
+            {
+                var path = tsmi.ToolTipText;
+
+                this.Controller.OpenFile(tsmi.ToolTipText);
+            }
         }
     }
 }
