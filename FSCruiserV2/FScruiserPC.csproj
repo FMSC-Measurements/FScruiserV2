@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9568C413-05B2-4672-AD7B-E4101537AB26}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -112,6 +112,18 @@
     <Compile Include="Core\Workers\Worker.cs" />
     <Compile Include="Core\Workers\WorkerExceptionThrownEventArgs.cs" />
     <Compile Include="Core\Workers\WorkerProgressChangedEventArgs.cs" />
+    <Compile Include="WinForms.Common\FixCntTallyControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCntTallyControl.Designer.cs">
+      <DependentUpon>FixCntTallyControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCntTallyRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCntTallyRow.Designer.cs">
+      <DependentUpon>FixCntTallyRow.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms.Common\FormCruiserSelection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -220,6 +232,9 @@
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="WinForms\ViewController.PC.cs" />
     <Compile Include="Properties\AssemblyInfo.PC.cs" />
+    <EmbeddedResource Include="WinForms.Common\FixCntTallyRow.resx">
+      <DependentUpon>FixCntTallyRow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormCruiserSelection.resx">
       <DependentUpon>FormCruiserSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
