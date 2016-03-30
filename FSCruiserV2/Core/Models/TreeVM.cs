@@ -2,6 +2,7 @@
 using CruiseDAL;
 using FMSC.ORM.Core;
 using System;
+using System.Linq;
 using FMSC.ORM.EntityModel.Attributes;
 using FSCruiser.Core.ViewInterfaces;
 using System.Collections.Generic;
@@ -18,6 +19,19 @@ namespace FSCruiser.Core.Models
         public TreeVM()
             : base()
         {
+        }
+
+        public new CuttingUnitVM CuttingUnit
+        {
+            get
+            {
+                return (CuttingUnitVM)base.CuttingUnit;
+            }
+            set
+            {
+                base.CuttingUnit = value;
+            }
+
         }
 
         [IgnoreField]
@@ -91,6 +105,14 @@ namespace FSCruiser.Core.Models
         //        }
         //    }
         //}
+
+        public override CuttingUnitDO GetCuttingUnit()
+        {
+            if (DAL == null) { return null; }
+            return DAL.From<CuttingUnitVM>().Where("CuttingUnit_CN = ?")
+                .Read(this.CuttingUnit_CN).FirstOrDefault();
+        }
+
 
         public override StratumDO GetStratum()
         {
@@ -274,12 +296,16 @@ namespace FSCruiser.Core.Models
 
         public int GetDefaultLogCount()
         {
-            int regionCode = 0;
-            Dictionary<int, RegionLogInfo> logInfo = new Dictionary<int, RegionLogInfo>();
+            var retionLogInfo = this.CuttingUnit.Sale.GetRegionLogInfo();
 
-            if (logInfo.ContainsKey(regionCode))
-                return logInfo[regionCode].GetLogRule(TreeDefaultValue.FIAcode.ToString()).GetDefaultLogHeight(TotalHeight, DBH);
-            
+            if (retionLogInfo != null)
+            {
+                var logRule = retionLogInfo.GetLogRule(this.Species);
+                if (logRule != null)
+                {
+                    return logRule.GetDefaultLogHeight(this.TotalHeight, this.DBH);
+                }
+            }
             return 0;
         }
 
