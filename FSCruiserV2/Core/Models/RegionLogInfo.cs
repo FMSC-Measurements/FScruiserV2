@@ -9,17 +9,17 @@ namespace FSCruiser.Core.Models
     {
         public int RegionCode { get; private set; }
 
-        private Dictionary<long, Guid> SpeciesToRuleCodes;
+        private Dictionary<String, Guid> SpeciesToRuleCodes;
         private Dictionary<Guid, LogRule> Rules;
 
         public RegionLogInfo(int regionCode)
         {
             this.RegionCode = regionCode;
-            SpeciesToRuleCodes = new Dictionary<long, Guid>();
+            SpeciesToRuleCodes = new Dictionary<String, Guid>();
             Rules = new Dictionary<Guid, LogRule>();
         }
 
-        public LogRule GetLogRule(long species)
+        public LogRule GetLogRule(String species)
         {
             if (SpeciesToRuleCodes.ContainsKey(species))
             {
@@ -36,7 +36,7 @@ namespace FSCruiser.Core.Models
                 throw new Exception("Tree species not found");
         }
 
-        public void AddRule(long speciesCode, LogRule rule)
+        public void AddRule(String speciesCode, LogRule rule)
         {
             if (rule.ID == null)
                 rule.ID = Guid.NewGuid();

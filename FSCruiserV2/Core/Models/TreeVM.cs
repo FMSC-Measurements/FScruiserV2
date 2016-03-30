@@ -278,7 +278,7 @@ namespace FSCruiser.Core.Models
             Dictionary<int, RegionLogInfo> logInfo = new Dictionary<int, RegionLogInfo>();
 
             if (logInfo.ContainsKey(regionCode))
-                return logInfo[regionCode].GetLogRule(TreeDefaultValue.FIAcode).GetDefaultLogHeight(TotalHeight, DBH);
+                return logInfo[regionCode].GetLogRule(TreeDefaultValue.FIAcode.ToString()).GetDefaultLogHeight(TotalHeight, DBH);
             
             return 0;
         }
