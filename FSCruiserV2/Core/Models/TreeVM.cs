@@ -4,6 +4,7 @@ using FMSC.ORM.Core;
 using System;
 using FMSC.ORM.EntityModel.Attributes;
 using FSCruiser.Core.ViewInterfaces;
+using System.Collections.Generic;
 
 namespace FSCruiser.Core.Models
 {
@@ -268,6 +269,18 @@ namespace FSCruiser.Core.Models
                 //this.HandleNonCriticalException(e, "Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid");
                 return false;
             }
+        }
+
+
+        public int GetDefaultLogCount()
+        {
+            int regionCode = 0;
+            Dictionary<int, RegionLogInfo> logInfo = new Dictionary<int, RegionLogInfo>();
+
+            if (logInfo.ContainsKey(regionCode))
+                return logInfo[regionCode].GetLogRule(TreeDefaultValue.FIAcode).GetDefaultLogHeight(TotalHeight, DBH);
+            
+            return 0;
         }
 
     }

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9568C413-05B2-4672-AD7B-E4101537AB26}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -67,6 +67,10 @@
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="Core\Exceptions.cs" />
+    <Compile Include="Core\Models\DBHBreak.cs" />
+    <Compile Include="Core\Models\LogHeightInfo.cs" />
+    <Compile Include="Core\Models\LogRule.cs" />
+    <Compile Include="Core\Models\RegionLogInfo.cs" />
     <Compile Include="Core\System\FloatExtentions.cs" />
     <Compile Include="Core\ViewInterfaces\IView.cs" />
     <Compile Include="Core\Workers\FileLoadWorker.cs" />
@@ -218,12 +222,15 @@
     <Compile Include="Properties\AssemblyInfo.PC.cs" />
     <EmbeddedResource Include="WinForms.Common\FormCruiserSelection.resx">
       <DependentUpon>FormCruiserSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormDataEntryBase.resx">
       <DependentUpon>FormDataEntryBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormPlotInfo.resx">
       <DependentUpon>FormPlotInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\TallyRow.resx">
       <DependentUpon>TallyRow.cs</DependentUpon>
@@ -231,6 +238,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\TreeBasedTallyView_Base.resx">
       <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\CuttingUnitSelectView.resx">
       <DependentUpon>CuttingUnitSelectView.cs</DependentUpon>
@@ -242,9 +250,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\DataEntry\FormLogs.resx">
       <DependentUpon>FormLogs.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\DataEntry\SampleGroupRow.resx">
       <DependentUpon>SampleGroupRow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\FormAbout.PC.resx">
       <DependentUpon>FormAbout.PC.cs</DependentUpon>
