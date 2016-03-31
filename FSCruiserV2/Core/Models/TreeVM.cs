@@ -294,7 +294,7 @@ namespace FSCruiser.Core.Models
         }
 
 
-        public int GetDefaultLogCount()
+        public uint GetDefaultLogCount()
         {
             var retionLogInfo = this.CuttingUnit.Sale.GetRegionLogInfo();
 

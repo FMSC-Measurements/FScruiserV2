@@ -7,7 +7,7 @@ namespace FSCruiser.Core.Models
 {
     public class LogRule
     {
-        public Guid ID { get; internal set; }
+        public List<string> Species { get; private set; }
         public List<LogHeightInfo> LogHeights { get; private set; }
 
         public LogRule()
@@ -15,24 +15,24 @@ namespace FSCruiser.Core.Models
             LogHeights = new List<LogHeightInfo>();
         }
 
+        public LogRule(string species)
+        {
+            var speciesArray = species.Split(' ');
+            this.Species = new List<string>(speciesArray);
+        }
+
         public void AddLogHeight(LogHeightInfo logHeightInfo)
         {
             LogHeights.Add(logHeightInfo);
         }
 
-        public int GetDefaultLogHeight(float height, float dbh)
+        public uint GetDefaultLogHeight(float height, float dbh)
         {
             foreach (LogHeightInfo lhi in LogHeights)
             {
-                if (lhi.IsInRange(height))
+                if (lhi.Range.IsInRange(height))
                 {
-                    foreach (DBHBreak dbhBreak in lhi.DBHBreaks)
-                    {
-                        if (dbhBreak.DBHValue < dbh)
-                        {
-                            return dbhBreak.NumberOfLogs;
-                        }
-                    }
+                    return lhi.GetDefaultLogCount(dbh);
                 }
             }
 

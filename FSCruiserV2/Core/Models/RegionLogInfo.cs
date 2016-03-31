@@ -7,14 +7,14 @@ namespace FSCruiser.Core.Models
 {
     public class RegionLogInfo
     {
-        public int RegionCode { get; private set; }
+        //public int RegionCode { get; private set; }
 
         private Dictionary<String, Guid> SpeciesToRuleCodes;
         private Dictionary<Guid, LogRule> Rules;
 
         public RegionLogInfo(int regionCode)
         {
-            this.RegionCode = regionCode;
+            //this.RegionCode = regionCode;
             SpeciesToRuleCodes = new Dictionary<String, Guid>();
             Rules = new Dictionary<Guid, LogRule>();
         }
@@ -29,34 +29,31 @@ namespace FSCruiser.Core.Models
                 {
                     return Rules[ruleCode];
                 }
-                else
-                    throw new Exception("Rule not found");
+                else 
+                { return null; }
+
             }
-            else
-                throw new Exception("Tree species not found");
+            else 
+            { return null; }
         }
 
-        public void AddRule(String speciesCode, LogRule rule)
+        public void AddRule(LogRule rule)
         {
-            if (rule.ID == null)
-                rule.ID = Guid.NewGuid();
+            var ruleID = Guid.NewGuid();
 
-            if (SpeciesToRuleCodes.ContainsKey(speciesCode))
-            {
-                SpeciesToRuleCodes[speciesCode] = rule.ID;
-            }
-            else
-            {
-                SpeciesToRuleCodes.Add(speciesCode, rule.ID);
-            }
+            Rules.Add(ruleID, rule);
 
-            if (Rules.ContainsKey(rule.ID))
+            foreach (string sp in rule.Species)
             {
-                Rules[rule.ID] = rule;
+                SpeciesToRuleCodes.Add(sp, ruleID);
             }
-            else
+        }
+
+        public void AddRule(IEnumerable<LogRule> rules)
+        {
+            foreach (LogRule rule in rules)
             {
-                Rules.Add(rule.ID, rule);
+                AddRule(rule);
             }
         }
     }

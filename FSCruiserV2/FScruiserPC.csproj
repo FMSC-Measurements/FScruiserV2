@@ -67,7 +67,6 @@
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="Core\Exceptions.cs" />
-    <Compile Include="Core\Models\DBHBreak.cs" />
     <Compile Include="Core\Models\LogHeightInfo.cs" />
     <Compile Include="Core\Models\LogRule.cs" />
     <Compile Include="Core\Models\RegionLogInfo.cs" />
