@@ -601,7 +601,7 @@ namespace FSCruiser.Core
 
         public static string GetExecutionDirectory()
         {
-            string name = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FSCruiserV2\\");
+            string name = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FSCruiserV2\\");
             //Assembly.GetCallingAssembly().GetName().CodeBase;
             
             //clean up path, in FF name is a URI
