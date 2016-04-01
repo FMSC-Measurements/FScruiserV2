@@ -21,7 +21,6 @@ namespace FSCruiser.WinForms.DataEntry
     {
         private delegate void SplitterMovedEventHandler(object sender, int newPosition);
 
-
         private bool _viewLoading = true;
 
         
@@ -126,6 +125,10 @@ namespace FSCruiser.WinForms.DataEntry
             this._tallyListPanel.ResumeLayout();
 
             this.ViewLogicController.UpdateCurrentPlot();
+
+            logToolStripMenuItem.Text = AppController.ViewController.EnableLogGrading ?
+                "Disable Log Grading" : "Enable Log Grading";
+            
         }
 
         #region splitter
@@ -655,6 +658,15 @@ namespace FSCruiser.WinForms.DataEntry
 
         #endregion
 
+        private void logToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppController.ViewController.EnableLogGrading = !AppController.ViewController.EnableLogGrading;
+
+            logToolStripMenuItem.Text = AppController.ViewController.EnableLogGrading ?
+                "Disable Log Grading" : "Enable Log Grading";
+            }
+        }
+
         
 
         //protected override void OnKeyUp(KeyEventArgs e)
@@ -665,9 +677,4 @@ namespace FSCruiser.WinForms.DataEntry
         //    if (_viewLoading) { return; }
         //    e.Handled = this.ViewLogicController.DataEntryController.ProcessHotKey(key, this);
         //}
-
-        
-
-        
-    }
 }
