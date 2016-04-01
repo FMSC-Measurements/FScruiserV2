@@ -495,7 +495,15 @@ namespace FSCruiser.Core
             try
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
-                var path = GetExecutionDirectory() + Constants.APP_SETTINGS_PATH;
+                var dir = GetExecutionDirectory();
+
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                var path = dir + Constants.APP_SETTINGS_PATH;
+
                 using (StreamWriter writer = new StreamWriter(path))
                 {
                     serializer.Serialize(writer, this.Settings);
@@ -593,7 +601,9 @@ namespace FSCruiser.Core
 
         public static string GetExecutionDirectory()
         {
-            string name = Assembly.GetCallingAssembly().GetName().CodeBase;
+            string name = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FSCruiserV2\\");
+            //Assembly.GetCallingAssembly().GetName().CodeBase;
+            
             //clean up path, in FF name is a URI
             if (name.StartsWith(@"file:///"))
             {
