@@ -99,6 +99,10 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _initialsColoumn.DataSource = this.AppController.Settings.Cruisers.ToArray();
             }
+            if (_logsColumn != null)
+            {
+                _logsColumn.Visible = AppController.ViewController.EnableLogGrading;
+            }
 
 
             //no need to load tallies....?

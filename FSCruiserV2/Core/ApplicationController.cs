@@ -225,6 +225,8 @@ namespace FSCruiser.Core
                 var filePath = _cDal.Path;
                 var fileName = System.IO.Path.GetFileName(this._cDal.Path);
 
+                ViewController.EnableLogGrading = _cDal.ExecuteScalar<bool>("SELECT LogGradingEnabled FROM Sale Limit 1;");
+
                 Settings.AddRecentProject(new RecentProject(fileName, filePath));
                 SaveAppSettings();
             }
