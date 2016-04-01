@@ -11,6 +11,7 @@ using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FMSC.ORM.Core.SQL;
+using System.Drawing;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -116,7 +117,7 @@ namespace FSCruiser.WinForms.DataEntry
             logToolStripMenuItem = new ToolStripMenuItem();
             _contexMenu.SuspendLayout();
 
-            this.ContextMenuStrip = _contexMenu;
+            this.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(ControlTreeDataGrid_ColumnHeaderMouseClick);
 
             _contexMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { logToolStripMenuItem });
             _contexMenu.Name = "_contexMenu";
@@ -127,6 +128,17 @@ namespace FSCruiser.WinForms.DataEntry
                 "Disable Log Grading" : "Enable Log Grading";
             logToolStripMenuItem.Click += logToolStripMenuItem_Click;
             _contexMenu.ResumeLayout(false);
+        }
+
+        void ControlTreeDataGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                logToolStripMenuItem.Text = Controller.ViewController.EnableLogGrading ?
+                    "Disable Log Grading" : "Enable Log Grading";
+
+                _contexMenu.Show(Cursor.Position);
+            }
         }
 
         void ControlTreeDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)

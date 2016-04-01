@@ -662,10 +662,20 @@ namespace FSCruiser.WinForms.DataEntry
         {
             AppController.ViewController.EnableLogGrading = !AppController.ViewController.EnableLogGrading;
 
-            logToolStripMenuItem.Text = AppController.ViewController.EnableLogGrading ?
-                "Disable Log Grading" : "Enable Log Grading";
+                logToolStripMenuItem.Text = AppController.ViewController.EnableLogGrading ?
+                    "Disable Log Grading" : "Enable Log Grading";
+            }
+
+        private void _dataGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                logToolStripMenuItem.Text = AppController.ViewController.EnableLogGrading ?
+                    "Disable Log Grading" : "Enable Log Grading";
+                _contexMenu.Show(Cursor.Position);
             }
         }
+    }
 
         
 
