@@ -2,8 +2,8 @@
 ; #defines require the ISPP add-on: http://sourceforge.net/projects/ispp/
 #define APP "FSCruiserV2"
 
-#define APP_VERSION "2016.03.29"
-#define SETUPVERSION "20160329"
+#define APP_VERSION "2016.04.01"
+#define SETUPVERSION "20160401"
 #define SPECIALTAG "Production"
 #define BASEURL "http://www.fs.fed.us/fmsc/measure"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
@@ -13,77 +13,53 @@
 #define FSCRUISER_INI "FSCruiserV2_CF20.ini"
 
 [Setup]
-AppName=FSCruiser V2
-AppVersion={#APP_VERSION}
-AppVerName=FSCruiser version {#SETUPVERSION} for Windows CE, and Windows Mobile devices
-AppPublisher={#ORGANIZATION}
-AppPublisherURL={#BASEURL}
-AppSupportURL={#BASEURL}/support.shtml
-AppUpdatesURL={#BASEURL}/cruising/index.shtml
+AppName         =FSCruiser V2
+AppVersion      ={#APP_VERSION}
+AppVerName      =FSCruiser version {#SETUPVERSION} for Windows CE, and Windows Mobile devices
+AppPublisher    ={#ORGANIZATION}
+AppPublisherURL ={#BASEURL}
+AppSupportURL   ={#BASEURL}/support.shtml
+AppUpdatesURL   ={#BASEURL}/cruising/index.shtml
 
-DefaultDirName={pf32}\FMSC\{#APP}
-DefaultGroupName=FMSC\{#APP}
-UsePreviousAppDir=no
+;this is not a tyical installer and doesn't install anything on the users computer
+Uninstallable   = no 
+CreateAppDir    = no
 
-CreateAppDir=yes
+ShowLanguageDialog      = no
+DisableProgramGroupPage = yes
+DefaultGroupName        =FMSC\{#APP}
+
+
 OutputBaseFilename=FScruiserV2_FDR_{#SETUPVERSION}
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=lowest
-ShowLanguageDialog=no
+
 
 InfoBeforeFile=..\Documentation\ConnectingToDevice.md
 
 [Files]
 ;Compact framework files
-Source: "netcf20.ini"; DestDir: "{app}"; Flags: ignoreversion; 
-Source: "wce400\armv4\*.CAB"; DestDir: "{app}\wce400\armv4"; 
-Source: "wce400\mipsii\*.CAB"; DestDir: "{app}\wce400\mipsii"; 
-Source: "wce400\mipsiv\*.CAB"; DestDir: "{app}\wce400\mipsiv"; 
-Source: "wce400\sh4\*.CAB"; DestDir: "{app}\wce400\sh4"; 
-Source: "wce400\x86\*.CAB"; DestDir: "{app}\wce400\x86"; 
-Source: "wce500\armv4i\*.CAB"; DestDir: "{app}\wce500\armv4i"; 
-Source: "wce500\mipsii\*.CAB"; DestDir: "{app}\wce500\mipsii"; 
-Source: "wce500\mipsiv\*.CAB"; DestDir: "{app}\wce500\mipsiv"; 
-Source: "wce500\sh4\*.CAB"; DestDir: "{app}\wce500\sh4"; 
-Source: "wce500\x86\*.CAB"; DestDir: "{app}\wce500\x86"; 
+Source: "netcf20.ini"; DestDir: "{localappdata}\{#APP}\FDR_Install\"; Flags: ignoreversion; 
+Source: "wce400\armv4\*.CAB"; DestDir: "{localappdata}\{#APP}\FDR_Install\\wce400\armv4";  
+Source: "wce500\armv4i\*.CAB"; DestDir: "{localappdata}\{#APP}\FDR_Install\\wce500\armv4i"; 
+
 
 ;FScruiser mobile files
-Source: {#FSCRUISER_INI}; DestDir: "{app}"; Flags: ignoreversion; 
-Source: "..\FSCruiserV2CECF20_CAB\Release\FSCruiserV2.CAB"; DestDir: "{app}"; Flags: ignoreversion; 
-
+Source: {#FSCRUISER_INI}; DestDir: "{localappdata}\{#APP}\FDR_Install"; Flags: ignoreversion; 
+Source: "..\FSCruiserV2CECF20_CAB\Release\FSCruiserV2.CAB"; DestDir: "{localappdata}\{#APP}\FDR_Install"; Flags: ignoreversion; 
 
 ;Documentation
-Source: "..\Documentation\FScruiserV2UserGuide.docx"; DestName:"FScruiserV2UserGuide.docx"; DestDir: "{app}"; Flags: ignoreversion;
+Source: "..\Documentation\FScruiserV2UserGuide.docx"; DestName:"FScruiserV2UserGuide.docx"; DestDir: "{userappdata}\{#APP}"; Flags: ignoreversion;
 
 [Icons]
-Name: {group}\FScruiser V2 User Guide.docx; Filename: {app}\FScruiser V2 User Guide.docx
-
-;[Run]
-;FileName: {code:GetCEappManager}; Parameters: {code:GetIniFile|\netcf20.ini} {code:GetIniFile|\FSCruiserV2_CF20.ini}; Flags: runascurrentuser;
-
-;[Tasks]
-;Name: mobileInstall; Description: "Install FScruiser on mobile devices"; GroupDescription: "Install Options";
+Name: {group}\FScruiser V2 User Guide.docx; Filename: {localappdata}\{#APP}\FScruiser V2 User Guide.docx
 
 
-;function InitializeSetup() : Boolean;
-;var
-;ResultCode: Integer;
-;begin
-;  if IsAdminLoggedOn() or IsPowerUserLoggedOn() then
-;  begin
-;    Exec('runas', ExpandConstant('/trustlevel:0x20000 "{srcexe} ') + GetCmdTail() +'"', '', SW_HIDE, ewNoWait, ResultCode)
-;    result := False
-;  end
-;  else
-;    result := True
-;end;  
-
+[Tasks]
+Name: netcf; Description: "Install Compact Framework 2.0  (Required for: Allegro CX)"; Flags: unchecked
 
 [Code]
-
-
-
 function GetCEappManager(Param : string) : string;
 var Path: String;
 begin
@@ -93,28 +69,36 @@ begin
       if FileExists('C:\Windows\WindowsMobile\ceappmgr.exe') then
         Path:= 'C:\Windows\WindowsMobile\ceappmgr.exe'
 
-      
+  if Path = '' then
+  begin
+    MsgBox('Unable to locate CEAppMgr.exe Ensure that Windows Mobile Device Center or ActiveSync is installed', mbInformation, MB_OK);
+  end    
   result:=  Path
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
 var 
-RunCmd : String;
+CEAppMgrPath : String;
 ErrorCode : Integer;
 Prams : String;
 begin
   if ((CurStep=ssPostInstall)) then
   begin
-    RunCmd:= GetCEappManager('');
-    if RunCmd <>'' then
+    CEAppMgrPath:= GetCEappManager('');
+    if CEAppMgrPath <>'' then
     begin
-      Prams:= ExpandConstant('"{app}\{#DOTNET_INI}" "{app}\{#FSCRUISER_INI}"');
-      Exec(RunCmd, Prams, '', SW_SHOW, ewNoWait, ErrorCode)
+          
+
+      Prams:= ExpandConstant(' "{localappdata}\{#APP}\FDR_Install\{#FSCRUISER_INI}"');
+      ExecAsOriginalUser(CEAppMgrPath , Prams, '', SW_SHOW, ewNoWait, ErrorCode); 
+        
     end
-    else
+
+    if IsTaskSelected('netcf') then
     begin
-      MsgBox('Unable to locate CEAppMgr.exe Ensure that Windows Mobile Device Center or ActiveSync is installed properly', mbInformation, MB_OK);
-    end;
-     
+        ExecAsOriginalUser(CEAppMgrPath 
+      , ExpandConstant(' "{localappdata}\{#APP}\FDR_Install\{#DOTNET_INI}"')
+      , '', SW_SHOW, ewNoWait, ErrorCode);
+    end
   end;   
 end;

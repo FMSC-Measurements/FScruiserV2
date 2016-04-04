@@ -4,6 +4,7 @@ using System.Text;
 using System.Xml.Serialization;
 using FSCruiser.Core.Models;
 using System.Linq;
+using System.IO;
 
 namespace FSCruiser.Core
 {
@@ -61,6 +62,15 @@ namespace FSCruiser.Core
 
         [XmlElement]
         public float DataGridFontSize { get; set; }
+
+        public static ApplicationSettings Deserialize(string path)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
+            using (StreamReader reader = new StreamReader(path))
+            {
+                return (ApplicationSettings)serializer.Deserialize(reader);
+            }            
+        }
 
 
         #region Cruisers
