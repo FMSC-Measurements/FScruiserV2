@@ -7,7 +7,7 @@ namespace FSCruiser.Core.Models
 {
     public class LogHeightClass
     {
-        public class HeightRange
+        public class HeightRange : IComparable<HeightRange>
         {
             public HeightRange(float from, float to)
             {
@@ -23,6 +23,15 @@ namespace FSCruiser.Core.Models
                 return value.GreaterThanOrEqualsEx(From) 
                     && value.LessThanOrEqualsEx(To);
             }
+
+            #region IComparable<HeightRange> Members
+
+            public int CompareTo(HeightRange other)
+            {
+                return From.CompareTo(other.From);
+            }
+
+            #endregion
         }
 
         uint _numLogs = 0;
