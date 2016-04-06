@@ -6,6 +6,7 @@ using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
+    [EntitySource(SourceName = "Sale")]
     public class Sale 
     {
         RegionLogInfo _regionalLogRules;
