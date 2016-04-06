@@ -11,6 +11,8 @@ namespace FSCruiser.Core.Models
 {
     public class TreeVM : TreeDO
     {
+        int cachedLogCount = -1;
+
         public TreeVM(DAL dal)
             : base((DatastoreRedux)dal)
         {
@@ -74,6 +76,38 @@ namespace FSCruiser.Core.Models
                 base.TreeCount = value;
             }
         }
+        
+        [IgnoreField]
+        public int LogCount
+        {
+            get
+            {
+                if (cachedLogCount == -1 || this.LogCountDirty)
+                {
+                    cachedLogCount = (int)this.DAL.GetRowCount("Log", "WHERE Tree_CN = ?", this.Tree_CN);
+                    LogCountDirty = false;
+                }
+                return cachedLogCount;
+            }
+        }
+
+        [IgnoreField]
+        public bool LogCountDirty { get; set; }
+
+        [IgnoreField]
+        public string LogLevelDiscription
+        {
+            get
+            {
+                return String.Format("Tree:{0} Sp:{1} DBH:{2} Ht:{3} MrchHt:{4} Logs:{5}",
+                TreeNumber,
+                Species,
+                DBH,
+                TotalHeight,
+                MerchHeightPrimary,
+                LogCount);
+            }
+        }
 
         //public override float HiddenPrimary
         //{
@@ -106,6 +140,7 @@ namespace FSCruiser.Core.Models
         //    }
         //}
 
+        #region overridden methods
         public override CuttingUnitDO GetCuttingUnit()
         {
             if (DAL == null) { return null; }
@@ -113,6 +148,11 @@ namespace FSCruiser.Core.Models
                 .Read(this.CuttingUnit_CN).FirstOrDefault();
         }
 
+        //public override PlotDO GetPlot()
+        //{
+        //    if (DAL == null) { return null; }
+        //    return DAL.ReadSingleRow<PlotVM>(CruiseDAL.Schema.PLOT._NAME, this.Plot_CN);
+        //}
 
         public override StratumDO GetStratum()
         {
@@ -126,6 +166,16 @@ namespace FSCruiser.Core.Models
             if (DAL == null) { return null; }
             return DAL.ReadSingleRow<SampleGroupVM>(this.SampleGroup_CN);
         }
+
+        protected override void NotifyPropertyChanged(string name)
+        {
+            base.NotifyPropertyChanged(name);
+            if (name == CruiseDAL.Schema.TREE.TREEDEFAULTVALUE_CN)
+            {
+                base.NotifyPropertyChanged(CruiseDAL.Schema.TREE.HIDDENPRIMARY);
+            }
+        }
+        #endregion
 
         public bool HandleSampleGroupChanging(SampleGroupDO newSG, IView view)
         {
@@ -217,38 +267,6 @@ namespace FSCruiser.Core.Models
             return TrySave();
         }
 
-        //public override PlotDO GetPlot()
-        //{
-        //    if (DAL == null) { return null; }
-        //    return DAL.ReadSingleRow<PlotVM>(CruiseDAL.Schema.PLOT._NAME, this.Plot_CN);
-        //}
-
-        private int cachedLogCount = -1;
-        public int LogCount
-        {
-            get
-            {
-                if (cachedLogCount == -1 || this.LogCountDirty)
-                {
-                    cachedLogCount = (int)this.DAL.GetRowCount("Log", "WHERE Tree_CN = ?", this.Tree_CN);
-                    LogCountDirty = false;
-                }
-                return cachedLogCount;
-            }
-        }
-
-        public bool LogCountDirty { get; set; }
-
-        protected override void NotifyPropertyChanged(string name)
-        {
-            base.NotifyPropertyChanged(name);
-            if (name == CruiseDAL.Schema.TREE.TREEDEFAULTVALUE_CN)
-            {
-                base.NotifyPropertyChanged(CruiseDAL.Schema.TREE.HIDDENPRIMARY);
-            }
-        }
-
-
         public void SetTreeTDV(TreeDefaultValueDO tdv)
         {
             //if (tdv == _newPopPlaceHolder && this.SampleGroup != null)
@@ -293,7 +311,6 @@ namespace FSCruiser.Core.Models
             }
         }
 
-
         public uint GetDefaultLogCount()
         {
             var retionLogInfo = this.CuttingUnit.Sale.GetRegionLogInfo();
@@ -307,6 +324,38 @@ namespace FSCruiser.Core.Models
                 }
             }
             return 0;
+        }
+
+        public IEnumerable<LogDO> QueryLogs()
+        {
+            return this.DAL.From<LogDO>()
+                .Where("Tree_CN = ?")
+                .OrderBy("CAST (LogNumber AS NUMERIC)")
+                .Query(Tree_CN);
+
+            //return tree.DAL.Query<LogDO>(new FMSC.ORM.Core.SQL.WhereClause("Log.Tree_CN = ? ORDER BY CAST (LogNumber AS NUMERIC)")
+            //    , tree.Tree_CN);
+        }
+
+        public IList<LogDO> LoadLogs()
+        {
+            var logs = QueryLogs().ToList();
+
+            if (logs.Count == 0)
+            {
+                var defaultLogCnt = GetDefaultLogCount();
+                for (int i = 0; i < defaultLogCnt; i++)
+                {
+                    logs.Add(
+                        new LogDO(this.DAL)
+                        {
+                            LogNumber = (i + 1).ToString(),
+                            Tree = this
+                        });
+                }
+            }
+
+            return logs;
         }
 
     }
