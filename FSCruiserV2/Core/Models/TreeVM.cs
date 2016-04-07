@@ -23,6 +23,7 @@ namespace FSCruiser.Core.Models
         {
         }
 
+        [IgnoreField]
         public new CuttingUnitVM CuttingUnit
         {
             get
@@ -78,7 +79,7 @@ namespace FSCruiser.Core.Models
         }
         
         [IgnoreField]
-        public int LogCount
+        public int LogCountActual
         {
             get
             {
@@ -89,6 +90,13 @@ namespace FSCruiser.Core.Models
                 }
                 return cachedLogCount;
             }
+        }
+
+        [IgnoreField]
+        public double LogCountDesired
+        {
+            get;
+            set;
         }
 
         [IgnoreField]
@@ -105,7 +113,7 @@ namespace FSCruiser.Core.Models
                 DBH,
                 TotalHeight,
                 MerchHeightPrimary,
-                LogCount);
+                LogCountDesired);
             }
         }
 
@@ -170,12 +178,27 @@ namespace FSCruiser.Core.Models
         protected override void NotifyPropertyChanged(string name)
         {
             base.NotifyPropertyChanged(name);
+
+            if (name == CruiseDAL.Schema.TREE.TREEDEFAULTVALUE_CN
+                || name == CruiseDAL.Schema.TREE.DBH)
+            {
+                UpdateLogCountDesired();
+            }
+
             if (name == CruiseDAL.Schema.TREE.TREEDEFAULTVALUE_CN)
             {
                 base.NotifyPropertyChanged(CruiseDAL.Schema.TREE.HIDDENPRIMARY);
             }
         }
         #endregion
+
+        void UpdateLogCountDesired()
+        {
+            if (TreeDefaultValue != null)
+            {
+                LogCountDesired = GetDefaultLogCount();
+            }
+        }
 
         public bool HandleSampleGroupChanging(SampleGroupDO newSG, IView view)
         {
@@ -311,16 +334,17 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public uint GetDefaultLogCount()
+        public double GetDefaultLogCount()
         {
             var retionLogInfo = this.CuttingUnit.Sale.GetRegionLogInfo();
+            var mrchHtLL = TreeDefaultValue.MerchHeightLogLength;
 
             if (retionLogInfo != null)
             {
                 var logRule = retionLogInfo.GetLogRule(this.Species);
                 if (logRule != null)
                 {
-                    return logRule.GetDefaultLogHeight(this.TotalHeight, this.DBH);
+                    return logRule.GetDefaultLogCount(this.TotalHeight, this.DBH, mrchHtLL);
                 }
             }
             return 0;
@@ -344,6 +368,7 @@ namespace FSCruiser.Core.Models
             if (logs.Count == 0)
             {
                 var defaultLogCnt = GetDefaultLogCount();
+                defaultLogCnt = Math.Ceiling(defaultLogCnt);
                 for (int i = 0; i < defaultLogCnt; i++)
                 {
                     logs.Add(

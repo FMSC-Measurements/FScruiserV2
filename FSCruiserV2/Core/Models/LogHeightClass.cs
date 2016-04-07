@@ -34,16 +34,16 @@ namespace FSCruiser.Core.Models
             #endregion
         }
 
-        uint _numLogs = 0;
+        double _num16FtLogs = 0;
 
         public HeightRange Range { get; set; }
 
         public List<uint> Breaks { get; set; }
 
-        public LogHeightClass(float rangeFrom, float rangeTo, uint logs)
+        public LogHeightClass(float rangeFrom, float rangeTo, float num16FtLogs)
         {
             this.Range = new HeightRange(rangeFrom, rangeTo);
-            this._numLogs = logs;
+            this._num16FtLogs = num16FtLogs;
         }
 
         public LogHeightClass WithBreaks(params uint[] breaks)
@@ -53,9 +53,9 @@ namespace FSCruiser.Core.Models
             return this;
         }
 
-        public uint GetDefaultLogCount(float dbh)
+        public double GetDefaultLogCount(float dbh)
         {
-            uint logCount = this._numLogs;
+            var logCount = this._num16FtLogs;
 
             if (Breaks != null)
             {

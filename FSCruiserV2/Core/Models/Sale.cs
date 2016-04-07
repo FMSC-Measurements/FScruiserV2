@@ -71,7 +71,7 @@ namespace FSCruiser.Core.Models
         {
             var regionalLogRules = new RegionLogInfo(10);
 
-            var spruce = new LogRule("98");
+            var spruce = new LogRule("98");// Spruce
             spruce.Add(new LogHeightClass(36, 45, 1));
             spruce.Add(new LogHeightClass(46, 55, 1).WithBreaks(13));
             spruce.Add(new LogHeightClass(56, 65, 1).WithBreaks(18));
@@ -92,6 +92,11 @@ namespace FSCruiser.Core.Models
             spruce.Add(new LogHeightClass(206, 215, 11));
 
             regionalLogRules.AddRule(spruce);
+
+            //var yspruce = new LogRule("98Y");
+
+            //yspruce.Add(new LogHeightClass(36, 45, 1));
+            //yspruce.Add(new LogHeightClass(46, 55, 1
 
             var wrc = new LogRule("242");//western redcedar
             wrc.Add(new LogHeightClass(36, 45, 1));

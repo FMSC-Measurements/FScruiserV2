@@ -26,13 +26,26 @@ namespace FSCruiser.Core.Models
             LogHeights.Add(logHeightInfo);
         }
 
-        public uint GetDefaultLogHeight(float height, float dbh)
+        public double GetDefaultLogCount(float height, float dbh, long mrchHgtLL)
         {
             foreach (LogHeightClass lhi in LogHeights)
             {
                 if (lhi.Range.IsInRange(height))
                 {
-                    return lhi.GetDefaultLogCount(dbh);
+                    var logCnt16Ft = lhi.GetDefaultLogCount(dbh);
+
+                    if (mrchHgtLL == 16)
+                    {
+                        return logCnt16Ft;
+                    }
+                    if (mrchHgtLL == 32)
+                    {
+                        return logCnt16Ft / 2.0;
+                    }
+                    else 
+                    {
+                        return 0;
+                    }
                 }
             }
 
