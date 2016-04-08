@@ -93,10 +93,22 @@ namespace FSCruiser.Core.Models
 
             regionalLogRules.AddRule(spruce);
 
-            //var yspruce = new LogRule("98Y");
+            var spruceYoung = new LogRule("98Y"); //Young Spruce
+            spruceYoung.Add(new LogHeightClass(36, 45, 1).WithBreaks(9));
+            spruceYoung.Add(new LogHeightClass(46, 55, 1).WithBreaks(13));
+            spruceYoung.Add(new LogHeightClass(56, 65, 1).WithBreaks(10));
+            spruceYoung.Add(new LogHeightClass(66, 75, 2).WithBreaks(15));
+            spruceYoung.Add(new LogHeightClass(76, 85, 2).WithBreaks(11));
+            spruceYoung.Add(new LogHeightClass(86, 95, 2).WithBreaks(10, 15));
+            spruceYoung.Add(new LogHeightClass(96, 105, 2).WithBreaks(10, 12, 23));
+            spruceYoung.Add(new LogHeightClass(106, 115, 4).WithBreaks(15));
+            spruceYoung.Add(new LogHeightClass(116, 125, 4).WithBreaks(22));
+            spruceYoung.Add(new LogHeightClass(126, 135, 5).WithBreaks(16, 36));
+            spruceYoung.Add(new LogHeightClass(136, 145, 6).WithBreaks(25, 56));
+            spruceYoung.Add(new LogHeightClass(146, 155, 7).WithBreaks(21));
+            spruceYoung.Add(new LogHeightClass(156, 165, 8).WithBreaks(31));
 
-            //yspruce.Add(new LogHeightClass(36, 45, 1));
-            //yspruce.Add(new LogHeightClass(46, 55, 1
+            regionalLogRules.AddRule(spruceYoung);
 
             var wrc = new LogRule("242");//western redcedar
             wrc.Add(new LogHeightClass(36, 45, 1));
@@ -155,6 +167,22 @@ namespace FSCruiser.Core.Models
             hmlk.Add(new LogHeightClass(196, 205, 10).WithBreaks(59));
 
             regionalLogRules.AddRule(hmlk);
+
+            var hmlkYoung = new LogRule("263Y"); //Young Hemlock
+            hmlkYoung.Add(new LogHeightClass(36, 45, 1).WithBreaks(9));
+            hmlkYoung.Add(new LogHeightClass(46, 55, 1).WithBreaks(14));
+            hmlkYoung.Add(new LogHeightClass(56, 65, 1).WithBreaks(11));
+            hmlkYoung.Add(new LogHeightClass(66, 75, 1).WithBreaks(9, 15));
+            hmlkYoung.Add(new LogHeightClass(76, 85, 1).WithBreaks(9, 12));
+            hmlkYoung.Add(new LogHeightClass(86, 95, 3).WithBreaks(15));
+            hmlkYoung.Add(new LogHeightClass(96, 105, 3).WithBreaks(12, 23));
+            hmlkYoung.Add(new LogHeightClass(106, 115, 4).WithBreaks(16));
+            hmlkYoung.Add(new LogHeightClass(116, 125, 5).WithBreaks(22));
+            hmlkYoung.Add(new LogHeightClass(126, 135, 6).WithBreaks(37));
+            hmlkYoung.Add(new LogHeightClass(136, 145, 6).WithBreaks(24));
+            hmlkYoung.Add(new LogHeightClass(146, 155, 7).WithBreaks(32));
+
+            regionalLogRules.AddRule(hmlkYoung);
 
             var ra = new LogRule("351");//Red Alder
             ra.Add(new LogHeightClass(36, 45, 1).WithBreaks(19));
