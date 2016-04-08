@@ -235,16 +235,9 @@ namespace FSCruiser.WinForms
             {
                 Name = "Logs",
                 HeaderText = "Logs",
-                DataPropertyName = "LogCount"
+                DataPropertyName = "LogCountActual"
             });
 
-            //columns.Add(new DataGridViewTextBoxColumn()
-            //{
-            //    Name = "Error",
-            //    HeaderText = "Error",
-            //    DataPropertyName = "Error",
-                
-            //});
 
             return columns.ToArray();
         }

@@ -99,7 +99,7 @@ namespace FSCruiser.WinForms.DataEntry
             _stratumColumn = tableStyle.GridColumnStyles["Stratum"] as EditableComboBoxColumn;
             _treeNumberColumn = tableStyle.GridColumnStyles["TreeNumber"] as EditableTextBoxColumn;
             _initialsColoumn = tableStyle.GridColumnStyles["Initials"] as EditableComboBoxColumn;
-            _logsColumn = tableStyle.GridColumnStyles["LogCount"] as DataGridButtonColumn;
+            _logsColumn = tableStyle.GridColumnStyles["LogCountActual"] as DataGridButtonColumn;
             _kpiColumn = tableStyle.GridColumnStyles["KPI"] as EditableTextBoxColumn;
 
             //if (_speciesColumn != null)
