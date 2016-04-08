@@ -178,12 +178,7 @@ namespace FSCruiser.Core.Models
         protected override void NotifyPropertyChanged(string name)
         {
             base.NotifyPropertyChanged(name);
-
-            if (name == CruiseDAL.Schema.TREE.TREEDEFAULTVALUE_CN
-                || name == CruiseDAL.Schema.TREE.DBH)
-            {
-                UpdateLogCountDesired();
-            }
+            if (base.PropertyChangedEventsDisabled) { return; }
 
             if (name == CruiseDAL.Schema.TREE.TREEDEFAULTVALUE_CN)
             {
@@ -192,13 +187,6 @@ namespace FSCruiser.Core.Models
         }
         #endregion
 
-        void UpdateLogCountDesired()
-        {
-            if (TreeDefaultValue != null)
-            {
-                LogCountDesired = GetDefaultLogCount();
-            }
-        }
 
         public bool HandleSampleGroupChanging(SampleGroupDO newSG, IView view)
         {
@@ -364,10 +352,11 @@ namespace FSCruiser.Core.Models
         public IList<LogDO> LoadLogs()
         {
             var logs = QueryLogs().ToList();
+            var defaultLogCnt = GetDefaultLogCount();
+            this.LogCountDesired = defaultLogCnt;
 
             if (logs.Count == 0)
             {
-                var defaultLogCnt = GetDefaultLogCount();
                 defaultLogCnt = Math.Ceiling(defaultLogCnt);
                 for (int i = 0; i < defaultLogCnt; i++)
                 {
