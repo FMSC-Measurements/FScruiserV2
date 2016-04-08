@@ -33,7 +33,17 @@ namespace FSCruiser.Core.Models
                 { return null; }
 
             }
-            else 
+            else if (SpeciesToRuleCodes.ContainsKey(String.Empty))
+            {
+                Guid ruleCode = SpeciesToRuleCodes[String.Empty];
+
+                if (Rules.ContainsKey(ruleCode))
+                {
+                    return Rules[ruleCode];
+                }
+                else
+                { return null; }
+            }
             { return null; }
         }
 
@@ -43,9 +53,19 @@ namespace FSCruiser.Core.Models
 
             Rules.Add(ruleID, rule);
 
-            foreach (string sp in rule.Species)
+            var species = rule.Species;
+
+            if (species == null
+                || species.Count == 0)
             {
-                SpeciesToRuleCodes.Add(sp, ruleID);
+                SpeciesToRuleCodes.Add("", ruleID);
+            }
+            else
+            {
+                foreach (string sp in species)
+                {
+                    SpeciesToRuleCodes.Add(sp, ruleID);
+                }
             }
         }
 
