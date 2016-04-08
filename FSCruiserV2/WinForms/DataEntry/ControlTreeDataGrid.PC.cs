@@ -11,6 +11,7 @@ using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FMSC.ORM.Core.SQL;
+using System.Drawing;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -26,6 +27,9 @@ namespace FSCruiser.WinForms.DataEntry
         private DataGridViewButtonColumn _logsColumn;
         private DataGridViewTextBoxColumn _errorMessageColumn;
         private DataGridViewComboBoxColumn _initialsColoumn;
+
+        private ContextMenuStrip _contexMenu;
+        private ToolStripMenuItem logToolStripMenuItem;
 
         //private BindingSource _BS_TreeSampleGroups;
         //private BindingSource _BS_TreeSpecies; 
@@ -56,32 +60,32 @@ namespace FSCruiser.WinForms.DataEntry
 
         public ControlTreeDataGrid(IApplicationController controller, FormDataEntryLogic dataEntryController)
         {
-            this.EditMode = DataGridViewEditMode.EditOnEnter;
-            this.AutoGenerateColumns = false;
-            this.AllowUserToDeleteRows = false;
-            this.AllowUserToAddRows = false;
-            this.Controller = controller;
-            this.DataEntryController = dataEntryController;
+            EditMode = DataGridViewEditMode.EditOnEnter;
+            AutoGenerateColumns = false;
+            AllowUserToDeleteRows = false;
+            AllowUserToAddRows = false;
+            Controller = controller;
+            DataEntryController = dataEntryController;
 
-            this.CellClick += new DataGridViewCellEventHandler(ControlTreeDataGrid_CellClick);
+            CellClick += new DataGridViewCellEventHandler(ControlTreeDataGrid_CellClick);
 
-            this._BS_trees = new BindingSource();
-            ((System.ComponentModel.ISupportInitialize)this._BS_trees).BeginInit();
-            this._BS_trees.DataSource = typeof(TreeVM);
-            this.DataSource = this._BS_trees;
-            ((System.ComponentModel.ISupportInitialize)this._BS_trees).EndInit();
+            _BS_trees = new BindingSource();
+            ((System.ComponentModel.ISupportInitialize)_BS_trees).BeginInit();
+            _BS_trees.DataSource = typeof(TreeVM);
+            DataSource = _BS_trees;
+            ((System.ComponentModel.ISupportInitialize)_BS_trees).EndInit();
 
-            //this._BS_TreeSpecies = new BindingSource();
-            //((System.ComponentModel.ISupportInitialize)this._BS_TreeSpecies).BeginInit();
-            //this._BS_TreeSpecies.DataSource = typeof(TreeDefaultValueDO);
-            //((System.ComponentModel.ISupportInitialize)this._BS_TreeSpecies).EndInit();
+            //_BS_TreeSpecies = new BindingSource();
+            //((System.ComponentModel.ISupportInitialize)_BS_TreeSpecies).BeginInit();
+            //_BS_TreeSpecies.DataSource = typeof(TreeDefaultValueDO);
+            //((System.ComponentModel.ISupportInitialize)_BS_TreeSpecies).EndInit();
 
-            //this._BS_TreeSampleGroups = new BindingSource();
-            //((System.ComponentModel.ISupportInitialize)this._BS_TreeSampleGroups).BeginInit();
-            //this._BS_TreeSampleGroups.DataSource = typeof(SampleGroupDO);
-            //((System.ComponentModel.ISupportInitialize)this._BS_TreeSampleGroups).EndInit();
+            //_BS_TreeSampleGroups = new BindingSource();
+            //((System.ComponentModel.ISupportInitialize)_BS_TreeSampleGroups).BeginInit();
+            //_BS_TreeSampleGroups.DataSource = typeof(SampleGroupDO);
+            //((System.ComponentModel.ISupportInitialize)_BS_TreeSampleGroups).EndInit();
 
-            DataGridViewColumn[] columns = DataGridAdjuster.MakeTreeColumns(controller._cDal, DataEntryController.Unit, null, this.Controller.ViewController.EnableLogGrading);
+            DataGridViewColumn[] columns = DataGridAdjuster.MakeTreeColumns(controller._cDal, DataEntryController.Unit, null, Controller.ViewController.EnableLogGrading);
             base.Columns.AddRange(columns);
 
             _speciesColumn = base.Columns["Species"] as DataGridViewComboBoxColumn;
@@ -106,14 +110,44 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_initialsColoumn != null)
             {
-                _initialsColoumn.DataSource = this.Controller.Settings.Cruisers.ToArray();
+                _initialsColoumn.DataSource = Controller.Settings.Cruisers.ToArray();
             }
-            
+            if (_logsColumn != null)
+            {
+                _logsColumn.Visible = Controller.ViewController.EnableLogGrading;
+            }
+
+            _contexMenu = new ContextMenuStrip(new System.ComponentModel.Container());
+            logToolStripMenuItem = new ToolStripMenuItem();
+            _contexMenu.SuspendLayout();
+
+            this.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(ControlTreeDataGrid_ColumnHeaderMouseClick);
+
+            _contexMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { logToolStripMenuItem });
+            _contexMenu.Name = "_contexMenu";
+            _contexMenu.Size = new System.Drawing.Size(181, 26);
+            logToolStripMenuItem.Name = "logToolStripMenuItem";
+            logToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            logToolStripMenuItem.Text = Controller.ViewController.EnableLogGrading ?
+                "Disable Log Grading" : "Enable Log Grading";
+            logToolStripMenuItem.Click += logToolStripMenuItem_Click;
+            _contexMenu.ResumeLayout(false);
+        }
+
+        void ControlTreeDataGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                logToolStripMenuItem.Text = Controller.ViewController.EnableLogGrading ?
+                    "Disable Log Grading" : "Enable Log Grading";
+
+                _contexMenu.Show(Cursor.Position);
+            }
         }
 
         void ControlTreeDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (_logsColumn != null && e.ColumnIndex == _logsColumn.Index)
+            if (_logsColumn != null && e.RowIndex > -1 && e.ColumnIndex == _logsColumn.Index)
             {
                 TreeVM curTree = this.Trees[e.RowIndex] as TreeVM;
                 if (curTree != null)
@@ -475,14 +509,24 @@ namespace FSCruiser.WinForms.DataEntry
 
         #endregion
 
+        
+
+        private void logToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Controller.ViewController.EnableLogGrading = !Controller.ViewController.EnableLogGrading;
+
+            logToolStripMenuItem.Text = Controller.ViewController.EnableLogGrading ?
+                "Disable Log Grading" : "Enable Log Grading";
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                if(this._BS_trees != null)
+                if(_BS_trees != null)
                 {
-                    this._BS_trees.Dispose();
-                    this._BS_trees = null;
+                    _BS_trees.Dispose();
+                    _BS_trees = null;
                 }
             }
             base.Dispose(disposing);

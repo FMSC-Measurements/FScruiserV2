@@ -1,14 +1,11 @@
 #define APP "FSCruiserV2"
 
-#define APP_VERSION "2016.03.29"
-#define SETUPVERSION "20160329"
+#define APP_VERSION "2016.04.01"
+#define SETUPVERSION "20160401"
 #define SPECIALTAG "Production"
 #define BASEURL "http://www.fs.fed.us/fmsc/measure"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
 
-
-#define DOTNET_INI "netcf20.ini"
-#define FSCRUISER_INI "FSCruiserV2_CF20.ini"
 
 [Setup]
 AppName=FSCruiser V2

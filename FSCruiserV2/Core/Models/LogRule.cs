@@ -8,31 +8,44 @@ namespace FSCruiser.Core.Models
     public class LogRule
     {
         public List<string> Species { get; private set; }
-        public List<LogHeightInfo> LogHeights { get; private set; }
+        public IList<LogHeightClass> LogHeights { get; private set; }
 
         public LogRule()
         {
-            LogHeights = new List<LogHeightInfo>();
+            LogHeights = new List<LogHeightClass>();
         }
 
-        public LogRule(string species)
+        public LogRule(string species) : this()
         {
             var speciesArray = species.Split(' ');
             this.Species = new List<string>(speciesArray);
         }
 
-        public void AddLogHeight(LogHeightInfo logHeightInfo)
+        public void Add(LogHeightClass logHeightInfo)
         {
             LogHeights.Add(logHeightInfo);
         }
 
-        public uint GetDefaultLogHeight(float height, float dbh)
+        public double GetDefaultLogCount(float height, float dbh, long mrchHgtLL)
         {
-            foreach (LogHeightInfo lhi in LogHeights)
+            foreach (LogHeightClass lhi in LogHeights)
             {
                 if (lhi.Range.IsInRange(height))
                 {
-                    return lhi.GetDefaultLogCount(dbh);
+                    var logCnt16Ft = lhi.GetDefaultLogCount(dbh);
+
+                    if (mrchHgtLL == 16)
+                    {
+                        return logCnt16Ft;
+                    }
+                    if (mrchHgtLL == 32)
+                    {
+                        return logCnt16Ft / 2.0;
+                    }
+                    else 
+                    {
+                        return 0;
+                    }
                 }
             }
 

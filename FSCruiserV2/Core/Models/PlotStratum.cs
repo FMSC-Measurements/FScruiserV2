@@ -19,6 +19,16 @@ namespace FSCruiser.Core.Models
         }
 
         [IgnoreField]
+        public bool IsSingleStage
+        {
+            get
+            {
+                return this.Method == CruiseDAL.Schema.CruiseMethods.PNT
+                    || this.Method == CruiseDAL.Schema.CruiseMethods.FIX;
+            }
+        }
+
+        [IgnoreField]
         public IList<PlotVM> Plots { get; protected set; }
 
 

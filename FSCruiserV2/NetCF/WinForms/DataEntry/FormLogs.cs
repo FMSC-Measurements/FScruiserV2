@@ -158,25 +158,11 @@ namespace FSCruiser.WinForms.DataEntry
         public DialogResult ShowDialog(TreeVM tree)
         {
             this._currentTree = tree;
-            this._treeDesLbl.Text = tree.GetLogLevelDescription();
+            this._treeDesLbl.Text = tree.LogLevelDiscription;
 
-            this._logs = new BindingList<LogDO>(tree.QueryLogs());
+            this._logs = new BindingList<LogDO>(tree.LoadLogs());
             this._logNumIndex = tree.ReadHighestLogNumber();
-            //if (_logs.Count == 0)
-            //{
-            //    _logNumIndex = 0;
-            //}
-            //else
-            //{
-            //    try
-            //    {
-            //        _logNumIndex = Convert.ToInt32(this._logs[_logs.Count - 1].LogNumber);
-            //    }
-            //    catch
-            //    {
-            //        _logNumIndex = 0;
-            //    }
-            //}
+
             this._BS_Logs.DataSource = this._logs;
             this._dataGrid.DataSource = this._BS_Logs;
             this._dataGrid.Focus();
