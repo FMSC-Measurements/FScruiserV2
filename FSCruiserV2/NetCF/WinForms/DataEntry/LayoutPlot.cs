@@ -334,7 +334,7 @@ namespace FSCruiser.WinForms.DataEntry
             _sgColumn = _tableStyle.GridColumnStyles["SampleGroup"] as EditableComboBoxColumn;
             _treeNumberColumn = _tableStyle.GridColumnStyles["TreeNumber"] as EditableTextBoxColumn;
             _initialsColoumn = _tableStyle.GridColumnStyles["Initials"] as EditableComboBoxColumn;
-            _logsColumn = _tableStyle.GridColumnStyles["LogCount"] as DataGridButtonColumn;
+            _logsColumn = _tableStyle.GridColumnStyles["LogCountActual"] as DataGridButtonColumn;
             _kpiColumn = _tableStyle.GridColumnStyles["KPI"] as EditableTextBoxColumn;
 
             if (_logsColumn != null)
@@ -676,17 +676,17 @@ namespace FSCruiser.WinForms.DataEntry
 
         }
 
-        public bool PreviewKeypress(string key)
+        public bool PreviewKeypress(KeyEventArgs ea)
         {
             if (_viewLoading) { return false; }
-            switch (key)
+            switch (ea.KeyCode)
             {
-                case "Add":
+                case Keys.Add:
                     {
                         this._addPlotButton_Click(null, null);
                         return true;
                     }
-                case "Escape":
+                case Keys.Escape:
                     {
                         IsGridExpanded = !IsGridExpanded;
                         return true;

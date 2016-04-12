@@ -252,7 +252,9 @@ namespace FSCruiser.WinForms
                 {
                     CheckBox cb = new CheckBox();
                     cb.Dock = DockStyle.Top;
-                    cb.Text = tdv.ToString("[Species]-[LiveDead]-[Chargeable]", null);
+                    cb.Text = String.Format("{0}-{1}",
+                        tdv.Species,
+                        tdv.LiveDead);
 
                     sg.TreeDefaultValues.Populate();
                     if (sg.TreeDefaultValues.Contains(tdv))

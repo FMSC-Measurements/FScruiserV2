@@ -132,6 +132,7 @@
       <DependentUpon>FormDataEntry.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\TreeValidationWorker.cs" />
+    <Compile Include="PlatformHelper.WinForms.cs" />
     <Compile Include="WinForms.Common\FormCruiserSelection.cs">
       <SubType>Form</SubType>
     </Compile>

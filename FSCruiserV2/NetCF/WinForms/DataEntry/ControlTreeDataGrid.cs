@@ -45,35 +45,6 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        //public String[] VisableFields
-        //{
-        //    get
-        //    {
-        //        return DataGridAdjuster.GetTreeFieldNames(this.Controller._cDal, this.Controller.CurrentUnit, null);
-        //    }
-        //}
-
-
-        //public System.Windows.Forms.BindingSource TreeBindingSource
-        //{
-        //    get { return _BS_trees; }
-        //    set
-        //    {
-        //        if (this._BS_trees == value) { return; }
-        //        if (_BS_trees != null)
-        //        {
-        //            _BS_trees.CurrentChanged -= this._BS_trees_CurrentChanged;
-        //        }
-
-        //        _BS_trees = value;
-        //        this.DataSource = value;
-        //        if (_BS_trees != null)
-        //        {
-        //            _BS_trees.CurrentChanged += this._BS_trees_CurrentChanged;
-        //        }
-        //    }
-        //}
-
         public ControlTreeDataGrid(IApplicationController controller, FormDataEntryLogic dataEntryController, InputPanel sip)
         {
             this.Controller = controller;
@@ -102,32 +73,6 @@ namespace FSCruiser.WinForms.DataEntry
             _logsColumn = tableStyle.GridColumnStyles["LogCountActual"] as DataGridButtonColumn;
             _kpiColumn = tableStyle.GridColumnStyles["KPI"] as EditableTextBoxColumn;
 
-            //if (_speciesColumn != null)
-            //{
-            //    _speciesColumn.SelectedValueChanged += new EventHandler(SelectedSpeciesChanged);
-            //}
-
-            //if (_sgColumn != null)
-            //{
-            //    _sgColumn.SelectedValueChanged += new EventHandler(SelectedSampleGroupChanged);
-            //}
-
-            //if (_stratumColumn != null)
-            //{
-            //    //
-            //    _stratumColumn.SelectedValueChanged += new EventHandler(SelectedStratumChanged);
-            //}
-
-            //if (_treeNumberColumn != null)
-            //{
-            //    _treeNumberColumn.Validating += new System.ComponentModel.CancelEventHandler(TreeNumberTextBox_Validating);
-            //    //_treeNumberColumn.TextChanged += new EventHandler(_treeNumberColumn_TextChanged);
-            //}
-            //if (_kpiColumn != null)
-            //{
-            //    _kpiColumn.CellEditBeginning += new CellEditEventHandler(_kpiColumn_CellEditBeginning);
-            //}
-
             if (_logsColumn != null)
             {
                 _logsColumn.Click += this.LogsClicked;
@@ -138,25 +83,6 @@ namespace FSCruiser.WinForms.DataEntry
                 _initialsColoumn.DataSource = this.Controller.Settings.Cruisers.ToArray();
             }
         }
-
-        //void _treeNumberColumn_TextChanged(object sender, EventArgs e)
-        //{
-        //    TextBox tb = (TextBox)sender;
-        //    try
-        //    {
-        //        int newTreeNumber = Convert.ToInt32(tb.Text);
-        //        if (!this.Controller.SetUnitTreeNumberSeqance(newTreeNumber))
-        //        {
-        //            tb.Undo();
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        tb.Undo();
-        //    }
-        //}
-
-        
 
 
         protected override void OnCellValidating(EditableDataGridCellValidatingEventArgs e)
@@ -316,6 +242,7 @@ namespace FSCruiser.WinForms.DataEntry
                 _stratumColumn.DataSource = DataEntryController.Unit.GetTreeBasedStrata();
             }
         }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -350,9 +277,9 @@ namespace FSCruiser.WinForms.DataEntry
             _viewLoading = false;
         }
 
-        public bool PreviewKeypress(string key)
+        public bool PreviewKeypress(KeyEventArgs ea)
         {
-            if (key == "Escape")//esc
+            if (ea.KeyCode == Keys.Escape)//esc
             {
                 this.DataEntryController.View.GoToTallyPage();
                 return true;
@@ -362,12 +289,6 @@ namespace FSCruiser.WinForms.DataEntry
                 return false;
             }
         }
-
-        //public bool HandleEscKey()
-        //{
-        //        this.DataEntryController.View.GoToTallyPage();
-        //        return true;
-        //}
 
         public void HandleEnableLogGradingChanged()
         {
@@ -423,124 +344,5 @@ namespace FSCruiser.WinForms.DataEntry
 
         #endregion
 
-        //protected void TreeNumberTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        //{
-        //    TextBox tb = (TextBox)sender;
-        //    try
-        //    {
-        //        int newTreeNumber = Convert.ToInt32(tb.Text);
-        //        if (!this.Controller.SetUnitTreeNumberSeqance(newTreeNumber))
-        //        {
-        //            tb.Undo();
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        tb.Undo();
-        //    }
-        //}
-
-        //void SelectedStratumChanged(object sender, EventArgs e)
-        //{
-        //    if (!_changingTree)
-        //    {
-        //        TreeVM tree = _BS_trees.Current as TreeVM;
-        //        StratumDO stratum = null;
-        //        if (_stratumColumn != null)
-        //        {
-        //            stratum = _stratumColumn.EditComboBox.SelectedItem as StratumDO;
-        //        }
-        //        if (tree == null || stratum == null) { return; }
-        //        if (tree.Stratum == stratum) { return; }
-        //        if (tree.Stratum != null)
-        //        {
-        //            if (MessageBox.Show("You are changing the stratum of a tree, are you sure you want to do this?", "!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2)
-        //                == DialogResult.No)
-        //            {
-        //                return;//do not change stratum
-        //            }
-        //            else
-        //            {
-        //                //log stratum changed
-        //                this.Controller._cDal.LogMessage(String.Format("Tree Stratum Changed (Cu:{0} St:{1} -> {2} Sg:{3} Tdv_CN:{4} T#: {5}",
-        //                    tree.CuttingUnit.Code,
-        //                    tree.Stratum.Code,
-        //                    stratum.Code,
-        //                    (tree.SampleGroup != null) ? tree.SampleGroup.Code : "?",
-        //                    (tree.TreeDefaultValue != null) ? tree.TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?",
-        //                    tree.TreeNumber), "high");
-        //            }
-        //        }
-
-
-        //        tree.Species = null;
-        //        tree.SampleGroup = null;
-        //        ApplicationController.SetTreeTDV(tree, null);
-        //        tree.Stratum = stratum;
-        //        this.UpdateSampleGroupColumn(tree);
-        //        this.UpdateSpeciesColumn(tree);
-        //        this.Controller.TrySaveTree(tree);
-
-
-        //    }
-        //}
-
-        //void SelectedSampleGroupChanged(object sender, EventArgs e)
-        //{
-        //    if (!_changingTree)
-        //    {
-        //        TreeVM tree = _BS_trees.Current as TreeVM;
-        //        SampleGroupDO sg = null;
-        //        if (_sgColumn != null)
-        //        {
-        //            sg = _sgColumn.EditComboBox.SelectedItem as SampleGroupDO;
-        //        }
-        //        if (tree == null || sg == null) { return; }
-        //        if (tree.SampleGroup == sg) { return; }
-        //        if (tree.SampleGroup != null)
-        //        {
-        //            if (MessageBox.Show("You are changing the Sample Group of a tree, are you sure you want to do this?", "!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2)
-        //                == DialogResult.No)
-        //            {
-        //                return;//disregard changes
-        //            }
-        //            else
-        //            {
-
-        //                this.Controller._cDal.LogMessage(String.Format("Tree Sample Group Changed (Cu:{0} St:{1} Sg:{2} -> {3} Tdv_CN:{4} T#: {5}",
-        //                    tree.CuttingUnit.Code,
-        //                    tree.Stratum.Code,
-        //                    (tree.SampleGroup != null) ? tree.SampleGroup.Code : "?",
-        //                    sg.Code,
-        //                    (tree.TreeDefaultValue != null) ? tree.TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?",
-        //                    tree.TreeNumber), "high");
-        //            }
-        //        }
-
-        //        tree.SampleGroup = sg;
-        //        if (!sg.TreeDefaultValues.Contains(tree.TreeDefaultValue))
-        //        {
-        //            ApplicationController.SetTreeTDV(tree, null);
-        //        }
-        //        this.UpdateSpeciesColumn(tree);
-        //        this.Controller.TrySaveTree(tree);
-        //    }
-        //}
-
-        //private void SelectedSpeciesChanged(object sender, EventArgs e)
-        //{
-        //    if (!_changingTree)
-        //    {
-        //        TreeVM tree = _BS_trees.Current as TreeVM;
-        //        TreeDefaultValueDO tdv = null;
-        //        if (_speciesColumn != null)
-        //        {
-        //            tdv = _speciesColumn.EditComboBox.SelectedItem as TreeDefaultValueDO;
-        //        }
-        //        if (tree == null || tdv == null) { return; }
-        //        ApplicationController.SetTreeTDV(tree, tdv);
-        //        this.Controller.TrySaveTree(tree);
-        //    }
-        //}
     }
 }

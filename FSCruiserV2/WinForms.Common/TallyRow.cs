@@ -60,6 +60,14 @@ namespace FSCruiser.WinForms.DataEntry
             this._tallyBTN.Text = buttonText;
         }
 
+        public void AdjustHeight()
+        {
+            
+            var g = base.CreateGraphics();
+            var fHeight = g.MeasureString("|", _tallyBTN.Font).Height;
+            this.Height = (int)Math.Ceiling(2.2 * fHeight);
+        }
+
         protected void OnTallyButtonClicked(object sender, EventArgs e)
         {
             if(TallyButtonClicked != null)

@@ -220,8 +220,8 @@ namespace FSCruiser.WinForms.Common
             base.OnKeyUp(e);
             if (e.Handled) { return; }
 
-            var key = e.KeyData.ToString();
-            e.Handled = this.LogicController.HandleKeyPress(key);
+
+            e.Handled = this.LogicController.HandleKeyPress(e);
 
             //switch(e.KeyData)
             //{

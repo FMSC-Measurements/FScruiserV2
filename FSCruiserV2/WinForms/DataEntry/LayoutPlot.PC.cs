@@ -411,17 +411,17 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
 
-        public bool PreviewKeypress(string key)
+        public bool PreviewKeypress(KeyEventArgs ea)
         {
             if (_viewLoading) { return false; }
-            switch (key)
+            switch (ea.KeyCode)
             {
-                case "Add":
+                case Keys.Add:
                     {
                         this._addPlotButton_Click(null, null);
                         return true;
                     }
-                case "Escape":
+                case Keys.Escape:
                     {
                         //#warning not implemented
                         return false;
