@@ -386,11 +386,11 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public bool PreviewKeypress(string key)
+        public bool PreviewKeypress(KeyEventArgs ea)
         {
-            switch (key)
+            switch (ea.KeyCode)
             {
-                case "Escape": //esc
+                case Keys.Escape: //esc
                     {
                         this.DataEntryController.View.GoToTallyPage();
                         return true;
