@@ -313,8 +313,9 @@ namespace FSCruiser.WinForms
             row.TallyButtonClicked += new EventHandler(this.OnTallyButtonClicked);
             row.SettingsButtonClicked += new EventHandler(this.OnTallySettingsClicked);
 
-            row.Height = 56;
+            
             row.Parent = container;
+            row.AdjustHeight();
 
             row.Dock = DockStyle.Top;
             row.ResumeLayout(false);
