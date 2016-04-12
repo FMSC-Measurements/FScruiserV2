@@ -107,12 +107,12 @@ namespace FSCruiser.Core.Models
         {
             get
             {
-                return String.Format("Tree:{0} Sp:{1} DBH:{2} Ht:{3} MrchHt:{4} Logs:{5}",
+                return String.Format("Tree:{0}  Sp:{1}  DBH:{2} Ht:{3}  Log Length:{4}  Logs:{5}",
                 TreeNumber,
                 Species,
                 DBH,
                 TotalHeight,
-                MerchHeightPrimary,
+                (TreeDefaultValue != null) ? TreeDefaultValue.MerchHeightLogLength.ToString() : String.Empty,
                 LogCountDesired);
             }
         }
@@ -324,6 +324,8 @@ namespace FSCruiser.Core.Models
 
         public double GetDefaultLogCount()
         {
+            if (TreeDefaultValue == null) { return 0.0; }
+
             var retionLogInfo = this.CuttingUnit.Sale.GetRegionLogInfo();
             var mrchHtLL = TreeDefaultValue.MerchHeightLogLength;
 
