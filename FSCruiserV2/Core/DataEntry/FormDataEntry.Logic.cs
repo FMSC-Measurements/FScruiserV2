@@ -14,15 +14,12 @@ namespace FSCruiser.Core.DataEntry
 {
     public class FormDataEntryLogic
     {
-        public const char ESC_KEY_VALUE = char.MaxValue;
-
         private Dictionary<char, int> _stratumHotKeyLookup; 
 
         public IApplicationController Controller { get; set; }
         public IDataEntryView View { get; set; }
 
         public CuttingUnitVM Unit { get; set; }
-        //public List<CountTreeVM> Counts { get; protected set; }
 
         public DAL Database { get { return this.Unit.DAL; } }
         public IViewController ViewController { get { return this.Controller.ViewController; } }
@@ -589,16 +586,6 @@ namespace FSCruiser.Core.DataEntry
             return Array.IndexOf(Constants.HOTKEY_KEYS, c) != -1;
         }
 
-        //public bool HandleEscKey()
-        //{
-        //    IDataEntryPage view = this.View.FocusedLayout;
-        //    if (view != null)
-        //    {
-        //        return view.HandleEscKey();
-        //    }
-        //    return false;
-        //}
-
 
         public void HandleKPIChanging(TreeVM tree, float newKPI, bool doSample, out bool cancel)
         {
@@ -639,47 +626,6 @@ namespace FSCruiser.Core.DataEntry
             }
             cancel = false;
         }
-
-        //public void HandleSampleGroupChanged(ITreeView view, TreeVM tree)
-        //{
-        //    if (tree == null) { return; }
-        //    if (!tree.SampleGroup.TreeDefaultValues.Contains(tree.TreeDefaultValue))
-        //    {
-        //        tree.SetTreeTDV(null);
-        //    }
-        //    view.UpdateSpeciesColumn(tree);
-        //    tree.TrySave();
-        //}
-
-        //public void HandleSampleGroupChanging(TreeVM tree, SampleGroupDO newSG, out bool cancel)
-        //{
-        //    if (tree == null || newSG == null) { cancel = true; return; }
-        //    cancel =  !tree.NotifySampleGroupChanging(newSG, View);
-
-        //    //if (tree.SampleGroup != null && tree.SampleGroup_CN == newSG.SampleGroup_CN) { cancel = true; return; }
-        //    //if (tree.SampleGroup != null)
-        //    //{
-        //    //    if (MessageBox.Show("You are changing the Sample Group of a tree, are you sure you want to do this?", "!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2)
-        //    //        == DialogResult.No)
-        //    //    {
-        //    //        cancel = true;//disregard changes
-        //    //        return;
-        //    //    }
-        //    //    else
-        //    //    {
-
-        //    //        this.Database.LogMessage(String.Format("Tree Sample Group Changed (Cu:{0} St:{1} Sg:{2} -> {3} Tdv_CN:{4} T#: {5} P#:{6}",
-        //    //            tree.CuttingUnit.Code,
-        //    //            tree.Stratum.Code,
-        //    //            (tree.SampleGroup != null) ? tree.SampleGroup.Code : "?",
-        //    //            newSG.Code,
-        //    //            (tree.TreeDefaultValue != null) ? tree.TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?",
-        //    //            tree.TreeNumber,
-        //    //            (tree.Plot != null)? tree.Plot.PlotNumber.ToString() : "-"), "high");
-        //    //    }
-        //    //}
-        //    //cancel = false;
-        //}
 
         public bool HandleSpeciesChanged(TreeVM tree, TreeDefaultValueDO tdv)
         {
@@ -778,18 +724,7 @@ namespace FSCruiser.Core.DataEntry
         void _loadUnitWorker_DoneLoading(object sender, EventArgs e)
         {
             this.View.HandleCuttingUnitDataLoaded();
-        }
-
-        //public void SaveCounts()
-        //{
-        //    foreach (CountTreeVM count in Counts)
-        //    {
-        //        count.Save();
-        //    }
-        //}
-
-
-        
+        }        
 
         public void HandleViewClosing(CancelEventArgs e)
         {
