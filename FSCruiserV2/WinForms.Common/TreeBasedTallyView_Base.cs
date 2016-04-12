@@ -390,18 +390,18 @@ namespace FSCruiser.WinForms
             this._viewLoading = false;
         }
 
-        public bool PreviewKeypress(string key)
+        public bool PreviewKeypress(KeyEventArgs key)
         {
-            if (key == "Escape")//esc
+            if (key.KeyCode == Keys.Escape)//esc
             {
                 this.DataEntryController.View.GotoTreePage();
                 return true;
             }
-
-            if (key.Length == 1)
+            else
             {
-                var keyChar = char.ToUpper(key[0]);
-                if (StrataHotKeyLookup.ContainsKey(keyChar))
+                var keyChar = PlatformHelper.KeyToChar(key.KeyCode);
+                if (keyChar != char.MinValue
+                    && StrataHotKeyLookup.ContainsKey(keyChar))
                 {
                     DisplayTallyPanel(StrataHotKeyLookup[keyChar]);
                     return true;
@@ -409,12 +409,6 @@ namespace FSCruiser.WinForms
             }
             return false;
         }
-
-        //public bool HandleEscKey()
-        //{
-        //    this.DataEntryController.View.GotoTreePage();
-        //    return true;
-        //}
 
         #endregion
     }

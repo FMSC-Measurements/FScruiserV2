@@ -7,6 +7,6 @@ namespace FSCruiser.Core.ViewInterfaces
         bool ViewLoading { get; }
         void HandleLoad();
 
-        bool PreviewKeypress(string key);
+        bool PreviewKeypress(KeyEventArgs ea);
     }
 }

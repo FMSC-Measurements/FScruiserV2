@@ -437,32 +437,6 @@ namespace FSCruiser.Core.DataEntry
             return "Unit: " + this.Unit.Code + ", " + this.Unit.Description;
         }
 
-//        public IList<StratumInfo> GetUnitPlotStrata()
-//        {
-//            CuttingUnitDO unit = this.Controller.CurrentUnit;
-//            IList<StratumInfo> list = this.Controller._cDal.Read<StratumInfo>("Stratum",
-//@"JOIN CuttingUnitStratum USING (Stratum_CN) 
-//WHERE CuttingUnitStratum.CuttingUnit_CN = ? 
-//AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', 'P3PNT')", unit.CuttingUnit_CN);
-//            foreach (StratumInfo s in list)
-//            {
-//                if (s.Plots == null)
-//                {
-//                    s.Plots = this.Controller._cDal.Read<PlotInfo>("Plot", "WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber", s.Stratum_CN, unit.CuttingUnit_CN);
-//                }
-//                if (s.Method == "3PPNT")
-//                {
-//                    if (s.KZ3PPNT <= 0)
-//                    {
-//                        MessageBox.Show("error 3PPNT missing KZ value, please return to Cruise System Manger and fix");
-//                        return null;
-//                    }
-//                    s.SampleSelecter = new FMSC.Sampling.ThreePSelecter((int)s.KZ3PPNT, 1000000, 0);
-//                }
-//            }
-//            return list;
-//        }
-
         public void PopulateTallies(StratumVM stratum, DataEntryMode stratumMode, CuttingUnitVM unit, Panel container, ITallyView view)
         {
             if ((stratumMode & DataEntryMode.OneStagePlot) == DataEntryMode.OneStagePlot)
@@ -509,10 +483,6 @@ namespace FSCruiser.Core.DataEntry
                     counts.Add(count);
                 }
 
-                
-
-                //List<CountTreeVM> counts = _cDal.Read<CountTreeVM>(CruiseDAL.Schema.COUNTTREE._NAME, "JOIN SampleGroup WHERE CountTree.SampleGroup_CN = SampleGroup.SampleGroup_CN AND CuttingUnit_CN = ? AND SampleGroup.Stratum_CN = ?", unit.CuttingUnit_CN, stratum.Stratum_CN);
-                //Counts.AddRange(counts);
                 stratum.Counts = counts;
                 stratum.PopulateHotKeyLookup();
 
@@ -521,15 +491,6 @@ namespace FSCruiser.Core.DataEntry
                 {
                     foreach (CountTreeVM count in counts)
                     {
-                        //MakeSampleSelecter(count, stratumMode);
-                        //if (container.InvokeRequired)
-                        //{
-                        //    container.Invoke(f, container, count); //== view.MakeTallyRow(container, count);
-                        //}
-                        //else
-                        //{
-                        //    view.MakeTallyRow(container, count);
-                        //}
                         container.Invoke(f, container, count);
                     }
                     view.HandleStratumLoaded(container);
@@ -579,45 +540,43 @@ namespace FSCruiser.Core.DataEntry
         //    return this.ProcessHotKey(key, view);
         //}
 
-        public bool HandleKeyPress(string key)
+        public bool HandleKeyPress(KeyEventArgs ea)
         {
             var view = this.View.FocusedLayout;
 
             if (view != null)
             {
-                if (view.PreviewKeypress(key))
+                if (view.PreviewKeypress(ea))
                 {
                     return true;
                 }
                 else
                 {
                     var tallyView = view as ITallyView;
-                    if (tallyView != null)
+                    if (tallyView == null) { return false; }
+                    if (tallyView.HotKeyEnabled == false) { return false; }
+
+                    var key = PlatformHelper.KeyToChar(ea.KeyData);
+                    if (key == char.MinValue) { return false; }
+                    key = char.ToUpper(key);
+                    if (!IsHotkeyKey(key)) { return false; }
+
+                    //if valid stratm hot key, go to view that stratum belongs to
+                    if (this.StratumHotKeyLookup.ContainsKey(key))
                     {
-                        if (key.Length != 1) { return false; }
-                        var keyChar = char.ToUpper(key[0]);
-
-                        if (!IsHotkeyKey(keyChar)) { return false; }
-
-                        if (tallyView.HotKeyEnabled == false) { return false; }
-
-                        //if valid stratm hot key, go to view that stratum belongs to
-                        if (this.StratumHotKeyLookup.ContainsKey(keyChar))
-                        {
-                            this.View.GoToPageIndex(this.StratumHotKeyLookup[keyChar]);
-                            return true;
-                        }
-                        else if (tallyView.HotKeyLookup != null && tallyView.HotKeyLookup.ContainsKey(keyChar))//maybe a tally hotkey
-                        {
-                            CountTreeVM count = tallyView.HotKeyLookup[keyChar];
-                            tallyView.OnTally(count);
-                            return true;
-                        }
-                        else//not valid hotkey, get grumpy
-                        {
-                            this.ViewController.SignalInvalidAction();
-                            return true;
-                        }
+                        this.View.GoToPageIndex(this.StratumHotKeyLookup[key]);
+                        return true;
+                    }
+                    else if (tallyView.HotKeyLookup != null && tallyView.HotKeyLookup.ContainsKey(key))//maybe a tally hotkey
+                    {
+                        CountTreeVM count = tallyView.HotKeyLookup[key];
+                        tallyView.OnTally(count);
+                        return true;
+                    }
+                    else//not valid hotkey, get grumpy
+                    {
+                        this.ViewController.SignalInvalidAction();
+                        return true;
                     }
                 }
             }
