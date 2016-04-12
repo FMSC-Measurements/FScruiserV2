@@ -36,6 +36,19 @@ namespace FSCruiser.Core.Models
         [IgnoreField]
         public TallyHistoryCollection TallyHistoryBuffer { get; set; }
 
+        Sale _sale;
+        [IgnoreField]
+        public Sale Sale
+        {
+            get
+            {
+                if (_sale == null)
+                {
+                    this._sale = DAL.From<Sale>().Limit(1, 0).Query().FirstOrDefault();
+                }
+                return _sale;
+            }
+        }
 
 
         public CuttingUnitVM() 

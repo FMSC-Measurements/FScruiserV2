@@ -212,14 +212,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public static IList<LogDO> QueryLogs(this TreeDO tree) 
-        {
-            return tree.DAL.Query<LogDO>(new FMSC.ORM.Core.SQL.WhereClause("Log.Tree_CN = ? ORDER BY CAST (LogNumber AS NUMERIC)")
-                ,tree.Tree_CN);
 
-            //return tree.DAL.Read<LogDO>("WHERE Log.Tree_CN = ? ORDER BY CAST (LogNumber AS NUMERIC) "
-            //    ,(object)tree.Tree_CN);
-        }
 
         public static object ReadValidSampleGroups(this TreeVM tree)
         {
@@ -241,6 +234,7 @@ namespace FSCruiser.Core.Models
 
             if (tree.SampleGroup == null)
             {
+                //if stratum has only one sampleGroup, make it this tree's SG
                 if (tree.DAL.GetRowCount("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN) == 1)
                 {
                     tree.SampleGroup = tree.DAL.From<SampleGroupVM>()
@@ -248,6 +242,7 @@ namespace FSCruiser.Core.Models
                         .Read(tree.Stratum_CN)
                         .FirstOrDefault();
                 }
+
                 if (tree.SampleGroup == null)
                 {
                     return Constants.EMPTY_SPECIES_LIST;
@@ -277,16 +272,5 @@ namespace FSCruiser.Core.Models
 
         }
 
-        public static string GetLogLevelDescription(this TreeVM tree)
-        {
-            return String.Format("Tree:{0} Sp:{1} DBH:{2} Ht:{3} MrchHt:{4} Logs:{5}",
-                tree.TreeNumber,
-                tree.Species,
-                tree.DBH,
-                tree.TotalHeight,
-                tree.MerchHeightPrimary,
-                tree.LogCount);
-
-        }
     }
 }

@@ -441,7 +441,7 @@ namespace FSCruiser.WinForms
 
             DataGridButtonColumn logsCol = new DataGridButtonColumn();
             logsCol.HeaderText = "Logs";
-            logsCol.MappingName = "LogCount";
+            logsCol.MappingName = "LogCountActual";
             logsCol.Width = (enableLogs) ? Constants.LOG_COLUMN_WIDTH : -1;
             tblStyle.GridColumnStyles.Add(logsCol);
 

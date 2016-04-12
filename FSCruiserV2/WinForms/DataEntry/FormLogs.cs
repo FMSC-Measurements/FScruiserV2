@@ -15,9 +15,8 @@ namespace FSCruiser.WinForms.DataEntry
     public partial class FormLogs : Form
     {
         public IApplicationController Controller { get; protected set; }
-        private TreeDO _currentTree;
-        private BindingList<LogDO> _logs;
-        private int _logNumIndex;
+        TreeDO _currentTree;
+        BindingList<LogDO> _logs;
         DataGridViewTextBoxColumn _logNumColumn;
 
 
@@ -38,27 +37,13 @@ namespace FSCruiser.WinForms.DataEntry
 
         public DialogResult ShowDialog(TreeVM tree)
         {
-            this._currentTree = tree;
-            this._treeDesLbl.Text = tree.GetLogLevelDescription();
+            if (tree == null) { throw new ArgumentNullException("tree"); }
 
-            this._logs = new BindingList<LogDO>(tree.QueryLogs());
-            //this._logNumIndex = tree.ReadHighestLogNumber();
-            //if (_logs.Count == 0)
-            //{
-            //    _logNumIndex = 0;
-            //}
-            //else
-            //{
-            //    try
-            //    {
-            //        _logNumIndex = Convert.ToInt32(this._logs[_logs.Count - 1].LogNumber);
-            //    }
-            //    catch
-            //    {
-            //        _logNumIndex = 0;
-            //    }
-            //}
-            //this._BS_Logs.DataSource = this._logs;
+            this._logs = new BindingList<LogDO>(tree.LoadLogs());
+
+            this._currentTree = tree;
+            this._treeDesLbl.Text = tree.LogLevelDiscription;
+
             this._dataGrid.DataSource = this._logs;
             this._dataGrid.Focus();
             tree.LogCountDirty = true;

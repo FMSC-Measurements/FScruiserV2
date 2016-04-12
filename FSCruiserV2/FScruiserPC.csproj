@@ -67,6 +67,10 @@
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="Core\Exceptions.cs" />
+    <Compile Include="Core\Models\LogHeightClass.cs" />
+    <Compile Include="Core\Models\LogRule.cs" />
+    <Compile Include="Core\Models\RegionLogInfo.cs" />
+    <Compile Include="Core\Models\Sale.cs" />
     <Compile Include="Core\System\FloatExtentions.cs" />
     <Compile Include="Core\ViewInterfaces\IView.cs" />
     <Compile Include="Core\Workers\FileLoadWorker.cs" />
@@ -108,6 +112,18 @@
     <Compile Include="Core\Workers\Worker.cs" />
     <Compile Include="Core\Workers\WorkerExceptionThrownEventArgs.cs" />
     <Compile Include="Core\Workers\WorkerProgressChangedEventArgs.cs" />
+    <Compile Include="WinForms.Common\FixCntTallyControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCntTallyControl.Designer.cs">
+      <DependentUpon>FixCntTallyControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCntTallyRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCntTallyRow.Designer.cs">
+      <DependentUpon>FixCntTallyRow.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms.Common\FormCruiserSelection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -216,14 +232,20 @@
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="WinForms\ViewController.PC.cs" />
     <Compile Include="Properties\AssemblyInfo.PC.cs" />
+    <EmbeddedResource Include="WinForms.Common\FixCntTallyRow.resx">
+      <DependentUpon>FixCntTallyRow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormCruiserSelection.resx">
       <DependentUpon>FormCruiserSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormDataEntryBase.resx">
       <DependentUpon>FormDataEntryBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormPlotInfo.resx">
       <DependentUpon>FormPlotInfo.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\TallyRow.resx">
       <DependentUpon>TallyRow.cs</DependentUpon>
@@ -231,6 +253,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\TreeBasedTallyView_Base.resx">
       <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\CuttingUnitSelectView.resx">
       <DependentUpon>CuttingUnitSelectView.cs</DependentUpon>
@@ -242,9 +265,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\DataEntry\FormLogs.resx">
       <DependentUpon>FormLogs.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\DataEntry\SampleGroupRow.resx">
       <DependentUpon>SampleGroupRow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\FormAbout.PC.resx">
       <DependentUpon>FormAbout.PC.cs</DependentUpon>

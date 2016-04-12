@@ -2,9 +2,13 @@
 {
     public static class FloatExtentions
     {
+        public static float DEFAULT_EPSILON = 0.000001f;
+
+        #region Equals
+
         public static bool EqualsEx(this float x, float y)
         {
-            return x.EqualsEx(y, .000001f);
+            return x.EqualsEx(y, DEFAULT_EPSILON);
         }
 
         public static bool EqualsEx(this float x, float y, float epsilon)
@@ -25,7 +29,7 @@
         public static bool EqualsEx(this float x, float? y)
         {
             if (y == null) { return false; }
-            return x.EqualsEx(y.Value, .000001f);
+            return x.EqualsEx(y.Value, DEFAULT_EPSILON);
         }
 
         public static bool EqualsEx(this float x, float? y, float epsilon)
@@ -38,7 +42,7 @@
         {
             
             if (x == null) { return false; }
-            return x.Value.EqualsEx(y, .000001f);
+            return x.Value.EqualsEx(y, DEFAULT_EPSILON);
         }
 
         public static bool EqualsEx(this float? x, float y, float epsilon)
@@ -52,11 +56,11 @@
             if (x == null && y == null) { return true; }
             else if (x != null)
             {
-                return x.Value.EqualsEx(y, .000001f);
+                return x.Value.EqualsEx(y, DEFAULT_EPSILON);
             }
             else
             {
-                return y.Value.EqualsEx(x, .000001f);
+                return y.Value.EqualsEx(x, DEFAULT_EPSILON);
             }
         }
 
@@ -72,6 +76,92 @@
                 return y.Value.EqualsEx(x, epsilon);
             }
         }
+
+        #endregion
+
+        #region Less Than Or Equals
+
+        public static bool LessThanOrEqualsEx(this float x, float y)
+        {
+            return x.LessThanOrEqualsEx(y, DEFAULT_EPSILON);
+        }
+
+        public static bool LessThanOrEqualsEx(this float x, float y, float epsilon)
+        {
+            if (x.EqualsEx(y, epsilon))
+            {
+                return true;
+            }
+            else
+            {
+                return x < y;
+            }
+        }
+
+        #endregion
+
+        #region Less Than
+
+        public static bool LessThanEx(this float x, float y)
+        {
+            return x.LessThanEx(y, DEFAULT_EPSILON);
+        }
+
+        public static bool LessThanEx(this float x, float y, float epsilon)
+        {
+            if (x.EqualsEx(y, epsilon))
+            {
+                return false;
+            }
+            else
+            {
+                return x < y;
+            }
+        }
+
+        #endregion
+
+        #region Greater Than Or Equals
+
+        public static bool GreaterThanOrEqualsEx(this float x, float y)
+        {
+            return x.GreaterThanOrEqualsEx(y, DEFAULT_EPSILON);
+        }
+
+        public static bool GreaterThanOrEqualsEx(this float x, float y, float epsilon)
+        {
+            if (x.EqualsEx(y, epsilon))
+            {
+                return true;
+            }
+            else
+            {
+                return x > y;
+            }
+        }
+
+        #endregion
+
+        #region Greater Than 
+
+        public static bool GreaterThanEx(this float x, float y)
+        {
+            return x.GreaterThanEx(y, DEFAULT_EPSILON);
+        }
+
+        public static bool GreaterThanEx(this float x, float y, float epsilon)
+        {
+            if (x.EqualsEx(y, epsilon))
+            {
+                return false;
+            }
+            else
+            {
+                return x > y;
+            }
+        }
+
+        #endregion
 
     }
 }
