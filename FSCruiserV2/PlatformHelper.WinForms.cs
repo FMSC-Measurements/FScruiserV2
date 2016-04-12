@@ -74,7 +74,7 @@ namespace FSCruiser
                 case Keys.OemCloseBrackets:    //oem6
                     return ']';
                 case Keys.OemQuotes:        //oem7
-                    return ''';
+                    return '"';
                 case Keys.OemBackslash: //oem102
                     return '/';
                 case Keys.Oemplus:
