@@ -93,9 +93,8 @@ namespace FSCruiser.Core.DataEntry
         {
             if (pInfo != null)
             {
-                this.EndEdit();
-                var worker = new TreeValidationWorker(pInfo.Trees);
-                if (!worker.ValidateTrees())
+                this.EndEdit();                
+                if (!pInfo.ValidateTrees())
                 {
                     return this.View.AskContinueOnCurrnetPlotTreeError();
                 }
