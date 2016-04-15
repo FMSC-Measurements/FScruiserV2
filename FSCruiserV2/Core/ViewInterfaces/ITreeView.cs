@@ -10,18 +10,34 @@ namespace FSCruiser.Core.ViewInterfaces
         //String[] VisableFields { get; }
         IList<TreeVM> Trees { get; }
 
-        
-        void ShowHideErrorCol();
+        bool ErrorColumnVisable { get; set; }
+        bool LogColumnVisable { get; set; }
         
         void HandleEnableLogGradingChanged();
         void HandleCruisersChanged();
-        void DeleteRow();
+        void DeleteSelectedTree();
         void EndEdit();
-        void MoveLast();
+        void MoveLastTree();
         void MoveHomeField();
         TreeVM UserAddTree();
 
-        void UpdateSpeciesColumn(TreeVM tree);
-        void UpdateSampleGroupColumn(TreeVM tree);
+        //void UpdateSpeciesColumn(TreeVM tree);
+        //void UpdateSampleGroupColumn(TreeVM tree);
     }
+
+    public static class ITreeViewExtentions
+    {
+        public static void ToggleErrorColumn(this ITreeView view)
+        {
+            if (view == null) { return; }
+            view.ErrorColumnVisable = !view.ErrorColumnVisable;
+        }
+
+        public static void ToggleLogColumn(this ITreeView view)
+        {
+            if (view == null) { return; }
+            view.LogColumnVisable = !view.LogColumnVisable; 
+        }
+    }
+
 }

@@ -22,7 +22,8 @@ namespace FSCruiser.WinForms.DataEntry
         private EditableTextBoxColumn _treeNumberColumn;
         private EditableComboBoxColumn _initialsColoumn;
         private DataGridButtonColumn _logsColumn;
-        private EditableTextBoxColumn _kpiColumn; 
+        private EditableTextBoxColumn _kpiColumn;
+        private DataGridTextBoxColumn _errorsColumn;
         private System.Windows.Forms.BindingSource _BS_trees;
         private IApplicationController Controller { get; set; }
 
@@ -72,6 +73,7 @@ namespace FSCruiser.WinForms.DataEntry
             _initialsColoumn = tableStyle.GridColumnStyles["Initials"] as EditableComboBoxColumn;
             _logsColumn = tableStyle.GridColumnStyles["LogCountActual"] as DataGridButtonColumn;
             _kpiColumn = tableStyle.GridColumnStyles["KPI"] as EditableTextBoxColumn;
+            _errorsColumn = tableStyle.GridColumnStyles["Errors"] as DataGridTextBoxColumn;
 
             if (_logsColumn != null)
             {
@@ -258,7 +260,45 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region ITreeView Members
 
-        public void MoveLast()
+        public bool ErrorColumnVisable
+        {
+            get
+            {
+                if (_errorsColumn != null)
+                {
+                    return _errorsColumn.Width > 0;
+                }
+                else { return false; }
+            }
+            set
+            {
+                if (_errorsColumn != null)
+                {
+                    _errorsColumn.Width = (value) ? Screen.PrimaryScreen.WorkingArea.Width : -1;
+                }
+            }
+        }
+
+        public bool LogColumnVisable
+        {
+            get
+            {
+                if (_logsColumn != null)
+                {
+                    return _logsColumn.Width > 0;
+                }
+                else { return false; }
+            }
+            set
+            {
+                if (_logsColumn != null)
+                {
+                    _logsColumn.Width = (value) ? Constants.LOG_COLUMN_WIDTH : -1;
+                }
+            }
+        }
+
+        public void MoveLastTree()
         {            
             this._BS_trees.MoveLast();
             this.MoveHomeField();
@@ -313,7 +353,7 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
 
-        public void DeleteRow()
+        public void DeleteSelectedTree()
         {
             TreeVM curTree = this._BS_trees.Current as TreeVM;
             if (curTree == null)
@@ -336,13 +376,6 @@ namespace FSCruiser.WinForms.DataEntry
             
         }
 
-
-        public void ShowHideErrorCol()
-        {
-            DataGridAdjuster.ShowHideErrorCol(this);
-        }
-
         #endregion
-
     }
 }

@@ -414,7 +414,7 @@ namespace FSCruiser.Core.DataEntry
             plot.AddTree(tree);
 
             //treeView.Trees.Add(tree);
-            treeView.MoveLast();
+            treeView.MoveLastTree();
             //this._dataGrid.CurrentColumnIndex = this._dataGrid.HomeColumnIndex;
 
             //count.TreeCount++;//TODO double check the rules for tree counts on plots 
@@ -434,8 +434,9 @@ namespace FSCruiser.Core.DataEntry
             return "Unit: " + this.Unit.Code + ", " + this.Unit.Description;
         }
 
-        public void PopulateTallies(StratumVM stratum, DataEntryMode stratumMode, CuttingUnitVM unit, Panel container, ITallyView view)
+        public void PopulateTallies(StratumVM stratum, CuttingUnitVM unit, Panel container, ITallyView view)
         {
+            var stratumMode = stratum.GetDataEntryMode();
             if ((stratumMode & DataEntryMode.OneStagePlot) == DataEntryMode.OneStagePlot)
             {
                 if (stratum.Method == "3PPNT")
@@ -635,18 +636,6 @@ namespace FSCruiser.Core.DataEntry
             return tree.TrySave();
         }
 
-        public void HandleStratumChanged(ITreeView view, TreeVM tree)
-        {
-            if (tree == null) { return; }
-
-            tree.Species = null;
-            tree.SampleGroup = null;
-            tree.SetTreeTDV(null);
-            view.UpdateSampleGroupColumn(tree);
-            view.UpdateSpeciesColumn(tree);
-            tree.TrySave();
-        }
-
         public void HandleStratumChanging(TreeVM tree, StratumDO st, out bool cancel)
         {
             if (tree == null || st == null) { cancel = true; return; }
@@ -687,7 +676,7 @@ namespace FSCruiser.Core.DataEntry
             ITreeView layout = this.View.FocusedLayout as ITreeView;
             if (layout != null)
             {
-                layout.DeleteRow();
+                layout.DeleteSelectedTree();
             }
         }
 
@@ -695,12 +684,14 @@ namespace FSCruiser.Core.DataEntry
         {
             ITreeView view = this.View.FocusedLayout as ITreeView;
             if (view == null) { return; }
-            view.ShowHideErrorCol();
+            view.ToggleErrorColumn();
         }
 
         public void HandleShowHideLogCol()
         {
-            this.ViewController.EnableLogGrading = !this.ViewController.EnableLogGrading;
+            ITreeView view = this.View.FocusedLayout as ITreeView;
+            if (view == null) { return; }
+            view.ToggleLogColumn();
         }
 
         public void HandleDisplayLimitingDistance()

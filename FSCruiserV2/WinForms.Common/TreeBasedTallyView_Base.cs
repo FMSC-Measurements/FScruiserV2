@@ -117,25 +117,17 @@ namespace FSCruiser.WinForms
 
                 StrataViews.Add(stratum, tallyContainer);
 
-                DataEntryMode mode = stratum.GetDataEntryMode();
                 this.DataEntryController.PopulateTallies(stratum
-                    , mode
                     , DataEntryController.Unit
                     , tallyContainer
                     , this);
 
-                //AdjustPanelHeight(tallyContainer);
 
                 if (string.IsNullOrEmpty(stratum.Hotkey) == false)
                 {
                     StrataHotKeyLookup.Add(char.ToUpper(stratum.Hotkey[0]), stratum);
                 }
             }
-
-            //foreach (Control c in _leftContentPanel.Controls)
-            //{
-            //    c.ResumeLayout(false);
-            //}
         }
 
         #region overrid methods

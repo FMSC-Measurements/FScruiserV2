@@ -351,7 +351,7 @@ namespace FSCruiser.WinForms.Common
         {
             if (_treeView != null)
             {
-                _treeView.MoveLast();
+                _treeView.MoveLastTree();
             }
         }
 

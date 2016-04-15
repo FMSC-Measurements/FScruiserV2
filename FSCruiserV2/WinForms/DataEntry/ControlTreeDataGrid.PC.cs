@@ -371,7 +371,44 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region ITreeView Members
 
-        
+        public bool ErrorColumnVisable
+        {
+            get
+            {
+                if (_errorMessageColumn != null)
+                {
+                    return _errorMessageColumn.Visible;
+                }
+                else { return false; }
+            }
+            set
+            {
+                if (_errorMessageColumn != null)
+                {
+                    _errorMessageColumn.Visible = value;
+                }
+            }
+        }
+
+        public bool LogColumnVisable
+        {
+            get
+            {
+                if (_logsColumn != null)
+                {
+                    return _logsColumn.Visible;
+                }
+                else { return false; }
+            }
+            set
+            {
+                if (_logsColumn != null)
+                {
+                    _logsColumn.Visible = value;
+                }
+            }
+        }
+
         public bool UserCanAddTrees
         {
             get
@@ -400,25 +437,11 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        //public bool HandleEscKey()
-        //{
-        //    this.DataEntryController.View.GoToTallyPage();
-        //    return true;
-        //}
-
         public void HandleLoad()
         {
             this._BS_trees.DataSource = DataEntryController.Unit.NonPlotTrees;
 
             _viewLoading = false;
-        }
-
-        public void ShowHideErrorCol()
-        {
-            if (this._errorMessageColumn != null)
-            {
-                this._errorMessageColumn.Visible = !this._errorMessageColumn.Visible;
-            }
         }
 
         public void HandleEnableLogGradingChanged()
@@ -437,7 +460,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void DeleteRow()
+        public void DeleteSelectedTree()
         {
             TreeVM curTree = this._BS_trees.Current as TreeVM;
             if (curTree == null)
@@ -462,7 +485,7 @@ namespace FSCruiser.WinForms.DataEntry
             base.EndEdit();
         }
 
-        public void MoveLast()
+        public void MoveLastTree()
         {
             this._BS_trees.MoveLast();
         }
@@ -486,7 +509,7 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 //t.TreeCount = 1; //for pc dont set tree count to 1
                 //this._BS_trees.Add(t);
-                this.MoveLast();
+                this.MoveLastTree();
                 this.MoveHomeField();
             }
             return t;
@@ -531,5 +554,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             base.Dispose(disposing);
         }
+
+
     }
 }

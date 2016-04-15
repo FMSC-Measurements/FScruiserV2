@@ -192,28 +192,6 @@ namespace FSCruiser.WinForms
             return tblStyle;
         }
 
-
-        public static void ShowHideErrorCol(EditableDataGrid grid)
-        {
-            DataGridColumnStyle erroCol = null;
-            try
-            {
-                erroCol = grid.TableStyle.GridColumnStyles["Error"];
-            }
-            catch {}
-            if(erroCol != null)
-            {
-                if(erroCol.Width > 0)
-                {
-                    erroCol.Width = -1;
-                }
-                else
-                {
-                    erroCol.Width = Screen.PrimaryScreen.WorkingArea.Width;
-                }
-            }
-        }
-
         private static int MeasureTextWidth(Control c, string text)
         {
             if (c == null)
