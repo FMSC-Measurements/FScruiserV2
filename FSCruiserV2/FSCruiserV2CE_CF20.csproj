@@ -67,6 +67,11 @@
     <Compile Include="Core\LoadCuttingUnitWorker.cs" />
     <Compile Include="Core\Models\DataEntryMode.cs" />
     <Compile Include="Core\Models\DataModelExtensions.cs" />
+    <Compile Include="Core\Models\FixCNTPlot.cs" />
+    <Compile Include="Core\Models\FixCNTStratum.cs" />
+    <Compile Include="Core\Models\FixCNTTallyBucket.cs" />
+    <Compile Include="Core\Models\FixCNTTallyClass.cs" />
+    <Compile Include="Core\Models\FixCNTTallyPopulation.cs" />
     <Compile Include="Core\Models\ITreeContaningModel.cs" />
     <Compile Include="Core\Models\LogHeightClass.cs" />
     <Compile Include="Core\Models\LogRule.cs" />

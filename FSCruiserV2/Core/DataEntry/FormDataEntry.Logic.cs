@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using CruiseDAL.DataObjects;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
-using FMSC.Sampling;
 using CruiseDAL;
-using FSCruiser.Core.ViewInterfaces;
+using CruiseDAL.DataObjects;
+using FMSC.Sampling;
 using FSCruiser.Core.Models;
+using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.DataEntry;
 
 namespace FSCruiser.Core.DataEntry
