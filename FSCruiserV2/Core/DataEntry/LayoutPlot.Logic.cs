@@ -279,24 +279,24 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public void HandleTreeNumberChanging(long newTreeNumber, out bool cancel)
-        {
-            try
-            {
+        //public void HandleTreeNumberChanging(long newTreeNumber, out bool cancel)
+        //{
+        //    try
+        //    {
 
-                if (!this.CurrentPlot.IsTreeNumberAvalible(newTreeNumber))
-                {
-                    cancel = true;
-                    return;
-                }
-            }
-            catch
-            {
-                cancel = true;
-                return;
-            }
-            cancel = false;
-        }
+        //        if (!this.CurrentPlot.IsTreeNumberAvalible(newTreeNumber))
+        //        {
+        //            cancel = true;
+        //            return;
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        cancel = true;
+        //        return;
+        //    }
+        //    cancel = false;
+        //}
 
         public void OnTally(CountTreeVM count)
         {
