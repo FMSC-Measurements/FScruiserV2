@@ -67,7 +67,9 @@
     <Compile Include="Core\LoadCuttingUnitWorker.cs" />
     <Compile Include="Core\Models\DataEntryMode.cs" />
     <Compile Include="Core\Models\DataModelExtensions.cs" />
+    <Compile Include="Core\Models\ILogFieldProvider.cs" />
     <Compile Include="Core\Models\ITreeContaningModel.cs" />
+    <Compile Include="Core\Models\ITreeFieldProvider.cs" />
     <Compile Include="Core\Models\LogHeightClass.cs" />
     <Compile Include="Core\Models\LogRule.cs" />
     <Compile Include="Core\Models\Plot3PPNT.cs" />

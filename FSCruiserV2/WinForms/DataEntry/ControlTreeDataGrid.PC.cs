@@ -41,15 +41,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         public int HomeColumnIndex { get; set; }
 
-
-        public String[] VisableFields
-        {
-            get
-            {
-                return DataGridAdjuster.GetTreeFieldNames(this.Controller._cDal, this.DataEntryController.Unit, null);
-            }
-        }
-
         public IList<TreeVM> Trees
         {
             get
@@ -85,8 +76,8 @@ namespace FSCruiser.WinForms.DataEntry
             //_BS_TreeSampleGroups.DataSource = typeof(SampleGroupDO);
             //((System.ComponentModel.ISupportInitialize)_BS_TreeSampleGroups).EndInit();
 
-            DataGridViewColumn[] columns = DataGridAdjuster.MakeTreeColumns(controller._cDal, DataEntryController.Unit, null, Controller.ViewController.EnableLogGrading);
-            base.Columns.AddRange(columns);
+            var columns = DataEntryController.Unit.MakeTreeColumns();
+            base.Columns.AddRange(columns.ToArray());
 
             _speciesColumn = base.Columns["Species"] as DataGridViewComboBoxColumn;
             _sgColumn = base.Columns["SampleGroup"] as DataGridViewComboBoxColumn;

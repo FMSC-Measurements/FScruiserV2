@@ -51,7 +51,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.Controller = controller;
             this.DataEntryController = dataEntryController;
             DataGridAdjuster.InitializeGrid(this);
-            DataGridTableStyle tableStyle = DataGridAdjuster.InitializeTreeColumns(controller._cDal, this, this.DataEntryController.Unit, null,this.Controller.ViewController.EnableLogGrading);
+            DataGridTableStyle tableStyle = DataEntryController.Unit.InitializeTreeColumns(this);
 
             this.AllowUserToAddRows = false;//don't allow down arrow to add tree
             this.SIP = sip;
@@ -61,7 +61,6 @@ namespace FSCruiser.WinForms.DataEntry
             this._BS_trees = new System.Windows.Forms.BindingSource();
             ((System.ComponentModel.ISupportInitialize)(this._BS_trees)).BeginInit();
             this._BS_trees.DataSource = typeof(TreeVM);
-            //this._BS_trees.AddingNew += new System.ComponentModel.AddingNewEventHandler(this.UserAddTree);
             this._BS_trees.CurrentChanged += new EventHandler(_BS_trees_CurrentChanged);
             this.DataSource = this._BS_trees;
             ((System.ComponentModel.ISupportInitialize)(this._BS_trees)).EndInit();

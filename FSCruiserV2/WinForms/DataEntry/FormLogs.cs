@@ -20,7 +20,7 @@ namespace FSCruiser.WinForms.DataEntry
         DataGridViewTextBoxColumn _logNumColumn;
 
 
-        public FormLogs(IApplicationController controller, long stratum_cn)
+        public FormLogs(IApplicationController controller, StratumVM stratum)
         {
             this.Controller = controller;
             InitializeComponent();
@@ -28,7 +28,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.AutoGenerateColumns = false;
             this._dataGrid.SuspendLayout();
             this._dataGrid.Columns.AddRange(
-                DataGridAdjuster.MakeLogColumns(controller._cDal, stratum_cn).ToArray());
+                stratum.MakeLogColumns().ToArray());
             this._dataGrid.ResumeLayout();
 
             _logNumColumn = _dataGrid.Columns[CruiseDAL.Schema.LOG.LOGNUMBER] as DataGridViewTextBoxColumn;

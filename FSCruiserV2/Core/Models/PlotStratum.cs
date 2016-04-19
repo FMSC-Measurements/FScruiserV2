@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using CruiseDAL;
 using FMSC.ORM.EntityModel.Attributes;
+using CruiseDAL.DataObjects;
 
 namespace FSCruiser.Core.Models
 {
@@ -108,5 +109,24 @@ namespace FSCruiser.Core.Models
             return true;
         }
 
+
+        public override List<TreeFieldSetupDO> ReadTreeFields()
+        {
+            var fields = base.ReadTreeFields();
+
+            //if not a single stage plot strata 
+            //and count measure field is missing 
+            //automaticly add it
+            if (!IsSingleStage
+                && fields.FindIndex(((tfs) => tfs.Field == CruiseDAL.Schema.TREE.COUNTORMEASURE)) < 0)
+            {
+                fields.Insert(5
+                    , new TreeFieldSetupDO() { 
+                        Field = CruiseDAL.Schema.TREE.COUNTORMEASURE
+                        , Heading = "C/M" });
+            }
+
+            return fields;
+        }
     }
 }
