@@ -138,6 +138,24 @@
     </Compile>
     <Compile Include="Core\TreeValidationWorker.cs" />
     <Compile Include="PlatformHelper.WinForms.cs" />
+    <Compile Include="WinForms.Common\FixCNTTallyButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCNTTallyButton.Designer.cs">
+      <DependentUpon>FixCNTTallyButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCntTallyControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCntTallyControl.Designer.cs">
+      <DependentUpon>FixCntTallyControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCntTallyRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCntTallyRow.Designer.cs">
+      <DependentUpon>FixCntTallyRow.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms.Common\FormCruiserSelection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -321,6 +339,12 @@
     <EmbeddedResource Include="NetCF\WinForms\FormBackupUtility.resx">
       <DependentUpon>FormBackupUtility.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\FixCNTTallyButton.resx">
+      <DependentUpon>FixCNTTallyButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\FixCntTallyRow.resx">
+      <DependentUpon>FixCntTallyRow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormCruiserSelection.resx">
       <DependentUpon>FormCruiserSelection.cs</DependentUpon>

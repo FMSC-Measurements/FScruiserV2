@@ -7,7 +7,7 @@ namespace FSCruiser.Core.Models
 {
     public class FixCNTPlot : PlotVM 
     {
-        public Dictionary<FixCNTTallyPopulation
+        public Dictionary<IFixCNTTallyPopulation
             , Dictionary<int, FixCNTTallyBucket>> TallyBuckets { get; protected set; }
 
 

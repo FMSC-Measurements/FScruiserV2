@@ -6,36 +6,45 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using FSCruiser.Core.Models;
 
 namespace FSCruiser.WinForms.Common
 {
     public partial class FixCntTallyControl : UserControl
     {
-        public FixCntTallyControl()
+        public FixCntTallyControl(IFixCNTTallyPopulationProvider provider)
         {
             InitializeComponent();
+
+            var tallyPopulations = provider.GetFixCNTTallyPopulations();
+
+            foreach (var pop in tallyPopulations)
+            {
+                var tallyRow = new FixCntTallyRow(pop) { Dock = DockStyle.Top };
+                this.Controls.Add(tallyRow);
+            }
+
         }
 
-        public void AddTallyRows(IFixCntObject[] objs)
+        protected override void OnResize(EventArgs e)
         {
-            if (this.Controls.Count > 0)
-                this.Controls.Clear();
+            base.OnResize(e);
 
-            int rowHeight = this.Height / objs.Count();
+            InternalAjustRowHeights();
+        }
 
-            int offsetY = 0;
+        protected void InternalAjustRowHeights()
+        {
+            var layoutHeight = this.Height;
+            var numTallyRows = Controls.Count;
 
-            foreach (IFixCntObject o in objs)
+            var rowHeight = layoutHeight / numTallyRows;
+
+            foreach (Control row in Controls)
             {
-                FixCntTallyRow row = new FixCntTallyRow(this.Width, rowHeight, o);
-
-                row.Dock = DockStyle.Fill;
-                row.Location = new Point(0, offsetY);
-
-                this.Controls.Add(row);
-
-                offsetY += rowHeight;
+                row.Height = rowHeight;
             }
         }
+
     }
 }

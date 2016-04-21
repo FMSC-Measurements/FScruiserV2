@@ -27,73 +27,43 @@ namespace FSCruiser.WinForms.Common
         /// Required method for Designer support - do not modify 
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent(int width, int height, IFixCntObject obj)
+        private void InitializeComponent()
         {
-            int panelContentWidth = width - lblTitle.Width;
-            int panelButtonHeight = height - 25;
-
-            this.lblTitle = new System.Windows.Forms.Label();
-            this.panel = new System.Windows.Forms.Panel();
-            this.pnlHeaders = new System.Windows.Forms.Panel();
-            this.pnlButtons = new System.Windows.Forms.Panel();
-            this.panel.SuspendLayout();
+            this._tallyContainer_PNL = new System.Windows.Forms.Panel();
+            this._speciesName_LBL = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // lblTitle
+            // _tallyContainer_PNL
             // 
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblTitle.Location = new System.Drawing.Point(0, 0);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(50, height);
-            this.lblTitle.Text = obj.Name;
-            this.lblTitle.Font = new Font(FontFamily.GenericSansSerif, 25);
+            this._tallyContainer_PNL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._tallyContainer_PNL.Location = new System.Drawing.Point(71, 0);
+            this._tallyContainer_PNL.Name = "_tallyContainer_PNL";
+            this._tallyContainer_PNL.Size = new System.Drawing.Size(327, 62);
             // 
-            // panel
+            // _speciesName_LBL
             // 
-            this.panel.Controls.Add(this.pnlButtons);
-            this.panel.Controls.Add(this.pnlHeaders);
-            this.panel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel.Location = new System.Drawing.Point(50, 0);
-            this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(panelContentWidth, height);
-            // 
-            // pnlHeaders
-            // 
-            //this.pnlHeaders.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.pnlHeaders.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlHeaders.Location = new System.Drawing.Point(0, 0);
-            this.pnlHeaders.Name = "pnlHeaders";
-            this.pnlHeaders.Size = new System.Drawing.Size(panelContentWidth, 25);
-            // 
-            // pnlButtons
-            // 
-            this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlButtons.Location = new System.Drawing.Point(0, 25);
-            this.pnlButtons.Name = "pnlButtons";
-            this.pnlButtons.Size = new System.Drawing.Size(panelContentWidth, panelButtonHeight);
-
+            this._speciesName_LBL.Dock = System.Windows.Forms.DockStyle.Left;
+            this._speciesName_LBL.Location = new System.Drawing.Point(0, 0);
+            this._speciesName_LBL.Name = "_speciesName_LBL";
+            this._speciesName_LBL.Size = new System.Drawing.Size(71, 62);
+            this._speciesName_LBL.Text = "label1";
             // 
             // FixCntTallyRow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panel);
-            this.Controls.Add(this.lblTitle);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.Controls.Add(this._tallyContainer_PNL);
+            this.Controls.Add(this._speciesName_LBL);
             this.Name = "FixCntTallyRow";
-            this.Size = new System.Drawing.Size(width, height);
-            this.panel.ResumeLayout(false);
+            this.Size = new System.Drawing.Size(398, 62);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label lblTitle;
-        private System.Windows.Forms.Panel panel;
-        private System.Windows.Forms.Panel pnlButtons;
-        private System.Windows.Forms.Panel pnlHeaders;
+        private System.Windows.Forms.Panel _tallyContainer_PNL;
+        private System.Windows.Forms.Label _speciesName_LBL;
+
 
     }
 }

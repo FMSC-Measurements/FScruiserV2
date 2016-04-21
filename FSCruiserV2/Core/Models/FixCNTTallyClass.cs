@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Text;
+using CruiseDAL.DataObjects;
 
 namespace FSCruiser.Core.Models
 {
@@ -11,7 +12,9 @@ namespace FSCruiser.Core.Models
     {
         public FixCNTTallyClassField FieldName { get; set; }
 
-        public long? SampleGroup_CN { get; set; }
+        public long? Stratum_CN { get; set; }
+
+        public FixCNTStratum Stratum { get; set; }
 
 
     }
