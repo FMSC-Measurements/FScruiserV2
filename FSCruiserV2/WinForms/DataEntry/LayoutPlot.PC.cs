@@ -80,7 +80,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this._datagrid_CellEnter);
 
             this._dataGrid.AutoGenerateColumns = false;
-            var columns = stratum.MakeLogColumns();
+            var columns = stratum.MakeTreeColumns();
             this._dataGrid.Columns.AddRange(columns.ToArray());
             this._dataGrid.ResumeLayout();
 
