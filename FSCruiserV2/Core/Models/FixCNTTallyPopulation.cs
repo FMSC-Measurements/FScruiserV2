@@ -10,6 +10,8 @@ namespace FSCruiser.Core.Models
     {
         //string SpeciesName { get; set; }
 
+        IFixCNTTallyClass TallyClass { get; set; }
+
         TreeDefaultValueDO TreeDefaultValue { get; set; }
         SampleGroupDO SampleGroup { get; set; }
 

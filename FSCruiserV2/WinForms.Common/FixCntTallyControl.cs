@@ -10,8 +10,17 @@ using FSCruiser.Core.Models;
 
 namespace FSCruiser.WinForms.Common
 {
+
+    public class FixCNTTallyEventArgs : EventArgs
+    {
+        public IFixCNTTallyBucket TallyBucket {get; set; }
+    }
+
+
     public partial class FixCntTallyControl : UserControl
     {
+        public IFixCNTTallyProvider TallyCountProvider { get; set; }
+
         public FixCntTallyControl(IFixCNTTallyPopulationProvider provider)
         {
             InitializeComponent();
@@ -20,9 +29,20 @@ namespace FSCruiser.WinForms.Common
 
             foreach (var pop in tallyPopulations)
             {
-                var tallyRow = new FixCntTallyRow(pop) { Dock = DockStyle.Top };
+                var tallyRow = new FixCntTallyRow(pop, this) { Dock = DockStyle.Top };
                 this.Controls.Add(tallyRow);
             }
+
+        }
+
+        public void NotifyTallyClicked(IFixCNTTallyBucket tallyBucket)
+        {
+            var ea = new FixCNTTallyEventArgs() { TallyBucket = tallyBucket };
+            OnTallyClicked(ea);
+        }
+
+        public void OnTallyClicked(FixCNTTallyEventArgs e)
+        {
 
         }
 

@@ -12,18 +12,25 @@ namespace FSCruiser.WinForms.Common
 {
     public partial class FixCntTallyRow : UserControl
     {
-        public FixCntTallyRow(IFixCNTTallyPopulation obj)
+        public FixCntTallyRow(IFixCNTTallyPopulation obj, FixCntTallyControl tallyLayout)
         {
             InitializeComponent();
+
+            TallyLayout = tallyLayout;
+
             this.SuspendLayout();
             foreach (var tally in obj.Buckets)
             {
-                var tallyButton = new FixCNTTallyButton(tally);
+                var tallyButton = new FixCNTTallyButton(tally, tallyLayout);
                 _tallyContainer_PNL.Controls.Add(tallyButton);
             }
             ResumeLayout(false);
 
         }
+
+
+        public FixCntTallyControl TallyLayout { get; set; }
+
 
         protected override void OnResize(EventArgs e)
         {

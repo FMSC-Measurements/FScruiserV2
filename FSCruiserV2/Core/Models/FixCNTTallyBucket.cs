@@ -5,28 +5,36 @@ using System.Text;
 
 namespace FSCruiser.Core.Models
 {
-    public class FixCNTTallyBucket
+    public interface IFixCNTTallyBucket
+    {
+        IFixCNTTallyPopulation TallyPopulation { get; set; }
+
+        double IntervalValue { get; set; }
+    }
+
+
+    public class FixCNTTallyBucket : IFixCNTTallyBucket
     {
         public IFixCNTTallyPopulation TallyPopulation { get; set; }
 
-        public double InvervalValue { get; set; }
+        public double IntervalValue { get; set; }
 
-        public int TreeCount { get; set; }
+        //public int TreeCount { get; set; }
 
-        public event EventHandler TreeCountChanged;
+        //public event EventHandler TreeCountChanged;
 
-        protected void NotifyTreeCountChanged()
-        {
-            this.OnTreeCountChanged(new EventArgs());
-        }
+        //protected void NotifyTreeCountChanged()
+        //{
+        //    this.OnTreeCountChanged(new EventArgs());
+        //}
 
-        protected void OnTreeCountChanged(EventArgs e)
-        {
-            if (TreeCountChanged != null)
-            {
-                this.TreeCountChanged(this, e);
-            }
-        }
+        //protected void OnTreeCountChanged(EventArgs e)
+        //{
+        //    if (TreeCountChanged != null)
+        //    {
+        //        this.TreeCountChanged(this, e);
+        //    }
+        //}
 
     }
 }

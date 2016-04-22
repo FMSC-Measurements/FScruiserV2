@@ -12,55 +12,70 @@ namespace FSCruiser.WinForms.Common
 {
     public partial class FixCNTTallyButton : UserControl
     {
-        public FixCNTTallyButton(FixCNTTallyBucket bucket)
+        public FixCNTTallyButton(FixCNTTallyBucket bucket, FixCntTallyControl tallyLayout)
         {
             InitializeComponent();
 
+            TallyLayout = tallyLayout;
+
             Bucket = bucket;
 
-            _bucketValue_LBL.Text = bucket.InvervalValue.ToString() + "\"";
+            _bucketValue_LBL.Text = bucket.IntervalValue.ToString() + "\"";
 
         }
 
-        FixCNTTallyBucket _bucket;
-        public FixCNTTallyBucket Bucket 
+        public FixCntTallyControl TallyLayout { get; set; }
+
+        //FixCNTTallyBucket _bucket;
+        public FixCNTTallyBucket Bucket { get; set; }
+        //{
+        //    get { return _bucket; }
+        //    set
+        //    {
+        //        if (_bucket != null)
+        //        {
+        //            UnWireTallyBucket(_bucket);
+        //        }
+        //        _bucket = value;
+        //        if (_bucket != null)
+        //        {
+        //            WireUpTallyBucket(_bucket);
+        //        }
+        //    }
+        //}
+
+        protected override void OnClick(EventArgs e)
         {
-            get { return _bucket; }
-            set
-            {
-                if (_bucket != null)
-                {
-                    UnWireTallyBucket(_bucket);
-                }
-                _bucket = value;
-                if (_bucket != null)
-                {
-                    WireUpTallyBucket(_bucket);
-                }
-            }
+            base.OnClick(e);
+
+            this.TallyLayout.NotifyTallyClicked(this.Bucket);
         }
 
-        protected void WireUpTallyBucket(FixCNTTallyBucket value)
-        {
-            _bucketValue_LBL.Text = value.InvervalValue.ToString() + "\"";
-            value.TreeCountChanged += new EventHandler(Bucket_TreeCountChanged);
-        }
+        //protected void WireUpTallyBucket(FixCNTTallyBucket value)
+        //{
+        //    _bucketValue_LBL.Text = value.IntervalValue.ToString() + "\"";
+        //    value.TreeCountChanged += new EventHandler(Bucket_TreeCountChanged);
+        //}
 
-        protected void UnWireTallyBucket(FixCNTTallyBucket value)
-        {
-            _bucketValue_LBL.Text = string.Empty;
-            value.TreeCountChanged -= Bucket_TreeCountChanged;
-        }
+        //protected void UnWireTallyBucket(FixCNTTallyBucket value)
+        //{
+        //    _bucketValue_LBL.Text = string.Empty;
+        //    value.TreeCountChanged -= Bucket_TreeCountChanged;
+        //}
 
-        void Bucket_TreeCountChanged(object sender, EventArgs e)
-        {
-            UpdateTreeCount();
-        }
+        //void Bucket_TreeCountChanged(object sender, EventArgs e)
+        //{
+        //    UpdateTreeCount();
+        //}
 
-        private void UpdateTreeCount()
+        public void UpdateTreeCount()
         {
-            _tallyCount_LBL.Text = this.Bucket.TreeCount.ToString();
+            var tallyCountProvider = TallyLayout.TallyCountProvider;
 
+            var tallyCount = tallyCountProvider.GetTallyCount(this.Bucket).ToString();
+                _tallyCount_LBL.Text = (tallyCountProvider != null) ?
+                    tallyCountProvider.GetTallyCount(this.Bucket).ToString() :
+                    "no plot";
         }
     }
 }
