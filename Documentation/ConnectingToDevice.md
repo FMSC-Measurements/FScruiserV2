@@ -28,8 +28,7 @@ The device disconnects while transferring files
 ---------------------------------------------
 - plug USB cable directly into device, if using a dock
 - reinstall WMDC
-
-
+- If the device is an Allegro MX and the issue is still occurring, download and install this patch: http://www.junipersys.com/Juniper-Systems-Rugged-Handheld-Computers/support/Downloads/Allegro-Field-PC/Allegro-MX/ActiveSync-network-security-conflict-patch-utility
 
 Additional Troubleshooting
 --------------------------
