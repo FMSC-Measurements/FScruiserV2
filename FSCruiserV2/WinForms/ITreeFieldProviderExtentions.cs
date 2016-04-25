@@ -24,6 +24,7 @@ namespace FSCruiser.WinForms
                         {
                             col = new DataGridViewComboBoxColumn()
                             {
+                                DataPropertyName = "TreeDefaultValue",                                
                                 DisplayMember = "Species",
                                 ValueMember = "Self",
                                 FlatStyle = FlatStyle.Flat

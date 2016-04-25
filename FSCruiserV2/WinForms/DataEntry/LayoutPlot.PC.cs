@@ -84,7 +84,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.Columns.AddRange(columns.ToArray());
             this._dataGrid.ResumeLayout();
 
-            _speciesColumn = _dataGrid.Columns["Species"] as DataGridViewComboBoxColumn;
+            _speciesColumn = _dataGrid.Columns["TreeDefaultValue"] as DataGridViewComboBoxColumn;
             _sgColumn = _dataGrid.Columns["SampleGroup"] as DataGridViewComboBoxColumn;
             _treeNumberColumn = _dataGrid.Columns["TreeNumber"] as DataGridViewTextBoxColumn;
             _initialsColoumn = _dataGrid.Columns["Initials"] as DataGridViewComboBoxColumn;

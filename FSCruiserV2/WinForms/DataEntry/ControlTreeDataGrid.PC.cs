@@ -79,7 +79,7 @@ namespace FSCruiser.WinForms.DataEntry
             var columns = DataEntryController.Unit.MakeTreeColumns();
             base.Columns.AddRange(columns.ToArray());
 
-            _speciesColumn = base.Columns["Species"] as DataGridViewComboBoxColumn;
+            _speciesColumn = base.Columns["TreeDefaultValue"] as DataGridViewComboBoxColumn;
             _sgColumn = base.Columns["SampleGroup"] as DataGridViewComboBoxColumn;
             _stratumColumn = base.Columns["Stratum"] as DataGridViewComboBoxColumn;
             _treeNumberColumn = base.Columns["TreeNumber"] as DataGridViewTextBoxColumn;
@@ -209,6 +209,10 @@ namespace FSCruiser.WinForms.DataEntry
         protected override void OnCellValidating(DataGridViewCellValidatingEventArgs e)
         {
             base.OnCellValidating(e);
+
+            if (e.RowIndex > base.RowCount - 1 || e.RowIndex < 0) { return; }
+            if (e.ColumnIndex > base.ColumnCount - 1 || e.ColumnIndex < 0) { return; }
+
             var cell = base[e.ColumnIndex,e.RowIndex];
             if (cell == null) { return; }
             if (cell.FormattedValue == e.FormattedValue) { return; }//are there any changes? 
@@ -217,10 +221,10 @@ namespace FSCruiser.WinForms.DataEntry
             try
             {
                 curTree = this._BS_trees[e.RowIndex] as TreeVM;
+                if (curTree == null) { return; }
             }
             catch (ArgumentOutOfRangeException) { return; }//ignore posible out of bound exceptions
-            if (curTree == null) { return; }
-
+            
             object cellValue = e.FormattedValue;
             cellValue = cell.ParseFormattedValue(cellValue, cell.InheritedStyle, null, null);
 
@@ -247,12 +251,6 @@ namespace FSCruiser.WinForms.DataEntry
                 {
                     e.Cancel = true;
                 }
-
-                //SampleGroupVM sg = cellValue as SampleGroupVM;
-                //bool cancel = e.Cancel;
-                //this.DataEntryController.HandleSampleGroupChanging(curTree, sg, out cancel);
-                //e.Cancel = cancel;
-
             }
             else if (_speciesColumn != null && e.ColumnIndex == _speciesColumn.Index)
             {
@@ -275,50 +273,6 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-
-
-        //protected bool ProcessSampleGroupChanging(TreeVM tree, SampleGroupVM newSG)
-        //{
-        //    if (tree == null || newSG == null) {  return true; }
-        //    //if (tree.SampleGroup == newSG) { return false; }
-        //    if (tree.SampleGroup != null)
-        //    {
-        //        if (MessageBox.Show("You are changing the Sample Group of a tree, are you sure you want to do this?", "!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2)
-        //            == DialogResult.No)
-        //        {
-        //            return false;
-        //        }
-        //        else
-        //        {
-
-        //            this.Controller._cDal.LogMessage(String.Format("Tree Sample Group Changed (Cu:{0} St:{1} Sg:{2} -> {3} Tdv_CN:{4} T#: {5}",
-        //                tree.CuttingUnit.Code,
-        //                tree.Stratum.Code,
-        //                (tree.SampleGroup != null) ? tree.SampleGroup.Code : "?",
-        //                newSG.Code,
-        //                (tree.TreeDefaultValue != null) ? tree.TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?",
-        //                tree.TreeNumber), "high");
-        //            tree.SampleGroup = newSG;
-        //        }
-        //    }
-        //    if (!tree.SampleGroup.TreeDefaultValues.Contains(tree.TreeDefaultValue))
-        //    {
-        //        tree.SetTreeTDV(null);
-        //    }
-        //    return tree.TrySave();
-        //}
-
-
-
-
-        //protected bool ProcessSpeciesChanged(TreeVM tree, TreeDefaultValueDO tdv)
-        //{
-        //    if (tree == null) { return true; }
-        //    if (tree.TreeDefaultValue == tdv) { return true; }
-        //    tree.SetTreeTDV(tdv);
-        //    return tree.TrySave();
-        //}
-
         public void UpdateSampleGroupColumn(TreeVM tree)
         {
             this.UpdateSampleGroupColumn(tree, this.CurrentCell as DataGridViewComboBoxCell);
@@ -340,24 +294,6 @@ namespace FSCruiser.WinForms.DataEntry
             if (cell == null) { return; }
             cell.DataSource = tree.ReadValidTDVs();
         }
-
-        //private void UpdateSampleGroupColumn(TreeVM tree, DataGridViewComboBoxEditingControl editControl)
-        //{
-        //    object sel = editControl.SelectedItem;
-        //    if(editControl.DataSource != this._BS_TreeSampleGroups)//generaly always true
-        //    {
-        //        editControl.DataSource = this._BS_TreeSampleGroups;
-        //    }
-
-        //    this._BS_TreeSampleGroups.SuspendBinding();
-        //    this._BS_TreeSampleGroups.DataSource = Controller.GetTreeSGList(tree);
-        //    this._BS_TreeSampleGroups.ResumeBinding();
-
-        //    this._BS_TreeSampleGroups.Position = this._BS_TreeSampleGroups.IndexOf(sel);
-
-            
-        //}
-
 
 
         #region ITreeView Members
