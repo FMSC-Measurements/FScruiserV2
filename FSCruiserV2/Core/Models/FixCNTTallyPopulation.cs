@@ -13,7 +13,7 @@ namespace FSCruiser.Core.Models
         IFixCNTTallyClass TallyClass { get; set; }
 
         TreeDefaultValueDO TreeDefaultValue { get; set; }
-        SampleGroupDO SampleGroup { get; set; }
+        SampleGroupVM SampleGroup { get; set; }
 
         double IntervalSize { get; set; }
         double Min { get; set; }
@@ -40,7 +40,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public SampleGroupDO SampleGroup
+        public SampleGroupVM SampleGroup
         {
             get
             {

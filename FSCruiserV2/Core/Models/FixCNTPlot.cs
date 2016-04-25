@@ -14,7 +14,7 @@ namespace FSCruiser.Core.Models
 
     public interface IFixCNTTallyProvider
     {
-        event EventHandler TallyCountChanged;
+        event EventHandler<TallyCountChangedEventArgs> TallyCountChanged;
 
         int GetTallyCount(FixCNTTallyBucket tallyBucket);
 
@@ -23,10 +23,34 @@ namespace FSCruiser.Core.Models
 
     }
 
-    public class FixCNTPlot : PlotVM 
+    public class FixCNTPlot : PlotVM, IFixCNTTallyProvider
     {
-        public Dictionary<IFixCNTTallyPopulation
-            , Dictionary<int, FixCNTTallyBucket>> TallyBuckets { get; protected set; }
+        public event EventHandler<TallyCountChangedEventArgs> TallyCountChanged;
+
+        public Dictionary<FixCNTTallyBucket, int> TallyCounts { get; protected set; }
+
+        public int GetTallyCount(FixCNTTallyBucket tallyBucket)
+        {
+            return TallyCounts[tallyBucket];
+
+            throw new NotImplementedException();
+        }
+
+        public void Tally(FixCNTTallyBucket tallyBucket)
+        {
+
+            var tree = base.CreateNewTreeEntry(tallyBucket.TallyPopulation.SampleGroup,
+                tallyBucket.TallyPopulation.TreeDefaultValue, true);
+            tallyBucket.TallyPopulation.TallyClass.SetTreeFieldValue(tree, tallyBucket);
+
+
+            
+
+            throw new NotImplementedException();
+        }
+
+
+
 
 
 
