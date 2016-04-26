@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="FSCruiser.Core.Models.FixCNTTallyPopulation" Collapsed="true">
+    <Position X="5.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABQAAEBEAABAAEAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Core\Models\FixCNTTallyPopulation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FSCruiser.Core.Models.FixCNTStratum" Collapsed="true">
+    <Position X="8.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Models\FixCNTStratum.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.658" />
+  </Class>
+  <Class Name="FSCruiser.Core.Models.FixCNTTallyClass" Collapsed="true">
+    <Position X="3.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAABAAAAAAICAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Core\Models\FixCNTTallyClass.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.TallyCountChangedEventArgs">
+    <Position X="0.5" Y="2.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAIA=</HashCode>
+      <FileName>Core\Models\FixCNTPlot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.Core.Models.FixCNTPlot" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAMAAAAAAAAIAAAhAAAIgAAAAA=</HashCode>
+      <FileName>Core\Models\FixCNTPlot.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FSCruiser.WinForms.Common.FixCNTTallyButton">
+    <Position X="0.5" Y="6.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAACAAAACAEAACAAACAAAAAAAAAIAIAAA=</HashCode>
+      <FileName>WinForms.Common\FixCNTTallyButton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.WinForms.Common.FixCNTTallyEventArgs">
+    <Position X="7" Y="6.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>WinForms.Common\FixCntTallyControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.WinForms.Common.FixCntTallyControl">
+    <Position X="7" Y="8" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAICAAAAAAQCCAAAACABAAIQAAAAAAAAAgAEA=</HashCode>
+      <FileName>WinForms.Common\FixCntTallyControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FSCruiser.WinForms.Common.FixCntTallyRow">
+    <Position X="3.75" Y="6.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACQAAAAAQACAEAACIAAAAAAAQAAAAIAAAAA=</HashCode>
+      <FileName>WinForms.Common\FixCntTallyRow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="FSCruiser.Core.Models.IFixCNTTallyPopulation">
+    <Position X="5.75" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>CEAABAAAEBEAgBAAEAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Core\Models\FixCNTTallyPopulation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FSCruiser.Core.Models.IFixCNTTallyPopulationProvider">
+    <Position X="8.25" Y="0.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Models\FixCNTStratum.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FSCruiser.Core.Models.IFixCNTTallyClass">
+    <Position X="3.25" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAABAAAAAAIAAAAAAACAAAAAAgAA=</HashCode>
+      <FileName>Core\Models\FixCNTTallyClass.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FSCruiser.Core.Models.IFixCNTTallyCountProvider">
+    <Position X="0.5" Y="0.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAABAAAAgAAAAA=</HashCode>
+      <FileName>Core\Models\FixCNTPlot.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="FSCruiser.Core.Models.FixCNTTallyField" Collapsed="true">
+    <Position X="3.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAABA=</HashCode>
+      <FileName>Core\Models\FixCNTTallyClass.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

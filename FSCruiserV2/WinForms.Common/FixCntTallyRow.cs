@@ -54,20 +54,15 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-    }
+        public void HandleTreeCountChanged(TallyCountChangedEventArgs ea)
+        {
+            foreach (Control c in Controls)
+            {
+                var tallyButton = c as FixCNTTallyButton;
+                if (tallyButton != null)
+                { tallyButton.HandleTreeCountChanged(ea); }
+            }
+        }
 
-    public interface IFixCntObject
-    {
-        string Name { get; }
-
-        List<IFixCntTally> Tallys { get; }
-    }
-
-    public interface IFixCntTally : INotifyPropertyChanged
-    {
-        string Title { get; }
-        string Count { get; }
-
-        void Clicked(object sender, EventArgs e);
     }
 }

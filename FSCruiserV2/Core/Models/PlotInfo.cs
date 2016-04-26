@@ -132,7 +132,7 @@ namespace FSCruiser.Core.Models
         }
 
 
-        public void PopulateTrees()
+        public virtual void PopulateTrees()
         {
             if (this._trees == null)
             {

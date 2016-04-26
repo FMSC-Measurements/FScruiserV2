@@ -16,7 +16,9 @@ namespace FSCruiser.Core.Models
 
         FixCNTStratum Stratum { get; set; }
 
-        void SetTreeFieldValue(TreeVM tree, FixCNTTallyBucket tallyBucket);
+        void SetTreeFieldValue(TreeVM tree, IFixCNTTallyBucket tallyBucket);
+
+        double GetTreeFieldValue(TreeVM tree);
     }
 
     public class FixCNTTallyClass
@@ -27,7 +29,7 @@ namespace FSCruiser.Core.Models
 
         public FixCNTStratum Stratum { get; set; }
 
-        public void SetTreeFieldValue(TreeVM tree, FixCNTTallyBucket tallyBucket)
+        public void SetTreeFieldValue(TreeVM tree, IFixCNTTallyBucket tallyBucket)
         {
             if (this.FieldName == FixCNTTallyField.DBH)
             {
@@ -41,6 +43,22 @@ namespace FSCruiser.Core.Models
             {
                 throw new NotImplementedException();
             }
-        }        
+        }
+
+        public double GetTreeFieldValue(TreeVM tree)
+        {
+            if (this.FieldName == FixCNTTallyField.DBH)
+            {
+                return tree.DBH;
+            }
+            else if (FieldName == FixCNTTallyField.TotalHeight)
+            {
+                return tree.TotalHeight;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

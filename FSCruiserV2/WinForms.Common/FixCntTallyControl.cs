@@ -19,7 +19,20 @@ namespace FSCruiser.WinForms.Common
 
     public partial class FixCntTallyControl : UserControl
     {
-        public IFixCNTTallyProvider TallyCountProvider { get; set; }
+        IFixCNTTallyCountProvider _tallyCountProvider; 
+        public IFixCNTTallyCountProvider TallyCountProvider 
+        {
+            get { return _tallyCountProvider; }
+            set
+            {
+                if (_tallyCountProvider == value) { return; }
+                UnWireTallyCountProvider();
+                _tallyCountProvider = value;
+                WireTallyCountProvider();
+            }
+        }
+
+        
 
         public FixCntTallyControl(IFixCNTTallyPopulationProvider provider)
         {
@@ -35,6 +48,36 @@ namespace FSCruiser.WinForms.Common
 
         }
 
+        void WireTallyCountProvider()
+        {
+            var tallyCountProvider = TallyCountProvider;
+            if (tallyCountProvider != null)
+            {
+                tallyCountProvider.TallyCountChanged += new EventHandler<TallyCountChangedEventArgs>(tallyCountProvider_TallyCountChanged);
+            }
+        }
+
+        void UnWireTallyCountProvider()
+        {
+            var tallyCountProvider = TallyCountProvider;
+            if (tallyCountProvider != null)
+            {
+                tallyCountProvider.TallyCountChanged -= tallyCountProvider_TallyCountChanged;
+            }
+        }
+
+        void tallyCountProvider_TallyCountChanged(object sender, TallyCountChangedEventArgs e)
+        {
+            if (e == null) { throw new ArgumentNullException("e"); }
+
+            foreach (var c in Controls)
+            {
+                var tallyRow = c as FixCntTallyRow;
+                if (tallyRow != null)
+                { tallyRow.HandleTreeCountChanged(e); }
+            }
+        }
+
         public void NotifyTallyClicked(IFixCNTTallyBucket tallyBucket)
         {
             var ea = new FixCNTTallyEventArgs() { TallyBucket = tallyBucket };
@@ -43,7 +86,7 @@ namespace FSCruiser.WinForms.Common
 
         public void OnTallyClicked(FixCNTTallyEventArgs e)
         {
-
+            TallyCountProvider.Tally(e.TallyBucket);
         }
 
         protected override void OnResize(EventArgs e)

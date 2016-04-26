@@ -3,56 +3,102 @@
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.DataObjects;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
 
     public class TallyCountChangedEventArgs : EventArgs
     {
-        FixCNTTallyBucket TallyBucket;
+        public IFixCNTTallyBucket TallyBucket { get; set; }
+        public IFixCNTTallyCountProvider CountProvider { get; set; }
     }
 
-    public interface IFixCNTTallyProvider
+    public interface IFixCNTTallyCountProvider
     {
         event EventHandler<TallyCountChangedEventArgs> TallyCountChanged;
 
-        int GetTallyCount(FixCNTTallyBucket tallyBucket);
+        int GetTallyCount(IFixCNTTallyBucket tallyBucket);
 
-        void Tally(FixCNTTallyBucket tallyBucket);
-        
-
+        void Tally(IFixCNTTallyBucket tallyBucket);
     }
 
-    public class FixCNTPlot : PlotVM, IFixCNTTallyProvider
+    public class FixCNTPlot : PlotVM, IFixCNTTallyCountProvider
     {
         public event EventHandler<TallyCountChangedEventArgs> TallyCountChanged;
 
-        public Dictionary<FixCNTTallyBucket, int> TallyCounts { get; protected set; }
-
-        public int GetTallyCount(FixCNTTallyBucket tallyBucket)
+        public int GetTallyCount(IFixCNTTallyBucket tallyBucket)
         {
-            return TallyCounts[tallyBucket];
+            int count = 0;
+            var population = tallyBucket.TallyPopulation;
+            var tallyClass = population.TallyClass;
 
-            throw new NotImplementedException();
+            foreach (var tree in Trees)
+            {
+                if (tree.SampleGroup_CN == population.SampleGroup_CN
+                    && tree.TreeDefaultValue_CN == population.TreeDefaultValue_CN
+                    && tallyBucket.IntervalValue == tallyClass.GetTreeFieldValue(tree))
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
-        public void Tally(FixCNTTallyBucket tallyBucket)
+        [IgnoreField]
+        public new FixCNTStratum Stratum
         {
+            get
+            {
+                return (FixCNTStratum)base.Stratum;
+            }
+            set
+            {
+                base.Stratum = value;
+            }
+        }
 
+        public override StratumDO GetStratum()
+        {
+            if (DAL == null) { return null; }
+            return DAL.ReadSingleRow<FixCNTStratum>(this.Stratum_CN);
+        }
+
+        public override void PopulateTrees()
+        {
+            base.PopulateTrees();
+
+            NotifyTallyCountChanged(null);
+        }
+
+        protected void NotifyTallyCountChanged(IFixCNTTallyBucket tallyBucket)
+        {
+            var args = new TallyCountChangedEventArgs()
+            {
+                CountProvider = this
+                ,
+                TallyBucket = tallyBucket
+            };
+            OnTallyCountChanged(args);
+        }
+
+        protected void OnTallyCountChanged(TallyCountChangedEventArgs ea)
+        {
+            if (TallyCountChanged != null)
+            {
+                TallyCountChanged(this, ea);
+            }
+        }
+
+        public void Tally(IFixCNTTallyBucket tallyBucket)
+        {
             var tree = base.CreateNewTreeEntry(tallyBucket.TallyPopulation.SampleGroup,
                 tallyBucket.TallyPopulation.TreeDefaultValue, true);
             tallyBucket.TallyPopulation.TallyClass.SetTreeFieldValue(tree, tallyBucket);
 
-
-            
-
-            throw new NotImplementedException();
+            NotifyTallyCountChanged(tallyBucket);
         }
-
-
-
-
-
 
     }
 }

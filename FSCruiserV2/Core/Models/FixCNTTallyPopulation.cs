@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.DataObjects;
@@ -12,14 +12,19 @@ namespace FSCruiser.Core.Models
 
         IFixCNTTallyClass TallyClass { get; set; }
 
-        TreeDefaultValueDO TreeDefaultValue { get; set; }
-        SampleGroupVM SampleGroup { get; set; }
+        long? ID { get; }
+
+        long? SampleGroup_CN { get; }
+        long? TreeDefaultValue_CN { get; }
+
+        TreeDefaultValueDO TreeDefaultValue { get; }
+        SampleGroupVM SampleGroup { get; }
 
         double IntervalSize { get; set; }
         double Min { get; set; }
         double Max { get; set; }
 
-        IList<FixCNTTallyBucket> Buckets { get; set; }
+        ICollection<FixCNTTallyBucket> Buckets { get; }
 
     }
 
@@ -88,18 +93,36 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public IList<FixCNTTallyBucket> Buckets
+        ICollection<FixCNTTallyBucket> _buckets;
+        public ICollection<FixCNTTallyBucket> Buckets
         {
             get
             {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
+                if (_buckets == null)
+                {
+                    _buckets = MakeTallyBuckets().ToArray();
+                }
+                return _buckets;
             }
         }
 
         #endregion
+
+        IEnumerable<FixCNTTallyBucket> MakeTallyBuckets()
+        {
+            var interval = Min;
+            do
+            {
+                var bucket = new FixCNTTallyBucket()
+                {
+                    IntervalValue = interval
+                    ,TallyPopulation = this
+                };
+
+                interval += IntervalSize;
+
+                yield return bucket;
+            } while (interval <= Max);
+        }
     }
 }
