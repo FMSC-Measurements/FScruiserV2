@@ -54,7 +54,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public void PopulatePlots(long cuttingUnit_CN)
+        public virtual void PopulatePlots(long cuttingUnit_CN)
         {
             this.Plots = this.DAL.From<PlotVM>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
                 .OrderBy("PlotNumber")

@@ -437,7 +437,11 @@ namespace FSCruiser.Core.DataEntry
         public void PopulateTallies(StratumVM stratum, CuttingUnitVM unit, Panel container, ITallyView view)
         {
             var stratumMode = stratum.GetDataEntryMode();
-            if ((stratumMode & DataEntryMode.OneStagePlot) == DataEntryMode.OneStagePlot)
+            if (stratum is FixCNTStratum)
+            {
+                //don't initialize tallies for FixCNT
+            }
+            else if ((stratumMode & DataEntryMode.OneStagePlot) == DataEntryMode.OneStagePlot)
             {
                 if (stratum.Method == "3PPNT")
                 {

@@ -42,6 +42,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         public bool ViewLoading { get { return _viewLoading; } }
 
+        public PlotStratum Stratum { get; set; }
+
         public IList<TreeVM> Trees
         {
             get
@@ -58,6 +60,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, PlotStratum stratum)
         {
+            Stratum = stratum;
             this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController, dataEntryController.ViewController);
             this.Dock = DockStyle.Fill;            
             InitializeComponent();
@@ -105,11 +108,31 @@ namespace FSCruiser.WinForms.DataEntry
             }
 
 
+            if (stratum is FixCNTStratum)
+            {
+                var openFixCNTTallyButton = new Button()
+                {
+                    Text = "Open Tally Screen"
+                    , Dock = DockStyle.Top
+                };
+                openFixCNTTallyButton.Click +=new EventHandler(openFixCNTTallyButton_Click);
+                this._tallyListPanel.Controls.Add(openFixCNTTallyButton);
+            }
+
             //no need to load tallies....?
             //Controller.PopulateTallies(this.StratumInfo, this._mode, Controller.CurrentUnit, this._tallyListPanel, this);
             this.Parent = parent;
 
 
+        }
+
+        void openFixCNTTallyButton_Click(object sender, EventArgs e)
+        {
+            var stratum = Stratum as FixCNTStratum;
+            var currentPlot = ViewLogicController.CurrentPlot as FixCNTPlot;
+            if (stratum == null || currentPlot == null) { return; }
+            var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum);
+            view.ShowDialog(currentPlot);
         }
 
         protected override void OnLoad(EventArgs e)

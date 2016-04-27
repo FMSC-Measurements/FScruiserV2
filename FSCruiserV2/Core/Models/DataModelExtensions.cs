@@ -53,11 +53,17 @@ namespace FSCruiser.Core.Models
                 + "AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')")
                 .Query(unit.CuttingUnit_CN).ToList();
 
-//            IList<PlotStratum> list = unit.DAL.Query<PlotStratum>(
-//@"JOIN CuttingUnitStratum USING (Stratum_CN) 
-//WHERE CuttingUnitStratum.CuttingUnit_CN = ? 
-//AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')", (object)unit.CuttingUnit_CN);
-            
+            var fixCNT = unit.DAL.From<FixCNTStratum>()
+                .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
+                .Where("CUST.CuttingUnit_CN = ? "
+                + "AND Stratum.Method = 'FIXCNT'")
+                .Query(unit.CuttingUnit_CN);
+
+            foreach (var st in fixCNT)
+            {
+                list.Add(st);
+            }
+
             return list;
         }
     }

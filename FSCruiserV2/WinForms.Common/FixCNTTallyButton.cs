@@ -37,8 +37,11 @@ namespace FSCruiser.WinForms.Common
             this.TallyLayout.NotifyTallyClicked(this.Bucket);
         }
 
-        public void HandleTreeCountChanged(IFixCNTTallyCountProvider tallyCountProvider)
+        public void HandleTreeCountChanged(TallyCountChangedEventArgs ea)
         {
+            if (ea.TallyBucket != null && ea.TallyBucket != this) { return; }
+
+            var tallyCountProvider = ea.CountProvider;
             if (tallyCountProvider != null)
             {
 

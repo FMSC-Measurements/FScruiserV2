@@ -118,6 +118,12 @@
     <Compile Include="Core\Workers\WorkerExceptionThrownEventArgs.cs" />
     <Compile Include="Core\Workers\WorkerProgressChangedEventArgs.cs" />
     <Compile Include="PlatformHelper.WinForms.cs" />
+    <Compile Include="WinForms.Common\FixCNTForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCNTForm.Designer.cs">
+      <DependentUpon>FixCNTForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms.Common\FixCNTTallyButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -244,6 +250,9 @@
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="WinForms\ViewController.PC.cs" />
     <Compile Include="Properties\AssemblyInfo.PC.cs" />
+    <EmbeddedResource Include="WinForms.Common\FixCNTForm.resx">
+      <DependentUpon>FixCNTForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FixCNTTallyButton.resx">
       <DependentUpon>FixCNTTallyButton.cs</DependentUpon>
     </EmbeddedResource>

@@ -33,6 +33,13 @@ namespace FSCruiser.Core.Models
 
         #region IFixCNTTallyPopulation Members
 
+        public IFixCNTTallyClass TallyClass { get; set; }
+
+        public long? ID { get; set; }
+
+        public long? SampleGroup_CN { get; set; }
+        public long? TreeDefaultValue_CN { get; set; }
+
         public TreeDefaultValueDO TreeDefaultValue
         {
             get
