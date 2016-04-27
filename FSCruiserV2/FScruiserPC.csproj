@@ -67,6 +67,11 @@
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="Core\Exceptions.cs" />
+    <Compile Include="Core\Models\FixCNTPlot.cs" />
+    <Compile Include="Core\Models\FixCNTStratum.cs" />
+    <Compile Include="Core\Models\FixCNTTallyBucket.cs" />
+    <Compile Include="Core\Models\FixCNTTallyClass.cs" />
+    <Compile Include="Core\Models\FixCNTTallyPopulation.cs" />
     <Compile Include="Core\Models\LogHeightClass.cs" />
     <Compile Include="Core\Models\LogRule.cs" />
     <Compile Include="Core\Models\RegionLogInfo.cs" />
