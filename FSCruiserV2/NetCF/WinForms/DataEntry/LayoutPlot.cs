@@ -224,8 +224,6 @@ namespace FSCruiser.WinForms.DataEntry
         public System.Windows.Forms.ComboBox _plotSelectCB;
         public System.Windows.Forms.Panel _tallyListPanel;
 
-        //public System.Windows.Forms.BindingSource _BS_Trees;
-        //public System.Windows.Forms.BindingSource _BS_Plots;
         private System.Windows.Forms.BindingSource _BS_TDV;
 
         #endregion Designer code
@@ -400,7 +398,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._expandGridButton.ImageList = this._imageList;
         }
 
-        private void UpdateSpeciesColumn(TreeVM tree)
+        void UpdateSpeciesColumn(TreeVM tree)
         {
             if (_speciesColumn != null)
             {
@@ -408,7 +406,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        private void UpdateSampleGroupColumn(TreeVM tree)
+        void UpdateSampleGroupColumn(TreeVM tree)
         {
             if (_sgColumn != null)
             {
@@ -418,7 +416,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region event handlers
 
-        private void openFixCNTTallyButton_Click(object sender, EventArgs e)
+        void openFixCNTTallyButton_Click(object sender, EventArgs e)
         {
             var stratum = Stratum as FixCNTStratum;
             var currentPlot = ViewLogicController.CurrentPlot as FixCNTPlot;
@@ -429,7 +427,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        private void _expandGridButton_Click(object sender, EventArgs e)
+        void _expandGridButton_Click(object sender, EventArgs e)
         {
             IsGridExpanded = !IsGridExpanded;
         }
@@ -450,7 +448,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.DataEntryController.ShowLogs(tree);
         }
 
-        private void _dataGrid_CellValidating(object sender, EditableDataGridCellValidatingEventArgs e)
+        void _dataGrid_CellValidating(object sender, EditableDataGridCellValidatingEventArgs e)
         {
             bool cancel = false;
             TreeVM tree = null;
@@ -501,7 +499,7 @@ namespace FSCruiser.WinForms.DataEntry
             e.Cancel = cancel;
         }
 
-        private void _dataGrid_CellValueChanged(object sender, EditableDataGridCellEventArgs e)
+        void _dataGrid_CellValueChanged(object sender, EditableDataGridCellEventArgs e)
         {
             TreeVM tree = this.ViewLogicController.CurrentTree;
             if (tree == null || e.Column == null) { return; }
@@ -517,7 +515,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        private void _dataGrid_Click(object sender, EventArgs e)
+        void _dataGrid_Click(object sender, EventArgs e)
         {
             if (IsGridExpanded == false)
             {
@@ -527,7 +525,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         //ocures during a FIX or PNT cruise, when user clicks a Sample Group.
         //Expands a list of species in the sample group
-        private void sgButton_Click(object sender, EventArgs e)
+        void sgButton_Click(object sender, EventArgs e)
         {
             Button sgButton = (Button)sender;
             Panel spContainer = (Panel)sgButton.Tag;
@@ -536,7 +534,7 @@ namespace FSCruiser.WinForms.DataEntry
             //Controller.OnTally();
         }
 
-        private void SettingsButton_Click(object sender, EventArgs e)
+        void SettingsButton_Click(object sender, EventArgs e)
         {
             TallyRow row = (TallyRow)sender;
             CountTreeVM count = row.Count;
@@ -545,7 +543,7 @@ namespace FSCruiser.WinForms.DataEntry
             AppController.ViewController.ShowTallySettings(count);
         }
 
-        private void SpeciesButton_Click(object sender, EventArgs e)
+        void SpeciesButton_Click(object sender, EventArgs e)
         {
             if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
 
@@ -555,7 +553,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.ViewLogicController.AddTree(subPop.SG, subPop.TDV);
         }
 
-        private void TallyButton_Click(object sender, EventArgs e)
+        void TallyButton_Click(object sender, EventArgs e)
         {
             if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
 
@@ -567,27 +565,27 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region plot nav events
 
-        private void _gotoFirstPlotButton_Click(object sender, EventArgs e)
+        void _gotoFirstPlotButton_Click(object sender, EventArgs e)
         {
             this.ViewLogicController.SelectFirstPlot();
         }
 
-        private void _prevPlotButton_Click(object sender, EventArgs e)
+        void _prevPlotButton_Click(object sender, EventArgs e)
         {
             this.ViewLogicController.SelectPreviousPlot();
         }
 
-        private void _nextPlotButton_Click(object sender, EventArgs e)
+        void _nextPlotButton_Click(object sender, EventArgs e)
         {
             this.ViewLogicController.SelectNextPlot();
         }
 
-        private void _gotoLastPlotButton_Click(object sender, EventArgs e)
+        void _gotoLastPlotButton_Click(object sender, EventArgs e)
         {
             this.ViewLogicController.SelectLastPlot();
         }
 
-        private void _addPlotButton_Click(object sender, EventArgs e)
+        void _addPlotButton_Click(object sender, EventArgs e)
         {
             this.ViewLogicController.HandleAddPlot();
             this.IsGridExpanded = false;
@@ -598,7 +596,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.ViewLogicController.HandleDeletePlot();
         }
 
-        private void _plotInfoButton_Click(object sender, EventArgs e)
+        void _plotInfoButton_Click(object sender, EventArgs e)
         {
             this.ViewLogicController.ShowCurrentPlotInfo();
         }
