@@ -738,11 +738,8 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                if (_errorsColumn != null)
-                {
-                    return _errorsColumn.Width > 0;
-                }
-                else { return false; }
+                return _errorsColumn != null
+                    && _errorsColumn.Width > 0;
             }
             set
             {
@@ -757,11 +754,8 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                if (_logsColumn != null)
-                {
-                    return _logsColumn.Width > 0;
-                }
-                else { return false; }
+                return _logsColumn != null
+                    && _logsColumn.Width > 0;
             }
             set
             {
@@ -788,6 +782,16 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
+        public void DeleteSelectedTree()
+        {
+            this.ViewLogicController.HandleDeleteCurrentTree();
+        }
+
+        public void EndEdit()
+        {
+            this.ViewLogicController.EndEdit();
+        }
+
         public void HandleEnableLogGradingChanged()
         {
             if (_logsColumn == null) { return; }
@@ -808,16 +812,6 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 this._initialsColoumn.DataSource = this.AppController.Settings.Cruisers.ToArray();
             }
-        }
-
-        public void DeleteSelectedTree()
-        {
-            this.ViewLogicController.HandleDeleteCurrentTree();
-        }
-
-        public void EndEdit()
-        {
-            this.ViewLogicController.EndEdit();
         }
 
         public void MoveLastTree()
@@ -853,6 +847,12 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 return !this._isGridExpanded;
             }
+        }
+
+        public void HandleStratumLoaded(Control container)
+        {
+            //do nothing
+            return;
         }
 
         public void MakeSGList(List<SampleGroupVM> list, Panel container)
@@ -951,12 +951,6 @@ namespace FSCruiser.WinForms.DataEntry
         public void OnTally(CountTreeVM count)
         {
             this.ViewLogicController.OnTally(count);
-        }
-
-        public void HandleStratumLoaded(Control container)
-        {
-            //do nothing
-            return;
         }
 
         public void SaveCounts()
