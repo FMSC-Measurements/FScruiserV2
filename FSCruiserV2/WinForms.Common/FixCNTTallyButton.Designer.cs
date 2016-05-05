@@ -35,28 +35,31 @@
             // _bucketValue_LBL
             // 
             this._bucketValue_LBL.Dock = System.Windows.Forms.DockStyle.Top;
+            this._bucketValue_LBL.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Bold);
             this._bucketValue_LBL.Location = new System.Drawing.Point(0, 0);
             this._bucketValue_LBL.Name = "_bucketValue_LBL";
-            this._bucketValue_LBL.Size = new System.Drawing.Size(98, 20);
-            this._bucketValue_LBL.Text = "label1";
+            this._bucketValue_LBL.Size = new System.Drawing.Size(96, 20);
+            this._bucketValue_LBL.Text = "<int>\"";
+            this._bucketValue_LBL.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // _tallyCount_LBL
             // 
             this._tallyCount_LBL.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._tallyCount_LBL.Location = new System.Drawing.Point(0, 54);
+            this._tallyCount_LBL.Location = new System.Drawing.Point(0, 52);
             this._tallyCount_LBL.Name = "_tallyCount_LBL";
-            this._tallyCount_LBL.Size = new System.Drawing.Size(98, 26);
-            this._tallyCount_LBL.Text = "label2";
+            this._tallyCount_LBL.Size = new System.Drawing.Size(96, 26);
+            this._tallyCount_LBL.Text = "Count: <cnt>";
             this._tallyCount_LBL.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // FixCNTTallyButton
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this._tallyCount_LBL);
             this.Controls.Add(this._bucketValue_LBL);
             this.Name = "FixCNTTallyButton";
-            this.Size = new System.Drawing.Size(98, 80);
+            this.Size = new System.Drawing.Size(96, 78);
             this.ResumeLayout(false);
 
         }

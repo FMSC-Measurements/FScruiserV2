@@ -131,8 +131,10 @@ namespace FSCruiser.WinForms.DataEntry
             var stratum = Stratum as FixCNTStratum;
             var currentPlot = ViewLogicController.CurrentPlot as FixCNTPlot;
             if (stratum == null || currentPlot == null) { return; }
-            var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum);
-            view.ShowDialog(currentPlot);
+            using (var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum))
+            {
+                view.ShowDialog(currentPlot);
+            }
         }
 
         protected override void OnLoad(EventArgs e)

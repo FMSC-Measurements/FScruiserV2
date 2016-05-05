@@ -12,7 +12,12 @@ namespace FSCruiser.WinForms.Common
 {
     public partial class FixCNTTallyButton : UserControl
     {
-        public FixCNTTallyButton(IFixCNTTallyBucket bucket, FixCntTallyControl tallyLayout)
+        public FixCNTTallyButton()
+        {
+            InitializeComponent();
+        }
+
+        public FixCNTTallyButton(IFixCNTTallyBucket bucket, FixCNTTallyControl tallyLayout)
         {
             InitializeComponent();
 
@@ -24,7 +29,7 @@ namespace FSCruiser.WinForms.Common
 
         }
 
-        public FixCntTallyControl TallyLayout { get; set; }
+        public FixCNTTallyControl TallyLayout { get; set; }
 
         //FixCNTTallyBucket _bucket;
         public IFixCNTTallyBucket Bucket { get; set; }
@@ -39,7 +44,9 @@ namespace FSCruiser.WinForms.Common
 
         public void HandleTreeCountChanged(TallyCountChangedEventArgs ea)
         {
-            if (ea.TallyBucket != null && ea.TallyBucket != this) { return; }
+            if (ea.TallyBucket != null 
+                && object.ReferenceEquals(ea.TallyBucket, this)) 
+            { return; }
 
             var tallyCountProvider = ea.CountProvider;
             if (tallyCountProvider != null)

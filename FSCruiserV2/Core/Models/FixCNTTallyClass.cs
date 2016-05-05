@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.DataObjects;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
@@ -21,21 +22,25 @@ namespace FSCruiser.Core.Models
         double GetTreeFieldValue(TreeVM tree);
     }
 
-    public class FixCNTTallyClass
-    {
-        public FixCNTTallyField FieldName { get; set; }
 
+    [EntitySource(SourceName="FixCNTTallyClass")]
+    public class FixCNTTallyClass : IFixCNTTallyClass
+    {
+        [Field(Name="FieldName")]
+        public FixCNTTallyField Field { get; set; }
+
+        [Field(Name="Stratum_CN")]
         public long? Stratum_CN { get; set; }
 
         public FixCNTStratum Stratum { get; set; }
 
         public void SetTreeFieldValue(TreeVM tree, IFixCNTTallyBucket tallyBucket)
         {
-            if (this.FieldName == FixCNTTallyField.DBH)
+            if (this.Field == FixCNTTallyField.DBH)
             {
                 tree.DBH = (float)tallyBucket.IntervalValue;
             }
-            else if (FieldName == FixCNTTallyField.TotalHeight)
+            else if (Field == FixCNTTallyField.TotalHeight)
             {
                 tree.TotalHeight = (float)tallyBucket.IntervalValue;
             }
@@ -47,11 +52,11 @@ namespace FSCruiser.Core.Models
 
         public double GetTreeFieldValue(TreeVM tree)
         {
-            if (this.FieldName == FixCNTTallyField.DBH)
+            if (this.Field == FixCNTTallyField.DBH)
             {
                 return tree.DBH;
             }
-            else if (FieldName == FixCNTTallyField.TotalHeight)
+            else if (Field == FixCNTTallyField.TotalHeight)
             {
                 return tree.TotalHeight;
             }

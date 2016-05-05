@@ -12,16 +12,23 @@ namespace FSCruiser.WinForms.Common
 {
     public partial class FixCntTallyRow : UserControl
     {
-        public FixCntTallyRow(IFixCNTTallyPopulation obj, FixCntTallyControl tallyLayout)
+        public FixCntTallyRow()
+        {
+            InitializeComponent();
+        }
+
+        public FixCntTallyRow(IFixCNTTallyPopulation population, FixCNTTallyControl tallyLayout)
         {
             InitializeComponent();
 
             TallyLayout = tallyLayout;
 
+            _speciesName_LBL.Text = population.TreeDefaultValue.Species;
             this.SuspendLayout();
-            foreach (var tally in obj.Buckets)
+            foreach (var tally in population.Buckets)
             {
                 var tallyButton = new FixCNTTallyButton(tally, tallyLayout);
+                tallyButton.Dock = DockStyle.Right;
                 _tallyContainer_PNL.Controls.Add(tallyButton);
             }
             ResumeLayout(false);
@@ -29,7 +36,7 @@ namespace FSCruiser.WinForms.Common
         }
 
 
-        public FixCntTallyControl TallyLayout { get; set; }
+        public FixCNTTallyControl TallyLayout { get; set; }
 
 
         protected override void OnResize(EventArgs e)
@@ -56,7 +63,7 @@ namespace FSCruiser.WinForms.Common
 
         public void HandleTreeCountChanged(TallyCountChangedEventArgs ea)
         {
-            foreach (Control c in Controls)
+            foreach (Control c in _tallyContainer_PNL.Controls)
             {
                 var tallyButton = c as FixCNTTallyButton;
                 if (tallyButton != null)

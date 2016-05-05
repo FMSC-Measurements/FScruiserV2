@@ -29,12 +29,35 @@ namespace FSCruiser.WinForms.Common
         /// </summary>
         private void InitializeComponent()
         {
+            this.panel1 = new System.Windows.Forms.Panel();
+            this._tallyControl = new FSCruiser.WinForms.Common.FixCNTTallyControl();
             this.SuspendLayout();
+            // 
+            // panel1
+            // 
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 281);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(338, 36);
+            this.panel1.TabIndex = 1;
+            // 
+            // _tallyControl
+            // 
+            this._tallyControl.AutoScroll = true;
+            this._tallyControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._tallyControl.Location = new System.Drawing.Point(0, 0);
+            this._tallyControl.Name = "_tallyControl";
+            this._tallyControl.PopulationProvider = null;
+            this._tallyControl.Size = new System.Drawing.Size(338, 281);
+            this._tallyControl.TabIndex = 0;
+            this._tallyControl.TallyCountProvider = null;
             // 
             // FixCNTForm
             // 
-            this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Controls.Add(this.fixCntTallyControl1);
+            this.ClientSize = new System.Drawing.Size(338, 317);
+            this.Controls.Add(this._tallyControl);
+            this.Controls.Add(this.panel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "FixCNTForm";
             this.ResumeLayout(false);
 
@@ -42,7 +65,7 @@ namespace FSCruiser.WinForms.Common
 
         #endregion
 
-        private FixCntTallyControl fixCntTallyControl1;
-
+        private FixCNTTallyControl _tallyControl;
+        private System.Windows.Forms.Panel panel1;
     }
 }

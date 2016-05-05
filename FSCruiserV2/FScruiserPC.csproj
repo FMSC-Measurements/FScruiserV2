@@ -130,11 +130,11 @@
     <Compile Include="WinForms.Common\FixCNTTallyButton.Designer.cs">
       <DependentUpon>FixCNTTallyButton.cs</DependentUpon>
     </Compile>
-    <Compile Include="WinForms.Common\FixCntTallyControl.cs">
+    <Compile Include="WinForms.Common\FixCNTTallyControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="WinForms.Common\FixCntTallyControl.Designer.cs">
-      <DependentUpon>FixCntTallyControl.cs</DependentUpon>
+    <Compile Include="WinForms.Common\FixCNTTallyControl.Designer.cs">
+      <DependentUpon>FixCNTTallyControl.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms.Common\FixCntTallyRow.cs">
       <SubType>UserControl</SubType>
@@ -255,6 +255,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FixCNTTallyButton.resx">
       <DependentUpon>FixCNTTallyButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\FixCNTTallyControl.resx">
+      <DependentUpon>FixCNTTallyControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FixCntTallyRow.resx">
       <DependentUpon>FixCntTallyRow.cs</DependentUpon>

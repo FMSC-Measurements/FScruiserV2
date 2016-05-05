@@ -3,7 +3,7 @@
   <Class Name="FSCruiser.Core.Models.FixCNTTallyPopulation" Collapsed="true">
     <Position X="5.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAABQAAEBEAABAAEAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <HashCode>CEAABQAAEBEAgBAAEAAAAAAAAAAAAAAAAAgAAAACAAA=</HashCode>
       <FileName>Core\Models\FixCNTTallyPopulation.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -11,7 +11,7 @@
   <Class Name="FSCruiser.Core.Models.FixCNTStratum" Collapsed="true">
     <Position X="8.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AEAAAAAAAAAAAAAgAAAAAIAAIAAAAAEACAAAAAAAAAA=</HashCode>
       <FileName>Core\Models\FixCNTStratum.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.658" />
@@ -22,6 +22,7 @@
       <HashCode>AAAAAAAAAAAAAAgAAABAAAAAAICAAAAAACAAAAAAAAA=</HashCode>
       <FileName>Core\Models\FixCNTTallyClass.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="FSCruiser.Core.Models.TallyCountChangedEventArgs">
     <Position X="0.5" Y="2.75" Width="2.25" />

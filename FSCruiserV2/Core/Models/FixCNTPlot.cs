@@ -69,7 +69,7 @@ namespace FSCruiser.Core.Models
         {
             base.PopulateTrees();
 
-            NotifyTallyCountChanged(null);
+            
         }
 
         protected void NotifyTallyCountChanged(IFixCNTTallyBucket tallyBucket)
@@ -77,8 +77,7 @@ namespace FSCruiser.Core.Models
             var args = new TallyCountChangedEventArgs()
             {
                 CountProvider = this
-                ,
-                TallyBucket = tallyBucket
+                , TallyBucket = tallyBucket
             };
             OnTallyCountChanged(args);
         }
@@ -95,7 +94,12 @@ namespace FSCruiser.Core.Models
         {
             var tree = base.CreateNewTreeEntry(tallyBucket.TallyPopulation.SampleGroup,
                 tallyBucket.TallyPopulation.TreeDefaultValue, true);
+
             tallyBucket.TallyPopulation.TallyClass.SetTreeFieldValue(tree, tallyBucket);
+            if (tree.TrySave())
+            {
+                Trees.Add(tree);
+            }
 
             NotifyTallyCountChanged(tallyBucket);
         }

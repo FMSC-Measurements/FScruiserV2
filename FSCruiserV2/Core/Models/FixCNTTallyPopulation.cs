@@ -3,22 +3,22 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.DataObjects;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
     public interface IFixCNTTallyPopulation
     {
         //string SpeciesName { get; set; }
-
-        IFixCNTTallyClass TallyClass { get; set; }
-
-        long? ID { get; }
+        
+        long? TreeDefaultValue_CN { get; }
+        TreeDefaultValueDO TreeDefaultValue { get; }
 
         long? SampleGroup_CN { get; }
-        long? TreeDefaultValue_CN { get; }
-
-        TreeDefaultValueDO TreeDefaultValue { get; }
         SampleGroupVM SampleGroup { get; }
+
+        long? FixCNTTallyClass_CN { get; set; }
+        IFixCNTTallyClass TallyClass { get; set; }
 
         double IntervalSize { get; set; }
         double Min { get; set; }
@@ -28,77 +28,32 @@ namespace FSCruiser.Core.Models
 
     }
 
+    [EntitySource(SourceName="FixCNTTallyPopulation")]
     public class FixCNTTallyPopulation : IFixCNTTallyPopulation
     {
-
         #region IFixCNTTallyPopulation Members
 
+        [Field(Name = "SampleGroup_CN")]
+        public long? SampleGroup_CN { get; set; }
+        SampleGroupVM _sampleGroup;
+        public SampleGroupVM SampleGroup { get; set; }
+
+        [Field(Name = "TreeDefaultValue_CN")]
+        public long? TreeDefaultValue_CN { get; set; }
+        public TreeDefaultValueDO TreeDefaultValue { get; set; }
+
+        [Field(Name = "FixCNTTallyClass_CN")]
+        public long? FixCNTTallyClass_CN { get; set; }
         public IFixCNTTallyClass TallyClass { get; set; }
 
-        public long? ID { get; set; }
+        [Field(Name = "IntervalSize")]
+        public double IntervalSize { get; set; }
 
-        public long? SampleGroup_CN { get; set; }
-        public long? TreeDefaultValue_CN { get; set; }
+        [Field(Name = "Min")]
+        public double Min { get; set; }
 
-        public TreeDefaultValueDO TreeDefaultValue
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public SampleGroupVM SampleGroup
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public double IntervalSize
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public double Min
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public double Max
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        [Field(Name = "Max")]
+        public double Max { get; set; }
 
         ICollection<FixCNTTallyBucket> _buckets;
         public ICollection<FixCNTTallyBucket> Buckets

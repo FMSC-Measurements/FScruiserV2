@@ -10,15 +10,10 @@ using FSCruiser.Core.Models;
 
 namespace FSCruiser.WinForms.Common
 {
-
-    public class FixCNTTallyEventArgs : EventArgs
+    public partial class FixCNTTallyControl : UserControl
     {
-        public IFixCNTTallyBucket TallyBucket {get; set; }
-    }
+        IFixCNTTallyPopulationProvider _populationProvider;
 
-
-    public partial class FixCntTallyControl : UserControl
-    {
         IFixCNTTallyCountProvider _tallyCountProvider; 
         public IFixCNTTallyCountProvider TallyCountProvider 
         {
@@ -32,20 +27,48 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-        
+        public IFixCNTTallyPopulationProvider PopulationProvider
+        {
+            get { return _populationProvider; }
+            set
+            {
+                OnPopulationProviderChanging();
+                _populationProvider = value;
+                OnPopulationProviderChanged();
+            }
+        }
 
-        public FixCntTallyControl(IFixCNTTallyPopulationProvider provider)
+        public FixCNTTallyControl()
         {
             InitializeComponent();
+        }
 
-            var tallyPopulations = provider.GetFixCNTTallyPopulations();
+        void OnPopulationProviderChanging()
+        {
 
-            foreach (var pop in tallyPopulations)
+        }
+
+        void OnPopulationProviderChanged()
+        {
+            if (_populationProvider != null)
             {
-                var tallyRow = new FixCntTallyRow(pop, this) { Dock = DockStyle.Top };
-                this.Controls.Add(tallyRow);
-            }
+                SuspendLayout();
+                var tallyPopulations = _populationProvider.GetFixCNTTallyPopulations();
 
+                int rowCounter = 0;
+                var alternateRowColor = SystemColors.ControlDark;
+                foreach (var pop in tallyPopulations)
+                {
+                    var tallyRow = new FixCntTallyRow(pop, this);
+                    tallyRow.Dock = DockStyle.Top;
+                    if(rowCounter++%2 == 0)
+                    {
+                        tallyRow.BackColor = alternateRowColor;
+                    }
+                    this.Controls.Add(tallyRow);
+                }
+                ResumeLayout(false);
+            }
         }
 
         void WireTallyCountProvider()
@@ -54,6 +77,12 @@ namespace FSCruiser.WinForms.Common
             if (tallyCountProvider != null)
             {
                 tallyCountProvider.TallyCountChanged += new EventHandler<TallyCountChangedEventArgs>(tallyCountProvider_TallyCountChanged);
+                
+                var updateEventArgs = 
+                    new TallyCountChangedEventArgs()
+                    { CountProvider = tallyCountProvider };
+                
+                UpdateTallyCount(updateEventArgs);
             }
         }
 
@@ -68,7 +97,13 @@ namespace FSCruiser.WinForms.Common
 
         void tallyCountProvider_TallyCountChanged(object sender, TallyCountChangedEventArgs e)
         {
+            UpdateTallyCount(e);
+        }
+
+        void UpdateTallyCount(TallyCountChangedEventArgs e)
+        {
             if (e == null) { throw new ArgumentNullException("e"); }
+
 
             foreach (var c in Controls)
             {
@@ -101,6 +136,8 @@ namespace FSCruiser.WinForms.Common
             var layoutHeight = this.Height;
             var numTallyRows = Controls.Count;
 
+            if (numTallyRows == 0) { return; }
+
             var rowHeight = layoutHeight / numTallyRows;
 
             foreach (Control row in Controls)
@@ -109,5 +146,10 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
+    }
+
+    public class FixCNTTallyEventArgs : EventArgs
+    {
+        public IFixCNTTallyBucket TallyBucket { get; set; }
     }
 }
