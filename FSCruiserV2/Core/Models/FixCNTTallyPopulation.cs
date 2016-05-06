@@ -72,13 +72,14 @@ namespace FSCruiser.Core.Models
 
         IEnumerable<FixCNTTallyBucket> MakeTallyBuckets()
         {
-            var interval = Min;
+            var interval = Min + IntervalSize / 2;
             do
             {
                 var bucket = new FixCNTTallyBucket()
                 {
-                    IntervalValue = interval
-                    ,TallyPopulation = this
+                    IntervalValue = interval,
+                    TallyPopulation = this,
+                    Field = TallyClass.Field
                 };
 
                 interval += IntervalSize;
