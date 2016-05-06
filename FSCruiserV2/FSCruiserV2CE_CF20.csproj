@@ -72,7 +72,9 @@
     <Compile Include="Core\Models\FixCNTTallyBucket.cs" />
     <Compile Include="Core\Models\FixCNTTallyClass.cs" />
     <Compile Include="Core\Models\FixCNTTallyPopulation.cs" />
+    <Compile Include="Core\Models\ILogFieldProvider.cs" />
     <Compile Include="Core\Models\ITreeContaningModel.cs" />
+    <Compile Include="Core\Models\ITreeFieldProvider.cs" />
     <Compile Include="Core\Models\LogHeightClass.cs" />
     <Compile Include="Core\Models\LogRule.cs" />
     <Compile Include="Core\Models\Plot3PPNT.cs" />

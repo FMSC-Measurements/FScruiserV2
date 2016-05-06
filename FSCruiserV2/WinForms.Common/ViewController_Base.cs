@@ -128,13 +128,13 @@ namespace FSCruiser.WinForms.Common
 
         public abstract void BeginShowSplash();
 
-        public FormLogs GetLogsView(StratumDO stratum)
+        public FormLogs GetLogsView(StratumVM stratum)
         {
             if (_logViews.ContainsKey(stratum))
             {
                 return _logViews[stratum];
             }
-            FormLogs logView = new FormLogs(this.ApplicationController, stratum.Stratum_CN.Value);
+            FormLogs logView = new FormLogs(this.ApplicationController, stratum);
             _logViews.Add(stratum, logView);
 
             return logView;
@@ -212,7 +212,7 @@ namespace FSCruiser.WinForms.Common
         public abstract System.Windows.Forms.DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage);
 
 
-        public void ShowLogsView(StratumDO stratum, TreeVM tree)
+        public void ShowLogsView(StratumVM stratum, TreeVM tree)
         {
             if (stratum == null)
             {

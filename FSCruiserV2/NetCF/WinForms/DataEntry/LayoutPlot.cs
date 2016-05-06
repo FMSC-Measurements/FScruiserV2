@@ -320,7 +320,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             //Setup DataGrid
             DataGridAdjuster.InitializeGrid(this._dataGrid);
-            _tableStyle = DataGridAdjuster.InitializeTreeColumns(this.AppController._cDal, this._dataGrid, null, stratum, this.AppController.ViewController.EnableLogGrading);
+            _tableStyle = stratum.InitializeTreeColumns(_dataGrid);
             this._dataGrid.SIP = sip;
             this._dataGrid.CellValidating += new EditableDataGridCellValidatingEventHandler(_dataGrid_CellValidating);
             this._dataGrid.CellValueChanged += new EditableDataGridCellValueChangedEventHandler(this._dataGrid_CellValueChanged);

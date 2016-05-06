@@ -67,23 +67,27 @@ namespace FSCruiser.WinForms.DataEntry
 
             WireSplitter(stratum);
 
+            
+            this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this._addPlotButton_Click);
+            this.bindingNavigatorDeleteItem.Click += new System.EventHandler(this._deletePlotButton_Click);
+            this._plotInfoBTN.Click += new System.EventHandler(this._plotInfoBTN_Click);
+
+            
+            //this._dataGrid.DataSource = _BS_Trees;
+            
+            this._dataGrid.SuspendLayout();
+
             this._dataGrid.CellClick += new DataGridViewCellEventHandler(_dataGrid_CellClick);
             this._dataGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this._dataGrid_CellValidating);
             this._dataGrid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this._dataGrid_DataError);
             this._dataGrid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this._datagrid_CellEnter);
 
-            this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this._addPlotButton_Click);
-            this.bindingNavigatorDeleteItem.Click += new System.EventHandler(this._deletePlotButton_Click);
-            this._plotInfoBTN.Click += new System.EventHandler(this._plotInfoBTN_Click);
-
             this._dataGrid.AutoGenerateColumns = false;
-            //this._dataGrid.DataSource = _BS_Trees;
-            DataGridViewColumn[] columns = DataGridAdjuster.MakeTreeColumns(this.AppController._cDal, null, stratum, this.AppController.ViewController.EnableLogGrading);
-            this._dataGrid.SuspendLayout();
-            this._dataGrid.Columns.AddRange(columns);
+            var columns = stratum.MakeTreeColumns();
+            this._dataGrid.Columns.AddRange(columns.ToArray());
             this._dataGrid.ResumeLayout();
 
-            _speciesColumn = _dataGrid.Columns["Species"] as DataGridViewComboBoxColumn;
+            _speciesColumn = _dataGrid.Columns["TreeDefaultValue"] as DataGridViewComboBoxColumn;
             _sgColumn = _dataGrid.Columns["SampleGroup"] as DataGridViewComboBoxColumn;
             _treeNumberColumn = _dataGrid.Columns["TreeNumber"] as DataGridViewTextBoxColumn;
             _initialsColoumn = _dataGrid.Columns["Initials"] as DataGridViewComboBoxColumn;

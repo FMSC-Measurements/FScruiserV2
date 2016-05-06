@@ -72,6 +72,8 @@
     <Compile Include="Core\Models\FixCNTTallyBucket.cs" />
     <Compile Include="Core\Models\FixCNTTallyClass.cs" />
     <Compile Include="Core\Models\FixCNTTallyPopulation.cs" />
+    <Compile Include="Core\Models\ILogFieldProvider.cs" />
+    <Compile Include="Core\Models\ITreeFieldProvider.cs" />
     <Compile Include="Core\Models\LogHeightClass.cs" />
     <Compile Include="Core\Models\LogRule.cs" />
     <Compile Include="Core\Models\RegionLogInfo.cs" />
@@ -248,6 +250,8 @@
     </Compile>
     <Compile Include="WinForms\DataGridAjuster.PC.cs" />
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
+    <Compile Include="WinForms\ILogFieldProviderExtentions.cs" />
+    <Compile Include="WinForms\ITreeFieldProviderExtentions.cs" />
     <Compile Include="WinForms\ViewController.PC.cs" />
     <Compile Include="Properties\AssemblyInfo.PC.cs" />
     <EmbeddedResource Include="WinForms.Common\FixCNTForm.resx">

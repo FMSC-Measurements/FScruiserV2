@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using CruiseDAL.DataObjects;
 using System.Windows.Forms;
+using CruiseDAL.DataObjects;
 using FMSC.Sampling;
 
 namespace FSCruiser.Core.Models
 {
-    public class StratumVM : StratumDO
+    public class StratumVM : StratumDO, ITreeFieldProvider, ILogFieldProvider 
     {
         private Dictionary<char, CountTreeVM> _hotKeyLookup;
 
@@ -85,5 +86,45 @@ namespace FSCruiser.Core.Models
                 return false;
             }
         }
+
+        #region ITreeFieldProvider Members
+
+        public virtual List<TreeFieldSetupDO> ReadTreeFields()
+        {
+            var fields = DAL.From<TreeFieldSetupDO>()
+                .Where("Stratum_CN = ?")
+                .OrderBy("FieldOrder")
+                .Query(Stratum_CN).ToList();
+
+            if (fields.Count == 0)
+            {
+                fields.Clear();
+                fields.AddRange(Constants.DEFAULT_TREE_FIELDS);
+            }
+
+            return fields;
+        }
+
+        #endregion
+
+        #region ILogFieldProvider Members
+
+        public List<LogFieldSetupDO> ReadLogFields()
+        {
+            var fields = DAL.From<LogFieldSetupDO>()
+                .Where("Stratum_CN = ?")
+                .OrderBy("FieldOrder")
+                .Query(Stratum_CN).ToList();
+
+            if (fields.Count == 0)
+            {
+                fields.AddRange(Constants.DEFAULT_LOG_FIELDS);
+            }
+
+            return fields;
+
+        }
+
+        #endregion
     }
 }
