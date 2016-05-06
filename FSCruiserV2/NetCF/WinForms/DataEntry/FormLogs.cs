@@ -29,7 +29,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.InitializeComponent();
         }
 
-        public FormLogs(IApplicationController controller, long stratum_cn) : base()
+        public FormLogs(IApplicationController controller, StratumVM stratum) : base()
         {
             this.Controller = controller;
             InitializeComponent();
@@ -53,7 +53,8 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.CellValidating += new EditableDataGridCellValidatingEventHandler(_dataGrid_CellValidating);
 
             DataGridAdjuster.InitializeGrid(this._dataGrid);
-            DataGridTableStyle tableStyle = DataGridAdjuster.InitializeLogColumns(controller._cDal, this._dataGrid, stratum_cn);
+            DataGridTableStyle tableStyle = DataGridAdjuster.InitializeLogColumns(stratum, _dataGrid);
+
             _logNumColumn = tableStyle.GridColumnStyles[CruiseDAL.Schema.LOG.LOGNUMBER] as EditableTextBoxColumn;
             
         }

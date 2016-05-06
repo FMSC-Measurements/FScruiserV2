@@ -64,23 +64,27 @@ namespace FSCruiser.WinForms.DataEntry
 
             WireSplitter(stratum);
 
+            
+            this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this._addPlotButton_Click);
+            this.bindingNavigatorDeleteItem.Click += new System.EventHandler(this._deletePlotButton_Click);
+            this._plotInfoBTN.Click += new System.EventHandler(this._plotInfoBTN_Click);
+
+            
+            //this._dataGrid.DataSource = _BS_Trees;
+            
+            this._dataGrid.SuspendLayout();
+
             this._dataGrid.CellClick += new DataGridViewCellEventHandler(_dataGrid_CellClick);
             this._dataGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this._dataGrid_CellValidating);
             this._dataGrid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this._dataGrid_DataError);
             this._dataGrid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this._datagrid_CellEnter);
 
-            this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this._addPlotButton_Click);
-            this.bindingNavigatorDeleteItem.Click += new System.EventHandler(this._deletePlotButton_Click);
-            this._plotInfoBTN.Click += new System.EventHandler(this._plotInfoBTN_Click);
-
             this._dataGrid.AutoGenerateColumns = false;
-            //this._dataGrid.DataSource = _BS_Trees;
-            DataGridViewColumn[] columns = DataGridAdjuster.MakeTreeColumns(this.AppController._cDal, null, stratum, this.AppController.ViewController.EnableLogGrading);
-            this._dataGrid.SuspendLayout();
-            this._dataGrid.Columns.AddRange(columns);
+            var columns = stratum.MakeTreeColumns();
+            this._dataGrid.Columns.AddRange(columns.ToArray());
             this._dataGrid.ResumeLayout();
 
-            _speciesColumn = _dataGrid.Columns["Species"] as DataGridViewComboBoxColumn;
+            _speciesColumn = _dataGrid.Columns["TreeDefaultValue"] as DataGridViewComboBoxColumn;
             _sgColumn = _dataGrid.Columns["SampleGroup"] as DataGridViewComboBoxColumn;
             _treeNumberColumn = _dataGrid.Columns["TreeNumber"] as DataGridViewTextBoxColumn;
             _initialsColoumn = _dataGrid.Columns["Initials"] as DataGridViewComboBoxColumn;
@@ -119,8 +123,7 @@ namespace FSCruiser.WinForms.DataEntry
             var stratum = this.ViewLogicController.Stratum;
 
             this._tallyListPanel.SuspendLayout();
-            this._mode = stratum.GetDataEntryMode();
-            this.ViewLogicController.DataEntryController.PopulateTallies(stratum, this._mode, DataEntryController.Unit, this._tallyListPanel, this);
+            this.ViewLogicController.DataEntryController.PopulateTallies(stratum, DataEntryController.Unit, this._tallyListPanel, this);
             if (stratum.Method == "3PPNT")
             {
                 this.IsGridExpanded = true;
@@ -536,20 +539,49 @@ namespace FSCruiser.WinForms.DataEntry
             set { this.ViewLogicController.UserCanAddTrees = value; }
         }
 
+        public bool ErrorColumnVisable
+        {
+            get
+            {
+                if (_errorMessageColumn != null)
+                {
+                    return _errorMessageColumn.Visible;
+                }
+                else { return false; }
+            }
+            set
+            {
+                if (_errorMessageColumn != null)
+                {
+                    _errorMessageColumn.Visible = value;
+                }
+            }
+        }
+
+        public bool LogColumnVisable
+        {
+            get
+            {
+                if (_logsColumn != null)
+                {
+                    return _logsColumn.Visible;
+                }
+                else { return false; }
+            }
+            set
+            {
+                if (_logsColumn != null)
+                {
+                    _logsColumn.Visible = value;
+                }
+            }
+        }
+
         public void HandleLoad()
         {
             _viewLoading = false;
             this.ViewLogicController.HandleViewLoad();
-            
-        }
-
-        public void ShowHideErrorCol()
-        {
-            if (this._errorMessageColumn != null)
-            {
-                this._errorMessageColumn.Visible = !this._errorMessageColumn.Visible;
-            }
-        }
+        }        
 
         public void HandleEnableLogGradingChanged()
         {
@@ -567,7 +599,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void DeleteRow()
+        public void DeleteSelectedTree()
         {
             this.ViewLogicController.HandleDeleteCurrentTree();
         }
@@ -582,7 +614,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.EndEdit();
         }
 
-        public void MoveLast()
+        public void MoveLastTree()
         {
             this.ViewLogicController.SelectLastTree();
         }
@@ -602,6 +634,8 @@ namespace FSCruiser.WinForms.DataEntry
         {
             return this.ViewLogicController.UserAddTree();
         }
+
+        
 
         #endregion
         
@@ -679,6 +713,13 @@ namespace FSCruiser.WinForms.DataEntry
                 _contexMenu.Show(Cursor.Position);
             }
         }
+
+        #region ITreeView Members
+
+
+        
+
+        #endregion
     }
 
         

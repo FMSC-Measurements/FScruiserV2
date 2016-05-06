@@ -254,6 +254,12 @@ namespace FSCruiser.Core.Models
             worker.TrySaveAllAsync();
         }
 
+        public bool ValidateTrees()
+        {
+            var worker = new TreeValidationWorker(Trees);
+            return worker.ValidateTrees();
+        }
+
         public override string ToString()
         {
             return base.PlotNumber.ToString() + ((IsNull == true) ? "-Null" : string.Empty);

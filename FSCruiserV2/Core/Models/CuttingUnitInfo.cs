@@ -9,7 +9,7 @@ using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
-    public class CuttingUnitVM : CuttingUnitDO
+    public class CuttingUnitVM : CuttingUnitDO, ITreeFieldProvider
     {
         protected const int TREE_SAVE_INTERVAL = 10;
         private int _treesAddedSinceLastSave = 0;        
@@ -253,6 +253,37 @@ namespace FSCruiser.Core.Models
             this.TallyHistoryBuffer = null;
             this.NonPlotTrees = null;
             this.SampleGroups = null;
+        }
+
+        public List<TreeFieldSetupDO> ReadTreeFields()
+        {
+            var fields = DAL.From<TreeFieldSetupDO>()
+                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
+                .Where("CuttingUnit_CN = ?")
+                .GroupBy("Field")
+                .OrderBy("FieldOrder")
+                .Query(CuttingUnit_CN).ToList();
+
+            if (fields.Count == 0)
+            {
+                fields.AddRange(Constants.DEFAULT_TREE_FIELDS);
+            }
+
+            //if unit has multiple tree strata 
+            //but stratum column is missing
+            if (this.TreeStrata.Count > 1
+                && fields.FindIndex(x => x.Field == "Stratum") == -1)
+            {
+                //find the location of the tree number field
+                int indexOfTreeNum = fields.FindIndex(x => x.Field == CruiseDAL.Schema.TREE.TREENUMBER);
+                //if user doesn't have a tree number field, fall back to the last field index
+                if (indexOfTreeNum == -1) { indexOfTreeNum = fields.Count - 1; }//last item index 
+                //add the stratum field to the filed list
+                TreeFieldSetupDO tfs = new TreeFieldSetupDO() { Field = "Stratum", Heading = "St", Format = "[Code]" };
+                fields.Insert(indexOfTreeNum + 1, tfs);
+            }
+
+            return fields;
         }
 
 

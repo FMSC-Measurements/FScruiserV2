@@ -93,9 +93,8 @@ namespace FSCruiser.Core.DataEntry
         {
             if (pInfo != null)
             {
-                this.EndEdit();
-                var worker = new TreeValidationWorker(pInfo.Trees);
-                if (!worker.ValidateTrees())
+                this.EndEdit();                
+                if (!pInfo.ValidateTrees())
                 {
                     return this.View.AskContinueOnCurrnetPlotTreeError();
                 }
@@ -280,24 +279,24 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public void HandleTreeNumberChanging(long newTreeNumber, out bool cancel)
-        {
-            try
-            {
+        //public void HandleTreeNumberChanging(long newTreeNumber, out bool cancel)
+        //{
+        //    try
+        //    {
 
-                if (!this.CurrentPlot.IsTreeNumberAvalible(newTreeNumber))
-                {
-                    cancel = true;
-                    return;
-                }
-            }
-            catch
-            {
-                cancel = true;
-                return;
-            }
-            cancel = false;
-        }
+        //        if (!this.CurrentPlot.IsTreeNumberAvalible(newTreeNumber))
+        //        {
+        //            cancel = true;
+        //            return;
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        cancel = true;
+        //        return;
+        //    }
+        //    cancel = false;
+        //}
 
         public void OnTally(CountTreeVM count)
         {

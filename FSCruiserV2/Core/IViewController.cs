@@ -48,7 +48,7 @@ namespace FSCruiser.Core
         DialogResult ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit);
         DialogResult ShowEditTreeDefault(TreeDefaultValueDO tdv);
         DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage);
-        void ShowLogsView(StratumDO stratum, TreeVM tree);
+        void ShowLogsView(StratumVM stratum, TreeVM tree);
         void ShowManageCruisers();
         DialogResult ShowOpenCruiseFileDialog(out string fileName);
         
