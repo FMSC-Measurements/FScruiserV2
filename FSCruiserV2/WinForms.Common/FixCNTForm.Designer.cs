@@ -59,7 +59,9 @@ namespace FSCruiser.WinForms.Common
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "FixCNTForm";
+#if !NetCF
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+#endif
             this.ResumeLayout(false);
 
         }
