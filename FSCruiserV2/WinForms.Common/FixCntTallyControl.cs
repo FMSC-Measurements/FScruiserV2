@@ -56,14 +56,13 @@ namespace FSCruiser.WinForms.Common
                 var tallyPopulations = _populationProvider.GetFixCNTTallyPopulations();
 
                 int rowCounter = 0;
-                var alternateRowColor = SystemColors.ControlDark;
                 foreach (var pop in tallyPopulations)
                 {
                     var tallyRow = new FixCntTallyRow(pop, this);
                     tallyRow.Dock = DockStyle.Top;
                     if(rowCounter++%2 == 0)
                     {
-                        tallyRow.BackColor = alternateRowColor;
+                        tallyRow.BackColor = SystemColors.ControlDark;
                     }
                     this.Controls.Add(tallyRow);
                 }
