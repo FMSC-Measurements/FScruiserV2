@@ -56,7 +56,7 @@ namespace FSCruiser.Core.Models
             var fixCNT = unit.DAL.From<FixCNTStratum>()
                 .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
                 .Where("CUST.CuttingUnit_CN = ? "
-                + "AND Stratum.Method = 'FixCNT'")
+                + "AND Stratum.Method = '" + CruiseDAL.Schema.CruiseMethods.FIXCNT + "'")
                 .Query(unit.CuttingUnit_CN);
 
             foreach (var st in fixCNT)
