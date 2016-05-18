@@ -538,9 +538,15 @@ namespace FSCruiser.WinForms.DataEntry
         {
             TallyRow row = (TallyRow)sender;
             CountTreeVM count = row.Count;
-
             this.ViewLogicController.SavePlotTrees();
-            AppController.ViewController.ShowTallySettings(count);
+            this.ViewLogicController.ViewController.ShowTallySettings(count);
+
+
+            //TallyRow row = (TallyRow)sender;
+            //CountTreeVM count = row.Count;
+
+            //this.ViewLogicController.SavePlotTrees();
+            //AppController.ViewController.ShowTallySettings(count);
         }
 
         void SpeciesButton_Click(object sender, EventArgs e)
@@ -557,10 +563,14 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
 
-            Button button = (Button)sender;
-            //TallyRow row = (TallyRow)button.Parent;
-            CountTreeVM count = (CountTreeVM)button.Tag;
-            this.ViewLogicController.OnTally(count);
+            var row = (TallyRow)sender;
+            var count = row.Count;
+            OnTally(count);
+
+            //Button button = (Button)sender;
+            ////TallyRow row = (TallyRow)button.Parent;
+            //CountTreeVM count = (CountTreeVM)button.Tag;
+            //this.ViewLogicController.OnTally(count);
         }
 
         #region plot nav events
@@ -919,33 +929,40 @@ namespace FSCruiser.WinForms.DataEntry
 
         public Control MakeTallyRow(Control container, CountTreeVM count)
         {
-            char hotKey = count.Tally.Hotkey[0];
-            Button row = new Button();
-            row.Text = count.Tally.Description + "[" + hotKey + "]";
-            row.Click += new EventHandler(TallyButton_Click);
-            Button settingsButton = new Button();
-            settingsButton.Text = "i";
-            settingsButton.Click += new EventHandler(SettingsButton_Click);
-            //row.DiscriptionLabel.Text = count.Tally.Description;
-            //row.TallyButton.Click += new EventHandler(TallyButton_Click);
-            //row.SettingsButton.Click += new EventHandler(SettingsButton_Click);
-            //row._hotKeyLabel.Text = hotKey.ToString();
+            TallyRow row = new TallyRow(count);
+            row.SuspendLayout();
 
-            //row.TallyButton.DataBindings.Add(new Binding("Text", count, "TreeCount"));
+            row.TallyButtonClicked += new EventHandler(this.TallyButton_Click);
+            row.SettingsButtonClicked += new EventHandler(this.SettingsButton_Click);
 
-            settingsButton.Tag = count;
-            settingsButton.Width = 15;
-            settingsButton.Parent = container;
-            settingsButton.Dock = DockStyle.Left;
-            FMSC.Controls.DpiHelper.AdjustControl(settingsButton);
-
-            row.Tag = count;
-            //this.HotKeyLookup.Add(hotKey, count);
-            row.Width = 80;
+            row.Width = 90;
             row.Parent = container;
-            row.Dock = DockStyle.Left;
 
+            row.Dock = DockStyle.Right;
+            row.ResumeLayout(true);
             return row;
+
+
+            //char hotKey = count.Tally.Hotkey[0];
+            //Button row = new Button();
+            //row.Text = count.Tally.Description + "[" + hotKey + "]";
+            //row.Click += new EventHandler(TallyButton_Click);
+            //Button settingsButton = new Button();
+            //settingsButton.Text = "i";
+            //settingsButton.Click += new EventHandler(SettingsButton_Click);
+
+            //settingsButton.Tag = count;
+            //settingsButton.Width = 15;
+            //settingsButton.Parent = container;
+            //settingsButton.Dock = DockStyle.Left;
+            //FMSC.Controls.DpiHelper.AdjustControl(settingsButton);
+
+            //row.Tag = count;
+            //row.Width = 80;
+            //row.Parent = container;
+            //row.Dock = DockStyle.Left;
+
+            //return row;
         }
 
         public void OnTally(CountTreeVM count)

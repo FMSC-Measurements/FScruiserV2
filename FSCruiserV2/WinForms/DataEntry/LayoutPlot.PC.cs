@@ -129,18 +129,6 @@ namespace FSCruiser.WinForms.DataEntry
 
 
         }
-
-        void openFixCNTTallyButton_Click(object sender, EventArgs e)
-        {
-            var stratum = Stratum as FixCNTStratum;
-            var currentPlot = ViewLogicController.CurrentPlot as FixCNTPlot;
-            if (stratum == null || currentPlot == null) { return; }
-            using (var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum))
-            {
-                view.ShowDialog(currentPlot);
-            }
-        }
-
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -388,6 +376,18 @@ namespace FSCruiser.WinForms.DataEntry
         {
             this.ViewLogicController.HandleDeletePlot();
         }
+
+        void openFixCNTTallyButton_Click(object sender, EventArgs e)
+        {
+            var stratum = Stratum as FixCNTStratum;
+            var currentPlot = ViewLogicController.CurrentPlot as FixCNTPlot;
+            if (currentPlot == null) { ShowNoPlotSelectedMessage(); return; }
+            if (stratum == null || currentPlot == null) { return; }
+            using (var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum))
+            {
+                view.ShowDialog(currentPlot);
+            }
+        }
         #endregion
 
         #region IPlotLayout members
@@ -514,6 +514,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void tallyRow_TallyButtonClicked(object sender, EventArgs e)
         {
+            if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
+
             var row = (TallyRow)sender;
             var count = row.Count;
             OnTally(count);
@@ -523,6 +525,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             TallyRow row = (TallyRow)sender;
             CountTreeVM count = row.Count;
+            this.ViewLogicController.SavePlotTrees();
             this.ViewLogicController.ViewController.ShowTallySettings(count);
             //row.DiscriptionLabel.Text = count.Tally.Description;
         }
