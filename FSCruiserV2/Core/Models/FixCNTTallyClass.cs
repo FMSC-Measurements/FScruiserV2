@@ -11,6 +11,8 @@ namespace FSCruiser.Core.Models
 
     public interface IFixCNTTallyClass
     {
+        long? FixCNTTallyClass_CN { get; set; }
+
         FixCNTTallyField Field { get; set; }
 
         long? Stratum_CN { get; set; }
@@ -26,6 +28,9 @@ namespace FSCruiser.Core.Models
     [EntitySource(SourceName="FixCNTTallyClass")]
     public class FixCNTTallyClass : IFixCNTTallyClass
     {
+        [PrimaryKeyField(Name = "FixCNTTallyClass_CN")]
+        public long? FixCNTTallyClass_CN { get; set; }
+
         [Field(Name="FieldName")]
         public FixCNTTallyField Field { get; set; }
 

@@ -25,7 +25,32 @@ namespace FSCruiser.Core.Models
 
     public class FixCNTPlot : PlotVM, IFixCNTTallyCountProvider
     {
+        public FixCNTPlot()
+        { }
+
+        public FixCNTPlot(CruiseDAL.DAL ds)
+            : base(ds)
+        { }
+
         public event EventHandler<TallyCountChangedEventArgs> TallyCountChanged;
+        [IgnoreField]
+        public new FixCNTStratum Stratum
+        {
+            get
+            {
+                return (FixCNTStratum)base.Stratum;
+            }
+            set
+            {
+                base.Stratum = value;
+            }
+        }
+
+        public override StratumDO GetStratum()
+        {
+            if (DAL == null) { return null; }
+            return DAL.ReadSingleRow<FixCNTStratum>(this.Stratum_CN);
+        }
 
         public int GetTallyCount(IFixCNTTallyBucket tallyBucket)
         {
@@ -44,25 +69,6 @@ namespace FSCruiser.Core.Models
             }
 
             return count;
-        }
-
-        [IgnoreField]
-        public new FixCNTStratum Stratum
-        {
-            get
-            {
-                return (FixCNTStratum)base.Stratum;
-            }
-            set
-            {
-                base.Stratum = value;
-            }
-        }
-
-        public override StratumDO GetStratum()
-        {
-            if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<FixCNTStratum>(this.Stratum_CN);
         }
 
         public override void PopulateTrees()

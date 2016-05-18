@@ -30,13 +30,23 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public override PlotVM MakePlot(CuttingUnitVM cuttingUnit)
+        {
+            return new FixCNTPlot(this.DAL)
+            {
+                CuttingUnit = cuttingUnit,
+                Stratum = this,
+                PlotNumber = GetNextPlotNumber(cuttingUnit.CuttingUnit_CN.Value)
+            };
+        }
+
         public IEnumerable<IFixCNTTallyPopulation> GetFixCNTTallyPopulations()
         {
             var tallyClass = TallyClass;
 
             var tallyPopulations = DAL.From<FixCNTTallyPopulation>()
                 .Where("FixCNTTallyClass_CN = ?")
-                .Query(this.Stratum_CN);
+                .Query(tallyClass.FixCNTTallyClass_CN);
 
             foreach (var tallyPop in tallyPopulations)
             {

@@ -33,7 +33,7 @@ namespace FSCruiser.Core.Models
         public IList<PlotVM> Plots { get; protected set; }
 
 
-        public PlotVM MakePlot(CuttingUnitVM cuttingUnit)
+        public virtual PlotVM MakePlot(CuttingUnitVM cuttingUnit)
         {
             if (this.Is3PPNT)
             {
@@ -67,7 +67,7 @@ namespace FSCruiser.Core.Models
             //            , cuttingUnit_CN);
         }
 
-        int GetNextPlotNumber(long cuttingUnit_CN)
+        protected int GetNextPlotNumber(long cuttingUnit_CN)
         {
             try
             {
