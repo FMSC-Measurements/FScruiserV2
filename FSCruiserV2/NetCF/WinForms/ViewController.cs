@@ -59,7 +59,7 @@ namespace FSCruiser.WinForms
 
         public override DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage)
         {
-            using (FormLimitingDistance view = new FormLimitingDistance(this.ApplicationController))
+            using (FormLimitingDistance view = new FormLimitingDistance())
             {
                 return view.ShowDialog(baf, isVariableRadius, optTree, out logMessage);
             }

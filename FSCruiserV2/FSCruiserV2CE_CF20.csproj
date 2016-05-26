@@ -62,6 +62,7 @@
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\CountTreeExtensions.cs" />
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
+    <Compile Include="Core\DataEntry\LimitingDistanceCalculator.cs" />
     <Compile Include="Core\Exceptions.cs" />
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="Core\LoadCuttingUnitWorker.cs" />
@@ -413,6 +414,7 @@
     <None Include="FixCNTClassDiagram.cd" />
     <None Include="Core\FSCruiser.Core.cd" />
     <None Include="Core\Models\FMSC.Core.Models.cd" />
+    <None Include="Properties\DataSources\FSCruiser.Core.DataEntry.LimitingDistanceCalculator.datasource" />
     <None Include="Properties\DataSources\FSCruiser.Core.Models.Plot3PPNT.datasource" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.TreeDO.datasource" />
