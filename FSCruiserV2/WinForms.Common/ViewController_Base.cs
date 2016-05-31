@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using FSCruiser.Core;
@@ -12,8 +11,6 @@ namespace FSCruiser.WinForms.Common
 {
     public abstract class WinFormsViewControllerBase : IViewController
     {
-        private static Thread _splashThread;
-
         private Dictionary<StratumDO, FormLogs> _logViews = new Dictionary<StratumDO, FormLogs>();
 
         protected object _dataEntrySyncLock = new object();

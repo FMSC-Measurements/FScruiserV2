@@ -184,7 +184,6 @@
             this._volFactorTB.Name = "_volFactorTB";
             this._volFactorTB.Size = new System.Drawing.Size(40, 20);
             this._volFactorTB.TabIndex = 1;
-            this._volFactorTB.TextChanged += new System.EventHandler(this.TB_TextChanged);
             // 
             // label2
             // 

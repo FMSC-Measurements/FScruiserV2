@@ -39,8 +39,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         LimitingDistanceCalculator _calculator = new LimitingDistanceCalculator();
 
-        private double _limitingDistance;
-
         public bool IsVariableRadius { get; set; }
 
         public string LogMessage { get; set; }

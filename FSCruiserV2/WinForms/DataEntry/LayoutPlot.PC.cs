@@ -16,8 +16,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         private bool _viewLoading = true;
 
-        private DataEntryMode _mode;
-
         private DataGridViewComboBoxColumn _initialsColoumn;
         private DataGridViewComboBoxColumn _sgColumn;
         private DataGridViewComboBoxColumn _speciesColumn;

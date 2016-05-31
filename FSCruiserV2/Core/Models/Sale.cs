@@ -8,7 +8,7 @@ namespace FSCruiser.Core.Models
         RegionLogInfo _regionalLogRules;
 
         [Field(Name = "Region")]
-        public new uint Region { get; set; }
+        public uint Region { get; set; }
 
         public RegionLogInfo GetRegionLogInfo()
         {

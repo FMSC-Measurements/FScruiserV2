@@ -5,8 +5,6 @@ namespace FSCruiser.WinForms.Common
 {
     public partial class FixCNTForm : Form
     {
-        IFixCNTTallyPopulationProvider _populationProvider;
-
         FixCNTForm()
         {
             InitializeComponent();

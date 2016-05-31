@@ -14,7 +14,6 @@ namespace FSCruiser.WinForms.DataEntry
             InitializeComponent();
         }
 
-        private bool _blockTBClick = false;
         Plot3PPNT _plot;
         PlotStratum _stratum;
 
@@ -116,10 +115,6 @@ namespace FSCruiser.WinForms.DataEntry
         {
             System.Media.SystemSounds.Hand.Play();
             MessageBox.Show("Count Plot");
-        }
-
-        private void TB_TextChanged(object sender, EventArgs e)
-        {
         }
 
         private void _BS_plot_CurrentItemChanged(object sender, EventArgs e)

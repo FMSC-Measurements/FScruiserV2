@@ -23,7 +23,7 @@ namespace FSCruiser.Core.Models
         public override bool Equals(object obj)
         {
             if (obj == null || !(obj is RecentProject))
-                return false;
+                return base.Equals(obj);
 
             return FilePath.Equals(((RecentProject)obj).FilePath, StringComparison.InvariantCultureIgnoreCase);
         }

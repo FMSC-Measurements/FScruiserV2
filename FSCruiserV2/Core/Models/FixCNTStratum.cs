@@ -12,7 +12,6 @@ namespace FSCruiser.Core.Models
     public class FixCNTStratum : PlotStratum, IFixCNTTallyPopulationProvider
     {
         IFixCNTTallyClass _tallyClass;
-        IEnumerable<IFixCNTTallyPopulation> _tallyPopulations;
 
         IFixCNTTallyClass TallyClass
         {

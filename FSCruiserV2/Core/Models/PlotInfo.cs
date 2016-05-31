@@ -11,7 +11,6 @@ namespace FSCruiser.Core.Models
 {
     public class PlotVM : PlotDO
     {
-        private bool _isTreeDataPopulated = false;
         private IList<TreeVM> _trees;
 
         public PlotVM()
