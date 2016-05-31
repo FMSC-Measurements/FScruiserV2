@@ -9,7 +9,7 @@ namespace FSCruiser.Core.Models
     {
         IFixCNTTallyPopulation TallyPopulation { get; set; }
 
-        double IntervalValue { get; set; }
+        double MidpointValue { get; set; }
 
         FixCNTTallyField Field { get; set; }
     }
@@ -19,7 +19,7 @@ namespace FSCruiser.Core.Models
     {
         public IFixCNTTallyPopulation TallyPopulation { get; set; }
 
-        public double IntervalValue { get; set; }
+        public double MidpointValue { get; set; }
 
         public FixCNTTallyField Field { get; set; }
 

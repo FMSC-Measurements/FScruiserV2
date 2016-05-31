@@ -77,7 +77,7 @@ namespace FSCruiser.Core.Models
             {
                 var bucket = new FixCNTTallyBucket()
                 {
-                    IntervalValue = interval,
+                    MidpointValue = interval,
                     TallyPopulation = this,
                     Field = TallyClass.Field
                 };

@@ -62,7 +62,7 @@ namespace FSCruiser.Core.Models
             {
                 if (tree.SampleGroup_CN == population.SampleGroup_CN
                     && tree.TreeDefaultValue_CN == population.TreeDefaultValue_CN
-                    && tallyBucket.IntervalValue == tallyClass.GetTreeFieldValue(tree))
+                    && tallyBucket.MidpointValue == tallyClass.GetTreeFieldValue(tree))
                 {
                     count++;
                 }
