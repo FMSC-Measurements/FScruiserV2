@@ -1,26 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Threading;
-using System.ComponentModel;
 using CruiseDAL.DataObjects;
-using FSCruiser.Core;
 using FSCruiser.Core.Models;
-using FSCruiser.WinForms.DataEntry;
 using FSCruiser.WinForms.Common;
+using FSCruiser.WinForms.DataEntry;
 
 namespace FSCruiser.WinForms
 {
-
-
     public class ViewController : WinFormsViewControllerBase
     {
-
         public ViewController()
         {
-            
         }
 
         #region IViewController Members
@@ -40,7 +30,6 @@ namespace FSCruiser.WinForms
             throw new NotImplementedException();
         }
 
-
         public override void ShowManageCruisers()
         {
             throw new NotImplementedException();
@@ -51,9 +40,8 @@ namespace FSCruiser.WinForms
             _dataEntryView = null;
 
             _dataEntryView = new FormDataEntry(this.ApplicationController, unit);
-            _dataEntryView.Owner = this.MainView; 
+            _dataEntryView.Owner = this.MainView;
             _dataEntryView.ShowDialog();
-
         }
 
         public override DialogResult ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit)
@@ -65,10 +53,6 @@ namespace FSCruiser.WinForms
         {
             throw new NotImplementedException();
         }
-
-
-
-
 
         public override TreeDefaultValueDO ShowAddPopulation()
         {
@@ -123,8 +107,6 @@ namespace FSCruiser.WinForms
             System.Media.SystemSounds.Beep.Play();
         }
 
-
-        #endregion
-
+        #endregion IViewController Members
     }
 }

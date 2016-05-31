@@ -22,7 +22,7 @@ namespace FSCruiser.WinForms.Common
             }
 
             TallyLayout = tallyLayout;
-            Bucket = bucket;            
+            Bucket = bucket;
         }
 
         void FixCNTTallyButton_Click(object sender, EventArgs e)
@@ -33,7 +33,8 @@ namespace FSCruiser.WinForms.Common
         public FixCNTTallyControl TallyLayout { get; set; }
 
         IFixCNTTallyBucket _bucket;
-        public IFixCNTTallyBucket Bucket 
+
+        public IFixCNTTallyBucket Bucket
         {
             get { return _bucket; }
             set
@@ -53,14 +54,11 @@ namespace FSCruiser.WinForms.Common
 
         private void OnBucketChanging()
         {
-            
         }
 
         protected override void OnClick(EventArgs e)
         {
             base.OnClick(e);
-
-            
         }
 
         public void HandleTreeCountChanged(TallyCountChangedEventArgs ea)

@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
-using CruiseDAL;
 using System.Windows.Forms;
-using FMSC.Controls;
 using CruiseDAL.DataObjects;
+using FMSC.Controls;
 using FSCruiser.Core.Models;
-using FSCruiser.Core;
 
 namespace FSCruiser.WinForms
 {
@@ -27,7 +22,7 @@ namespace FSCruiser.WinForms
         }
 
         public static void InitializeGrid(EditableDataGrid grid)
-        {  
+        {
             // Default grid-level parameters
             grid.RowHeadersVisible = false;
             grid.HomeColumnIndex = 0;
@@ -43,9 +38,7 @@ namespace FSCruiser.WinForms
             grid.SelectionBackColor = Color.Yellow;
             grid.SelectionForeColor = Color.Black;
             grid.AlternatingBackColor = Color.LightGray;
-
         }
-
 
         public static DataGridTableStyle InitializeLogColumns(this ILogFieldProvider stratum, EditableDataGrid grid)
         {
@@ -53,7 +46,6 @@ namespace FSCruiser.WinForms
 
             DataGridTableStyle tblStyle = new DataGridTableStyle();
             tblStyle.MappingName = "LogDO";
-
 
             foreach (LogFieldSetupDO field in fields)
             {
@@ -66,7 +58,7 @@ namespace FSCruiser.WinForms
 
                 if (field.Width == 0.0)
                 {
-                    col.Width = MeasureTextWidth(grid, field.Heading.Trim()) + 18;//plus 18 to allow for padding 
+                    col.Width = MeasureTextWidth(grid, field.Heading.Trim()) + 18;//plus 18 to allow for padding
                 }
                 else
                 {
@@ -93,8 +85,7 @@ namespace FSCruiser.WinForms
 
         public static DataGridTableStyle InitializeTreeColumns(this ITreeFieldProvider provider, EditableDataGrid grid)
         {
-            DataGridTableStyle tblStyle = new System.Windows.Forms.DataGridTableStyle()
-                { MappingName = "TreeVM" };
+            DataGridTableStyle tblStyle = new System.Windows.Forms.DataGridTableStyle() { MappingName = "TreeVM" };
 
             var fields = provider.ReadTreeFields();
 
@@ -102,9 +93,9 @@ namespace FSCruiser.WinForms
             int charWidth = MeasureTextWidth(grid, "0");
 
             // Loop through each item in the fields list,
-            // set up a column style and add it to the table style. 
-            
-            foreach(TreeFieldSetupDO field in fields)
+            // set up a column style and add it to the table style.
+
+            foreach (TreeFieldSetupDO field in fields)
             {
                 CustomColumnBase col;
 
@@ -139,9 +130,9 @@ namespace FSCruiser.WinForms
                     case "Stratum":
                         {
                             col = new FMSC.Controls.EditableComboBoxColumn();
-                                ((EditableComboBoxColumn)col).DisplayMember = "Code";
-                                //((EditableComboBoxColumn)col).ValueMember = "Code";
-                                break;
+                            ((EditableComboBoxColumn)col).DisplayMember = "Code";
+                            //((EditableComboBoxColumn)col).ValueMember = "Code";
+                            break;
                         }
                     case "SampleGroup":
                         {
@@ -167,14 +158,13 @@ namespace FSCruiser.WinForms
                         {
                             col = MakeColumn(field.ColumnType);
                             break;
-                        }                
+                        }
                 }
 
-                
                 // Set up width: autowidth or fixed width
                 if (field.Width == 0.0)
                 {
-                    col.Width = MeasureTextWidth(grid, field.Heading.Trim()) + 18;//plus 18 to allow for padding 
+                    col.Width = MeasureTextWidth(grid, field.Heading.Trim()) + 18;//plus 18 to allow for padding
                 }
                 else
                 {
@@ -194,7 +184,7 @@ namespace FSCruiser.WinForms
                 {
                     col.MappingName = field.Field;
                 }
-                if(String.IsNullOrEmpty(col.HeaderText))
+                if (String.IsNullOrEmpty(col.HeaderText))
                 {
                     col.HeaderText = field.Heading;
                 }
@@ -206,10 +196,8 @@ namespace FSCruiser.WinForms
                 //this.myCustomColumnBase.Width = (int)myTreeFieldSetups[i].Width;
                 col.NullText = String.Empty;// <- look into this
 
-
                 // Add the column style to the table style
                 tblStyle.GridColumnStyles.Add(col);
-
             }
 
             DataGridButtonColumn logsCol = new DataGridButtonColumn();
@@ -218,9 +206,9 @@ namespace FSCruiser.WinForms
             tblStyle.GridColumnStyles.Add(logsCol);
 
             tblStyle.GridColumnStyles.Add(MakeErrorColumn(screenWidth));
-            // Add the newly created DataGridTableStyle to the grid. 
+            // Add the newly created DataGridTableStyle to the grid.
             grid.TableStyles.Add(tblStyle);
-            
+
             return tblStyle;
         }
 

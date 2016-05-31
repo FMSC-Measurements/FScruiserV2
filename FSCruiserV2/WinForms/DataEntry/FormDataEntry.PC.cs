@@ -1,28 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-
-using CruiseDAL.DataObjects;
-using FSCruiser.Core.DataEntry;
-using FSCruiser.Core.ViewInterfaces;
-using FSCruiser.WinForms.Common;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using FSCruiser.Core.ViewInterfaces;
+using FSCruiser.WinForms.Common;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public partial class FormDataEntry : FormDataEntryBase, IDataEntryView 
+    public partial class FormDataEntry : FormDataEntryBase, IDataEntryView
     {
         protected override TabControl PageContainer
         {
             get { return this._pageContainer; }
         }
-
 
         FormDataEntry()
         {
@@ -36,9 +26,7 @@ namespace FSCruiser.WinForms.DataEntry
             : this()
         {
             base.Initialize(controller, unit);
-
         }
-
 
         protected override void OnFocusedLayoutChanged(object sender, EventArgs e)
         {
@@ -152,9 +140,6 @@ namespace FSCruiser.WinForms.DataEntry
         //        this._pageContainer.ResumeLayout(false);
         //    }
 
-
-
-
         //    // Set the form title (Text) with current cutting unit and description.
         //    this.Text = this.LogicController.GetViewTitle();
 
@@ -178,15 +163,5 @@ namespace FSCruiser.WinForms.DataEntry
         {
             this.LogicController.HandleDeleteRowButtonClick();
         }
-
-
-        
-
-
-
-
-
-
-
     }
 }

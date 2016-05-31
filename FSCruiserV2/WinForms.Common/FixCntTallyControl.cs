@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using FSCruiser.Core.Models;
 
@@ -14,8 +9,9 @@ namespace FSCruiser.WinForms.Common
     {
         IFixCNTTallyPopulationProvider _populationProvider;
 
-        IFixCNTTallyCountProvider _tallyCountProvider; 
-        public IFixCNTTallyCountProvider TallyCountProvider 
+        IFixCNTTallyCountProvider _tallyCountProvider;
+
+        public IFixCNTTallyCountProvider TallyCountProvider
         {
             get { return _tallyCountProvider; }
             set
@@ -45,7 +41,6 @@ namespace FSCruiser.WinForms.Common
 
         void OnPopulationProviderChanging()
         {
-
         }
 
         void OnPopulationProviderChanged()
@@ -60,7 +55,7 @@ namespace FSCruiser.WinForms.Common
                 {
                     var tallyRow = new FixCntTallyRow(pop, this);
                     tallyRow.Dock = DockStyle.Top;
-                    if(rowCounter++%2 == 0)
+                    if (rowCounter++ % 2 == 0)
                     {
                         tallyRow.BackColor = SystemColors.ControlDark;
                     }
@@ -76,11 +71,10 @@ namespace FSCruiser.WinForms.Common
             if (tallyCountProvider != null)
             {
                 tallyCountProvider.TallyCountChanged += new EventHandler<TallyCountChangedEventArgs>(tallyCountProvider_TallyCountChanged);
-                
-                var updateEventArgs = 
-                    new TallyCountChangedEventArgs()
-                    { CountProvider = tallyCountProvider };
-                
+
+                var updateEventArgs =
+                    new TallyCountChangedEventArgs() { CountProvider = tallyCountProvider };
+
                 UpdateTallyCount(updateEventArgs);
             }
         }
@@ -102,7 +96,6 @@ namespace FSCruiser.WinForms.Common
         void UpdateTallyCount(TallyCountChangedEventArgs e)
         {
             if (e == null) { throw new ArgumentNullException("e"); }
-
 
             foreach (var c in Controls)
             {
@@ -144,7 +137,6 @@ namespace FSCruiser.WinForms.Common
                 row.Height = rowHeight;
             }
         }
-
     }
 
     public class FixCNTTallyEventArgs : EventArgs

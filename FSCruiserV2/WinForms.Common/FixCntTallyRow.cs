@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using FSCruiser.Core.Models;
 
@@ -32,12 +26,9 @@ namespace FSCruiser.WinForms.Common
                 _tallyContainer_PNL.Controls.Add(tallyButton);
             }
             ResumeLayout(false);
-
         }
 
-
         public FixCNTTallyControl TallyLayout { get; set; }
-
 
         protected override void OnResize(EventArgs e)
         {
@@ -46,7 +37,7 @@ namespace FSCruiser.WinForms.Common
 
             InternalPerformLayout();
         }
-        
+
         protected void InternalPerformLayout()
         {
             var tallyContainerWidth = _tallyContainer_PNL.Width;
@@ -70,6 +61,5 @@ namespace FSCruiser.WinForms.Common
                 { tallyButton.HandleTreeCountChanged(ea); }
             }
         }
-
     }
 }

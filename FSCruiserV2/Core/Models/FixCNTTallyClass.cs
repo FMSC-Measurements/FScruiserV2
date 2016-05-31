@@ -1,13 +1,10 @@
 ﻿using System;
 
-using System.Collections.Generic;
-using System.Text;
-using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
-    public enum FixCNTTallyField { Unknown, DBH, TotalHeight, DRC};
+    public enum FixCNTTallyField { Unknown, DBH, TotalHeight, DRC };
 
     public interface IFixCNTTallyClass
     {
@@ -24,17 +21,16 @@ namespace FSCruiser.Core.Models
         double GetTreeFieldValue(TreeVM tree);
     }
 
-
-    [EntitySource(SourceName="FixCNTTallyClass")]
+    [EntitySource(SourceName = "FixCNTTallyClass")]
     public class FixCNTTallyClass : IFixCNTTallyClass
     {
         [PrimaryKeyField(Name = "FixCNTTallyClass_CN")]
         public long? FixCNTTallyClass_CN { get; set; }
 
-        [Field(Name="FieldName")]
+        [Field(Name = "FieldName")]
         public FixCNTTallyField Field { get; set; }
 
-        [Field(Name="Stratum_CN")]
+        [Field(Name = "Stratum_CN")]
         public long? Stratum_CN { get; set; }
 
         public FixCNTStratum Stratum { get; set; }

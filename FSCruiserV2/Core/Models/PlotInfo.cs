@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
-using CruiseDAL.DataObjects;
 using System.ComponentModel;
-using CruiseDAL;
-using CruiseDAL.Schema;
 using System.Diagnostics;
+using System.Linq;
+using CruiseDAL;
+using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
@@ -16,11 +14,11 @@ namespace FSCruiser.Core.Models
         private bool _isTreeDataPopulated = false;
         private IList<TreeVM> _trees;
 
-        public PlotVM() 
+        public PlotVM()
             : base()
         { }
 
-        public PlotVM(DAL dal) 
+        public PlotVM(DAL dal)
             : base(dal)
         { }
 
@@ -131,7 +129,6 @@ namespace FSCruiser.Core.Models
             }
         }
 
-
         public virtual void PopulateTrees()
         {
             if (this._trees == null)
@@ -187,20 +184,18 @@ namespace FSCruiser.Core.Models
 
             viewController.ShowCruiserSelection(newTree);
 
-            //if a 3P plot method set Count Measure to empty. 
-            if (Array.IndexOf(CruiseDAL.Schema.CruiseMethods.THREE_P_METHODS, 
+            //if a 3P plot method set Count Measure to empty.
+            if (Array.IndexOf(CruiseDAL.Schema.CruiseMethods.THREE_P_METHODS,
                 this.Stratum.Method) >= 0)
             {
                 newTree.CountOrMeasure = string.Empty;
             }
 
-            newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied 
+            newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied
             newTree.TrySave();
             this.AddTree(newTree);
 
-
             return newTree;
-
         }
 
         public TreeVM CreateNewTreeEntry(CountTreeVM count, bool isMeasure)

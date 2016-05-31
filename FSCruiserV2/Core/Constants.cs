@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using CruiseDAL.DataObjects;
 
 namespace FSCruiser.Core
@@ -13,7 +11,7 @@ namespace FSCruiser.Core
 
         public const string APP_TITLE = "FScruiser - " + FSCRUISER_VERSION;
 
-        public const string CRUISERS_FILENAME = "\\Cruisers.xml";//depeciated, cruiser info now stored in setting file 
+        public const string CRUISERS_FILENAME = "\\Cruisers.xml";//depeciated, cruiser info now stored in setting file
         public const string APP_SETTINGS_PATH = "Settings.xml";
 
         public const string BACKUP_PREFIX = "BACK_";
@@ -62,12 +60,11 @@ namespace FSCruiser.Core
 
         public static readonly String[] PRODUCT_CODES = new string[] { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "26" };
 
-        public static readonly String[] UOM_CODES = new string[] { "01", "02", "03", "04", "05"};
+        public static readonly String[] UOM_CODES = new string[] { "01", "02", "03", "04", "05" };
 
         public static readonly char[] HOTKEY_KEYS = new char[] {'A','B','C','D','E','F'
             ,'G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
             ,'1','2','3','4','5','6','7','8','9','0'
             ,'*','.' };
-
     }
 }

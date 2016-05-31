@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
-using System.Threading;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
 
 namespace FSCruiser.WinForms
 {
-    
-
     public partial class FormMain : Form
     {
         class RecentFilesMenuItem : MenuItem
@@ -35,9 +28,7 @@ namespace FSCruiser.WinForms
             }
 
             this._dataEntryMI.Enabled = false;
-            
         }
-
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -56,23 +47,23 @@ namespace FSCruiser.WinForms
 
             FMSC.Utility.MobileDeviceInfo di = new FMSC.Utility.MobileDeviceInfo();
             _userInfoLBL.Text = di.GetModelAndSerialNumber();
-            
 
             //Thread.Sleep(1000);
         }
 
         IApplicationController Controller { get; set; }
-        CuttingUnitVM SelectedUnit 
-        { 
-            get 
+
+        CuttingUnitVM SelectedUnit
+        {
+            get
             {
                 CuttingUnitVM unitVM = _BS_cuttingUnits.Current as CuttingUnitVM;
                 if (unitVM != null && unitVM.Code != null)
                 {
                     return unitVM;
                 }
-                return null; 
-            } 
+                return null;
+            }
         }
 
         private void OpenButton_Click(object sender, EventArgs e)
@@ -88,7 +79,6 @@ namespace FSCruiser.WinForms
             }
             else
             {
-
                 if (Controller._cDal != null && Controller._cDal.Exists)
                 {
                     var fileName = System.IO.Path.GetFileName(Controller._cDal.Path);
@@ -122,7 +112,6 @@ namespace FSCruiser.WinForms
                 this._cuttingUnitCB.Enabled = false;
             }
         }
-
 
         private void _cruiseInfo_MI_Click(object sender, EventArgs e)
         {
@@ -188,13 +177,11 @@ namespace FSCruiser.WinForms
                             SizeF s = g.MeasureString(" ", stLBL.Font);
                             _fontHeight = (int)Math.Ceiling(s.Height);
                         }
-
                     }
 
                     stLBL.Dock = DockStyle.Top;
                     stLBL.Height = _fontHeight;
                     _strataView.Controls.Add(stLBL);
-
                 }
             }
             _strataView.ResumeLayout();
@@ -210,7 +197,6 @@ namespace FSCruiser.WinForms
                 Controller.ViewController.ShowDataEntry(SelectedUnit);
                 // Cursor.Current = Cursors.Default; is at the end of FormDataEntry.OnLoad();
             }
-            
         }
 
         // Kludgy and not sure I like this.
@@ -218,7 +204,6 @@ namespace FSCruiser.WinForms
         {
             //this._strataLB.SelectedIndex = -1; // unselect all items
         }
-
 
         private void _manageCruisersMI_Click(object sender, EventArgs e)
         {
@@ -229,17 +214,16 @@ namespace FSCruiser.WinForms
         {
             _recentFiles_MI.MenuItems.Clear();
 
-            foreach(RecentProject rp in Controller.Settings.RecentProjects)
+            foreach (RecentProject rp in Controller.Settings.RecentProjects)
             {
                 var mi = new RecentFilesMenuItem()
-                { 
+                {
                     Text = rp.ProjectName,
                     FilePath = rp.FilePath
                 };
                 mi.Click += recentFileSelected;
                 _recentFiles_MI.MenuItems.Add(mi);
             }
-
         }
 
         private void recentFileSelected(object sender, EventArgs e)
@@ -249,8 +233,5 @@ namespace FSCruiser.WinForms
 
             this.Controller.OpenFile(tsmi.FilePath);
         }
-
-        
     }
-
 }

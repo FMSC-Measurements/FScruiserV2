@@ -1,38 +1,32 @@
 ﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-using CruiseDAL.DataObjects;
-using System.ComponentModel;
 using System.Collections.Generic;
-using System.Xml.Serialization;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using System.Windows.Forms;
+using System.Xml.Serialization;
 using CruiseDAL;
+using CruiseDAL.DataObjects;
 using FSCruiser.Core.Models;
-using System.Diagnostics;
 using FSCruiser.Core.Workers;
-
 
 namespace FSCruiser.Core
 {
-     
-
     public enum BackUpMethod { None = 0, LeaveUnit = 1, TimeInterval = 2 }
 
     public class ApplicationController : IApplicationController
     {
-        
-
         //private int _talliesSinceLastSave = 0;
-        
+
         //private List<CruiserVM> _cruisers;
-        //private bool _allowBackup; 
+        //private bool _allowBackup;
 
         FileLoadWorker FileLoadWorker { get; set; }
 
         public ApplicationSettings Settings { get; set; }
+
         //public List<CruiserVM> Cruisers { get { return _cruisers; } }
-        public CruiseDAL.DAL _cDal 
+        public CruiseDAL.DAL _cDal
         {
             get
             {
@@ -40,7 +34,8 @@ namespace FSCruiser.Core
                 else { return FileLoadWorker.DataStore; }
             }
         }
-        public IList<CuttingUnitVM> CuttingUnits 
+
+        public IList<CuttingUnitVM> CuttingUnits
         {
             get
             {
@@ -49,50 +44,28 @@ namespace FSCruiser.Core
             }
         }
 
-
-        
-
         public CuttingUnitVM CurrentUnit { get; set; }
-
 
         //public long UnitTreeNumIndex = 0;
         //public BackUpMethod BackUpMethod { get; set; }
-        
-        
-
 
         public IViewController ViewController { get; protected set; }
-
-
-
-
-
-        
-
-        
 
         public ApplicationController(IViewController viewController)
         {
             viewController.ApplicationController = this;
-            viewController.ApplicationClosing +=new CancelEventHandler(OnApplicationClosing);
+            viewController.ApplicationClosing += new CancelEventHandler(OnApplicationClosing);
             this.ViewController = viewController;
 
             //TallyHistory = new BindingList<TallyAction>();
             this.LoadAppSettings();
-            
         }
 
+        #region exception handleing
 
-
-
-
-        
-
-
-        #region exception handleing 
         public void HandleNonCriticalException(Exception ex, string optMessage)
         {
-            if(optMessage == null)
+            if (optMessage == null)
             {
                 optMessage = ex.Message;
             }
@@ -105,8 +78,8 @@ namespace FSCruiser.Core
         }
 
         public void HandleException(Exception ex, string optMessage, bool isCritical, bool createErrorReport)
-        {            
-            if(createErrorReport)
+        {
+            if (createErrorReport)
             {
                 FMSC.Utility.ErrorHandling.ErrorReport report = new FMSC.Utility.ErrorHandling.ErrorReport(ex, Assembly.GetCallingAssembly());
                 report.MakeErrorReport();
@@ -117,7 +90,8 @@ namespace FSCruiser.Core
                 (isCritical) ? "Error" : "Non-Critical Error",
                 MessageBoxIcon.Asterisk);
         }
-        #endregion
+
+        #endregion exception handleing
 
         public void OpenFile()
         {
@@ -211,7 +185,6 @@ namespace FSCruiser.Core
             ViewController.ShowWait();
         }
 
-
         void HandleFileLoadEnd(object sender
             , FSCruiser.Core.Workers.WorkerProgressChangedEventArgs e)
         {
@@ -230,8 +203,6 @@ namespace FSCruiser.Core
                 Settings.AddRecentProject(new RecentProject(fileName, filePath));
                 SaveAppSettings();
             }
-            
-
         }
 
         //protected void LoadDatabase(String path)
@@ -245,12 +216,12 @@ namespace FSCruiser.Core
         //    try
         //    {
         //        this.ViewController.ShowWait();
-                
+
         //        _cDal = new CruiseDAL.DAL(path);
         //        _cDal.LogMessage(string.Format("Opened By FSCruiser ({0})", Constants.FSCRUISER_VERSION), "I");
         //        //read all cutting units
         //        var units = this._cDal.From<CuttingUnitVM>().Read().ToList();
-        //        //HACK insert dummy unit for unit dropdown, this needs to be done by main form 
+        //        //HACK insert dummy unit for unit dropdown, this needs to be done by main form
         //        units.Insert(0, new CuttingUnitVM());
         //        this.CuttingUnits = units;
 
@@ -275,8 +246,6 @@ namespace FSCruiser.Core
 
         #region load CuttingUnit
 
-
-
         public void LoadCuttingUnit(CuttingUnitVM unit)
         {
             if (unit == this.CurrentUnit) { return; }//should be equivilant to referenceEquals
@@ -285,17 +254,12 @@ namespace FSCruiser.Core
             //this.TallyHistory.Clear();
             this.CurrentUnit = unit;
 
-            
-
             //this.Counts = new List<CountTreeVM>();
-
-            
 
             //this.LoadCuttingUnitData();
         }
-        #endregion
 
-        
+        #endregion load CuttingUnit
 
         //#region Cruisers
         //public CruiserVM[] GetCruiserList()
@@ -335,8 +299,6 @@ namespace FSCruiser.Core
             newTDV.PrimaryProduct = pProd;
             newTDV.LiveDead = "L";
 
-
-
             if (this.ViewController.ShowEditTreeDefault(newTDV) == DialogResult.OK)
             {
                 try
@@ -349,7 +311,6 @@ namespace FSCruiser.Core
                     this.HandleNonCriticalException(e, "oops Tree Default save error");
                     return null;
                 }
-
             }
             else
             {
@@ -374,25 +335,25 @@ namespace FSCruiser.Core
                 return null;
             }
         }
-        #endregion
+
+        #endregion tally setup
 
         #region backup
 
         private string GetBackupFileName(string backupDir, bool addTimeStamp)
         {
             string originalFileName = System.IO.Path.GetFileName(this._cDal.Path);
-            
 
             //regex disected
             //prefix (optional): "BACK_"
             //core: one or more characters that extends until the time or postfix is found
-            //time (optional): time stamp  
+            //time (optional): time stamp
             //postfix: file extention and optional component indicator
 
             System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(
                 @"(?<prefix>BACK_)*"
-                + @"(?<core>.+?)" 
-                //+ @"(?<time>\(\d{4}_\d{2}_\d{2}__\d{2}_\d{2}\))?" 
+                + @"(?<core>.+?)"
+                //+ @"(?<time>\(\d{4}_\d{2}_\d{2}__\d{2}_\d{2}\))?"
                 + @"(?<compID>[.](?:[m]|\d+))?"
                 + @"(?<ext>[\.](?:cruise))"
                 , System.Text.RegularExpressions.RegexOptions.IgnoreCase);
@@ -402,10 +363,11 @@ namespace FSCruiser.Core
                 return null;
             }
 
-            string backupFileName = regex.Replace(originalFileName, 
-                (m) => {
+            string backupFileName = regex.Replace(originalFileName,
+                (m) =>
+                {
                     var result = Constants.BACKUP_PREFIX + m.Groups["core"].Value;
-                    if(addTimeStamp)
+                    if (addTimeStamp)
                     {
                         result += DateTime.Now.ToString(Constants.BACKUP_TIME_FORMAT);
                     }
@@ -417,7 +379,6 @@ namespace FSCruiser.Core
 
             return backupDir + "\\" + backupFileName;
         }
-
 
         public void PerformBackup(bool useTS)
         {
@@ -441,7 +402,7 @@ namespace FSCruiser.Core
             //    ViewController.ShowMessage("Back up not allowed", "Warning", MessageBoxIcon.Asterisk);
             //    return;
             //}
-            
+
             try
             {
                 if (path == null)
@@ -462,7 +423,8 @@ namespace FSCruiser.Core
                 this.ViewController.HideWait();
             }
         }
-        #endregion
+
+        #endregion backup
 
         //public void OnTally()
         //{
@@ -476,7 +438,6 @@ namespace FSCruiser.Core
         //    }
         //}
 
-
         public void LogTreeCountEdit(CountTreeDO countTree, long oldValue, long newValue)
         {
             this._cDal.LogMessage(String.Format("Tree Count Edit: CT_CN={0}; PrevVal={1}; NewVal={2}", countTree.CountTree_CN, oldValue, newValue), "I");
@@ -488,6 +449,7 @@ namespace FSCruiser.Core
         }
 
         #region App Settings
+
         protected void SaveAppSettings()
         {
             if (this.Settings == null)
@@ -531,7 +493,7 @@ namespace FSCruiser.Core
                     this.HandleNonCriticalException(e, "Fail to load application settings");
                 }
             }
-            else 
+            else
             {
                 var oldSettingsPath = System.IO.Path.Combine(ApplicationController.GetExecutionDirectory()
                     , Constants.APP_SETTINGS_PATH);
@@ -551,7 +513,6 @@ namespace FSCruiser.Core
                         System.IO.File.Delete(oldSettingsPath);
                     }
                     catch { }
-
                 }
             }
 
@@ -559,7 +520,6 @@ namespace FSCruiser.Core
             {
                 this.Settings = new ApplicationSettings();
             }
-
         }
 
         ApplicationSettings Deserialize(string path)
@@ -578,7 +538,8 @@ namespace FSCruiser.Core
                 return null;
             }
         }
-        #endregion
+
+        #endregion App Settings
 
         private void OnApplicationClosing(object sender, CancelEventArgs e)
         {
@@ -587,7 +548,6 @@ namespace FSCruiser.Core
             {
                 this._cDal.Dispose();
             }
-            
         }
 
         public void OnLeavingCurrentUnit(System.ComponentModel.CancelEventArgs e)
@@ -602,7 +562,6 @@ namespace FSCruiser.Core
             {
                 this.PerformBackup(false);
             }
-
         }
 
         public bool Save()
@@ -636,7 +595,7 @@ namespace FSCruiser.Core
         {
             string name = Assembly.GetCallingAssembly().GetName().CodeBase;
             //Assembly.GetCallingAssembly().GetName().CodeBase;
-            
+
             //clean up path, in FF name is a URI
             if (name.StartsWith(@"file:///"))
             {
@@ -650,9 +609,9 @@ namespace FSCruiser.Core
         {
             get
             {
-#if NetCF 
-                return System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FScruiser"); ; 
-             
+#if NetCF
+                return System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FScruiser"); ;
+
 #else
                 return System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FScruiser");
 #endif
@@ -668,8 +627,7 @@ namespace FSCruiser.Core
             }
         }
 
-        #endregion
-
+        #endregion static methods
 
         #region IDisposable Members
 
@@ -694,13 +652,13 @@ namespace FSCruiser.Core
                     this.ViewController.Dispose();
                     this.ViewController = null;
                 }
-
             }
         }
 
-        #endregion
+        #endregion IDisposable Members
 
         #region tally history
+
         //public void AddTallyAction(TallyAction action)
         //{
         //    if (action.KPI != 0)
@@ -711,7 +669,6 @@ namespace FSCruiser.Core
         //        action.TreeEstimate = te;
         //        te.Save();
         //    }
-
 
         //    if (TallyHistory.Count >= Constants.MAX_TALLY_HISTORY_SIZE)
         //    {
@@ -788,8 +745,8 @@ namespace FSCruiser.Core
         //        TallyAction[] array = new TallyAction[tallyHistory.Count];
         //        tallyHistory.CopyTo(array, 0);
         //        serializer.Serialize(writer, array);
-        //        return writer.ToString();                
-        //    }            
+        //        return writer.ToString();
+        //    }
         //}
 
         //protected TallyAction[] DeserializeTallyHistory(string stuff)
@@ -822,9 +779,11 @@ namespace FSCruiser.Core
 
         //    return tallyHistory;
         //}
-        #endregion
+
+        #endregion tally history
 
         #region save trees
+
         //private void SaveTreesAsync()
         //{
         //    if (this._saveTreesWorkerThread != null)
@@ -842,7 +801,6 @@ namespace FSCruiser.Core
         //    {
         //        this._saveTreesWorkerThread = null;
         //    }
-
 
         //}
 
@@ -867,7 +825,7 @@ namespace FSCruiser.Core
 
         //public void SaveTrees(ICollection<TreeVM> list)
         //{
-        //    bool success = true; 
+        //    bool success = true;
         //    if (list != null)
         //    {
         //        TreeVM[] a = new TreeVM[list.Count];
@@ -878,11 +836,11 @@ namespace FSCruiser.Core
         //        {
         //            try
         //            {
-        //                t.Save(OnConflictOption.Fail);//fail on conflict, but donot cancel current transaction 
+        //                t.Save(OnConflictOption.Fail);//fail on conflict, but donot cancel current transaction
         //            }
         //            catch (FMSC.ORM.SQLException)
         //            {
-        //                //TODO rethrow with meaningful exception, not this success crap 
+        //                //TODO rethrow with meaningful exception, not this success crap
         //                success = false;
         //            }
 
@@ -899,9 +857,11 @@ namespace FSCruiser.Core
         //    }
 
         //}
-        #endregion
+
+        #endregion save trees
 
         #region validate trees
+
         //public bool ValidateTrees()
         //{
         //    return ValidateTrees((ICollection<TreeVM>)CurrentUnitTreeList);
@@ -989,9 +949,11 @@ namespace FSCruiser.Core
         //    this._validateTreesWorkerThread.Priority = ThreadPriority.BelowNormal;
         //    this._validateTreesWorkerThread.Start();
         //}
-        #endregion
+
+        #endregion validate trees
 
         #region Sample Selecter Methods
+
         //public void SerializeSamplerState(SampleGroupVM sg)
         //{
         //    SampleSelecter selector = sg.Sampler;
@@ -1044,7 +1006,7 @@ namespace FSCruiser.Core
         //            return sampler;
         //        }
         //    }
-            
+
         //    return null;
         //}
 
@@ -1102,7 +1064,7 @@ namespace FSCruiser.Core
         //    {
         //        selecter = LoadSamplerState(sg);
 
-        //        //ensure sampler frequency matches sample group freqency 
+        //        //ensure sampler frequency matches sample group freqency
         //        if (selecter != null && selecter is FMSC.Sampling.IFrequencyBasedSelecter
         //            && ( ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).Frequency != sg.SamplingFrequency
         //            || ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).ITreeFrequency != sg.InsuranceFrequency) )
@@ -1135,10 +1097,9 @@ namespace FSCruiser.Core
         //                    ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).Frequency,
         //                    ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).ITreeFrequency),"I");
 
-                        
         //                this.ViewController.ShowMessage("Oops! Sample Frequency on sample group " +
         //                    sg.Code + " has been modified.\r\n If you are trying to change the sample freqency during a cruise, you should create a new sample group.",
-        //                    "Error", MessageBoxIcon.Exclamation); 
+        //                    "Error", MessageBoxIcon.Exclamation);
         //                sg.SamplingFrequency = ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).Frequency;
         //                sg.InsuranceFrequency = ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).ITreeFrequency;
         //            }
@@ -1154,7 +1115,7 @@ namespace FSCruiser.Core
         //    SampleSelecter selecter = null;
         //    int iFrequency = (int)sg.InsuranceFrequency;
         //    int KZ = (int)sg.KZ;
-        //    int maxKPI = 100000;            
+        //    int maxKPI = 100000;
         //    selecter = new FMSC.Sampling.ThreePSelecter(KZ, maxKPI, iFrequency);
         //    return selecter;
         //}
@@ -1184,8 +1145,7 @@ namespace FSCruiser.Core
         //    }
         //    return selecter;
         //}
-        #endregion
 
-        
+        #endregion Sample Selecter Methods
     }
 }

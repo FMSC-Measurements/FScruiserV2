@@ -1,11 +1,9 @@
 ﻿using System;
-
 using System.Collections.Generic;
-using System.Text;
-using CruiseDAL.DataObjects;
+using System.ComponentModel;
 using System.IO;
 using System.Xml.Serialization;
-using System.ComponentModel;
+using CruiseDAL.DataObjects;
 
 namespace FSCruiser.Core.Models
 {
@@ -36,8 +34,6 @@ namespace FSCruiser.Core.Models
             }
         }
 
-
-
         public new void Add(TallyAction action)
         {
             if (action.KPI != 0)
@@ -55,7 +51,6 @@ namespace FSCruiser.Core.Models
                 base.Add(action);
                 if (base.Count > MaxSize)
                 {
-
                     while (base.Count > MaxSize)
                     {
                         try
@@ -78,7 +73,7 @@ namespace FSCruiser.Core.Models
             try
             {
                 var xmlStr = this.SerializeTallyHistory();
-                
+
                 if (!String.IsNullOrEmpty(xmlStr))
                 {
                     _unit.TallyHistory = xmlStr;
@@ -93,13 +88,10 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        
-
         public new bool Remove(TallyAction action)
         {
             lock (syncLock)
             {
-
                 int itemIndex = base.IndexOf(action);
                 if (itemIndex != -1)
                 {
@@ -139,7 +131,6 @@ namespace FSCruiser.Core.Models
         //    action.Time = DateTime.Now.ToString("hh:mm");
         //    Add(action);
 
-
         //    OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         //}
 
@@ -169,7 +160,6 @@ namespace FSCruiser.Core.Models
         //        }
         //    }
 
-
         //}
 
         protected string SerializeTallyHistory()
@@ -184,7 +174,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        protected TallyAction[] DeserializeTallyHistory( string xmlStr)
+        protected TallyAction[] DeserializeTallyHistory(string xmlStr)
         {
             TallyAction[] tallyHistory = null;
             try
@@ -207,7 +197,7 @@ namespace FSCruiser.Core.Models
                     action.PopulateData(_unit.DAL);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new TallyHistoryPersistanceException("Unable to load tally history", e);
 
@@ -217,9 +207,8 @@ namespace FSCruiser.Core.Models
             return tallyHistory;
         }
 
-
-
         #region IBindingList Members
+
         bool System.ComponentModel.IBindingList.SupportsSearching
         {
             get { return false; }
@@ -271,6 +260,7 @@ namespace FSCruiser.Core.Models
         }
 
         #region unsupported IBindingList Members
+
         bool System.ComponentModel.IBindingList.IsSorted
         {
             get { throw new NotSupportedException(); }
@@ -315,8 +305,9 @@ namespace FSCruiser.Core.Models
         {
             throw new NotSupportedException();
         }
-        #endregion
-        #endregion
 
+        #endregion unsupported IBindingList Members
+
+        #endregion IBindingList Members
     }
 }

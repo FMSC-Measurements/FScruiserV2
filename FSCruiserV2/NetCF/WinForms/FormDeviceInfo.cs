@@ -1,10 +1,6 @@
 ﻿using System;
+
 //using System.Linq;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace FSCruiser.WinForms
@@ -33,18 +29,18 @@ namespace FSCruiser.WinForms
             DeviceInfoString += " Device Name:\t" + DeviceInfo.machineName + "\r\n";
             DeviceInfoString += " Device Description:\t" + DeviceInfo.machineDescription + "\r\n";
 
-       //     DeviceInfoString += "Memory Load:\t" + DeviceInfo.physicalMemoryLoadPercent.ToString() + "%\r\n";
+            //     DeviceInfoString += "Memory Load:\t" + DeviceInfo.physicalMemoryLoadPercent.ToString() + "%\r\n";
 
-       //     DeviceInfoString += "Main Battery Charge:\t" + DeviceInfo.mainBatteryLifePercent.ToString() + "%\r\n";
+            //     DeviceInfoString += "Main Battery Charge:\t" + DeviceInfo.mainBatteryLifePercent.ToString() + "%\r\n";
 
-       //     DeviceInfoString += "Backup Battery Charge:\t" + DeviceInfo.backupBatteryLifePercent.ToString() + "%\r\n";
+            //     DeviceInfoString += "Backup Battery Charge:\t" + DeviceInfo.backupBatteryLifePercent.ToString() + "%\r\n";
 
             textBoxDeviceInfo.Text = DeviceInfoString;
 
             // The progress bars for memory load and battery charge
             this.progressBarMemoryLoad.Value = (int)DeviceInfo.physicalMemoryLoadPercent;
 
-            int mainBatteryPercent   = 100;
+            int mainBatteryPercent = 100;
             int backupBatteryPercent = 0;
 
             if (DeviceInfo.deviceModel.IndexOf("Emulator") == -1)// not contains "emulator"
@@ -57,12 +53,11 @@ namespace FSCruiser.WinForms
                 backupBatteryPercent = 0;
 
             this.progressBarMainBatteryCharge.Value = mainBatteryPercent;
-            this.progressBarBackupBatteryCharge.Value = backupBatteryPercent;            
+            this.progressBarBackupBatteryCharge.Value = backupBatteryPercent;
         }
 
         private void progressBarMainBatteryCharge_ParentChanged(object sender, EventArgs e)
         {
-
         }
     }
 }

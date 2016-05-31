@@ -10,7 +10,8 @@ namespace FSCruiser.WinForms
     {
         private SampleGroupDO _sampleGroup;
         private readonly SampleGroupDO _initialState = new SampleGroupDO();
-        private bool _allowEdit; 
+        private bool _allowEdit;
+
         public SampleGroupDO SampleGroup
         {
             get
@@ -42,7 +43,6 @@ namespace FSCruiser.WinForms
 
         public FormEditSampleGroup()
         {
-
             InitializeComponent();
             this._pProdCB.DataSource = Constants.PRODUCT_CODES.Clone();
             this._sProdCB.DataSource = Constants.PRODUCT_CODES.Clone();
@@ -63,8 +63,8 @@ namespace FSCruiser.WinForms
         {
             bool isNew = !sampleGroup.IsPersisted;
             this.SampleGroup = sampleGroup;
-            this.AllowEdit = allowEdit; 
-            
+            this.AllowEdit = allowEdit;
+
             //TODO insted of reseting values from initial state could just reread from database
             this._initialState.SetValues(sampleGroup);
 
@@ -80,7 +80,6 @@ namespace FSCruiser.WinForms
             {
                 this.Text = "View Sample Group";
             }
-
 
             if ((this.SampleGroup.TallyMethod & CruiseDAL.Enums.TallyMode.BySampleGroup) == CruiseDAL.Enums.TallyMode.BySampleGroup)
             {
@@ -100,16 +99,14 @@ namespace FSCruiser.WinForms
             //    this._samplingFreq_TB = SampleGroupDO.CanEnableFrequency(st);
             //    this._insuranceFreq_TB.Enabled = SampleGroupDO.CanEnableIFreq(st);
             //    this._kz_TB.Enabled = SampleGroupDO.CanEnableKZ(st);
-                
+
             //}
 
             return base.ShowDialog();
-
         }
 
         protected void OnAllowEditChanged()
         {
-            
             this._codeTB.Enabled = _allowEdit;
             this._pProdCB.Enabled = _allowEdit;
 
@@ -118,7 +115,7 @@ namespace FSCruiser.WinForms
             StratumDO st = this.SampleGroup.Stratum;
             this._bigBaf_TB.Enabled = _allowEdit && SampleGroupDO.CanEnableBigBAF(st);
             this._kz_TB.Enabled = _allowEdit && SampleGroupDO.CanEnableKZ(st);
-            this._samplingFreq_TB.Enabled =  _allowEdit && SampleGroupDO.CanEnableFrequency(st);
+            this._samplingFreq_TB.Enabled = _allowEdit && SampleGroupDO.CanEnableFrequency(st);
             this._insuranceFreq_TB.Enabled = _allowEdit && SampleGroupDO.CanEnableIFreq(st);
 
             this._tallyBySg_RB.Enabled = this._tallyBySpecies_RB.Enabled = _allowEdit && FormEditSampleGroup.CanEditTallyMode(this.SampleGroup);
@@ -142,10 +139,9 @@ namespace FSCruiser.WinForms
             }
 
             this.EndEdit();
-            if(this.AllowEdit)
+            if (this.AllowEdit)
             {
-                
-                if(SampleGroupDO.CanChangeSamplerType(this.SampleGroup) && this._systematicOpt_ChB.Checked)// if systematic option checked, set SampleSelectorType to Systematic
+                if (SampleGroupDO.CanChangeSamplerType(this.SampleGroup) && this._systematicOpt_ChB.Checked)// if systematic option checked, set SampleSelectorType to Systematic
                 {
                     this.SampleGroup.SampleSelectorType = CruiseDAL.Schema.CruiseMethods.SYSTEMATIC_SAMPLER_TYPE;
                 }
@@ -153,20 +149,18 @@ namespace FSCruiser.WinForms
                 {
                     if (this._tallyBySg_RB.Checked)
                     {
-                        //TallyMethod = existing tallyMethod - TallyBySpecies + TallyBySampleGroup 
+                        //TallyMethod = existing tallyMethod - TallyBySpecies + TallyBySampleGroup
                         this.SampleGroup.TallyMethod = (this.SampleGroup.TallyMethod & ~CruiseDAL.Enums.TallyMode.BySpecies)
                             | CruiseDAL.Enums.TallyMode.BySampleGroup;
                     }
                     else if (this._tallyBySpecies_RB.Checked)
                     {
-                        //TallyMethod = existing tallyMethod - TallyBySampleGroup + TallyBySpecies 
+                        //TallyMethod = existing tallyMethod - TallyBySampleGroup + TallyBySpecies
                         this.SampleGroup.TallyMethod = (this.SampleGroup.TallyMethod & ~CruiseDAL.Enums.TallyMode.BySampleGroup)
                             | CruiseDAL.Enums.TallyMode.BySpecies;
                     }
                 }
             }
-
-            
 
             this.SampleGroup.Validate();
             if (this.SampleGroup.HasErrors())
@@ -186,9 +180,6 @@ namespace FSCruiser.WinForms
                 e.Cancel = true;
                 return;
             }
-
-
-
         }
 
         private static bool CanEditTallyMode(SampleGroupDO sg)
@@ -211,15 +202,10 @@ namespace FSCruiser.WinForms
             return true;
         }
 
-
-
-
         private void _cancel_MI_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
-
-
     }
 }

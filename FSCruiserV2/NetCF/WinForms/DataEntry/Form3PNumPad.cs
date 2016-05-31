@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace FSCruiser.WinForms.DataEntry
@@ -11,6 +7,7 @@ namespace FSCruiser.WinForms.DataEntry
     public partial class Form3PNumPad : Form
     {
         #region Designer Code
+
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -62,9 +59,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._row2.SuspendLayout();
             this._row1.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // _outputView
-            // 
+            //
             this._outputView.Dock = System.Windows.Forms.DockStyle.Top;
             this._outputView.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Regular);
             this._outputView.Location = new System.Drawing.Point(0, 0);
@@ -73,9 +70,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._outputView.Size = new System.Drawing.Size(240, 35);
             this._outputView.TabIndex = 0;
             this._outputView.TabStop = false;
-            // 
+            //
             // _mainContentPanel
-            // 
+            //
             this._mainContentPanel.Controls.Add(this._row4);
             this._mainContentPanel.Controls.Add(this._row3);
             this._mainContentPanel.Controls.Add(this._row2);
@@ -84,9 +81,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._mainContentPanel.Location = new System.Drawing.Point(0, 35);
             this._mainContentPanel.Name = "_mainContentPanel";
             this._mainContentPanel.Size = new System.Drawing.Size(240, 256);
-            // 
+            //
             // _row4
-            // 
+            //
             this._row4.Controls.Add(this._STMBtn);
             this._row4.Controls.Add(this._clear);
             this._row4.Controls.Add(this._accept);
@@ -95,9 +92,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._row4.Location = new System.Drawing.Point(0, 192);
             this._row4.Name = "_row4";
             this._row4.Size = new System.Drawing.Size(240, 64);
-            // 
+            //
             // _STMBtn
-            // 
+            //
             this._STMBtn.Dock = System.Windows.Forms.DockStyle.Fill;
             this._STMBtn.Location = new System.Drawing.Point(60, 0);
             this._STMBtn.Name = "_STMBtn";
@@ -105,9 +102,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._STMBtn.TabIndex = 12;
             this._STMBtn.Text = "STM";
             this._STMBtn.Click += new System.EventHandler(this._STMBtn_Click);
-            // 
+            //
             // _clear
-            // 
+            //
             this._clear.Dock = System.Windows.Forms.DockStyle.Right;
             this._clear.Location = new System.Drawing.Point(120, 0);
             this._clear.Name = "_clear";
@@ -115,9 +112,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._clear.TabIndex = 10;
             this._clear.Text = "&Clear";
             this._clear.Click += new System.EventHandler(this._clear_Click);
-            // 
+            //
             // _accept
-            // 
+            //
             this._accept.DialogResult = System.Windows.Forms.DialogResult.OK;
             this._accept.Dock = System.Windows.Forms.DockStyle.Right;
             this._accept.Location = new System.Drawing.Point(180, 0);
@@ -126,9 +123,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._accept.TabIndex = 11;
             this._accept.Text = "&Accept";
             this._accept.Click += new System.EventHandler(this._accept_Click);
-            // 
+            //
             // _num0
-            // 
+            //
             this._num0.Dock = System.Windows.Forms.DockStyle.Left;
             this._num0.Location = new System.Drawing.Point(0, 0);
             this._num0.Name = "_num0";
@@ -136,9 +133,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._num0.TabIndex = 9;
             this._num0.Text = "0";
             this._num0.Click += new System.EventHandler(this._num0_Click);
-            // 
+            //
             // _row3
-            // 
+            //
             this._row3.Controls.Add(this._num8);
             this._row3.Controls.Add(this._num9);
             this._row3.Controls.Add(this._num7);
@@ -146,9 +143,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._row3.Location = new System.Drawing.Point(0, 128);
             this._row3.Name = "_row3";
             this._row3.Size = new System.Drawing.Size(240, 64);
-            // 
+            //
             // _num8
-            // 
+            //
             this._num8.Dock = System.Windows.Forms.DockStyle.Fill;
             this._num8.Location = new System.Drawing.Point(80, 0);
             this._num8.Name = "_num8";
@@ -156,9 +153,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._num8.TabIndex = 7;
             this._num8.Text = "8";
             this._num8.Click += new System.EventHandler(this._num8_Click);
-            // 
+            //
             // _num9
-            // 
+            //
             this._num9.Dock = System.Windows.Forms.DockStyle.Right;
             this._num9.Location = new System.Drawing.Point(160, 0);
             this._num9.Name = "_num9";
@@ -166,9 +163,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._num9.TabIndex = 8;
             this._num9.Text = "9";
             this._num9.Click += new System.EventHandler(this._num9_Click);
-            // 
+            //
             // _num7
-            // 
+            //
             this._num7.Dock = System.Windows.Forms.DockStyle.Left;
             this._num7.Location = new System.Drawing.Point(0, 0);
             this._num7.Name = "_num7";
@@ -176,9 +173,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._num7.TabIndex = 6;
             this._num7.Text = "7";
             this._num7.Click += new System.EventHandler(this._num7_Click);
-            // 
+            //
             // _row2
-            // 
+            //
             this._row2.Controls.Add(this._num5);
             this._row2.Controls.Add(this._num6);
             this._row2.Controls.Add(this._num4);
@@ -186,9 +183,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._row2.Location = new System.Drawing.Point(0, 64);
             this._row2.Name = "_row2";
             this._row2.Size = new System.Drawing.Size(240, 64);
-            // 
+            //
             // _num5
-            // 
+            //
             this._num5.Dock = System.Windows.Forms.DockStyle.Fill;
             this._num5.Location = new System.Drawing.Point(80, 0);
             this._num5.Name = "_num5";
@@ -196,9 +193,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._num5.TabIndex = 4;
             this._num5.Text = "5";
             this._num5.Click += new System.EventHandler(this._num5_Click);
-            // 
+            //
             // _num6
-            // 
+            //
             this._num6.Dock = System.Windows.Forms.DockStyle.Right;
             this._num6.Location = new System.Drawing.Point(160, 0);
             this._num6.Name = "_num6";
@@ -206,9 +203,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._num6.TabIndex = 5;
             this._num6.Text = "6";
             this._num6.Click += new System.EventHandler(this._num6_Click);
-            // 
+            //
             // _num4
-            // 
+            //
             this._num4.Dock = System.Windows.Forms.DockStyle.Left;
             this._num4.Location = new System.Drawing.Point(0, 0);
             this._num4.Name = "_num4";
@@ -216,9 +213,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._num4.TabIndex = 3;
             this._num4.Text = "4";
             this._num4.Click += new System.EventHandler(this._num4_Click);
-            // 
+            //
             // _row1
-            // 
+            //
             this._row1.Controls.Add(this._num2);
             this._row1.Controls.Add(this._num3);
             this._row1.Controls.Add(this._num1);
@@ -226,9 +223,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._row1.Location = new System.Drawing.Point(0, 0);
             this._row1.Name = "_row1";
             this._row1.Size = new System.Drawing.Size(240, 64);
-            // 
+            //
             // _num2
-            // 
+            //
             this._num2.Dock = System.Windows.Forms.DockStyle.Fill;
             this._num2.Location = new System.Drawing.Point(80, 0);
             this._num2.Name = "_num2";
@@ -236,9 +233,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._num2.TabIndex = 1;
             this._num2.Text = "2";
             this._num2.Click += new System.EventHandler(this._num2_Click);
-            // 
+            //
             // _num3
-            // 
+            //
             this._num3.Dock = System.Windows.Forms.DockStyle.Right;
             this._num3.Location = new System.Drawing.Point(160, 0);
             this._num3.Name = "_num3";
@@ -246,9 +243,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._num3.TabIndex = 2;
             this._num3.Text = "3";
             this._num3.Click += new System.EventHandler(this._num3_Click);
-            // 
+            //
             // _num1
-            // 
+            //
             this._num1.Dock = System.Windows.Forms.DockStyle.Left;
             this._num1.Location = new System.Drawing.Point(0, 0);
             this._num1.Name = "_num1";
@@ -256,9 +253,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._num1.TabIndex = 0;
             this._num1.Text = "1";
             this._num1.Click += new System.EventHandler(this._num1_Click);
-            // 
+            //
             // Form3PNumPad
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(240, 291);
@@ -273,10 +270,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._row2.ResumeLayout(false);
             this._row1.ResumeLayout(false);
             this.ResumeLayout(false);
-
         }
 
-        #endregion
+        #endregion Windows Form Designer generated code
 
         private System.Windows.Forms.TextBox _outputView;
         private System.Windows.Forms.Panel _mainContentPanel;
@@ -296,15 +292,16 @@ namespace FSCruiser.WinForms.DataEntry
         private System.Windows.Forms.Button _num7;
         private System.Windows.Forms.Button _num5;
         private System.Windows.Forms.Button _num6;
-        #endregion
+
+        #endregion Designer Code
 
         private int? _minValue;
         private int? _maxValue;
         private Button _STMBtn;
         private bool _canReturnNull = false;
+
         public Form3PNumPad()
         {
-
             InitializeComponent();
 
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
@@ -319,7 +316,7 @@ namespace FSCruiser.WinForms.DataEntry
             //_row1.Height = rowHeight;
             //_row2.Height = rowHeight;
             //_row3.Height = rowHeight;
-            //_row4.Height = rowHeight + remainder; 
+            //_row4.Height = rowHeight + remainder;
         }
 
         void _mainContentPanel_Resize(object sender, EventArgs e)
@@ -346,7 +343,6 @@ namespace FSCruiser.WinForms.DataEntry
         {
             return this.ShowDialog(null, null, initialValue, canReturnNull);
         }
-        
 
         public DialogResult ShowDialog(int? min, int? max, int? initialValue, bool canReturnNull)
         {
@@ -375,11 +371,11 @@ namespace FSCruiser.WinForms.DataEntry
         /// <summary>
         /// returns -1 if value is STM
         /// </summary>
-        public int? UserEnteredValue 
+        public int? UserEnteredValue
         {
             get
             {
-                if(String.IsNullOrEmpty( _outputView.Text))
+                if (String.IsNullOrEmpty(_outputView.Text))
                 {
                     return null;
                 }
@@ -513,12 +509,12 @@ namespace FSCruiser.WinForms.DataEntry
                 return;
             }
 
-            if(this._minValue != null && this.UserEnteredValue < this._minValue.Value)
+            if (this._minValue != null && this.UserEnteredValue < this._minValue.Value)
             {
                 MessageBox.Show("Must be Greater or Equal to " + this._minValue.ToString());
                 e.Cancel = true;
             }
-            else if(this._maxValue != null && this.UserEnteredValue > this._maxValue.Value)
+            else if (this._maxValue != null && this.UserEnteredValue > this._maxValue.Value)
             {
                 MessageBox.Show("Must be Less Than or Equal to " + this._maxValue.ToString());
                 e.Cancel = true;
@@ -545,10 +541,8 @@ namespace FSCruiser.WinForms.DataEntry
                         e.Handled = true;
                         break;
                     }
-
             }
         }
-
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -579,13 +573,9 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-
         private void _STMBtn_Click(object sender, EventArgs e)
         {
             this._outputView.Text = "STM";
         }
-
-
-
     }
 }

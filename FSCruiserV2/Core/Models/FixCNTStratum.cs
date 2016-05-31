@@ -1,17 +1,15 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
-using System.Text;
 using CruiseDAL.DataObjects;
 
 namespace FSCruiser.Core.Models
 {
-    public interface IFixCNTTallyPopulationProvider 
+    public interface IFixCNTTallyPopulationProvider
     {
         IEnumerable<IFixCNTTallyPopulation> GetFixCNTTallyPopulations();
     }
 
-    public class FixCNTStratum : PlotStratum , IFixCNTTallyPopulationProvider
+    public class FixCNTStratum : PlotStratum, IFixCNTTallyPopulationProvider
     {
         IFixCNTTallyClass _tallyClass;
         IEnumerable<IFixCNTTallyPopulation> _tallyPopulations;
@@ -63,7 +61,6 @@ namespace FSCruiser.Core.Models
             }
         }
 
-
         public override void PopulatePlots(long cuttingUnit_CN)
         {
             this.Plots = new List<PlotVM>();
@@ -80,6 +77,5 @@ namespace FSCruiser.Core.Models
         {
             return InternalReadTreeFields();
         }
-
     }
 }

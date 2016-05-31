@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 
@@ -8,8 +7,6 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormLimitingDistance : Form
     {
-
-
         public FormLimitingDistance()
         {
             InitializeComponent();

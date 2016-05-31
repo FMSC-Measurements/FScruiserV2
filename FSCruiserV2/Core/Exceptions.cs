@@ -1,8 +1,5 @@
 ﻿using System;
 
-using System.Collections.Generic;
-using System.Text;
-
 namespace FSCruiser.Core
 {
     public class UserFacingException : Exception
@@ -10,7 +7,6 @@ namespace FSCruiser.Core
         public UserFacingException(String message, Exception innerException)
             : base(message, innerException)
         { }
-
     }
 
     public class TallyHistoryPersistanceException : Exception

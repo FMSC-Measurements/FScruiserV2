@@ -44,7 +44,6 @@ namespace FSCruiser.Core.DataEntry
                 if (value < 0) { return; }
                 _slopePCT = value;
                 UpdateLimitingDistance();
-                
             }
         }
 
@@ -59,6 +58,7 @@ namespace FSCruiser.Core.DataEntry
         }
 
         double _limitingDistance;
+
         public double LimitingDistance
         {
             get { return _limitingDistance; }
@@ -70,7 +70,8 @@ namespace FSCruiser.Core.DataEntry
         }
 
         MeasurmentLocation _measureTo;
-        public MeasurmentLocation MeasureTo 
+
+        public MeasurmentLocation MeasureTo
         {
             get { return _measureTo; }
             set
@@ -117,7 +118,7 @@ namespace FSCruiser.Core.DataEntry
             { return string.Empty; }
 
             var isTreeIn = SlopeDistance <= LimitingDistance;
-#warning bad Comparison            
+#warning bad Comparison
 
             return String.Format("Tree was {0} (DBH:{1}, slope:{2}%, slope distance:{3}', limiting distance:{4:F}' to {5} of tree, {6}:{7}) \r\n",
                     (isTreeIn) ? "IN" : "OUT",
@@ -175,7 +176,7 @@ namespace FSCruiser.Core.DataEntry
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void NotifyPropertyChanged(string propertyName)
-        {            
+        {
             if (PropertyChanged != null)
             {
                 var e = new PropertyChangedEventArgs(propertyName);
@@ -183,6 +184,6 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        #endregion
+        #endregion INotifyPropertyChanged Members
     }
 }

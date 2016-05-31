@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace FSCruiser.Core.Workers
@@ -18,15 +15,18 @@ namespace FSCruiser.Core.Workers
         object _threadLock = new object();
 
         public event EventHandler<WorkerExceptionThrownEventArgs> ExceptionThrown;
+
         public event EventHandler<WorkerProgressChangedEventArgs> ProgressChanged;
+
         public event EventHandler<WorkerProgressChangedEventArgs> Ended;
+
         public event EventHandler<WorkerProgressChangedEventArgs> Starting;
 
         protected int UnitsOfWorkExpected { get; set; }
+
         protected int UnitsOfWorkCompleated { get; set; }
 
         public virtual string Name { get; protected set; }
-
 
         public bool IsDone
         {
@@ -45,17 +45,18 @@ namespace FSCruiser.Core.Workers
                 }
             }
         }
-        public virtual bool IsWorking 
-        { 
-            get 
+
+        public virtual bool IsWorking
+        {
+            get
             {
-                if(_thread == null) { return false; }
+                if (_thread == null) { return false; }
 #if NetCF
                 try
                 {
                     return !_thread.Join(0);
                 }
-                catch(ThreadStateException) { return false; }
+                catch (ThreadStateException) { return false; }
 #else
                 return (_thread.ThreadState & ThreadState.Running) == ThreadState.Running;
 #endif
@@ -139,7 +140,7 @@ namespace FSCruiser.Core.Workers
         protected abstract void WorkerMain();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns>true if worker ended successfuly</returns>
         public bool Wait(int millSecTimeout)
@@ -242,7 +243,6 @@ namespace FSCruiser.Core.Workers
             {
                 this.Starting(this, e);
             }
-
         }
 
         protected void CheckCanceled()
@@ -261,6 +261,5 @@ namespace FSCruiser.Core.Workers
             float frac = (float)workDone / workExpected;
             return (int)(100 * frac);
         }
-
     }
 }

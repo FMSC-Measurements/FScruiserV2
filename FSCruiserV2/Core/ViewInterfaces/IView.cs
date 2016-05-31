@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace FSCruiser.Core.ViewInterfaces
@@ -53,7 +50,7 @@ namespace FSCruiser.Core.ViewInterfaces
 #else
 
             var window = view as IWin32Window;
-            return DialogResult.Yes == MessageBox.Show(window, 
+            return DialogResult.Yes == MessageBox.Show(window,
                 message,
                 caption,
                 MessageBoxButtons.YesNo,
@@ -62,5 +59,4 @@ namespace FSCruiser.Core.ViewInterfaces
 #endif
         }
     }
-
 }

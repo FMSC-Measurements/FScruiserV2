@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace FSCruiser.Core.Models
@@ -14,7 +11,6 @@ namespace FSCruiser.Core.Models
 
         [XmlAttribute]
         public string FilePath { get; set; }
-
 
         public RecentProject() { }
 

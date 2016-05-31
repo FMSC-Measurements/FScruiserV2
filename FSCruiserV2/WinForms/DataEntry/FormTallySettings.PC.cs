@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using CruiseDAL.DataObjects;
 using FMSC.Sampling;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
@@ -77,7 +71,6 @@ namespace FSCruiser.WinForms.DataEntry
                 this._iFreq_LBL.Visible = value;
                 this._iFreqTB.Visible = value;
             }
-
         }
 
         public bool EnableTotalTreeCount
@@ -142,7 +135,6 @@ namespace FSCruiser.WinForms.DataEntry
                 }
             }
             this._samplingMethod_TB.Text = samplingMethod;
-
 
             _count = count;
             DialogResult result = this.ShowDialog();

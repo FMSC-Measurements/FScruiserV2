@@ -1,16 +1,14 @@
 ﻿using System;
 
-using System.Collections.Generic;
-using System.Text;
 using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
-
     public class TallyCountChangedEventArgs : EventArgs
     {
         public IFixCNTTallyBucket TallyBucket { get; set; }
+
         public IFixCNTTallyCountProvider CountProvider { get; set; }
     }
 
@@ -33,6 +31,7 @@ namespace FSCruiser.Core.Models
         { }
 
         public event EventHandler<TallyCountChangedEventArgs> TallyCountChanged;
+
         [IgnoreField]
         public new FixCNTStratum Stratum
         {
@@ -74,8 +73,6 @@ namespace FSCruiser.Core.Models
         public override void PopulateTrees()
         {
             base.PopulateTrees();
-
-            
         }
 
         protected void NotifyTallyCountChanged(IFixCNTTallyBucket tallyBucket)
@@ -83,7 +80,8 @@ namespace FSCruiser.Core.Models
             var args = new TallyCountChangedEventArgs()
             {
                 CountProvider = this
-                , TallyBucket = tallyBucket
+                ,
+                TallyBucket = tallyBucket
             };
             OnTallyCountChanged(args);
         }
@@ -109,6 +107,5 @@ namespace FSCruiser.Core.Models
 
             NotifyTallyCountChanged(tallyBucket);
         }
-
     }
 }

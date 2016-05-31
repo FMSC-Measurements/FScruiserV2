@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
 using System.Xml.Serialization;
 using FSCruiser.Core.Models;
-using System.Linq;
-using System.IO;
 
 namespace FSCruiser.Core
 {
@@ -13,6 +11,7 @@ namespace FSCruiser.Core
     {
         string _backupDir;
         List<CruiserVM> _cruisers;
+
         public List<RecentProject> RecentProjects { get; set; }
 
         public ApplicationSettings()
@@ -24,7 +23,7 @@ namespace FSCruiser.Core
         public bool BackUpToCurrentDir { get; set; }
 
         [XmlAttribute]
-        public string BackupDir 
+        public string BackupDir
         {
             get { return _backupDir; }
             set
@@ -47,7 +46,7 @@ namespace FSCruiser.Core
         public bool EnableCruiserPopup { get; set; }
 
         [XmlElement]
-        public List<CruiserVM> Cruisers 
+        public List<CruiserVM> Cruisers
         {
             get
             {
@@ -57,7 +56,7 @@ namespace FSCruiser.Core
                 }
                 return _cruisers;
             }
-            set { _cruisers = value; } 
+            set { _cruisers = value; }
         }
 
         [XmlElement]
@@ -69,11 +68,11 @@ namespace FSCruiser.Core
             using (StreamReader reader = new StreamReader(path))
             {
                 return (ApplicationSettings)serializer.Deserialize(reader);
-            }            
+            }
         }
 
-
         #region Cruisers
+
         //public CruiserVM[] GetCruiserList()
         //{
         //    if (this.Cruisers == null)
@@ -100,8 +99,8 @@ namespace FSCruiser.Core
         {
             this.Cruisers.Remove(cruiser);
         }
-        #endregion
 
+        #endregion Cruisers
 
         #region Recent Files
 
@@ -126,6 +125,7 @@ namespace FSCruiser.Core
                 RecentProjects.Clear();
             }
         }
-        #endregion
+
+        #endregion Recent Files
     }
 }

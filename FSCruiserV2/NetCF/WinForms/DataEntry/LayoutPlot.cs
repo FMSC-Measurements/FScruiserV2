@@ -541,7 +541,6 @@ namespace FSCruiser.WinForms.DataEntry
             this.ViewLogicController.SavePlotTrees();
             this.ViewLogicController.ViewController.ShowTallySettings(count);
 
-
             //TallyRow row = (TallyRow)sender;
             //CountTreeVM count = row.Count;
 
@@ -941,7 +940,6 @@ namespace FSCruiser.WinForms.DataEntry
             row.Dock = DockStyle.Right;
             row.ResumeLayout(true);
             return row;
-
 
             //char hotKey = count.Tally.Hotkey[0];
             //Button row = new Button();

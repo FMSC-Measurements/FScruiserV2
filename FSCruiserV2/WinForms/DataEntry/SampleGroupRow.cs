@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using FSCruiser.Core.Models;
 
@@ -27,7 +24,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public bool IsExpanded 
+        public bool IsExpanded
         {
             get { return this._speciesContainer.Visible; }
             set { this._speciesContainer.Visible = value; }
@@ -36,7 +33,6 @@ namespace FSCruiser.WinForms.DataEntry
         List<SubPop> _subPopList = new List<SubPop>();
 
         public event SpeciesClickedEventHandler SpeciesClicked;
-
 
         public SampleGroupRow()
         {
@@ -63,7 +59,6 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        
         void AddSubPop(SubPop subPop)
         {
             var spRow = new SpeciesRow()
@@ -81,12 +76,11 @@ namespace FSCruiser.WinForms.DataEntry
         public void AddSupPops(IEnumerable<SubPop> pops)
         {
             this._speciesContainer.SuspendLayout();
-            foreach(SubPop sp in pops.Reverse())
+            foreach (SubPop sp in pops.Reverse())
             {
                 this.AddSubPop(sp);
             }
             this._speciesContainer.ResumeLayout(false);
         }
-
     }
 }

@@ -2,17 +2,18 @@
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 
-
 namespace FSCruiser.Core
 {
     public class FormCruiserSelectionLogic
     {
         private CruiserVM[] _cruisers;
         private IApplicationController _controller;
-        public ICruiserSelectionView View { get; protected set; }
-        public TreeVM Tree {get; set; }
 
-        public FormCruiserSelectionLogic(IApplicationController controller,ICruiserSelectionView view)
+        public ICruiserSelectionView View { get; protected set; }
+
+        public TreeVM Tree { get; set; }
+
+        public FormCruiserSelectionLogic(IApplicationController controller, ICruiserSelectionView view)
         {
             this._controller = controller;
             this.View = view;
@@ -23,9 +24,8 @@ namespace FSCruiser.Core
             if (Tree == null) { throw new InvalidOperationException("Set Tree before calling HandleLoad"); }
 
             this.View.TreeNumberText = "Tree #:" + Tree.TreeNumber;
-            this.View.StratumText = "Stratum: " + Tree.Stratum.GetDescriptionShort();           
+            this.View.StratumText = "Stratum: " + Tree.Stratum.GetDescriptionShort();
             this.View.SampleGroupText = "Sg: " + Tree.SampleGroup.GetDescriptionShort();
-            
 
             _cruisers = _controller.Settings.Cruisers.ToArray();
             this.View.UpdateCruiserList(_cruisers);
@@ -46,7 +46,7 @@ namespace FSCruiser.Core
         public void HandleCruiserSelected(CruiserVM cruiser)
         {
             this.Tree.Initials = cruiser.Initials;
-            //this.Tree.Save();//don't save here, let it be saved by FormDataEntryLogic 
+            //this.Tree.Save();//don't save here, let it be saved by FormDataEntryLogic
 
             this.View.Close();
         }

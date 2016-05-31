@@ -1,18 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using CruiseDAL.DataObjects;
 using FMSC.Sampling;
-using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using FSCruiser.Core.ViewInterfaces;
 
 namespace FSCruiser.WinForms.DataEntry
 {
     public partial class Form3PPNTPlotInfo : Form, IPlotInfoDialog
     {
         public IViewController _viewController;
-        
 
         public Form3PPNTPlotInfo(IViewController viewController)
         {
@@ -23,15 +21,12 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 this.WindowState = FormWindowState.Maximized;
                 this._OKBtn.Visible = true;
-            }            
+            }
         }
-
 
         private bool _blockTBClick = false;
         Plot3PPNT _plot;
         PlotStratum _stratum;
-        
-
 
         public DialogResult ShowDialog(PlotVM plot, PlotStratum stratum, bool allowEdit)
         {
@@ -93,7 +88,6 @@ namespace FSCruiser.WinForms.DataEntry
 
                 lock (_plot.DAL.TransactionSyncLock)
                 {
-
                     _plot.DAL.BeginTransaction();
                     try
                     {
@@ -142,7 +136,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void _gpsButton_Click(object sender, EventArgs e)
         {
-
         }
 
         private void _aveHtBTN_Click(object sender, EventArgs e)
@@ -171,6 +164,5 @@ namespace FSCruiser.WinForms.DataEntry
             _plot.KPI = _plot.CalculateKPI();
             _blockTBClick = false;
         }
-
     }
 }

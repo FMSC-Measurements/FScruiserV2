@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using Logger;
-using System.Threading;
-using System.Xml.Serialization;
-using System.IO;
-using System.Reflection;
 using System.Diagnostics;
+using System.Windows.Forms;
 using FSCruiser.Core;
 
 namespace FSCruiser.WinForms
@@ -19,12 +13,12 @@ namespace FSCruiser.WinForms
 #if PocketPC
         [MTAThread]
 #else
+
         [STAThread]
 #endif
         static void Main()
         {
-
-            //read command line arguments 
+            //read command line arguments
             var args = Environment.GetCommandLineArgs();
             string dalPath = null;
             if (args.Length > 1)

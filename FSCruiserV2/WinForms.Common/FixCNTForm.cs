@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using FSCruiser.Core.Models;
 
 namespace FSCruiser.WinForms.Common
@@ -15,13 +8,13 @@ namespace FSCruiser.WinForms.Common
         IFixCNTTallyPopulationProvider _populationProvider;
 
         FixCNTForm()
-        {            
+        {
             InitializeComponent();
         }
 
         public FixCNTForm(IFixCNTTallyPopulationProvider populationProvider)
             : this()
-        {                        
+        {
             _tallyControl.PopulationProvider = populationProvider;
         }
 

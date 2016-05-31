@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using CruiseDAL;
-using FMSC.ORM.EntityModel.Attributes;
 using CruiseDAL.DataObjects;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
@@ -31,7 +30,6 @@ namespace FSCruiser.Core.Models
 
         [IgnoreField]
         public IList<PlotVM> Plots { get; protected set; }
-
 
         public virtual PlotVM MakePlot(CuttingUnitVM cuttingUnit)
         {
@@ -82,7 +80,6 @@ namespace FSCruiser.Core.Models
                 int? result2 = DAL.ExecuteScalar<int?>(query2);
                 highestInStratum = result2.GetValueOrDefault(0);
 
-
                 if (highestInUnit > highestInStratum && highestInUnit > 0)
                 {
                     return highestInUnit;
@@ -109,21 +106,23 @@ namespace FSCruiser.Core.Models
             return true;
         }
 
-
         public override List<TreeFieldSetupDO> ReadTreeFields()
         {
             var fields = InternalReadTreeFields();
 
-            //if not a single stage plot strata 
-            //and count measure field is missing 
+            //if not a single stage plot strata
+            //and count measure field is missing
             //automaticly add it
             if (!IsSingleStage
                 && fields.FindIndex(((tfs) => tfs.Field == CruiseDAL.Schema.TREE.COUNTORMEASURE)) < 0)
             {
                 fields.Insert(5
-                    , new TreeFieldSetupDO() { 
+                    , new TreeFieldSetupDO()
+                    {
                         Field = CruiseDAL.Schema.TREE.COUNTORMEASURE
-                        , Heading = "C/M" });
+                        ,
+                        Heading = "C/M"
+                    });
             }
 
             return fields;

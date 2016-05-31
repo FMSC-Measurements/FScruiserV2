@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using CruiseDAL.DataObjects;
 
 namespace FSCruiser.Core.Models
@@ -33,6 +31,5 @@ namespace FSCruiser.Core.Models
         void TrySaveTrees();
 
         void TrySaveTreesAsync();
-
     }
 }

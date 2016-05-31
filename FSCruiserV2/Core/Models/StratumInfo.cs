@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using FMSC.Sampling;
 
 namespace FSCruiser.Core.Models
 {
-    public class StratumVM : StratumDO, ITreeFieldProvider, ILogFieldProvider 
+    public class StratumVM : StratumDO, ITreeFieldProvider, ILogFieldProvider
     {
         private Dictionary<char, CountTreeVM> _hotKeyLookup;
 
-
         /// <summary>
-        /// for 3ppnt 
+        /// for 3ppnt
         /// </summary>
         public ThreePSelecter SampleSelecter { get; set; }
 
@@ -23,12 +21,12 @@ namespace FSCruiser.Core.Models
         //public StratumDO Stratum { get; set; }
         //public List<PlotVM> Plots { get; set; }
         public List<CountTreeVM> Counts { get; set; }
-        
-        public Dictionary<char, CountTreeVM> HotKeyLookup 
-        { 
+
+        public Dictionary<char, CountTreeVM> HotKeyLookup
+        {
             get
             {
-                if(_hotKeyLookup == null)
+                if (_hotKeyLookup == null)
                 {
                     _hotKeyLookup = new Dictionary<char, CountTreeVM>();
                 }
@@ -110,7 +108,7 @@ namespace FSCruiser.Core.Models
             return fields;
         }
 
-        #endregion
+        #endregion ITreeFieldProvider Members
 
         #region ILogFieldProvider Members
 
@@ -127,9 +125,8 @@ namespace FSCruiser.Core.Models
             }
 
             return fields;
-
         }
 
-        #endregion
+        #endregion ILogFieldProvider Members
     }
 }

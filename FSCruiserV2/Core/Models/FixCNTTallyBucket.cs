@@ -1,9 +1,4 @@
-﻿using System;
-
-using System.Collections.Generic;
-using System.Text;
-
-namespace FSCruiser.Core.Models
+﻿namespace FSCruiser.Core.Models
 {
     public interface IFixCNTTallyBucket
     {
@@ -13,7 +8,6 @@ namespace FSCruiser.Core.Models
 
         FixCNTTallyField Field { get; set; }
     }
-
 
     public class FixCNTTallyBucket : IFixCNTTallyBucket
     {
@@ -39,6 +33,5 @@ namespace FSCruiser.Core.Models
         //        this.TreeCountChanged(this, e);
         //    }
         //}
-
     }
 }
