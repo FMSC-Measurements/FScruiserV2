@@ -7,7 +7,7 @@ using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
-    public enum FixCNTTallyField { Unknown, DBH, TotalHeight };
+    public enum FixCNTTallyField { Unknown, DBH, TotalHeight, DRC};
 
     public interface IFixCNTTallyClass
     {
@@ -43,11 +43,15 @@ namespace FSCruiser.Core.Models
         {
             if (this.Field == FixCNTTallyField.DBH)
             {
-                tree.DBH = (float)tallyBucket.IntervalValue;
+                tree.DBH = (float)tallyBucket.MidpointValue;
             }
             else if (Field == FixCNTTallyField.TotalHeight)
             {
-                tree.TotalHeight = (float)tallyBucket.IntervalValue;
+                tree.TotalHeight = (float)tallyBucket.MidpointValue;
+            }
+            else if (Field == FixCNTTallyField.DRC)
+            {
+                tree.DRC = (float)tallyBucket.MidpointValue;
             }
             else
             {
