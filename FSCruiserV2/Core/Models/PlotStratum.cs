@@ -112,7 +112,7 @@ namespace FSCruiser.Core.Models
 
         public override List<TreeFieldSetupDO> ReadTreeFields()
         {
-            var fields = base.ReadTreeFields();
+            var fields = InternalReadTreeFields();
 
             //if not a single stage plot strata 
             //and count measure field is missing 

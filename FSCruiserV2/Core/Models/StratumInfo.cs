@@ -91,6 +91,11 @@ namespace FSCruiser.Core.Models
 
         public virtual List<TreeFieldSetupDO> ReadTreeFields()
         {
+            return InternalReadTreeFields();
+        }
+
+        protected List<TreeFieldSetupDO> InternalReadTreeFields()
+        {
             var fields = DAL.From<TreeFieldSetupDO>()
                 .Where("Stratum_CN = ?")
                 .OrderBy("FieldOrder")

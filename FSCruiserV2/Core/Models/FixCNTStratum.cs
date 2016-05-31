@@ -76,5 +76,10 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public override List<TreeFieldSetupDO> ReadTreeFields()
+        {
+            return InternalReadTreeFields();
+        }
+
     }
 }
