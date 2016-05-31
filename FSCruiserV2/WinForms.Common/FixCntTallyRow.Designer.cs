@@ -92,11 +92,6 @@ namespace FSCruiser.WinForms.Common
 
         private System.Windows.Forms.Panel _tallyContainer_PNL;
         private System.Windows.Forms.Label _speciesName_LBL;
-        private FixCNTTallyButton fixCNTTallyButton3;
-        private FixCNTTallyButton fixCNTTallyButton2;
-        private FixCNTTallyButton fixCNTTallyButton1;
-        private FixCNTTallyButton fixCNTTallyButton5;
-        private FixCNTTallyButton fixCNTTallyButton4;
         private System.Windows.Forms.Label label1;
 
 
