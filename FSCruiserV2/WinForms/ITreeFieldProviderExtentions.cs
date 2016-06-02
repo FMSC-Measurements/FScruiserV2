@@ -18,6 +18,10 @@ namespace FSCruiser.WinForms
                 DataGridViewColumn col = null;
                 switch (fieldSetup.Field)
                 {
+                    case "CuttingUnit":
+                        {
+                            continue;
+                        }
                     case "Species":
                         {
                             col = new DataGridViewComboBoxColumn()

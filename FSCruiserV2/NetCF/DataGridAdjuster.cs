@@ -101,6 +101,10 @@ namespace FSCruiser.WinForms
 
                 switch (field.Field)
                 {
+                    case "CuttingUnit":
+                        {
+                            continue;
+                        }
                     case "Species":
                         {
                             col = new FMSC.Controls.EditableComboBoxColumn();
