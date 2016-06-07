@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
+using System.Xml.Serialization;
 using CruiseDAL;
 using CruiseDAL.DataObjects;
-using CruiseDAL.Schema;
-using FMSC.Sampling;
-using System.Xml.Serialization;
-using System.IO;
 using FMSC.ORM.EntityModel.Attributes;
+using FMSC.Sampling;
 
 namespace FSCruiser.Core.Models
 {
@@ -33,7 +30,6 @@ namespace FSCruiser.Core.Models
         [IgnoreField]
         public SampleSelecter Sampler { get; set; }
 
-
         public override StratumDO GetStratum()
         {
             if (DAL == null) { return null; }
@@ -49,6 +45,7 @@ namespace FSCruiser.Core.Models
         }
 
         #region Sample Selecter Methods
+
         public void SerializeSamplerState()
         {
             SampleSelecter selector = this.Sampler;
@@ -159,7 +156,7 @@ namespace FSCruiser.Core.Models
             {
                 selecter = LoadSamplerState();
 
-                //ensure sampler frequency matches sample group freqency 
+                //ensure sampler frequency matches sample group freqency
                 if (selecter != null && selecter is FMSC.Sampling.IFrequencyBasedSelecter
                     && (((FMSC.Sampling.IFrequencyBasedSelecter)selecter).Frequency != this.SamplingFrequency
                     || ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).ITreeFrequency != this.InsuranceFrequency))
@@ -200,7 +197,6 @@ namespace FSCruiser.Core.Models
                         //this.SamplingFrequency = ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).Frequency;
                         //this.InsuranceFrequency = ((FMSC.Sampling.IFrequencyBasedSelecter)selecter).ITreeFrequency;
                     }
-
                 }
             }
 
@@ -242,8 +238,7 @@ namespace FSCruiser.Core.Models
             }
             return selecter;
         }
-        #endregion
 
-
+        #endregion Sample Selecter Methods
     }
 }

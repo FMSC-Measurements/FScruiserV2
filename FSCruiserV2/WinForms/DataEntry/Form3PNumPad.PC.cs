@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using FSCruiser.Core.ViewInterfaces;
 
@@ -23,7 +18,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
-            // HACK we need to handle dialog keys manualy 
+            // HACK we need to handle dialog keys manualy
             // otherwise the parent form recieves the key press too
             if (e.KeyData == Keys.Enter)
             {
@@ -43,15 +38,14 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
 
-            if (this.DialogResult == DialogResult.Cancel) 
+            if (this.DialogResult == DialogResult.Cancel)
             {
                 this.UserEnteredValue = null;
-                return; 
+                return;
             }
 
             if (!_canReturnNull && this.UserEnteredValue == null)

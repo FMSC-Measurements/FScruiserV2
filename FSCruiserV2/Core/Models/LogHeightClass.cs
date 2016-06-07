@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace FSCruiser.Core.Models
 {
@@ -20,7 +18,7 @@ namespace FSCruiser.Core.Models
 
             public bool IsInRange(float value)
             {
-                return value.GreaterThanOrEqualsEx(From) 
+                return value.GreaterThanOrEqualsEx(From)
                     && value.LessThanOrEqualsEx(To);
             }
 
@@ -31,7 +29,7 @@ namespace FSCruiser.Core.Models
                 return From.CompareTo(other.From);
             }
 
-            #endregion
+            #endregion IComparable<HeightRange> Members
         }
 
         double _num16FtLogs = 0;

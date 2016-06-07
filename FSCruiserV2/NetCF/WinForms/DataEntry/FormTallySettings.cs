@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using FMSC.Sampling;
@@ -17,19 +13,18 @@ namespace FSCruiser.WinForms.DataEntry
         private enum TallyMode { SRS, Block, Systematic }
 
         private CountTreeDO _count;
-        public IApplicationController Controller {get; set; }
+
+        public IApplicationController Controller { get; set; }
 
         public FormTallySettings(IApplicationController controller)
         {
             this.Controller = controller;
             InitializeComponent();
 
-
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
             {
                 this.WindowState = FormWindowState.Maximized;
             }
-
 
             this._tallyDescription_TB.TextChanged += new EventHandler(tallyDescription_TB_TextChanged);
         }
@@ -39,7 +34,7 @@ namespace FSCruiser.WinForms.DataEntry
             set
             {
                 this._tallyCount_TB.Visible = value;
-                this._tallyCount_LBL.Visible = value; 
+                this._tallyCount_LBL.Visible = value;
             }
         }
 
@@ -48,8 +43,8 @@ namespace FSCruiser.WinForms.DataEntry
             set
             {
                 this._SumKPI_TB.Visible = value;
-                this._sumKPI_LBL.Visible = value; 
-            }            
+                this._sumKPI_LBL.Visible = value;
+            }
         }
 
         public bool EnableBigBAF
@@ -83,10 +78,9 @@ namespace FSCruiser.WinForms.DataEntry
         {
             set
             {
-                this._iFreq_LBL.Visible = value; 
-                this._iFreqTB.Visible = value; 
+                this._iFreq_LBL.Visible = value;
+                this._iFreqTB.Visible = value;
             }
-
         }
 
         public bool EnableTotalTreeCount
@@ -97,7 +91,6 @@ namespace FSCruiser.WinForms.DataEntry
                 this._totalTreeCount_TB.Visible = value;
             }
         }
-
 
         public DialogResult ShowDialog(CountTreeVM count)
         {
@@ -112,11 +105,11 @@ namespace FSCruiser.WinForms.DataEntry
 
             this.EnableFrequency = !isThreep;
             this.EnableKZ = isThreep;
-            this.EnableSumKPI = (isThreep && !isPlot);            
+            this.EnableSumKPI = (isThreep && !isPlot);
 
             //this.comboBox1.SelectedItem = (count.Tag is BlockSelecter) ? TallyMode.Block.ToString() : (count.Tag is SRSSelecter) ? TallyMode.SRS.ToString() : (count.Tag is SystematicSelecter) ? TallyMode.Systematic.ToString() : "???";
             this._tallyDescription_TB.Text = count.Tally.Description;
-            this._SGDescription_TB.Text = count.SampleGroup.Description; 
+            this._SGDescription_TB.Text = count.SampleGroup.Description;
             this._frequencyTB.Text = count.SampleGroup.ToString("1 in [SamplingFrequency]", null);
             this._kzTB.Text = count.SampleGroup.KZ.ToString();
             this._SumKPI_TB.Text = count.SumKPI.ToString();
@@ -145,8 +138,7 @@ namespace FSCruiser.WinForms.DataEntry
                     samplingMethod = "Three P";
                 }
             }
-            this._samplingMethod_TB.Text = samplingMethod; 
-
+            this._samplingMethod_TB.Text = samplingMethod;
 
             _count = count;
             DialogResult result = this.ShowDialog();
@@ -205,6 +197,4 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
     }
-
-
 }

@@ -1,55 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
-using CruiseDAL.DataObjects;
-using FMSC.Sampling;
 using FMSC.Controls;
-using Microsoft.WindowsCE.Forms;
-using System.ComponentModel;
-using FSCruiser.WinForms.Common;
-using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
-using FSCruiser.Core.DataEntry;
+using FSCruiser.Core.ViewInterfaces;
+using FSCruiser.WinForms.Common;
 
 namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormDataEntry : FormDataEntryBase, IDataEntryView
     {
-
         protected override TabControl PageContainer
         {
             get { return this._pageContainer; }
         }
 
-
-        protected FormDataEntry():base()
+        protected FormDataEntry()
+            : base()
         {
             InitializeComponent();
 
             //this.Controls.Add(this._pageContainer);
 
-            if(ViewController.PlatformType == PlatformType.WM)
+            if (ViewController.PlatformType == PlatformType.WM)
             {
                 this.SIP = new Microsoft.WindowsCE.Forms.InputPanel();
                 this.components.Add(SIP);
             }
             else if (ViewController.PlatformType == PlatformType.WinCE)
             {
-
                 this.WindowState = FormWindowState.Maximized;
             }
         }
 
         public FormDataEntry(IApplicationController controller
-            , CuttingUnitVM unit) :this()
+            , CuttingUnitVM unit)
+            : this()
         {
             base.Initialize(controller, unit);
-
         }
 
         #region override methods
+
         //protected override void InitializeTreesTab()
         //{
         //    this._treePage = new TabPage();
@@ -63,8 +55,6 @@ namespace FSCruiser.WinForms.DataEntry
         //        Dock = DockStyle.Fill,
         //        UserCanAddTrees = true
         //    };
-
-
 
         //    _treePage.Controls.Add(_treeView);
         //    this._pageContainer.TabPages.Add(_treePage);
@@ -131,12 +121,11 @@ namespace FSCruiser.WinForms.DataEntry
             this._addTreeMI.Enabled = view != null && view.UserCanAddTrees;
         }
 
-        #endregion
+        #endregion override methods
 
         private void _deleteRowButton_Click(object sender, EventArgs e)
         {
             this.LogicController.HandleDeleteRowButtonClick();
-
         }
 
         private void showHideErrorMessages_Click(object sender, EventArgs e)
@@ -171,9 +160,5 @@ namespace FSCruiser.WinForms.DataEntry
         {
             this.LogicController.HandleAddTreeClick();
         }
-
-        
-
-
     }
 }

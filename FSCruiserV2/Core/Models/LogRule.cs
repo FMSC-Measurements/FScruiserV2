@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace FSCruiser.Core.Models
 {
     public class LogRule
     {
         public List<string> Species { get; private set; }
+
         public IList<LogHeightClass> LogHeights { get; private set; }
 
         public LogRule()
@@ -15,7 +13,8 @@ namespace FSCruiser.Core.Models
             LogHeights = new List<LogHeightClass>();
         }
 
-        public LogRule(string species) : this()
+        public LogRule(string species)
+            : this()
         {
             var speciesArray = species.Split(' ');
             this.Species = new List<string>(speciesArray);
@@ -42,7 +41,7 @@ namespace FSCruiser.Core.Models
                     {
                         return logCnt16Ft / 2.0;
                     }
-                    else 
+                    else
                     {
                         return 0;
                     }

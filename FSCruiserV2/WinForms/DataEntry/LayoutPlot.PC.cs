@@ -1,35 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-
-using CruiseDAL;
 using CruiseDAL.DataObjects;
-using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
-using FMSC.ORM.Core.SQL;
+using FSCruiser.Core.ViewInterfaces;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public partial class LayoutPlot : UserControl , ITallyView , ITreeView, IPlotLayout
+    public partial class LayoutPlot : UserControl, ITallyView, ITreeView, IPlotLayout
     {
         private delegate void SplitterMovedEventHandler(object sender, int newPosition);
 
         private bool _viewLoading = true;
 
-        
-
-        
-
-        private DataEntryMode _mode;
-
         private DataGridViewComboBoxColumn _initialsColoumn;
+        private DataGridViewComboBoxColumn _stColumn;
         private DataGridViewComboBoxColumn _sgColumn;
         private DataGridViewComboBoxColumn _speciesColumn;
         private DataGridViewTextBoxColumn _errorMessageColumn;
@@ -37,10 +25,14 @@ namespace FSCruiser.WinForms.DataEntry
         private DataGridViewTextBoxColumn _treeNumberColumn;
 
         public IApplicationController AppController { get { return this.ViewLogicController.Controller; } }
+
         public FormDataEntryLogic DataEntryController { get { return this.ViewLogicController.DataEntryController; } }
+
         public LayoutPlotLogic ViewLogicController { get; set; }
 
         public bool ViewLoading { get { return _viewLoading; } }
+
+        public PlotStratum Stratum { get; set; }
 
         public IList<TreeVM> Trees
         {
@@ -55,23 +47,21 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-
         public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, PlotStratum stratum)
         {
+            Stratum = stratum;
             this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController, dataEntryController.ViewController);
-            this.Dock = DockStyle.Fill;            
+            this.Dock = DockStyle.Fill;
             InitializeComponent();
 
             WireSplitter(stratum);
 
-            
             this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this._addPlotButton_Click);
             this.bindingNavigatorDeleteItem.Click += new System.EventHandler(this._deletePlotButton_Click);
             this._plotInfoBTN.Click += new System.EventHandler(this._plotInfoBTN_Click);
 
-            
             //this._dataGrid.DataSource = _BS_Trees;
-            
+
             this._dataGrid.SuspendLayout();
 
             this._dataGrid.CellClick += new DataGridViewCellEventHandler(_dataGrid_CellClick);
@@ -90,6 +80,7 @@ namespace FSCruiser.WinForms.DataEntry
             _initialsColoumn = _dataGrid.Columns["Initials"] as DataGridViewComboBoxColumn;
             _errorMessageColumn = _dataGrid.Columns["Error"] as DataGridViewTextBoxColumn;
             _logsColumn = _dataGrid.Columns["Logs"] as DataGridViewButtonColumn;
+            _stColumn = _dataGrid.Columns["Stratum"] as DataGridViewComboBoxColumn;
 
             if (_speciesColumn != null)
             {
@@ -107,13 +98,26 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _logsColumn.Visible = AppController.ViewController.EnableLogGrading;
             }
+            if (_stColumn != null)
+            {
+                _stColumn.DataSource = new PlotStratum[] { this.Stratum };
+            }
 
+            if (stratum is FixCNTStratum)
+            {
+                var openFixCNTTallyButton = new Button()
+                {
+                    Text = "Open Tally Screen"
+                    ,
+                    Dock = DockStyle.Top
+                };
+                openFixCNTTallyButton.Click += new EventHandler(openFixCNTTallyButton_Click);
+                this._tallyListPanel.Controls.Add(openFixCNTTallyButton);
+            }
 
             //no need to load tallies....?
             //Controller.PopulateTallies(this.StratumInfo, this._mode, Controller.CurrentUnit, this._tallyListPanel, this);
             this.Parent = parent;
-
-
         }
 
         protected override void OnLoad(EventArgs e)
@@ -135,10 +139,10 @@ namespace FSCruiser.WinForms.DataEntry
 
             logToolStripMenuItem.Text = AppController.ViewController.EnableLogGrading ?
                 "Disable Log Grading" : "Enable Log Grading";
-            
         }
 
         #region splitter
+
         static event SplitterMovedEventHandler SplitterMoved;
 
         void WireSplitter(PlotStratum stratum)
@@ -156,9 +160,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         void HandleSplitterMoved(object sender, SplitterEventArgs e)
         {
-
-            if (this.ViewLoading 
-                ||suppressSplitterEvents) {return;} 
+            if (this.ViewLoading
+                || suppressSplitterEvents) { return; }
             if (LayoutPlot.SplitterMoved != null)
             {
                 LayoutPlot.SplitterMoved(this, splitContainer1.SplitterDistance);
@@ -166,21 +169,24 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         bool suppressSplitterEvents;
-        void  LayoutPlot_SplitterMoved(object sender, int newPosition)
+
+        void LayoutPlot_SplitterMoved(object sender, int newPosition)
         {
- 	        if (sender == this) {return; }
+            if (sender == this) { return; }
             else
             {
                 suppressSplitterEvents = true;
                 try { this.splitContainer1.SplitterDistance = newPosition; }
                 finally { suppressSplitterEvents = false; }
-
             }
         }
-        #endregion
+
+        #endregion splitter
 
         #region Event Handlers
+
         #region DataGrid events
+
         void _dataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (_logsColumn != null && e.ColumnIndex == _logsColumn.Index)
@@ -195,22 +201,19 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void _dataGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
-            //?do nothing 
+            //?do nothing
         }
 
         private void _dataGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             var cell = _dataGrid[e.ColumnIndex, e.RowIndex];
             if (cell == null) { return; }
-            if (cell.FormattedValue == e.FormattedValue) { return; }//are there any changes 
+            if (cell.FormattedValue == e.FormattedValue) { return; }//are there any changes
 
             TreeVM curTree = null;
             object cellValue = null;
             try
             {
-
-
                 curTree = this.ViewLogicController.CurrentTree;
                 if (curTree == null) { return; }
 
@@ -235,7 +238,7 @@ namespace FSCruiser.WinForms.DataEntry
             else if (_sgColumn != null && cell.ColumnIndex == _sgColumn.Index)
             {
                 SampleGroupVM sg = cellValue as SampleGroupVM;
-                if(curTree.HandleSampleGroupChanging(sg, this))
+                if (curTree.HandleSampleGroupChanging(sg, this))
                 {
                     curTree.SampleGroup = sg;
                     curTree.HandleSampleGroupChanged();
@@ -309,7 +312,6 @@ namespace FSCruiser.WinForms.DataEntry
         //        }
         //        else
         //        {
-
         //            this.AppController._cDal.LogMessage(String.Format("Tree Sample Group Changed (Cu:{0} St:{1} Sg:{2} -> {3} Tdv_CN:{4} T#: {5}",
         //                tree.CuttingUnit.Code,
         //                tree.Stratum.Code,
@@ -346,7 +348,8 @@ namespace FSCruiser.WinForms.DataEntry
             tree.SetTreeTDV(tdv);
             return tree.TrySave();
         }
-        #endregion 
+
+        #endregion DataGrid events
 
         private void _plotInfoBTN_Click(object sender, EventArgs e)
         {
@@ -363,10 +366,25 @@ namespace FSCruiser.WinForms.DataEntry
         {
             this.ViewLogicController.HandleDeletePlot();
         }
-        #endregion
+
+        void openFixCNTTallyButton_Click(object sender, EventArgs e)
+        {
+            var stratum = Stratum as FixCNTStratum;
+            var currentPlot = ViewLogicController.CurrentPlot as FixCNTPlot;
+            if (currentPlot == null) { ShowNoPlotSelectedMessage(); return; }
+            if (stratum == null || currentPlot == null) { return; }
+            using (var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum))
+            {
+                view.ShowDialog(currentPlot);
+            }
+        }
+
+        #endregion Event Handlers
 
         #region IPlotLayout members
+
         private bool _isGridExpanded = false;
+
         public bool IsGridExpanded
         {
             get
@@ -393,10 +411,12 @@ namespace FSCruiser.WinForms.DataEntry
                 _isGridExpanded = value;
             }
         }
-        #endregion
+
+        #endregion IPlotLayout members
 
         #region ITallyView Members
-        //TODO implement ITallyView members 
+
+        //TODO implement ITallyView members
         public bool HotKeyEnabled
         {
             get
@@ -404,15 +424,14 @@ namespace FSCruiser.WinForms.DataEntry
                 return !this._dataGrid.IsCurrentCellInEditMode;
             }
         }
+
         public Dictionary<char, CountTreeVM> HotKeyLookup
         {
             get
             {
                 return this.ViewLogicController.Stratum.HotKeyLookup;
             }
-
         }
-
 
         public bool PreviewKeypress(KeyEventArgs ea)
         {
@@ -434,7 +453,6 @@ namespace FSCruiser.WinForms.DataEntry
                 default:
                     return false;
             }
-
         }
 
         public void MakeSGList(List<SampleGroupVM> list, Panel container)
@@ -479,7 +497,6 @@ namespace FSCruiser.WinForms.DataEntry
             row.Dock = DockStyle.Top;
             row.ResumeLayout(true);
             return row;
-            
         }
 
         public Control MakeTallyRow(Control container, SubPop subPop)
@@ -489,6 +506,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void tallyRow_TallyButtonClicked(object sender, EventArgs e)
         {
+            if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
+
             var row = (TallyRow)sender;
             var count = row.Count;
             OnTally(count);
@@ -498,6 +517,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             TallyRow row = (TallyRow)sender;
             CountTreeVM count = row.Count;
+            this.ViewLogicController.SavePlotTrees();
             this.ViewLogicController.ViewController.ShowTallySettings(count);
             //row.DiscriptionLabel.Text = count.Tally.Description;
         }
@@ -509,7 +529,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void HandleStratumLoaded(Control container)
         {
-            //do nothing 
+            //do nothing
             return;
         }
 
@@ -529,7 +549,7 @@ namespace FSCruiser.WinForms.DataEntry
             return true;
         }
 
-        #endregion
+        #endregion ITallyView Members
 
         #region ITreeView Members
 
@@ -581,7 +601,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             _viewLoading = false;
             this.ViewLogicController.HandleViewLoad();
-        }        
+        }
 
         public void HandleEnableLogGradingChanged()
         {
@@ -635,12 +655,9 @@ namespace FSCruiser.WinForms.DataEntry
             return this.ViewLogicController.UserAddTree();
         }
 
-        
+        #endregion ITreeView Members
 
-        #endregion
-        
         #region IPlotLayout Members
-
 
         public bool AskContinueOnCurrnetPlotTreeError()
         {
@@ -665,7 +682,6 @@ namespace FSCruiser.WinForms.DataEntry
                 return;
             }
 
-
             this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot, null);
         }
 
@@ -676,7 +692,7 @@ namespace FSCruiser.WinForms.DataEntry
                 this._dataGrid.Enabled = true;
                 //this._dataGrid.Focus();
             }
-            else //no plot is selected 
+            else //no plot is selected
             {
                 this._dataGrid.Enabled = false;     //disable data grid
             }
@@ -694,15 +710,15 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.DataSource = treeBS;
         }
 
-        #endregion
+        #endregion IPlotLayout Members
 
         private void logToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AppController.ViewController.EnableLogGrading = !AppController.ViewController.EnableLogGrading;
 
-                logToolStripMenuItem.Text = AppController.ViewController.EnableLogGrading ?
-                    "Disable Log Grading" : "Enable Log Grading";
-            }
+            logToolStripMenuItem.Text = AppController.ViewController.EnableLogGrading ?
+                "Disable Log Grading" : "Enable Log Grading";
+        }
 
         private void _dataGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -716,20 +732,15 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region ITreeView Members
 
-
-        
-
-        #endregion
+        #endregion ITreeView Members
     }
 
-        
-
-        //protected override void OnKeyUp(KeyEventArgs e)
-        //{
-        //    base.OnKeyUp(e);
-        //    if (e.Handled == true) { return; }
-        //    char key = (char)e.KeyValue;
-        //    if (_viewLoading) { return; }
-        //    e.Handled = this.ViewLogicController.DataEntryController.ProcessHotKey(key, this);
-        //}
+    //protected override void OnKeyUp(KeyEventArgs e)
+    //{
+    //    base.OnKeyUp(e);
+    //    if (e.Handled == true) { return; }
+    //    char key = (char)e.KeyValue;
+    //    if (_viewLoading) { return; }
+    //    e.Handled = this.ViewLogicController.DataEntryController.ProcessHotKey(key, this);
+    //}
 }

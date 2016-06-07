@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using FSCruiser.Core.ViewInterfaces;
 
 namespace FSCruiser.Core
@@ -12,8 +10,11 @@ namespace FSCruiser.Core
         private ILimitingDistanceView View { get; set; }
 
         public bool IsToFace { get; set; }
+
         public bool IsVariableRadius { get; set; }
+
         public string LogMessage { get; set; }
+
         public double LimmitingDistance
         {
             get
@@ -64,7 +65,6 @@ namespace FSCruiser.Core
 
         public float BAForFPSize
         {
-
             get
             {
                 try
@@ -86,9 +86,7 @@ namespace FSCruiser.Core
                 {
                     this.View.BAForFPSize = value.ToString();
                 }
-
             }
-
         }
 
         public int SlopePCT
@@ -115,7 +113,6 @@ namespace FSCruiser.Core
                     this.View.SlopePCT = value.ToString();
                 }
             }
-
         }
 
         public double SlopeDistance { get; set; }//TODO
@@ -137,7 +134,6 @@ namespace FSCruiser.Core
                 double limitingDistance = dbh * plotRadiusFactor;
                 double correctedPRF = (limitingDistance - toFaceCorrection) / dbh;
 
-
                 double slopeCorrectionFactor = Math.Sqrt(1.0d + (slope * slope));
                 double correctedLimitingDistance = dbh * correctedPRF * slopeCorrectionFactor;
                 return correctedLimitingDistance;
@@ -150,7 +146,6 @@ namespace FSCruiser.Core
                 double limitingDistance = (plotRad - toFaceCorrection) * slopeCorrectionFactor;
                 return limitingDistance;
             }
-
         }
 
         public void HandleLoad()
@@ -163,7 +158,6 @@ namespace FSCruiser.Core
 
         public void HandleCalculate()
         {
-
         }
 
         public bool CheckInputValid()

@@ -1,7 +1,6 @@
-﻿
-using System;
-using System.Threading;
+﻿using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace OpenNETCF.Threading
 {
@@ -64,6 +63,7 @@ namespace OpenNETCF.Threading
         public NamedMutex() : this(false, null) { }
 
         #region OpenExisting
+
         /// <summary>
         /// Opens an existing named mutex.
         /// </summary>
@@ -102,7 +102,8 @@ namespace OpenNETCF.Threading
             }
             return m;
         }
-        #endregion
+
+        #endregion OpenExisting
 
         /// <summary>
         /// Releases the <see cref="NamedMutex"/> once.
@@ -136,7 +137,6 @@ namespace OpenNETCF.Threading
             return (WaitForSingleObject(this.Handle, millisecondsTimeout) != WAIT_TIMEOUT);
         }
 
-
         /// <summary>
         /// When overridden in a derived class, blocks the current thread until the current instance receives a signal, using a TimeSpan to measure the time interval and specifying whether to exit the synchronization domain before the wait.
         /// </summary>
@@ -148,7 +148,6 @@ namespace OpenNETCF.Threading
             return (WaitForSingleObject(this.Handle, (int)aTs.TotalMilliseconds) != WAIT_TIMEOUT);
         }
 
-
         /// <summary>
         /// Releases all resources held by the current <see cref="WaitHandle"/>
         /// </summary>
@@ -159,7 +158,7 @@ namespace OpenNETCF.Threading
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="explicitDisposing"></param>
         protected override void Dispose(bool explicitDisposing)
@@ -209,6 +208,7 @@ public class WaitHandleCannotBeOpenedException : ApplicationException
     {
         base.HResult = -2146233044;
     }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="WaitHandleCannotBeOpenedException"/> class with a specified error message.
     /// </summary>
@@ -218,6 +218,7 @@ public class WaitHandleCannotBeOpenedException : ApplicationException
     {
         base.HResult = -2146233044;
     }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="WaitHandleCannotBeOpenedException"/> class with a specified error message and a reference to the inner exception that is the cause of this exception.
     /// </summary>
@@ -229,7 +230,4 @@ public class WaitHandleCannotBeOpenedException : ApplicationException
     {
         base.HResult = -2146233044;
     }
-
-
 }
-

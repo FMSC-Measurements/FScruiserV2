@@ -1,10 +1,7 @@
-﻿using System;
-
-using System.Collections.Generic;
-using System.Text;
-using FSCruiser.Core.Models;
-using System.Threading;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
+using FSCruiser.Core.Models;
 
 namespace FSCruiser.Core
 {
@@ -72,7 +69,5 @@ namespace FSCruiser.Core
             }
             return valid;
         }
-
-
     }
 }

@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-
 using CruiseDAL.DataObjects;
-using CruiseDAL; 
-using FSCruiser.Core.Models;
-using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
-using FMSC.ORM.Core.SQL;
-using System.Drawing;
+using FSCruiser.Core.Models;
+using FSCruiser.Core.ViewInterfaces;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -32,9 +27,10 @@ namespace FSCruiser.WinForms.DataEntry
         private ToolStripMenuItem logToolStripMenuItem;
 
         //private BindingSource _BS_TreeSampleGroups;
-        //private BindingSource _BS_TreeSpecies; 
+        //private BindingSource _BS_TreeSpecies;
 
         public IApplicationController Controller { get; protected set; }
+
         public FormDataEntryLogic DataEntryController { get; set; }
 
         public bool ViewLoading { get { return _viewLoading; } }
@@ -152,7 +148,6 @@ namespace FSCruiser.WinForms.DataEntry
         {
             displayErrorDialogIfNoHandler = false;
             base.OnDataError(displayErrorDialogIfNoHandler, e);
-            
         }
 
         protected override void OnCellEnter(DataGridViewCellEventArgs e)
@@ -160,7 +155,7 @@ namespace FSCruiser.WinForms.DataEntry
             base.OnCellEnter(e);
 
             DataGridViewComboBoxCell cell = base[e.ColumnIndex, e.RowIndex] as DataGridViewComboBoxCell;
-            if(cell == null) { return; }
+            if (cell == null) { return; }
             TreeVM curTree = this._BS_trees[e.RowIndex] as TreeVM;
             if (curTree == null) { return; }
 
@@ -181,7 +176,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         //    DataGridViewComboBoxCell cell = base.CurrentCell as DataGridViewComboBoxCell;
         //    if (cell == null) { return; }
-            
+
         //    TreeVM curTree = null;
         //    try
         //    {
@@ -213,9 +208,9 @@ namespace FSCruiser.WinForms.DataEntry
             if (e.RowIndex > base.RowCount - 1 || e.RowIndex < 0) { return; }
             if (e.ColumnIndex > base.ColumnCount - 1 || e.ColumnIndex < 0) { return; }
 
-            var cell = base[e.ColumnIndex,e.RowIndex];
+            var cell = base[e.ColumnIndex, e.RowIndex];
             if (cell == null) { return; }
-            if (cell.FormattedValue == e.FormattedValue) { return; }//are there any changes? 
+            if (cell.FormattedValue == e.FormattedValue) { return; }//are there any changes?
 
             TreeVM curTree = null;
             try
@@ -224,7 +219,7 @@ namespace FSCruiser.WinForms.DataEntry
                 if (curTree == null) { return; }
             }
             catch (ArgumentOutOfRangeException) { return; }//ignore posible out of bound exceptions
-            
+
             object cellValue = e.FormattedValue;
             cellValue = cell.ParseFormattedValue(cellValue, cell.InheritedStyle, null, null);
 
@@ -294,7 +289,6 @@ namespace FSCruiser.WinForms.DataEntry
             if (cell == null) { return; }
             cell.DataSource = tree.ReadValidTDVs();
         }
-
 
         #region ITreeView Members
 
@@ -440,7 +434,6 @@ namespace FSCruiser.WinForms.DataEntry
                 this.MoveHomeField();
             }
             return t;
-
         }
 
         private TreeVM GetNewTree()
@@ -457,9 +450,7 @@ namespace FSCruiser.WinForms.DataEntry
             return DataEntryController.Unit.UserAddTree(prevTree, assumedSt, DataEntryController.ViewController);
         }
 
-        #endregion
-
-        
+        #endregion ITreeView Members
 
         private void logToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -473,7 +464,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (disposing)
             {
-                if(_BS_trees != null)
+                if (_BS_trees != null)
                 {
                     _BS_trees.Dispose();
                     _BS_trees = null;
@@ -481,7 +472,5 @@ namespace FSCruiser.WinForms.DataEntry
             }
             base.Dispose(disposing);
         }
-
-
     }
 }

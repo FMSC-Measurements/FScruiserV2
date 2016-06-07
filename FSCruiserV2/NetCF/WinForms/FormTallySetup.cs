@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
-
-using SGType = CruiseDAL.DataObjects.SampleGroupDO;
 using FSCruiser.Core;
+using SGType = CruiseDAL.DataObjects.SampleGroupDO;
 
 namespace FSCruiser.WinForms
 {
@@ -30,6 +29,7 @@ namespace FSCruiser.WinForms
         }
 
         private TallyDO _tally;
+
         public TallyDO Tally
         {
             get
@@ -38,7 +38,7 @@ namespace FSCruiser.WinForms
             }
             set
             {
-                if(_tally == value) { return; }
+                if (_tally == value) { return; }
                 this._tally = value;
                 this._BS_Tally.DataSource = value;
             }
@@ -47,11 +47,9 @@ namespace FSCruiser.WinForms
         public SGType SampleGroup
         { get; protected set; }
 
-
         public DialogResult ShowDialog(SGType sg)
         {
             this.SampleGroup = sg;
-            
 
             this._sgInfo_LBL.Text = this.SampleGroup.Code + "-" + this.SampleGroup.TallyMethod.ToString();
             if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.BySampleGroup) == CruiseDAL.Enums.TallyMode.BySampleGroup)
@@ -94,11 +92,9 @@ namespace FSCruiser.WinForms
             }
             else
             {
-
             }
 
             return this.ShowDialog();
-
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -130,27 +126,26 @@ namespace FSCruiser.WinForms
                             }
                         }
 
-                        string createCountsCommand = String.Format(@"INSERT OR IGNORE INTO CountTree (CuttingUnit_CN, SampleGroup_CN,  CreatedBy) 
-                        Select CuttingUnitStratum.CuttingUnit_CN, SampleGroup.SampleGroup_CN,  '{0}' AS CreatedBy 
-                        From SampleGroup 
-                        INNER JOIN CuttingUnitStratum 
-                        ON SampleGroup.Stratum_CN = CuttingUnitStratum.Stratum_CN 
+                        string createCountsCommand = String.Format(@"INSERT OR IGNORE INTO CountTree (CuttingUnit_CN, SampleGroup_CN,  CreatedBy)
+                        Select CuttingUnitStratum.CuttingUnit_CN, SampleGroup.SampleGroup_CN,  '{0}' AS CreatedBy
+                        From SampleGroup
+                        INNER JOIN CuttingUnitStratum
+                        ON SampleGroup.Stratum_CN = CuttingUnitStratum.Stratum_CN
                         WHERE SampleGroup.SampleGroup_CN = {1};", this.Controller._cDal.User, this.SampleGroup.SampleGroup_CN);
                         this.Controller._cDal.Execute(createCountsCommand);
                         string setTallyRefCommand = String.Format("UPDATE CountTree SET Tally_CN = {0} WHERE SampleGroup_CN = {1} AND ifnull(TreeDefaultValue_CN, 0) = 0",
                             this.Tally.Tally_CN, this.SampleGroup.SampleGroup_CN);
                         this.Controller._cDal.Execute(setTallyRefCommand);
-
                     }
                     else if ((this.SampleGroup.TallyMethod & CruiseDAL.Enums.TallyMode.BySpecies) == CruiseDAL.Enums.TallyMode.BySpecies)
                     {
                         string creatCountsBySpeciesCommand = String.Format(@"INSERT  OR IGNORE INTO CountTree (CuttingUnit_CN, SampleGroup_CN, TreeDefaultValue_CN, CreatedBy)
-                        Select CuttingUnitStratum.CuttingUnit_CN, SampleGroup.SampleGroup_CN, SampleGroupTreeDefaultValue.TreeDefaultValue_CN, '{0}' AS CreatedBy 
-                        From SampleGroup 
-                        INNER JOIN CuttingUnitStratum 
-                        ON SampleGroup.Stratum_CN = CuttingUnitStratum.Stratum_CN 
-                        INNER JOIN SampleGroupTreeDefaultValue 
-                        ON SampleGroupTreeDefaultValue.SampleGroup_CN = SampleGroup.SampleGroup_CN 
+                        Select CuttingUnitStratum.CuttingUnit_CN, SampleGroup.SampleGroup_CN, SampleGroupTreeDefaultValue.TreeDefaultValue_CN, '{0}' AS CreatedBy
+                        From SampleGroup
+                        INNER JOIN CuttingUnitStratum
+                        ON SampleGroup.Stratum_CN = CuttingUnitStratum.Stratum_CN
+                        INNER JOIN SampleGroupTreeDefaultValue
+                        ON SampleGroupTreeDefaultValue.SampleGroup_CN = SampleGroup.SampleGroup_CN
                         WHERE SampleGroup.SampleGroup_CN = {1};", this.Controller._cDal.User, this.SampleGroup.SampleGroup_CN);
                         this.Controller._cDal.Execute(creatCountsBySpeciesCommand);
 
@@ -179,7 +174,6 @@ namespace FSCruiser.WinForms
                                 tally.Tally_CN, this.SampleGroup.SampleGroup_CN, tdv.TreeDefaultValue_CN);
                             this.Controller._cDal.Execute(setTallyRefCommand);
                         }
-
                     }
                     this.Controller._cDal.CommitTransaction();
                 }
@@ -193,7 +187,6 @@ namespace FSCruiser.WinForms
                     Cursor.Current = Cursors.Default;
                 }
             }
-
         }
 
         private void _speciesSelect_CB_SelectedValueChanged(object sender, EventArgs e)
@@ -208,7 +201,5 @@ namespace FSCruiser.WinForms
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
-
-
     }
 }

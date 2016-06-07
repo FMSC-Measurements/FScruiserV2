@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using CruiseDAL.DataObjects;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
-using CruiseDAL.DataObjects;
 
 namespace FSCruiser.WinForms
 {
     public partial class CuttingUnitSelectView : UserControl
     {
         public IApplicationController Controller { get; set; }
-        public CuttingUnitVM SelectedUnit 
+
+        public CuttingUnitVM SelectedUnit
         {
             get
             {
@@ -24,18 +20,17 @@ namespace FSCruiser.WinForms
                 {
                     return unitVM;
                 }
-                return null; 
+                return null;
             }
-             
         }
-
 
         public CuttingUnitSelectView()
         {
             InitializeComponent();
         }
 
-        public CuttingUnitSelectView(IApplicationController controller): this()
+        public CuttingUnitSelectView(IApplicationController controller)
+            : this()
         {
             this.Controller = controller;
         }
@@ -97,7 +92,5 @@ namespace FSCruiser.WinForms
                 this._strataLB.DataSource = null;
             }
         }
-
-
     }
 }

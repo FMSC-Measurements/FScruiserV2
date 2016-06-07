@@ -8,7 +8,8 @@ namespace FSCruiser.WinForms
 {
     public partial class FormEditTreeDefault : Form
     {
-        private bool _viewLoading; 
+        private bool _viewLoading;
+
         //private TreeDefaultValueDO _treeDefaultValue;
         public TreeDefaultValueDO TreeDefaultValue
         {
@@ -103,7 +104,6 @@ namespace FSCruiser.WinForms
                     tdv.PrimaryProduct, tdv.Species, tdv.LiveDead) > 0);
         }
 
-
         private void FormEditTreeDefault_KeyDown(object sender, KeyEventArgs e)
         {
             if ((e.KeyCode == System.Windows.Forms.Keys.Up))
@@ -126,7 +126,6 @@ namespace FSCruiser.WinForms
             {
                 // Enter
             }
-
         }
 
         private void _cancel_MI_Click(object sender, EventArgs e)

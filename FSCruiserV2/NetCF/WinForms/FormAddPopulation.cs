@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System.Linq;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
-
+using FSCruiser.Core;
 using SGType = CruiseDAL.DataObjects.SampleGroupDO;
 using StType = CruiseDAL.DataObjects.StratumDO;
-using FSCruiser.Core;
 
 namespace FSCruiser.WinForms
 {
@@ -24,17 +20,16 @@ namespace FSCruiser.WinForms
         private bool sampleGroupChangeing = false;
 
         private SGType _sampleGroup;
-        private StType _stratum; 
+        private StType _stratum;
 
         //private AddPopulationController LogicController { get; set; }
         public IApplicationController Controller { get; protected set; }
-        
-        public SGType SampleGroup 
+
+        public SGType SampleGroup
         {
             get { return _sampleGroup; }
             protected set
             {
-                
                 if (sampleGroupChangeing || _sampleGroup == value) { return; }
                 if (object.ReferenceEquals(value, _newSGPlaceHolder))
                 {
@@ -51,14 +46,13 @@ namespace FSCruiser.WinForms
                         value = newSG;
                         sampleGroupChangeing = false;
                     }
-                        
                 }
-                
+
                 this.OnSampleGroupChanging(value, _sampleGroup);
                 _sampleGroup = value;
-                
             }
         }
+
         public StType Stratum
         {
             get { return _stratum; }
@@ -68,13 +62,11 @@ namespace FSCruiser.WinForms
                 _stratum = value;
                 OnStratumChanged(value);
             }
-
-
         }
 
         public FormAddPopulation(IApplicationController controller)
         {
-            //this.LogicController = new AddPopulationController(controller, this); 
+            //this.LogicController = new AddPopulationController(controller, this);
             this.Controller = controller;
             InitializeComponent();
 
@@ -88,7 +80,6 @@ namespace FSCruiser.WinForms
                 this._ce_menuPanel.Visible = false;
             }
         }
-
 
         protected override void OnLoad(EventArgs e)
         {
@@ -104,8 +95,6 @@ namespace FSCruiser.WinForms
                 this._populationSelectPanel.Enabled = false;
             }
             //Cursor.Current = Cursors.Default;
-
-
         }
 
         protected void SaveTDVChanges()
@@ -117,10 +106,10 @@ namespace FSCruiser.WinForms
                 CheckBox cb = c as CheckBox;
                 if (cb == null) { continue; }
                 TreeDefaultValueDO tdv = cb.Tag as TreeDefaultValueDO;
-                if (tdv == null) 
+                if (tdv == null)
                 {
-                    System.Diagnostics.Debug.Assert(false);//condition should be unreachable 
-                    continue; 
+                    System.Diagnostics.Debug.Assert(false);//condition should be unreachable
+                    continue;
                 }
 
                 if (cb.Checked == true)
@@ -150,8 +139,8 @@ namespace FSCruiser.WinForms
         {
             base.OnClosing(e);
 
-            if(this.DialogResult == DialogResult.Cancel) 
-            { 
+            if (this.DialogResult == DialogResult.Cancel)
+            {
                 return;
             }
 
@@ -180,7 +169,6 @@ namespace FSCruiser.WinForms
 
         private void CreateCountRecord(SGType sg, TreeDefaultValueDO tdv)
         {
-
         }
 
         public DialogResult ShowDialog(SGType sg)
@@ -189,9 +177,6 @@ namespace FSCruiser.WinForms
 
             return base.ShowDialog();
         }
-
-
-
 
         private void _strataCB_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -235,7 +220,6 @@ namespace FSCruiser.WinForms
             this.BuildTDVList(newSG);
             this._addTDV_BTN.Enabled = newSG != null;
             Cursor.Current = Cursors.Default;
-
         }
 
         private void BuildTDVList(SampleGroupDO sg)
@@ -267,6 +251,7 @@ namespace FSCruiser.WinForms
             }
             this._speciesSelectPanel.ResumeLayout();
         }
+
         private void _addTDV_BTN_Click(object sender, EventArgs e)
         {
             if (this.Controller.CreateNewTreeDefaultValue(this.SampleGroup.PrimaryProduct) != null)
@@ -283,7 +268,7 @@ namespace FSCruiser.WinForms
 
         private void _editSG_BTN_Click(object sender, EventArgs e)
         {
-            if(this.SampleGroup != null && this.SampleGroup != this._newSGPlaceHolder)
+            if (this.SampleGroup != null && this.SampleGroup != this._newSGPlaceHolder)
             {
                 bool allowEdit = this.SampleGroup.CanEditSampleGroup();
                 this.Controller.ViewController.ShowEditSampleGroup(this.SampleGroup, allowEdit);
@@ -296,14 +281,11 @@ namespace FSCruiser.WinForms
             {
                 this.SaveTDVChanges();
                 FormTallySetup view = new FormTallySetup(this.Controller);
-                
+
                 if (view.ShowDialog(this.SampleGroup) == DialogResult.OK)
                 {
-
                 }
-
             }
         }
-
     }
 }

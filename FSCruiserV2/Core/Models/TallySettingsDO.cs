@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CruiseDAL;
-using FMSC.ORM.EntityModel.Attributes;
+﻿using FMSC.ORM.Core;
 using FMSC.ORM.EntityModel;
-using FMSC.ORM.Core;
-
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
@@ -16,11 +11,9 @@ namespace FSCruiser.Core.Models
     [EntitySource(SourceName = "CountTree")]
     public class TallySettingsDO : DataObject_Base
     {
-        public TallySettingsDO() 
-            : base() 
+        public TallySettingsDO()
+            : base()
         { }
-
-        
 
         public TallySettingsDO(DatastoreRedux db)
             : base(db)
@@ -29,12 +22,10 @@ namespace FSCruiser.Core.Models
         [Field(Name = "SampleGroup_CN")]
         public long? SampleGroup_CN { get; set; }
 
-
         [Field(Name = "TreeDefaultValue_CN")]
         public long? TreeDefaultValue_CN { get; set; }
 
         [Field(Name = "Tally_CN")]
         public long? Tally_CN { get; set; }
-
     }
 }

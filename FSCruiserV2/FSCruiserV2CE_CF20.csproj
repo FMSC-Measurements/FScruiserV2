@@ -62,11 +62,17 @@
     <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\CountTreeExtensions.cs" />
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
+    <Compile Include="Core\DataEntry\LimitingDistanceCalculator.cs" />
     <Compile Include="Core\Exceptions.cs" />
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="Core\LoadCuttingUnitWorker.cs" />
     <Compile Include="Core\Models\DataEntryMode.cs" />
     <Compile Include="Core\Models\DataModelExtensions.cs" />
+    <Compile Include="Core\Models\FixCNTPlot.cs" />
+    <Compile Include="Core\Models\FixCNTStratum.cs" />
+    <Compile Include="Core\Models\FixCNTTallyBucket.cs" />
+    <Compile Include="Core\Models\FixCNTTallyClass.cs" />
+    <Compile Include="Core\Models\FixCNTTallyPopulation.cs" />
     <Compile Include="Core\Models\ILogFieldProvider.cs" />
     <Compile Include="Core\Models\ITreeContaningModel.cs" />
     <Compile Include="Core\Models\ITreeFieldProvider.cs" />
@@ -135,6 +141,30 @@
     </Compile>
     <Compile Include="Core\TreeValidationWorker.cs" />
     <Compile Include="PlatformHelper.WinForms.cs" />
+    <Compile Include="WinForms.Common\FixCNTForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCNTForm.Designer.cs">
+      <DependentUpon>FixCNTForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCNTTallyButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCNTTallyButton.Designer.cs">
+      <DependentUpon>FixCNTTallyButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCntTallyControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCntTallyControl.Designer.cs">
+      <DependentUpon>FixCntTallyControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCntTallyRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FixCntTallyRow.Designer.cs">
+      <DependentUpon>FixCntTallyRow.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms.Common\FormCruiserSelection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -319,6 +349,18 @@
       <DependentUpon>FormBackupUtility.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\FixCNTForm.resx">
+      <DependentUpon>FixCNTForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\FixCNTTallyButton.resx">
+      <DependentUpon>FixCNTTallyButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\FixCntTallyControl.resx">
+      <DependentUpon>FixCntTallyControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\FixCntTallyRow.resx">
+      <DependentUpon>FixCntTallyRow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormCruiserSelection.resx">
       <DependentUpon>FormCruiserSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -369,8 +411,10 @@
     <Content Include="fscruiser.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="FixCNTClassDiagram.cd" />
     <None Include="Core\FSCruiser.Core.cd" />
     <None Include="Core\Models\FMSC.Core.Models.cd" />
+    <None Include="Properties\DataSources\FSCruiser.Core.DataEntry.LimitingDistanceCalculator.datasource" />
     <None Include="Properties\DataSources\FSCruiser.Core.Models.Plot3PPNT.datasource" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.TreeDO.datasource" />

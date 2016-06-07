@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace FSCruiser.Core.Models
@@ -15,7 +12,6 @@ namespace FSCruiser.Core.Models
         [XmlAttribute]
         public string FilePath { get; set; }
 
-
         public RecentProject() { }
 
         public RecentProject(string name, string path)
@@ -27,7 +23,7 @@ namespace FSCruiser.Core.Models
         public override bool Equals(object obj)
         {
             if (obj == null || !(obj is RecentProject))
-                return false;
+                return base.Equals(obj);
 
             return FilePath.Equals(((RecentProject)obj).FilePath, StringComparison.InvariantCultureIgnoreCase);
         }

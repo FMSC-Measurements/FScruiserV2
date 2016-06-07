@@ -24,12 +24,9 @@ The device is connected, but WMDC says the device is not connected.
 
 - if disabling advanced network functionality doesn't work, try reinstalling WMDC
 
-The device disconnects while transferring files
+The device disconnects while transferring files (Allegro MX)
 ---------------------------------------------
-- plug USB cable directly into device, if using a dock
-- reinstall WMDC
-
-
+ install patch from: http://www.junipersys.com/Juniper-Systems-Rugged-Handheld-Computers/support/Downloads/Allegro-Field-PC/Allegro-MX/ActiveSync-network-security-conflict-patch-utility
 
 Additional Troubleshooting
 --------------------------

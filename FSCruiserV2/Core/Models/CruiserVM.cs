@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace FSCruiser.Core.Models
@@ -12,11 +10,10 @@ namespace FSCruiser.Core.Models
         public string Initials { get; set; }
 
         public CruiserVM() { }
+
         public CruiserVM(string initials)
         {
             this.Initials = initials;
         }
-
-
     }
 }

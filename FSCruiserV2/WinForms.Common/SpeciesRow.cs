@@ -1,7 +1,5 @@
 ﻿using System;
 
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 using FSCruiser.Core.Models;
 
@@ -10,7 +8,8 @@ namespace FSCruiser.WinForms
     public class SpeciesRow : Button
     {
         SubPop _subPop;
-        public SubPop SubPopulation 
+
+        public SubPop SubPopulation
         {
             get { return _subPop; }
             set

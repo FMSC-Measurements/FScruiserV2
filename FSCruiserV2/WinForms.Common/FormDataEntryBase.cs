@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Forms;
 using System.Linq;
-using FSCruiser.Core.ViewInterfaces;
-using FSCruiser.Core;
-using FSCruiser.Core.Models;
-using FSCruiser.Core.DataEntry;
-using FSCruiser.WinForms.DataEntry;
+using System.Windows.Forms;
 using FMSC.Sampling;
+using FSCruiser.Core;
+using FSCruiser.Core.DataEntry;
+using FSCruiser.Core.Models;
+using FSCruiser.Core.ViewInterfaces;
+using FSCruiser.WinForms.DataEntry;
 
 #if NetCF
+
 using Microsoft.WindowsCE.Forms;
+
 #endif
 
 namespace FSCruiser.WinForms.Common
@@ -24,13 +26,17 @@ namespace FSCruiser.WinForms.Common
         private IDataEntryPage _previousLayout;
         protected List<IDataEntryPage> _layouts = new List<IDataEntryPage>();
         protected LayoutTreeBased _tallyLayout;
+
         //protected TabControl _pageContainer;
         protected TabPage _tallyPage;
+
         protected TabPage _treePage;
         protected ControlTreeDataGrid _treeView;
 
 #if NetCF
+
         public InputPanel SIP { get; set; }
+
 #endif
 
         protected virtual TabControl PageContainer
@@ -39,6 +45,7 @@ namespace FSCruiser.WinForms.Common
         }
 
         public IApplicationController Controller { get; protected set; }
+
         public FormDataEntryLogic LogicController { get; protected set; }
 
         public CuttingUnitVM Unit
@@ -49,8 +56,8 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-
-        protected FormDataEntryBase():base()
+        protected FormDataEntryBase()
+            : base()
         {
             this.KeyPreview = true;
         }
@@ -80,8 +87,6 @@ namespace FSCruiser.WinForms.Common
             //    this._pageContainer = MakePageContainer();
             //}
 
-
-
             //do we have any tree based strata in the unit
             if (unit.TreeStrata != null && unit.TreeStrata.Count > 0)
             {
@@ -106,6 +111,7 @@ namespace FSCruiser.WinForms.Common
         }
 
         #region virtual methods
+
         protected void InitializeTreesTab()
         {
             this._treePage = new TabPage();
@@ -131,7 +137,6 @@ namespace FSCruiser.WinForms.Common
             this.PageContainer.TabPages.Add(_treePage);
             this._layouts.Add(_treeView);
         }
-
 
         protected void InitializeTallyTab()
         {
@@ -162,7 +167,6 @@ namespace FSCruiser.WinForms.Common
 
                 st.PopulatePlots(Unit.CuttingUnit_CN.GetValueOrDefault());
 
-
                 TabPage page = new TabPage();
                 page.Text = String.Format("{0}-{1}[{2}]", st.Code, st.Method, st.Hotkey);
                 PageContainer.TabPages.Add(page);
@@ -177,14 +181,13 @@ namespace FSCruiser.WinForms.Common
 
                 int pageIndex = PageContainer.TabPages.IndexOf(page);
                 this.LogicController.AddStratumHotKey(st.Hotkey, pageIndex);
-
             }
-
         }
 
-        #endregion
+        #endregion virtual methods
 
         #region Overrides
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -206,20 +209,19 @@ namespace FSCruiser.WinForms.Common
             base.OnKeyDown(e);
             if (e.Handled) { return; }
 
-            // HACK when the escape key is pressed on some controls 
+            // HACK when the escape key is pressed on some controls
             // the device will make a invalid key press sound if OnKeyDown is not handled
             // we handle the key press in OnKeyUp
             if (e.KeyCode == Keys.Escape)
             {
                 e.Handled = true;
-            }         
+            }
         }
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
             base.OnKeyUp(e);
             if (e.Handled) { return; }
-
 
             e.Handled = this.LogicController.HandleKeyPress(e);
 
@@ -230,7 +232,7 @@ namespace FSCruiser.WinForms.Common
             //            e.Handled = this.LogicController.HandleEscKey();
             //            break;
             //        }
-                
+
             //    default:
             //        {
             //            char key = (char)e.KeyValue;
@@ -240,8 +242,7 @@ namespace FSCruiser.WinForms.Common
             //}
         }
 
-
-        #endregion
+        #endregion Overrides
 
         public IDataEntryPage FocusedLayout
         {
@@ -269,7 +270,6 @@ namespace FSCruiser.WinForms.Common
         {
             get { return _layouts; }
         }
-
 
         public void HandleCuttingUnitDataLoaded()
         {
@@ -355,7 +355,6 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-        
         protected virtual void OnFocusedLayoutChanged(object sender, EventArgs e)
         {
             if (_previousLayout != null)
@@ -363,7 +362,6 @@ namespace FSCruiser.WinForms.Common
                 ITreeView treeView = _previousLayout as ITreeView;
                 if (treeView != null)
                 {
-                    
                     treeView.EndEdit();
                     if (treeView.Trees != null)
                     {
@@ -390,20 +388,18 @@ namespace FSCruiser.WinForms.Common
             _previousLayout = this.FocusedLayout;
         }
 
-
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDataEntryBase));
             this.SuspendLayout();
-            // 
+            //
             // FormDataEntryBase
-            // 
+            //
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.ClientSize = new System.Drawing.Size(240, 294);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormDataEntryBase";
             this.ResumeLayout(false);
-
         }
     }
 }

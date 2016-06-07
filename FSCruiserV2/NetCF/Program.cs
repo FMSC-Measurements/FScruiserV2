@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using Logger;
-using System.Threading;
-using System.Xml.Serialization;
-using System.IO;
-using System.Reflection;
 using System.Diagnostics;
+using System.Windows.Forms;
 using FSCruiser.Core;
 using OpenNETCF.Threading;
 
@@ -18,6 +12,7 @@ namespace FSCruiser.WinForms
         /// The main entry point for the application.
         /// </summary>
 #if NetCF
+
         [MTAThread]
 #else
         [STAThread]
@@ -30,8 +25,8 @@ namespace FSCruiser.WinForms
             {
                 if (mutex.WaitOne(0, false))
                 {
-                    //not already running  
-                   
+                    //not already running
+
                     //PreJit();
                     using (ViewController viewController = new ViewController())
                     using (ApplicationController appController = new ApplicationController(viewController))
@@ -49,7 +44,7 @@ namespace FSCruiser.WinForms
                 {
                     //is already running
                     string message = "FScruiser is already running\r\n";
-                    if(ViewController.PlatformType == FMSC.Controls.PlatformType.WM)
+                    if (ViewController.PlatformType == FMSC.Controls.PlatformType.WM)
                     {
                         message += "To halt or activate background programs, go to Settings->System->Memory";
                     }
@@ -58,9 +53,6 @@ namespace FSCruiser.WinForms
                     return;
                 }
             }
-
-
-           
         }
 
         //http://stackoverflow.com/questions/548915/preloading-assemblies
@@ -90,7 +82,4 @@ namespace FSCruiser.WinForms
         //    });
         //}
     }
-
-    
-
 }

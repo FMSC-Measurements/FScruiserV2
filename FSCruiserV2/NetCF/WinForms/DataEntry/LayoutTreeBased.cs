@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
-using FMSC.Sampling;
-using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
+using FSCruiser.Core.ViewInterfaces;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -19,7 +16,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         //public IApplicationController Controller                { get; protected set; }
         //public FormDataEntryLogic DataEntryController           { get; protected set; }
-        //public Dictionary<char, CountTreeVM> HotKeyLookup 
+        //public Dictionary<char, CountTreeVM> HotKeyLookup
         //{
         //    get
         //    {
@@ -35,7 +32,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         //public IList<StratumVM> Strata                          { get; protected set; }
         //public StratumVM SelectedStratum                        { get; protected set; }
-        //public bool HotKeyEnabled 
+        //public bool HotKeyEnabled
         //{
         //    get { return true; }
         //}
@@ -51,7 +48,8 @@ namespace FSCruiser.WinForms.DataEntry
         //    }
         //}
 
-        LayoutTreeBased() : base()
+        LayoutTreeBased()
+            : base()
         {
             InitializeComponent();
 
@@ -63,7 +61,8 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         public LayoutTreeBased(IApplicationController controller
-            , FormDataEntryLogic dataEntryController): this()
+            , FormDataEntryLogic dataEntryController)
+            : this()
         {
             base.Initialize(controller, dataEntryController, _leftContentPanel);
         }
@@ -74,7 +73,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         //    this.PopulateStrata();
 
-        //    //if there is only one strata in the unit 
+        //    //if there is only one strata in the unit
         //    //display the counts for that stratum
         //    if (this.Strata.Count == 1)
         //    {
@@ -99,7 +98,7 @@ namespace FSCruiser.WinForms.DataEntry
         //    {
         //        if (!stratum.TrySaveCounts())
         //        {
-        //            System.Diagnostics.Debug.Fail("unable to save St:" 
+        //            System.Diagnostics.Debug.Fail("unable to save St:"
         //                + stratum.Code + " counts");
         //            success = false;
         //        }
@@ -107,13 +106,12 @@ namespace FSCruiser.WinForms.DataEntry
         //    return success;
         //}
 
-
         //private void PopulateStrata()
         //{
         //    foreach (StratumVM stratum in this.Strata)
         //    {
         //        if (stratum.Method == CruiseDAL.Schema.Constants.CruiseMethods.H_PCT) { continue; }
-        //        //if ((Controller.GetStrataDataEntryMode(stratum) & DataEntryMode.Plot) 
+        //        //if ((Controller.GetStrataDataEntryMode(stratum) & DataEntryMode.Plot)
         //        //    == DataEntryMode.Plot) { continue; }
 
         //        Button strataButton = new Button();
@@ -128,7 +126,7 @@ namespace FSCruiser.WinForms.DataEntry
         //        tallyContainer.Visible = false;
         //        tallyContainer.Parent = _leftContentPanel;
         //        tallyContainer.Tag = stratum;
-                
+
         //        strataButton.Height = 25;
         //        strataButton.BackColor = System.Drawing.Color.FromArgb(0x2F, 0x4F, 0x4F); //Color.DarkSlateGray;// DarkGray;// Green;System.Drawing.Color.FromArgb(0x2F, 0x4F, 0x4F);
         //        strataButton.ForeColor = Color.White;
@@ -192,14 +190,14 @@ namespace FSCruiser.WinForms.DataEntry
 
         //    Panel tallyContainer = StrataViews[stratumInfo];
 
-        //    // if strata is already displayed 
-        //    if (_visableTallyPanel != null 
-        //        && _visableTallyPanel == tallyContainer 
+        //    // if strata is already displayed
+        //    if (_visableTallyPanel != null
+        //        && _visableTallyPanel == tallyContainer
         //        && tallyContainer.Visible == true)
         //    {
         //        // toggle off visability
         //        _visableTallyPanel.Visible = false;
-        //        this.SelectedStratum = null; 
+        //        this.SelectedStratum = null;
         //        _visableTallyPanel = null;
         //        return;
         //    }
@@ -209,7 +207,7 @@ namespace FSCruiser.WinForms.DataEntry
         //        // hide current stratum
         //        _visableTallyPanel.Visible = false;
         //    }
-            
+
         //    this.SelectedStratum = stratumInfo;
         //    _visableTallyPanel = tallyContainer;
         //    if (_visableTallyPanel != null)
@@ -241,7 +239,6 @@ namespace FSCruiser.WinForms.DataEntry
         //    }
         //    panel.Height = totalChildHeight;
         //}
-
 
         //public SampleSelecter MakeSampleSelecter(CountTreeDO count, DataEntryMode mode)
         //{
@@ -297,7 +294,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         //    row.Count = count;
         //    row.Parent = container;
-
 
         //    row.Dock = DockStyle.Top;
         //    row.ResumeLayout(false);
@@ -393,14 +389,13 @@ namespace FSCruiser.WinForms.DataEntry
         //    }
         //    return false;
 
-            
         //    //return Controller.ProcessHotKey(key, this);
         //}
 
         //public bool HandleEscKey()
         //{
         //    this.DataEntryController.View.GotoTreePage();
-        //    return true; 
+        //    return true;
         //}
 
         //public bool HandleKeyUp(char key)
@@ -419,7 +414,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         //    char key = (char)e.KeyValue;
         //    e.Handled = this.HandleKeyDown(key);
-            
+
         //}
 
         //protected override void OnKeyUp(KeyEventArgs e)
@@ -428,8 +423,6 @@ namespace FSCruiser.WinForms.DataEntry
         //    char key = (char)e.KeyValue;
         //    e.Handled = this.DataEntryController.ProcessHotKey(key, this);
         //}
-
-
 
         //public bool ProcessHotKey(char key)
         //{
@@ -457,7 +450,6 @@ namespace FSCruiser.WinForms.DataEntry
         //{
         //    Button strataButton = (Button)sender;
         //    StratumVM stratumInfo = (StratumVM)strataButton.Tag;
-            
 
         //    //if (_visableTallyPanel != null && _visableTallyPanel == tallyContainer && tallyContainer.Visible == true)
         //    //{
@@ -477,7 +469,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         //void SettingsButton_Click(object sender, EventArgs e)
         //{
-        //    Button settingsbutton = (Button)sender; 
+        //    Button settingsbutton = (Button)sender;
         //    TallyRow row = (TallyRow)settingsbutton.Parent;
         //    CountTreeVM count = (CountTreeVM)row.Count;
         //    Controller.ViewController.ShowTallySettings(count);
@@ -504,7 +496,6 @@ namespace FSCruiser.WinForms.DataEntry
         //    //DataEntryMode mode = Controller.GetStrataDataEntryMode(count.SampleGroup.Stratum);
         //    //if ((mode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP)
         //    //{
-
         //    //    int kpi = 0;
         //    //    int? value = Controller.GetKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
         //    //    if (value == null)
@@ -563,7 +554,7 @@ namespace FSCruiser.WinForms.DataEntry
         //    //        tree = Controller.CreateNewTreeEntry(count);
         //    //        tree.CountOrMeasure = "I";
         //    //        Controller.TrySaveTree(tree);
-        //    //        action.TreeRecord = tree; 
+        //    //        action.TreeRecord = tree;
         //    //    }
         //    //    else if (item != null)
         //    //    {
@@ -577,7 +568,6 @@ namespace FSCruiser.WinForms.DataEntry
         //    //Controller.OnTally();
         //}
 
-
         //void OnSample(TallyAction action, CountTreeDO count, int kpi)
         //{
         //    this.Controller.ViewController.SignalMeasureTree();
@@ -587,7 +577,6 @@ namespace FSCruiser.WinForms.DataEntry
         //    tree.KPI = kpi;
         //    this.Controller.TrySaveTree(tree);
         //    action.TreeRecord = tree;
-            
 
         //    if (MessageBox.Show("Would You Like To Enter Tree Data?", "Sample", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
         //            == DialogResult.Yes)
@@ -607,7 +596,6 @@ namespace FSCruiser.WinForms.DataEntry
         //    action.TreeRecord = tree;
         //    tree.CountOrMeasure = "M";
         //    this.Controller.TrySaveTree(tree);
-            
 
         //    if (MessageBox.Show("Would You Like To Enter Tree Data?", "Sample", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
         //        == DialogResult.Yes)
@@ -624,8 +612,5 @@ namespace FSCruiser.WinForms.DataEntry
         //        _BS_tallyHistory.MoveLast();
         //    }
         //}
-
-        
-       
     }
 }

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using FSCruiser.Core;
@@ -15,10 +10,10 @@ namespace FSCruiser.WinForms.DataEntry
     public partial class FormLogs : Form
     {
         public IApplicationController Controller { get; protected set; }
+
         TreeDO _currentTree;
         BindingList<LogDO> _logs;
         DataGridViewTextBoxColumn _logNumColumn;
-
 
         public FormLogs(IApplicationController controller, StratumVM stratum)
         {
@@ -33,7 +28,6 @@ namespace FSCruiser.WinForms.DataEntry
 
             _logNumColumn = _dataGrid.Columns[CruiseDAL.Schema.LOG.LOGNUMBER] as DataGridViewTextBoxColumn;
         }
-
 
         public DialogResult ShowDialog(TreeVM tree)
         {
@@ -56,7 +50,7 @@ namespace FSCruiser.WinForms.DataEntry
             foreach (var log in _logs)
             {
                 int logNum = 0;
-                if(int.TryParse(log.LogNumber,out logNum))
+                if (int.TryParse(log.LogNumber, out logNum))
                 {
                     highest = Math.Max(highest, logNum);
                 }
@@ -78,7 +72,6 @@ namespace FSCruiser.WinForms.DataEntry
                 }
             }
             return true;
-
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -88,7 +81,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             try
             {
-                //this._currentTree.Save();//tree is saved before entering log screen. 
+                //this._currentTree.Save();//tree is saved before entering log screen.
                 foreach (LogDO log in this._logs)
                 {
                     //log.Tree = this._currentTree;
@@ -101,9 +94,7 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 e.Cancel = !this.Controller.ViewController.AskYesNo("Opps, logs weren't saved. Would you like to abort?", "", MessageBoxIcon.None);
             }
-
         }
-
 
         private LogDO AddLogRec()
         {

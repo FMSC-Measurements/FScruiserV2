@@ -1,12 +1,14 @@
 ﻿using System;
-using CruiseDAL.DataObjects;
 using System.Collections.Generic;
+using CruiseDAL.DataObjects;
 using FSCruiser.Core.Models;
+
 namespace FSCruiser.Core
 {
     public interface IApplicationController : IDisposable
     {
         #region Properties =========================================================
+
         IViewController ViewController { get; }
 
         ApplicationSettings Settings { get; }
@@ -15,17 +17,19 @@ namespace FSCruiser.Core
         CruiseDAL.DAL _cDal { get; }
 
         IList<CuttingUnitVM> CuttingUnits { get; }
+
         //CuttingUnitVM CurrentUnit { get; set; }
         //System.ComponentModel.BindingList<TallyAction> TallyHistory { get; }
         //System.Collections.Generic.List<TreeVM> CurrentUnitTreeList { get; }
         //System.ComponentModel.BindingList<TreeVM> CurrentUnitNonPlotTreeList { get; }
         //StratumVM DefaultStratum { get; }
 
-        
         //bool EnableCruiserSelectionPopup { get; set; }
-        #endregion 
+
+        #endregion Properties =========================================================
 
         #region ====================================================================
+
         //PlotVM AddPlot(StratumVM stratum);
         //void AddTallyAction(TallyAction action);
         //TreeVM CreateNewTreeEntry(CountTreeVM count);
@@ -33,8 +37,9 @@ namespace FSCruiser.Core
         //TreeVM CreateNewTreeEntry(CuttingUnitDO unit, StratumVM stratum, SampleGroupVM sg, CruiseDAL.DataObjects.TreeDefaultValueDO tdv, PlotVM plot, bool isMeasure);
         //StratumInfo CreateStratumInfo(CruiseDAL.DataObjects.CuttingUnitDO unit, CruiseDAL.DataObjects.StratumDO stratum);
         SampleGroupDO CreateNewSampleGroup(StratumDO stratum);
+
         TreeDefaultValueDO CreateNewTreeDefaultValue(String pProd);
-        
+
         //void DeletePlot(PlotVM plot);
         //void DeleteTree(TreeVM tree);
         //void DeleteTree(TreeVM tree, PlotVM plot);
@@ -51,24 +56,33 @@ namespace FSCruiser.Core
         //CruiserVM[] GetCruiserList();
 
         void OpenFile();
+
         void OpenFile(String path);
 
         //int GetLogNumerIndexStart(TreeVM tree);
         void HandleNonCriticalException(Exception ex, string optMessage);
+
         void LogTreeCountEdit(CountTreeDO countTree, long oldValue, long newValue);
+
         void LogSumKPIEdit(CountTreeDO countTree, long oldValue, long newValue);
+
         void LoadCuttingUnit(CuttingUnitVM unit);
+
         //void LoadCuttingUnitData();
         //void AsyncLoadCuttingUnitData();
         //void LoadDatabase(string path);
         //FMSC.Sampling.SampleSelecter MakeSampleSelecter(SampleGroupVM sg);
         //void OnTally();
         void OnLeavingCurrentUnit(System.ComponentModel.CancelEventArgs e);
+
         void PerformBackup(string path);
+
         void PerformBackup(bool incluedTimeStamp);
+
         //void PopulateTallies(StratumVM stratumInfo, DataEntryMode stratumMode, CuttingUnitVM unit, System.Windows.Forms.Panel container, FSCruiserV2.Forms.ITallyView view);
         //void Run();
         bool Save();
+
         //void SaveCounts();
         //bool TrySaveTree(TreeVM tree);
         //void SaveTrees(System.Collections.Generic.ICollection<TreeVM> list);
@@ -81,9 +95,9 @@ namespace FSCruiser.Core
         //bool ValidateTrees(System.Collections.Generic.ICollection<TreeVM> list);
         //bool ValidateTrees(System.Collections.Generic.ICollection<TreeVM> list, System.Collections.Generic.ICollection<String> fields);
 
-        #endregion
+        #endregion ====================================================================
 
-        #region  UI methods ========================================================
+        #region UI methods ========================================================
 
         //int? GetKPI(int min, int max);
         //void ShowDataEntry(CruiseDAL.DataObjects.CuttingUnitDO unit);
@@ -96,10 +110,13 @@ namespace FSCruiser.Core
         //void ShowLogs(TreeVM tree);
         //void SignalInsuranceTree();
         //void SignalMeasureTree();
-        #endregion
+
+        #endregion UI methods ========================================================
 
         //moved to IViewController
+
         #region DataObject description helper methods ==============================
+
         //string GetCuttingUnitDiscription(CruiseDAL.DataObjects.CuttingUnitDO unit);
         //string GetPlotInfo(CruiseDAL.DataObjects.PlotDO plot);
         //string GetPlotInfoShort(CruiseDAL.DataObjects.PlotDO plot);
@@ -109,12 +126,10 @@ namespace FSCruiser.Core
         //string GetStratumInfoShort(CruiseDAL.DataObjects.StratumDO stratum);
         //string GetLogLevelTreeDescription(TreeVM tree);
 
-
         //int GetNextPlotNumber(CruiseDAL.DataObjects.CuttingUnitDO unit, CruiseDAL.DataObjects.StratumDO stratum);
         //DataEntryMode GetStrataDataEntryMode(CruiseDAL.DataObjects.StratumDO stratum);
         //DataEntryMode GetUnitDataEntryMode(CruiseDAL.DataObjects.CuttingUnitDO unit);
-        #endregion
 
-        
+        #endregion DataObject description helper methods ==============================
     }
 }

@@ -1,15 +1,10 @@
 ﻿using System;
-//using System.Linq;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using System.Reflection;
 using System.IO;
-using FSCruiser.Core;
+using System.Reflection;
 
+//using System.Linq;
+using System.Windows.Forms;
+using FSCruiser.Core;
 
 namespace FSCruiser.WinForms
 {
@@ -30,25 +25,23 @@ namespace FSCruiser.WinForms
             this.TopMost = true;
         }
 
-
         protected override void OnDeactivate(EventArgs e)
         {
             base.OnDeactivate(e);
             this.Activate();
         }
+
         private void FormAbout_Load(object sender, EventArgs e)
         {
-            
             // Get the version from ApplicationController
             label1.Text = "Version " + Constants.FSCRUISER_VERSION;
             this._exeLBL.Text = AppDomain.CurrentDomain.FriendlyName;
             this._exeDOB_LBL.Text = "Installed: " + File.GetCreationTime(Assembly.GetExecutingAssembly().GetName().CodeBase).ToString();
             bool srFound = System.IO.File.Exists("\\Windows\\mscoree.dll");
-            if(!srFound)
+            if (!srFound)
             {
                 MessageBox.Show("Unable to locate resource file '\\Windows\\mscoree.dll', please reinstall Compact Framework");
             }
-            
         }
 
         protected override void OnClosed(EventArgs e)

@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FMSC.ORM.EntityModel.Attributes;
+﻿using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
     [EntitySource(SourceName = "Sale")]
-    public class Sale 
+    public class Sale
     {
         RegionLogInfo _regionalLogRules;
 
         [Field(Name = "Region")]
-        public new uint Region { get; set; }
-
+        public uint Region { get; set; }
 
         public RegionLogInfo GetRegionLogInfo()
         {
@@ -32,7 +27,6 @@ namespace FSCruiser.Core.Models
                             break;
                         }
                 }
-
             }
             return _regionalLogRules;
         }
@@ -198,6 +192,4 @@ namespace FSCruiser.Core.Models
             return regionalLogRules;
         }
     }
-
-    
 }

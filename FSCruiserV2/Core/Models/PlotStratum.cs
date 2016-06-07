@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using CruiseDAL;
-using FMSC.ORM.EntityModel.Attributes;
 using CruiseDAL.DataObjects;
+using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
@@ -32,8 +31,7 @@ namespace FSCruiser.Core.Models
         [IgnoreField]
         public IList<PlotVM> Plots { get; protected set; }
 
-
-        public PlotVM MakePlot(CuttingUnitVM cuttingUnit)
+        public virtual PlotVM MakePlot(CuttingUnitVM cuttingUnit)
         {
             if (this.Is3PPNT)
             {
@@ -55,7 +53,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public void PopulatePlots(long cuttingUnit_CN)
+        public virtual void PopulatePlots(long cuttingUnit_CN)
         {
             this.Plots = this.DAL.From<PlotVM>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
                 .OrderBy("PlotNumber")
@@ -67,7 +65,7 @@ namespace FSCruiser.Core.Models
             //            , cuttingUnit_CN);
         }
 
-        int GetNextPlotNumber(long cuttingUnit_CN)
+        protected int GetNextPlotNumber(long cuttingUnit_CN)
         {
             try
             {
@@ -81,7 +79,6 @@ namespace FSCruiser.Core.Models
                 string query2 = string.Format("Select Max(PlotNumber) FROM Plot WHERE CuttingUnit_CN = {0} AND Stratum_CN = {1}", cuttingUnit_CN, Stratum_CN);
                 int? result2 = DAL.ExecuteScalar<int?>(query2);
                 highestInStratum = result2.GetValueOrDefault(0);
-
 
                 if (highestInUnit > highestInStratum && highestInUnit > 0)
                 {
@@ -109,21 +106,23 @@ namespace FSCruiser.Core.Models
             return true;
         }
 
-
         public override List<TreeFieldSetupDO> ReadTreeFields()
         {
-            var fields = base.ReadTreeFields();
+            var fields = InternalReadTreeFields();
 
-            //if not a single stage plot strata 
-            //and count measure field is missing 
+            //if not a single stage plot strata
+            //and count measure field is missing
             //automaticly add it
             if (!IsSingleStage
                 && fields.FindIndex(((tfs) => tfs.Field == CruiseDAL.Schema.TREE.COUNTORMEASURE)) < 0)
             {
                 fields.Insert(5
-                    , new TreeFieldSetupDO() { 
+                    , new TreeFieldSetupDO()
+                    {
                         Field = CruiseDAL.Schema.TREE.COUNTORMEASURE
-                        , Heading = "C/M" });
+                        ,
+                        Heading = "C/M"
+                    });
             }
 
             return fields;

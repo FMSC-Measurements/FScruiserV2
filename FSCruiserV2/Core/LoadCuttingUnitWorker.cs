@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using FSCruiser.Core.Models;
-using System.Diagnostics;
-using System.ComponentModel;
 
 namespace FSCruiser.Core
 {
@@ -52,7 +51,6 @@ namespace FSCruiser.Core
             _unit.TallyHistoryBuffer = new TallyHistoryCollection(_unit, Constants.MAX_TALLY_HISTORY_SIZE);
             _unit.TallyHistoryBuffer.Initialize();
 
-
             InitializeNonPlotTrees();
 
             this.OnDoneLoading();
@@ -80,8 +78,6 @@ namespace FSCruiser.Core
             }
         }
 
-        
-
         public void InitializeNonPlotTrees()
         {
             //create a list of just trees in tree based strata
@@ -91,7 +87,7 @@ namespace FSCruiser.Core
                         "Stratum.Method IN ('100','STR','3P','S3P')")
                 .OrderBy("TreeNumber")
                 .Read(_unit.CuttingUnit_CN).ToList();
-            
+
             _unit.NonPlotTrees = new BindingList<TreeVM>(nonPlotTrees);
             _unit.ValidateTreesAsync();
         }

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using System.Linq;
 using CruiseDAL.DataObjects;
-using System.ComponentModel;
-using System.Threading;
 using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
@@ -12,8 +9,7 @@ namespace FSCruiser.Core.Models
     public class CuttingUnitVM : CuttingUnitDO, ITreeFieldProvider
     {
         protected const int TREE_SAVE_INTERVAL = 10;
-        private int _treesAddedSinceLastSave = 0;        
-        
+        private int _treesAddedSinceLastSave = 0;
 
         //public List<CountTreeVM> Counts { get; set; }
 
@@ -28,6 +24,7 @@ namespace FSCruiser.Core.Models
 
         [IgnoreField]
         public List<SampleGroupVM> SampleGroups { get; set; }
+
         //public List<TreeVM> TreeList { get; set; }
 
         [IgnoreField]
@@ -37,6 +34,7 @@ namespace FSCruiser.Core.Models
         public TallyHistoryCollection TallyHistoryBuffer { get; set; }
 
         Sale _sale;
+
         [IgnoreField]
         public Sale Sale
         {
@@ -50,15 +48,15 @@ namespace FSCruiser.Core.Models
             }
         }
 
-
-        public CuttingUnitVM() 
-            :base()
+        public CuttingUnitVM()
+            : base()
         {
         }
 
-
         #region Tree stuff
+
         #region treeNumbering
+
         private long GetNextNonPlotTreeNumber()
         {
             if (this.NonPlotTrees == null || this.NonPlotTrees.Count == 0)
@@ -81,7 +79,8 @@ namespace FSCruiser.Core.Models
 
             return true;
         }
-        #endregion
+
+        #endregion treeNumbering
 
         public TreeVM UserAddTree(TreeVM templateTree
             , StratumVM knownStratum
@@ -91,7 +90,7 @@ namespace FSCruiser.Core.Models
             SampleGroupVM assumedSG = null;
             TreeDefaultValueDO assumedTDV = null;
 
-            //extrapolate stratum 
+            //extrapolate stratum
             if (knownStratum == null && this.DefaultStratum != null)//default stratum is going to be our first choice
             {
                 knownStratum = this.DefaultStratum;
@@ -122,7 +121,7 @@ namespace FSCruiser.Core.Models
 
             newTree = this.CreateNewTreeEntry(knownStratum
                 , assumedSG, assumedTDV, true);
-            newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied 
+            newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied
 
             viewController.ShowCruiserSelection(newTree);
 
@@ -167,9 +166,9 @@ namespace FSCruiser.Core.Models
                 newTree.SampleGroup = sg;
                 if (tdv == null)
                 {
-                    if (sg.TreeDefaultValues.IsPopulated == false) 
-                    { 
-                        sg.TreeDefaultValues.Populate(); 
+                    if (sg.TreeDefaultValues.IsPopulated == false)
+                    {
+                        sg.TreeDefaultValues.Populate();
                     }
                     if (sg.TreeDefaultValues.Count == 1)
                     {
@@ -202,7 +201,6 @@ namespace FSCruiser.Core.Models
             }
         }
 
-
         public void DeleteTree(TreeVM tree)
         {
             //ReleaseUnitTreeNumber((int)tree.TreeNumber);
@@ -211,9 +209,11 @@ namespace FSCruiser.Core.Models
             //TreeList.Remove(tree);
             this.NonPlotTrees.Remove(tree);
         }
-        #endregion
+
+        #endregion Tree stuff
 
         #region validate trees
+
         public bool ValidateTrees()
         {
             var worker = new TreeValidationWorker(this.NonPlotTrees);
@@ -225,7 +225,8 @@ namespace FSCruiser.Core.Models
             var worker = new TreeValidationWorker(this.NonPlotTrees);
             worker.ValidateTreesAsync();
         }
-        #endregion
+
+        #endregion validate trees
 
         public void InitializeStrata()
         {
@@ -269,7 +270,7 @@ namespace FSCruiser.Core.Models
                 fields.AddRange(Constants.DEFAULT_TREE_FIELDS);
             }
 
-            //if unit has multiple tree strata 
+            //if unit has multiple tree strata
             //but stratum column is missing
             if (this.TreeStrata.Count > 1
                 && fields.FindIndex(x => x.Field == "Stratum") == -1)
@@ -277,7 +278,7 @@ namespace FSCruiser.Core.Models
                 //find the location of the tree number field
                 int indexOfTreeNum = fields.FindIndex(x => x.Field == CruiseDAL.Schema.TREE.TREENUMBER);
                 //if user doesn't have a tree number field, fall back to the last field index
-                if (indexOfTreeNum == -1) { indexOfTreeNum = fields.Count - 1; }//last item index 
+                if (indexOfTreeNum == -1) { indexOfTreeNum = fields.Count - 1; }//last item index
                 //add the stratum field to the filed list
                 TreeFieldSetupDO tfs = new TreeFieldSetupDO() { Field = "Stratum", Heading = "St", Format = "[Code]" };
                 fields.Insert(indexOfTreeNum + 1, tfs);
@@ -286,8 +287,8 @@ namespace FSCruiser.Core.Models
             return fields;
         }
 
-
         #region save methods
+
         public bool SaveFieldData()
         {
             try
@@ -343,7 +344,6 @@ namespace FSCruiser.Core.Models
 
         public void SaveTrees()
         {
-            
             var worker = new SaveTreesWorker(this.DAL, this.NonPlotTrees);
             worker.SaveAll();
             _treesAddedSinceLastSave = 0;
@@ -363,7 +363,7 @@ namespace FSCruiser.Core.Models
             _treesAddedSinceLastSave = 0;
         }
 
-        #endregion
+        #endregion save methods
 
         public override string ToString()
         {
