@@ -47,6 +47,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FMSC.Core, Version=1.0.0.26522, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FMSC.Core\Net35\FMSC.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -78,7 +82,6 @@
     <Compile Include="Core\Models\LogRule.cs" />
     <Compile Include="Core\Models\RegionLogInfo.cs" />
     <Compile Include="Core\Models\Sale.cs" />
-    <Compile Include="Core\System\FloatExtentions.cs" />
     <Compile Include="Core\ViewInterfaces\IView.cs" />
     <Compile Include="Core\Workers\FileLoadWorker.cs" />
     <Compile Include="Core\FormCruiserSelection.Logic.cs" />
