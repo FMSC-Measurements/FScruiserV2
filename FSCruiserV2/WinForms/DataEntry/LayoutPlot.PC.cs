@@ -17,6 +17,7 @@ namespace FSCruiser.WinForms.DataEntry
         private bool _viewLoading = true;
 
         private DataGridViewComboBoxColumn _initialsColoumn;
+        private DataGridViewComboBoxColumn _stColumn;
         private DataGridViewComboBoxColumn _sgColumn;
         private DataGridViewComboBoxColumn _speciesColumn;
         private DataGridViewTextBoxColumn _errorMessageColumn;
@@ -79,6 +80,7 @@ namespace FSCruiser.WinForms.DataEntry
             _initialsColoumn = _dataGrid.Columns["Initials"] as DataGridViewComboBoxColumn;
             _errorMessageColumn = _dataGrid.Columns["Error"] as DataGridViewTextBoxColumn;
             _logsColumn = _dataGrid.Columns["Logs"] as DataGridViewButtonColumn;
+            _stColumn = _dataGrid.Columns["Stratum"] as DataGridViewComboBoxColumn;
 
             if (_speciesColumn != null)
             {
@@ -95,6 +97,10 @@ namespace FSCruiser.WinForms.DataEntry
             if (_logsColumn != null)
             {
                 _logsColumn.Visible = AppController.ViewController.EnableLogGrading;
+            }
+            if (_stColumn != null)
+            {
+                _stColumn.DataSource = new PlotStratum[] { this.Stratum };
             }
 
             if (stratum is FixCNTStratum)
