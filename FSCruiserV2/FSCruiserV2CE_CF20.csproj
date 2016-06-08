@@ -413,7 +413,6 @@
     <Content Include="fscruiser.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FixCNTClassDiagram.cd" />
     <None Include="Core\FSCruiser.Core.cd" />
     <None Include="Core\Models\FMSC.Core.Models.cd" />
     <None Include="Properties\DataSources\FSCruiser.Core.DataEntry.LimitingDistanceCalculator.datasource" />
