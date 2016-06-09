@@ -117,8 +117,7 @@ namespace FSCruiser.Core.DataEntry
             if (LimitingDistance <= 0.0 || SlopeDistance <= 0.0)
             { return string.Empty; }
 
-            var isTreeIn = SlopeDistance <= LimitingDistance;
-#warning bad Comparison
+            var isTreeIn = SlopeDistance.LessThanOrEqualsEx(LimitingDistance);
 
             return String.Format("Tree was {0} (DBH:{1}, slope:{2}%, slope distance:{3}', limiting distance:{4:F}' to {5} of tree, {6}:{7}) \r\n",
                     (isTreeIn) ? "IN" : "OUT",
