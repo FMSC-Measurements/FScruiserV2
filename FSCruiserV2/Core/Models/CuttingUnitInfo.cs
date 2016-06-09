@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
@@ -11,8 +12,6 @@ namespace FSCruiser.Core.Models
         protected const int TREE_SAVE_INTERVAL = 10;
         private int _treesAddedSinceLastSave = 0;
 
-        //public List<CountTreeVM> Counts { get; set; }
-
         [IgnoreField]
         public IList<PlotStratum> PlotStrata { get; set; }
 
@@ -21,11 +20,6 @@ namespace FSCruiser.Core.Models
 
         [IgnoreField]
         public StratumVM DefaultStratum { get; set; }
-
-        [IgnoreField]
-        public List<SampleGroupVM> SampleGroups { get; set; }
-
-        //public List<TreeVM> TreeList { get; set; }
 
         [IgnoreField]
         public IList<TreeVM> NonPlotTrees { get; set; }
@@ -210,8 +204,6 @@ namespace FSCruiser.Core.Models
             this.NonPlotTrees.Remove(tree);
         }
 
-        #endregion Tree stuff
-
         #region validate trees
 
         public bool ValidateTrees()
@@ -228,10 +220,12 @@ namespace FSCruiser.Core.Models
 
         #endregion validate trees
 
+        #endregion Tree stuff
+
         public void InitializeStrata()
         {
-            this.TreeStrata = this.GetTreeBasedStrata();
-            this.PlotStrata = this.GetPlotStrata();
+            this.TreeStrata = this.ReadTreeBasedStrata().ToList();
+            this.PlotStrata = this.ReadPlotStrata().ToList();
 
             this.DefaultStratum = null;
             foreach (StratumVM stratum in this.TreeStrata)
@@ -249,11 +243,58 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public IEnumerable<PlotStratum> ReadPlotStrata()
+        {
+            Debug.Assert(DAL != null);
+
+            foreach (var st in
+                 DAL.From<PlotStratum>()
+                .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
+                .Where("CUST.CuttingUnit_CN = ? "
+                + "AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')")
+                .Query(CuttingUnit_CN))
+            {
+                st.LoadCounts(this);
+                st.PopulateHotKeyLookup();
+                yield return st;
+            }
+
+            foreach (var st in DAL.From<FixCNTStratum>()
+                .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
+                .Where("CUST.CuttingUnit_CN = ? "
+                + "AND Stratum.Method = '" + CruiseDAL.Schema.CruiseMethods.FIXCNT + "'")
+                .Query(CuttingUnit_CN))
+            {
+                st.LoadCounts(this);
+                st.PopulateHotKeyLookup();
+                yield return st;
+            }
+        }
+
+        public IEnumerable<StratumVM> ReadTreeBasedStrata()
+        {
+            Debug.Assert(DAL != null);
+
+            foreach (var st in
+                DAL.From<StratumVM>()
+                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
+                .Where("CuttingUnitStratum.CuttingUnit_CN = ?" +
+                        "AND Method IN ( '100', 'STR', '3P', 'S3P')")
+                .Read(CuttingUnit_CN))
+            {
+                st.LoadCounts(this);
+                st.PopulateHotKeyLookup();
+                st.LoadTreeFieldNames();
+                yield return st;
+            }
+        }
+
         public void ReleaseData()
         {
             this.TallyHistoryBuffer = null;
             this.NonPlotTrees = null;
-            this.SampleGroups = null;
+            TreeStrata = null;
+            PlotStrata = null;
         }
 
         public List<TreeFieldSetupDO> ReadTreeFields()
@@ -335,10 +376,14 @@ namespace FSCruiser.Core.Models
 
         protected void SaveSampleGroups()
         {
-            foreach (SampleGroupVM sg in this.SampleGroups)
+            foreach (var st in TreeStrata)
             {
-                sg.SerializeSamplerState();
-                sg.Save();
+                st.SaveSampleGroups();
+            }
+
+            foreach (var st in PlotStrata)
+            {
+                st.SaveSampleGroups();
             }
         }
 

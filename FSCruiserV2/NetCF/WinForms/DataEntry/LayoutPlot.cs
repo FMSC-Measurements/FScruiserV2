@@ -346,12 +346,16 @@ namespace FSCruiser.WinForms.DataEntry
 
             this.Dock = DockStyle.Fill;
             this.Parent = parent;
-            this._tallyListPanel.SuspendLayout();
-            this.ViewLogicController.DataEntryController.PopulateTallies(stratum, DataEntryController.Unit, this._tallyListPanel, this);
-            if (stratum.Method == "3PPNT")
-            {
-                this.IsGridExpanded = true;
-            }
+
+            InitializeTallyPanel();
+
+            this.ViewLogicController.UpdateCurrentPlot();
+        }
+
+        void InitializeTallyPanel()
+        {
+            var stratum = this.ViewLogicController.Stratum;
+            _tallyListPanel.SuspendLayout();
 
             if (stratum is FixCNTStratum)
             {
@@ -364,9 +368,27 @@ namespace FSCruiser.WinForms.DataEntry
                 openFixCNTTallyButton.Click += new EventHandler(openFixCNTTallyButton_Click);
                 this._tallyListPanel.Controls.Add(openFixCNTTallyButton);
             }
+            else if (stratum.IsSingleStage)
+            {
+                if (stratum.Method == "3PPNT")
+                {
+                    //no need to initialize any counts or samplegroup info for 3PPNT
+                    IsGridExpanded = false;
+                }
+                else
+                {
+                    MakeSGList(stratum.SampleGroups, _tallyListPanel);
+                }
+            }
+            else
+            {
+                foreach (CountTreeVM count in stratum.Counts)
+                {
+                    MakeTallyRow(_tallyListPanel, count);
+                }
+            }
 
-            this.ViewLogicController.UpdateCurrentPlot();
-            _tallyListPanel.ResumeLayout(false);
+            this._tallyListPanel.ResumeLayout();
         }
 
         private void InitializePlotNavIcons()

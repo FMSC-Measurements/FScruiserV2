@@ -65,6 +65,10 @@ namespace FSCruiser.Core.Models
             {
                 return tree.TotalHeight;
             }
+            else if (Field == FixCNTTallyField.DRC)
+            {
+                return tree.DRC;
+            }
             else
             {
                 throw new NotImplementedException();

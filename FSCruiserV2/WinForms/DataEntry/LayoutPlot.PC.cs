@@ -103,6 +103,16 @@ namespace FSCruiser.WinForms.DataEntry
                 _stColumn.DataSource = new PlotStratum[] { this.Stratum };
             }
 
+            //no need to load tallies....?
+            //Controller.PopulateTallies(this.StratumInfo, this._mode, Controller.CurrentUnit, this._tallyListPanel, this);
+            this.Parent = parent;
+        }
+
+        void InitializeTallyPanel()
+        {
+            var stratum = this.ViewLogicController.Stratum;
+            _tallyListPanel.SuspendLayout();
+
             if (stratum is FixCNTStratum)
             {
                 var openFixCNTTallyButton = new Button()
@@ -114,10 +124,27 @@ namespace FSCruiser.WinForms.DataEntry
                 openFixCNTTallyButton.Click += new EventHandler(openFixCNTTallyButton_Click);
                 this._tallyListPanel.Controls.Add(openFixCNTTallyButton);
             }
+            else if (stratum.IsSingleStage)
+            {
+                if (stratum.Method == "3PPNT")
+                {
+                    //no need to initialize any counts or samplegroup info for 3PPNT
+                    IsGridExpanded = false;
+                }
+                else
+                {
+                    MakeSGList(stratum.SampleGroups, _tallyListPanel);
+                }
+            }
+            else
+            {
+                foreach (CountTreeVM count in stratum.Counts)
+                {
+                    MakeTallyRow(_tallyListPanel, count);
+                }
+            }
 
-            //no need to load tallies....?
-            //Controller.PopulateTallies(this.StratumInfo, this._mode, Controller.CurrentUnit, this._tallyListPanel, this);
-            this.Parent = parent;
+            this._tallyListPanel.ResumeLayout();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -126,14 +153,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             var stratum = this.ViewLogicController.Stratum;
 
-            this._tallyListPanel.SuspendLayout();
-            this.ViewLogicController.DataEntryController.PopulateTallies(stratum, DataEntryController.Unit, this._tallyListPanel, this);
-            if (stratum.Method == "3PPNT")
-            {
-                this.IsGridExpanded = true;
-            }
-
-            this._tallyListPanel.ResumeLayout();
+            InitializeTallyPanel();
 
             this.ViewLogicController.UpdateCurrentPlot();
 

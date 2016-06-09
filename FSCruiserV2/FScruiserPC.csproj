@@ -70,7 +70,9 @@
     <Compile Include="Core\CountTreeExtensions.cs" />
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
+    <Compile Include="Core\ExceptionHandler.cs" />
     <Compile Include="Core\Exceptions.cs" />
+    <Compile Include="Core\IExceptionHandler.cs" />
     <Compile Include="Core\Models\FixCNTPlot.cs" />
     <Compile Include="Core\Models\FixCNTStratum.cs" />
     <Compile Include="Core\Models\FixCNTTallyBucket.cs" />

@@ -101,8 +101,8 @@ namespace FSCruiser.WinForms
             CuttingUnitVM unit = this.CuttingUnitSelectView.SelectedUnit;
             if (unit != null)
             {
-                this.Controller.LoadCuttingUnit(unit);
-                this.Controller.ViewController.ShowDataEntry(this.CuttingUnitSelectView.SelectedUnit);
+                Controller.CurrentUnit = unit;
+                Controller.ViewController.ShowDataEntry(this.CuttingUnitSelectView.SelectedUnit);
             }
         }
 

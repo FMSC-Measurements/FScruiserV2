@@ -44,7 +44,7 @@ namespace FSCruiser.Core
 
         public void LoadData()
         {
-            InitializeSampleGroups();
+            //InitializeSampleGroups();
 
             //InitializeCounts();
             //InitializeUnitTreeNumIndex();
@@ -61,22 +61,22 @@ namespace FSCruiser.Core
         //    _unit.Counts = _unit.DAL.Read<CountTreeVM>((string)null);
         //}
 
-        public void InitializeSampleGroups()
-        {
-            //create a list of all samplegroups in the unit
-            _unit.SampleGroups = _unit.DAL.From<SampleGroupVM>()
-                .Join("Stratum", "USING (Stratum_CN)")
-                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
-                .Where("CuttingUnitStratum.CuttingUnit_CN = ?")
-                .Read(_unit.CuttingUnit_CN).ToList();
+        //public void InitializeSampleGroups()
+        //{
+        //    //create a list of all samplegroups in the unit
+        //    _unit.SampleGroups = _unit.DAL.From<SampleGroupVM>()
+        //        .Join("Stratum", "USING (Stratum_CN)")
+        //        .Join("CuttingUnitStratum", "USING (Stratum_CN)")
+        //        .Where("CuttingUnitStratum.CuttingUnit_CN = ?")
+        //        .Read(_unit.CuttingUnit_CN).ToList();
 
-            //initialize sample selectors for all sampleGroups
-            foreach (SampleGroupVM sg in _unit.SampleGroups)
-            {
-                //DataEntryMode mode = GetStrataDataEntryMode(sg.Stratum);
-                sg.Sampler = sg.MakeSampleSelecter();
-            }
-        }
+        //    //initialize sample selectors for all sampleGroups
+        //    foreach (SampleGroupVM sg in _unit.SampleGroups)
+        //    {
+        //        //DataEntryMode mode = GetStrataDataEntryMode(sg.Stratum);
+        //        sg.Sampler = sg.MakeSampleSelecter();
+        //    }
+        //}
 
         public void InitializeNonPlotTrees()
         {

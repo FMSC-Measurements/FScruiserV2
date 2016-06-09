@@ -20,6 +20,23 @@ namespace FSCruiser.Core.Models
 
         //public StratumDO Stratum { get; set; }
         //public List<PlotVM> Plots { get; set; }
+
+        List<SampleGroupVM> _sampleGroups;
+
+        public List<SampleGroupVM> SampleGroups
+        {
+            get
+            {
+                if (_sampleGroups == null)
+                {
+                    _sampleGroups = DAL.From<SampleGroupVM>()
+                        .Where("Stratum_CN = ?")
+                        .Read(Stratum_CN).ToList();
+                }
+                return _sampleGroups;
+            }
+        }
+
         public List<CountTreeVM> Counts { get; set; }
 
         public Dictionary<char, CountTreeVM> HotKeyLookup
@@ -52,6 +69,39 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public void LoadCounts(CuttingUnitDO unit)
+        {
+            var counts = new List<CountTreeVM>();
+            var tallySettings = DAL.From<TallySettingsDO>()
+                .Join("SampleGroup", "USING (SampleGroup_CN)")
+                .Where("SampleGroup.Stratum_CN = ?")
+                .GroupBy("CountTree.SampleGroup_CN", "CountTree.TreeDefaultValue_CN", "CountTree.Tally_CN")
+                .Read(Stratum_CN);
+
+            foreach (TallySettingsDO ts in tallySettings)
+            {
+                CountTreeVM count = DAL.From<CountTreeVM>()
+                    .Where("CuttingUnit_CN = ? AND SampleGroup_CN = ? AND Tally_CN = ?")
+                    .Read(unit.CuttingUnit_CN
+                    , ts.SampleGroup_CN
+                    , ts.Tally_CN).FirstOrDefault();
+                if (count == null)
+                {
+                    count = new CountTreeVM(DAL);
+                    count.CuttingUnit = unit;
+                    count.SampleGroup_CN = ts.SampleGroup_CN;
+                    count.TreeDefaultValue_CN = ts.TreeDefaultValue_CN;
+                    count.Tally_CN = ts.Tally_CN;
+
+                    count.Save();
+                    //this.Unit.Counts.Add(count);
+                }
+                counts.Add(count);
+            }
+
+            Counts = counts;
+        }
+
         public void LoadTreeFieldNames()
         {
             string command = String.Concat("Select group_concat(distinct Field) FROM TreeFieldSetup WHERE Stratum_CN = ", this.Stratum_CN, ";");
@@ -59,6 +109,15 @@ namespace FSCruiser.Core.Models
             if (!string.IsNullOrEmpty(result))
             {
                 this.TreeFieldNames = result.Split(',');
+            }
+        }
+
+        public void SaveSampleGroups()
+        {
+            foreach (SampleGroupVM sg in SampleGroups)
+            {
+                sg.SerializeSamplerState();
+                sg.Save();
             }
         }
 

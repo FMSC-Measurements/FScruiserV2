@@ -115,10 +115,11 @@ namespace FSCruiser.WinForms
 
                 StrataViews.Add(stratum, tallyContainer);
 
-                this.DataEntryController.PopulateTallies(stratum
-                    , DataEntryController.Unit
-                    , tallyContainer
-                    , this);
+                foreach (CountTreeVM count in stratum.Counts)
+                {
+                    MakeTallyRow(tallyContainer, count);
+                    AdjustPanelHeight(tallyContainer);
+                }
 
                 if (string.IsNullOrEmpty(stratum.Hotkey) == false)
                 {

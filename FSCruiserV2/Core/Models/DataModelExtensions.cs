@@ -7,81 +7,8 @@ using CruiseDAL.DataObjects;
 
 namespace FSCruiser.Core.Models
 {
-    public static class CuttingUnitExtensions
-    {
-        //public static String GetDiscription(this CuttingUnitDO unit)
-        //{
-        //    return String.Format("{0} Area: {1}", unit.Description, unit.Area);
-        //}
-
-        //public static DataEntryMode GetDataEntryMode(this CuttingUnitDO unit)
-        //{
-        //    //"SELECT goupe_concat(Method, ' ') FROM Stratum JOIN CuttingUnitStratum USING (Stratum_CN) WHERE CuttingUnit_CN = {0} GROUP BY Stratum.Method;";
-        //    List<StratumVM> strata = unit.ReadStrata<StratumVM>();
-        //    DataEntryMode mode = DataEntryMode.Unknown;
-        //    foreach (StratumVM stratum in strata)
-        //    {
-        //        mode = mode | stratum.GetDataEntryMode();
-        //    }
-
-        //    return mode;
-        //}
-
-        public static IList<StratumVM> GetTreeBasedStrata(this CuttingUnitDO unit)
-        {
-            Debug.Assert(unit != null);
-            Debug.Assert(unit.DAL != null);
-
-            IList<StratumVM> list = unit.DAL.From<StratumVM>()
-                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
-                .Where("CuttingUnitStratum.CuttingUnit_CN = ?" +
-                        "AND Method IN ( '100', 'STR', '3P', 'S3P')")
-                .Read(unit.CuttingUnit_CN).ToList();
-
-            foreach (StratumVM s in list)
-            {
-                s.LoadTreeFieldNames();
-            }
-            return list;
-        }
-
-        public static IList<PlotStratum> GetPlotStrata(this CuttingUnitDO unit)
-        {
-            var list = unit.DAL.From<PlotStratum>()
-                .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
-                .Where("CUST.CuttingUnit_CN = ? "
-                + "AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')")
-                .Query(unit.CuttingUnit_CN).ToList();
-
-            var fixCNT = unit.DAL.From<FixCNTStratum>()
-                .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
-                .Where("CUST.CuttingUnit_CN = ? "
-                + "AND Stratum.Method = '" + CruiseDAL.Schema.CruiseMethods.FIXCNT + "'")
-                .Query(unit.CuttingUnit_CN);
-
-            foreach (var st in fixCNT)
-            {
-                list.Add(st);
-            }
-
-            return list;
-        }
-    }
-
     public static class StratumExtensions
     {
-        //public string GetDescription(this StratumDO stratum)
-        //{
-        //    throw new NotImplementedException();
-        //    //return "";
-        //}
-
-        //public string GetDescription(this StratumDO stratum, CuttingUnitDO unit)
-        //{
-        //    throw new NotImplementedException();
-        //    //return "";
-        //}
-
         public static string GetDescriptionShort(this StratumDO stratum)
         {
             if (stratum == null) return "-";

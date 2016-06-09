@@ -63,7 +63,7 @@ namespace FSCruiser.Core.Models
                     && tree.TreeDefaultValue_CN == population.TreeDefaultValue_CN
                     && tallyBucket.MidpointValue == tallyClass.GetTreeFieldValue(tree))
                 {
-                    count++;
+                    count += (int)tree.TreeCount;
                 }
             }
 
@@ -73,6 +73,11 @@ namespace FSCruiser.Core.Models
         public override void PopulateTrees()
         {
             base.PopulateTrees();
+        }
+
+        public override TreeVM CreateNewTreeEntry(SampleGroupVM sg, TreeDefaultValueDO tdv, bool isMeasure)
+        {
+            return base.CreateNewTreeEntry(sg, tdv, false);
         }
 
         protected void NotifyTallyCountChanged(IFixCNTTallyBucket tallyBucket)
@@ -97,7 +102,7 @@ namespace FSCruiser.Core.Models
         public void Tally(IFixCNTTallyBucket tallyBucket)
         {
             var tree = base.CreateNewTreeEntry(tallyBucket.TallyPopulation.SampleGroup,
-                tallyBucket.TallyPopulation.TreeDefaultValue, true);
+                tallyBucket.TallyPopulation.TreeDefaultValue, false);
 
             tallyBucket.TallyPopulation.TallyClass.SetTreeFieldValue(tree, tallyBucket);
             if (tree.TrySave())

@@ -27,8 +27,20 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        SampleSelecter _sampler;
+
         [IgnoreField]
-        public SampleSelecter Sampler { get; set; }
+        public SampleSelecter Sampler
+        {
+            get
+            {
+                if (_sampler == null)
+                {
+                    _sampler = MakeSampleSelecter();
+                }
+                return _sampler;
+            }
+        }
 
         public override StratumDO GetStratum()
         {

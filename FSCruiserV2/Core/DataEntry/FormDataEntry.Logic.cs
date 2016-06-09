@@ -341,12 +341,11 @@ namespace FSCruiser.Core.DataEntry
 
         public void PopulateTallies(StratumVM stratum, CuttingUnitVM unit, Panel container, ITallyView view)
         {
-            var stratumMode = stratum.GetDataEntryMode();
             if (stratum is FixCNTStratum)
             {
                 //don't initialize tallies for FixCNT
             }
-            else if ((stratumMode & DataEntryMode.OneStagePlot) == DataEntryMode.OneStagePlot)
+            else if (stratum is PlotStratum && ((PlotStratum)stratum).IsSingleStage)
             {
                 if (stratum.Method == "3PPNT")
                 {
@@ -362,41 +361,13 @@ namespace FSCruiser.Core.DataEntry
             }
             else
             {
-                var counts = new List<CountTreeVM>();
-                var tallySettings = this.Database.From<TallySettingsDO>()
-                    .Join("SampleGroup", "USING (SampleGroup_CN)")
-                    .Where("SampleGroup.Stratum_CN = ?")
-                    .GroupBy("CountTree.SampleGroup_CN", "CountTree.TreeDefaultValue_CN", "CountTree.Tally_CN")
-                    .Read(stratum.Stratum_CN);
-
-                foreach (TallySettingsDO ts in tallySettings)
-                {
-                    CountTreeVM count = this.Database.From<CountTreeVM>()
-                        .Where("CuttingUnit_CN = ? AND SampleGroup_CN = ? AND Tally_CN = ?")
-                        .Read(this.Unit.CuttingUnit_CN
-                        , ts.SampleGroup_CN
-                        , ts.Tally_CN).FirstOrDefault();
-                    if (count == null)
-                    {
-                        count = new CountTreeVM(this.Database);
-                        count.CuttingUnit = this.Unit;
-                        count.SampleGroup_CN = ts.SampleGroup_CN;
-                        count.TreeDefaultValue_CN = ts.TreeDefaultValue_CN;
-                        count.Tally_CN = ts.Tally_CN;
-
-                        count.Save();
-                        //this.Unit.Counts.Add(count);
-                    }
-                    counts.Add(count);
-                }
-
-                stratum.Counts = counts;
+                stratum.LoadCounts(Unit);
                 stratum.PopulateHotKeyLookup();
 
                 MakeCountTallyRowHadler f = new MakeCountTallyRowHadler(view.MakeTallyRow);
                 System.Threading.ThreadPool.QueueUserWorkItem((t) =>
                 {
-                    foreach (CountTreeVM count in counts)
+                    foreach (CountTreeVM count in stratum.Counts)
                     {
                         container.Invoke(f, container, count);
                     }

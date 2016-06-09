@@ -261,5 +261,7 @@ namespace FSCruiser.Core.Workers
             float frac = (float)workDone / workExpected;
             return (int)(100 * frac);
         }
+
+        
     }
 }
