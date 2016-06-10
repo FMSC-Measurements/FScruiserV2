@@ -108,10 +108,10 @@
 
         #endregion
 
+        System.Windows.Forms.Button _addTreeBTN;
+        System.Windows.Forms.Button _deleteTreeBTN;
+        System.Windows.Forms.TabControl _pageContainer;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button _addTreeBTN;
-        private System.Windows.Forms.Button _deleteTreeBTN;
         private System.Windows.Forms.Panel _mainContenPanel;
-        private System.Windows.Forms.TabControl _pageContainer;
     }
 }

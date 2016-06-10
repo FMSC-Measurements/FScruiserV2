@@ -64,7 +64,7 @@
             // _deleteRowButton
             // 
             this._deleteRowButton.Text = "&Delete Tree";
-            this._deleteRowButton.Click += new System.EventHandler(this._deleteRowButton_Click);
+            this._deleteRowButton.Click += new System.EventHandler(this._deleteTreeBTN_Click);
             // 
             // _showHideErrorColMI
             // 

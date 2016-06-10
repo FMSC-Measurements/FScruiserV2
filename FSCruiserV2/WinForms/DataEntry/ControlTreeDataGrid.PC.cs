@@ -93,7 +93,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_stratumColumn != null)
             {
-                _stratumColumn.DataSource = DataEntryController.Unit.ReadTreeBasedStrata();
+                _stratumColumn.DataSource = DataEntryController.Unit.TreeStrata;
             }
             if (_initialsColoumn != null)
             {

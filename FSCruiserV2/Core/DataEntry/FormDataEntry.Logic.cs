@@ -190,7 +190,7 @@ namespace FSCruiser.Core.DataEntry
             tree.TrySave();
             Unit.AddNonPlotTree(tree);
 
-            if (!isInsurance && this.AskEnterMeasureTreeData())
+            if (!isInsurance && View.AskEnterMeasureTreeData())
             {
                 this.View.GotoTreePage();
                 this.View.TreeViewMoveLast();
@@ -218,7 +218,7 @@ namespace FSCruiser.Core.DataEntry
             tree.TrySave();
             Unit.AddNonPlotTree(tree);
 
-            if (!isInsurance && this.AskEnterMeasureTreeData())
+            if (!isInsurance && View.AskEnterMeasureTreeData())
             {
                 this.View.GotoTreePage();
                 this.View.TreeViewMoveLast();

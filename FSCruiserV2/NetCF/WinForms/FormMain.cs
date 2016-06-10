@@ -193,7 +193,7 @@ namespace FSCruiser.WinForms
             {
                 Cursor.Current = Cursors.WaitCursor;
                 Cursor.Show();
-                Controller.LoadCuttingUnit(SelectedUnit);
+                Controller.CurrentUnit = SelectedUnit;
                 Controller.ViewController.ShowDataEntry(SelectedUnit);
                 // Cursor.Current = Cursors.Default; is at the end of FormDataEntry.OnLoad();
             }

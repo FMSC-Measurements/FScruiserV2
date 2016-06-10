@@ -1,19 +1,20 @@
 ﻿using System.Collections.Generic;
 using FSCruiser.Core.DataEntry;
+using FSCruiser.Core.Models;
 
 namespace FSCruiser.Core.ViewInterfaces
 {
     public interface IDataEntryView : IView
     {
+        CuttingUnitVM Unit { get; }
+
+        FormDataEntryLogic LogicController { get; }
+
         IDataEntryPage FocusedLayout { get; }
 
         List<IDataEntryPage> Layouts { get; }
 
-        FormDataEntryLogic LogicController { get; }
-
-        //IList<StratumVM> PlotStrata { get; }
-
-        //public bool HotKeyEnabled { get; }
+        bool AskEnterMeasureTreeData();
 
         void HandleCuttingUnitDataLoaded();
 

@@ -399,47 +399,17 @@ namespace FSCruiser.Core.DataEntry
         }
 
         //TODO rename method
-        public void AddTree(SampleGroupVM sg, CruiseDAL.DataObjects.TreeDefaultValueDO tdv)
+        public void AddTree(SubPop subPop)
         {
-            TreeVM tree;
-            tree = this.CurrentPlot.CreateNewTreeEntry(sg, tdv, true);
-            tree.TreeCount = 1;
+            TreeVM tree = CurrentPlot.CreateNewTreeEntry(subPop);
 
             this.Controller.ViewController.ShowCruiserSelection(tree);
 
             tree.TrySave();
-            this.CurrentPlot.AddTree(tree);
+            CurrentPlot.AddTree(tree);
 
-            this.SelectLastTree();
+            SelectLastTree();
         }
-
-        //protected TreeVM GetNewTree()
-        //{
-        //    if (!this.EnsureCurrentPlotWorkable())// if no plot is selected cancel action
-        //    {
-        //        return null;
-        //    }
-
-        //    if (this.UserCanAddTrees == false) { return null; }
-
-        //    //adding trees can be allowed in some cases for 3PPNT
-        //    //if (this.StratumInfo.Stratum.Method == "3PPNT")// if this is a 3PPNT stratum users aren't allowed to manualy enter trees
-        //    //{
-        //    //    return null;
-        //    //}
-
-        //    TreeVM prevTree = null;
-        //    if (_BS_Trees.Count > 0)
-        //    {
-        //        prevTree = (TreeVM)_BS_Trees[_BS_Trees.Count - 1];
-        //    }
-
-        //    var newTree = this.CurrentPlot.UserAddTree(prevTree, this.DataEntryController.ViewController);
-        //    //DataEntryController.Controller.OnTally();
-        //    return newTree;
-
-        //    //return Controller.UserAddTree(prevTree, this.StratumInfo, this.CurrentPlotInfo);
-        //}
 
         public TreeVM UserAddTree()
         {

@@ -32,31 +32,29 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this._tallyBTN = new TallyRowButton();
-            this._settingsBTN = new TallyRowButton();
+            this._tallyBTN = new FSCruiser.WinForms.DataEntry.TallyRow.TallyRowButton();
+            this._settingsBTN = new FSCruiser.WinForms.DataEntry.TallyRow.TallyRowButton();
             this.SuspendLayout();
+            // 
+            // _tallyBTN
+            // 
+            this._tallyBTN.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._tallyBTN.Font = new System.Drawing.Font("Tahoma", 12.25F, System.Drawing.FontStyle.Bold);
+            this._tallyBTN.Location = new System.Drawing.Point(0, 0);
+            this._tallyBTN.Name = "_tallyBTN";
+            this._tallyBTN.Size = new System.Drawing.Size(143, 35);
+            this._tallyBTN.TabIndex = 3;
+            this._tallyBTN.Text = "[_] <----> ###";
             // 
             // _settingsBTN
             // 
             this._settingsBTN.Dock = System.Windows.Forms.DockStyle.Right;
             this._settingsBTN.Font = new System.Drawing.Font("Times New Roman", 14.25F, System.Drawing.FontStyle.Bold);
-            this._settingsBTN.Location = new System.Drawing.Point(258, 0);
+            this._settingsBTN.Location = new System.Drawing.Point(143, 0);
             this._settingsBTN.Name = "_settingsBTN";
-            this._settingsBTN.Size = new System.Drawing.Size(17, 56);
+            this._settingsBTN.Size = new System.Drawing.Size(17, 35);
             this._settingsBTN.TabIndex = 2;
             this._settingsBTN.Text = "i";
-            // 
-            // _tallyBTN
-            // 
-            this._tallyBTN.Dock = System.Windows.Forms.DockStyle.Fill;
-            //this._tallyBTN.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._tallyBTN.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular);
-            this._tallyBTN.Location = new System.Drawing.Point(0, 0);
-            this._tallyBTN.Name = "_tallyBTN";
-            //this._tallyBTN.Size = new System.Drawing.Size(258, 56);
-            this._tallyBTN.TabIndex = 3;
-            this._tallyBTN.Text = "[_] <---->\r\n cnt:###";
-            //this._tallyBTN.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // TallyRow
             // 
@@ -64,7 +62,7 @@
             this.Controls.Add(this._tallyBTN);
             this.Controls.Add(this._settingsBTN);
             this.Name = "TallyRow";
-            //this.Size = new System.Drawing.Size(275, 56);
+            this.Size = new System.Drawing.Size(160, 35);
             this.ResumeLayout(false);
 
         }

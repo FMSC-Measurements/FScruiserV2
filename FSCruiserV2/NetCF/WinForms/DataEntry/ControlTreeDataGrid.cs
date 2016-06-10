@@ -240,7 +240,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_stratumColumn != null)
             {
-                _stratumColumn.DataSource = DataEntryController.Unit.GetTreeBasedStrata();
+                _stratumColumn.DataSource = DataEntryController.Unit.TreeStrata;
             }
         }
 

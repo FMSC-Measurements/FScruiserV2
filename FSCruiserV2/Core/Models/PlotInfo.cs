@@ -197,6 +197,13 @@ namespace FSCruiser.Core.Models
             return newTree;
         }
 
+        public TreeVM CreateNewTreeEntry(SubPop subPop)
+        {
+            var tree = CreateNewTreeEntry(subPop.SG, subPop.TDV, true);
+            tree.TreeCount = 1;
+            return tree;
+        }
+
         public TreeVM CreateNewTreeEntry(CountTreeVM count, bool isMeasure)
         {
             return this.CreateNewTreeEntry(count.SampleGroup, count.TreeDefaultValue, isMeasure);

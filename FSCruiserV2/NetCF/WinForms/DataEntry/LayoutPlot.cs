@@ -465,9 +465,7 @@ namespace FSCruiser.WinForms.DataEntry
             catch { return; }
             if (tree == null) { return; }
 
-            //this.LogsView.ShowDialog(tree);
-            //this.Controller.ViewController.ShowLogsView(this.StratumInfo, tree);
-            this.DataEntryController.ShowLogs(tree);
+            DataEntryController.ShowLogs(tree);
         }
 
         void _dataGrid_CellValidating(object sender, EditableDataGridCellValidatingEventArgs e)
@@ -552,8 +550,6 @@ namespace FSCruiser.WinForms.DataEntry
             Button sgButton = (Button)sender;
             Panel spContainer = (Panel)sgButton.Tag;
             spContainer.Visible = !spContainer.Visible;
-
-            //Controller.OnTally();
         }
 
         void SettingsButton_Click(object sender, EventArgs e)
@@ -562,36 +558,26 @@ namespace FSCruiser.WinForms.DataEntry
             CountTreeVM count = row.Count;
             this.ViewLogicController.SavePlotTrees();
             this.ViewLogicController.ViewController.ShowTallySettings(count);
-
-            //TallyRow row = (TallyRow)sender;
-            //CountTreeVM count = row.Count;
-
-            //this.ViewLogicController.SavePlotTrees();
-            //AppController.ViewController.ShowTallySettings(count);
         }
 
         void SpeciesButton_Click(object sender, EventArgs e)
         {
             if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
 
-            Button button = (Button)sender;
-            SubPop subPop = (SubPop)button.Tag;
+            var button = sender as SpeciesRow;
+            if (button == null) { return; }
 
-            this.ViewLogicController.AddTree(subPop.SG, subPop.TDV);
+            var subPop = button.SubPopulation;
+            ViewLogicController.AddTree(subPop);
         }
 
         void TallyButton_Click(object sender, EventArgs e)
         {
-            if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
+            if (!ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
 
             var row = (TallyRow)sender;
             var count = row.Count;
             OnTally(count);
-
-            //Button button = (Button)sender;
-            ////TallyRow row = (TallyRow)button.Parent;
-            //CountTreeVM count = (CountTreeVM)button.Tag;
-            //this.ViewLogicController.OnTally(count);
         }
 
         #region plot nav events
@@ -936,11 +922,10 @@ namespace FSCruiser.WinForms.DataEntry
 
         public Control MakeTallyRow(Control container, SubPop subPop)
         {
-            Button tallyButton = new Button();
+            var tallyButton = new SpeciesRow();
+            tallyButton.SubPopulation = subPop;
 
-            tallyButton.Text = subPop.TDV.Species;
             tallyButton.Click += new EventHandler(SpeciesButton_Click);
-            tallyButton.Tag = subPop;
             tallyButton.Parent = container;
             tallyButton.Dock = DockStyle.Left;
             tallyButton.Width = SUB_POP_BUTTON_WIDTH;
