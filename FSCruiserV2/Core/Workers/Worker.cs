@@ -107,38 +107,6 @@ namespace FSCruiser.Core.Workers
             this.IsCanceled = true;
         }
 
-        protected virtual void DoWork()
-        {
-            NotifyWorkStarting();
-            try
-            {
-                WorkerMain();
-                IsDone = true;
-                NotifyWorkEnded("Done");
-            }
-            catch (ThreadAbortException)
-            {
-                NotifyWorkEnded("Aborted");
-            }
-            catch (CancelWorkerException)
-            {
-                NotifyWorkEnded("Canceled");
-            }
-            catch (Exception e)
-            {
-                if (!NotifyExceptionThrown(e))
-                {
-                    throw;
-                }
-            }
-            finally
-            {
-                _thread = null;
-            }
-        }
-
-        protected abstract void WorkerMain();
-
         /// <summary>
         ///
         /// </summary>
@@ -209,6 +177,40 @@ namespace FSCruiser.Core.Workers
             OnEnded(eArg);
         }
 
+        #region virtual methods
+
+        protected virtual void DoWork()
+        {
+            NotifyWorkStarting();
+            try
+            {
+                WorkerMain();
+                IsDone = true;
+                NotifyWorkEnded("Done");
+            }
+            catch (ThreadAbortException)
+            {
+                NotifyWorkEnded("Aborted");
+            }
+            catch (CancelWorkerException)
+            {
+                NotifyWorkEnded("Canceled");
+            }
+            catch (Exception e)
+            {
+                if (!NotifyExceptionThrown(e))
+                {
+                    throw;
+                }
+            }
+            finally
+            {
+                _thread = null;
+            }
+        }
+
+        protected abstract void WorkerMain();
+
         protected virtual void OnExceptionThrown(WorkerExceptionThrownEventArgs e)
         {
             if (ExceptionThrown != null)
@@ -245,6 +247,8 @@ namespace FSCruiser.Core.Workers
             }
         }
 
+        #endregion virtual methods
+
         protected void CheckCanceled()
         {
             if (this.IsCanceled)
@@ -261,7 +265,5 @@ namespace FSCruiser.Core.Workers
             float frac = (float)workDone / workExpected;
             return (int)(100 * frac);
         }
-
-        
     }
 }

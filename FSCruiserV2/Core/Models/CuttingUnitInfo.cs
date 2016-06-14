@@ -197,10 +197,7 @@ namespace FSCruiser.Core.Models
 
         public void DeleteTree(TreeVM tree)
         {
-            //ReleaseUnitTreeNumber((int)tree.TreeNumber);
             tree.Delete();
-            //TreeDO.RecursiveDeleteTree(tree);
-            //TreeList.Remove(tree);
             this.NonPlotTrees.Remove(tree);
         }
 

@@ -14,6 +14,13 @@ namespace FSCruiser.WinForms.DataEntry
             : base()
         {
             InitializeComponent();
+        }
+
+        public FormDataEntry(IApplicationController controller
+            , CuttingUnitVM unit)
+        {
+            InitializeComponent();
+            InitializeCommon(controller, unit);
 
             if (ViewController.PlatformType == PlatformType.WM)
             {
@@ -26,23 +33,12 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public FormDataEntry(IApplicationController controller
-            , CuttingUnitVM unit)
-        {
-            InitializeComponent();
-            InitializeCommon(controller, unit);
-        }
-
-        #region override methods
-
         protected void OnFocusedLayoutChanged(object sender, EventArgs e)
         {
             OnFocusedLayoutChangedInternal(sender, e);
             var view = FocusedLayout as ITreeView;
             _addTreeMI.Enabled = view != null && view.UserCanAddTrees;
         }
-
-        #endregion override methods
 
         private void showHideErrorMessages_Click(object sender, EventArgs e)
         {

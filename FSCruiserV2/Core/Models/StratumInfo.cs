@@ -132,16 +132,21 @@ namespace FSCruiser.Core.Models
 
         public bool TrySaveCounts()
         {
-            try
+            bool success = true;
+            foreach (var count in Counts)
             {
-                this.SaveCounts();
-                return true;
+                try
+                {
+                    count.Save();
+                }
+                catch (Exception e)
+                {
+                    System.Diagnostics.Debug.WriteLine(e, "Exception");
+                    success = false;
+                }
             }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e, "Exception");
-                return false;
-            }
+
+            return success;
         }
 
         #region ITreeFieldProvider Members

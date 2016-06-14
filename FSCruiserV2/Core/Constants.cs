@@ -7,7 +7,7 @@ namespace FSCruiser.Core
     {
         public static bool NEW_SPECIES_OPTION = false;
 
-        public const string FSCRUISER_VERSION = "2016.05.18";
+        public const string FSCRUISER_VERSION = "2016.06.08";
 
         public const string APP_TITLE = "FScruiser - " + FSCRUISER_VERSION;
 
@@ -22,10 +22,6 @@ namespace FSCruiser.Core
         public const int SAVE_INTERVAL = 10;
 
         public const int LOG_COLUMN_WIDTH = 40;
-
-        public const System.Threading.ThreadPriority VALIDATE_TREE_THREAD_PRIORITY = System.Threading.ThreadPriority.BelowNormal;
-        public const System.Threading.ThreadPriority SAVE_TREES_THREAD_PRIORISTY = System.Threading.ThreadPriority.BelowNormal;
-        public const System.Threading.ThreadPriority LOAD_CUTTINGUNITDATA_PRIORITY = System.Threading.ThreadPriority.BelowNormal;
 
         public static readonly decimal DEFAULT_VOL_FACTOR = new Decimal(333, 0, 0, false, 3);
 

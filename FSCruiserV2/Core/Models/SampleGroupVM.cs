@@ -133,7 +133,9 @@ namespace FSCruiser.Core.Models
                         }
                     case "STR":
                         {
-                            if (this.SampleSelectorType == "SystematicSelecter" && Constants.ALLOW_STR_SYSTEMATIC)
+                            if (SampleSelectorType != null
+                                && SampleSelectorType.Equals("SystematicSelecter", StringComparison.InvariantCultureIgnoreCase)
+                                && Constants.ALLOW_STR_SYSTEMATIC)
                             {
                                 selecter = MakeSystematicSampleSelector();
                             }

@@ -500,7 +500,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
 
-            this.ViewLogicController.AddTree(sp.SG, sp.TDV);
+            this.ViewLogicController.AddTree(sp);
         }
 
         public Control MakeTallyRow(Control container, CountTreeVM count)
