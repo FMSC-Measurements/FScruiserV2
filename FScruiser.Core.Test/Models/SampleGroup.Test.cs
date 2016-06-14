@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FMSC.Sampling;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FSCruiser.Core.Models
@@ -66,7 +67,12 @@ namespace FSCruiser.Core.Models
         {
             var st = new StratumVM() { Method = "100PCT" };
 
-            var sg = new SampleGroupVM() { Stratum = st };
+            var sg = new SampleGroupVM()
+            {
+                Stratum = st,
+                SampleSelectorState = "something",
+                SampleSelectorType = "something"
+            };
 
             sg.SampleSelectorState = null;
 
@@ -84,7 +90,8 @@ namespace FSCruiser.Core.Models
             var sg = new SampleGroupVM()
             {
                 Stratum = st,
-                SamplingFrequency = 0
+                SamplingFrequency = 0,
+                SampleSelectorState = "something"
             };
 
             Assert.IsNull(sg.MakeSampleSelecter());
@@ -97,7 +104,8 @@ namespace FSCruiser.Core.Models
             sg = new SampleGroupVM()
             {
                 Stratum = st,
-                SamplingFrequency = 1
+                SamplingFrequency = 1,
+                SampleSelectorState = "something"
             };
 
             Assert.IsNotNull(sg.MakeSampleSelecter());
@@ -115,7 +123,8 @@ namespace FSCruiser.Core.Models
             {
                 Stratum = st,
                 SamplingFrequency = 1,
-                SampleSelectorType = "SystematicSelecter"
+                SampleSelectorType = "SystematicSelecter",
+                SampleSelectorState = "something"
             };
 
             Assert.IsNotNull(sg.MakeSampleSelecter());
@@ -128,19 +137,66 @@ namespace FSCruiser.Core.Models
         }
 
         [TestMethod]
+        public void MakeSampleSelecterTest_FCM_PCM()
+        {
+            MakeSampleSelecterTest_FCM_PCM_helper("FCM");
+            MakeSampleSelecterTest_FCM_PCM_helper("PCM");
+        }
+
+        void MakeSampleSelecterTest_FCM_PCM_helper(string method)
+        {
+            var st = new StratumVM() { Method = method };
+
+            //test: if sampling freq is 0
+            //then Sampler is null
+            var sg = new SampleGroupVM()
+            {
+                Stratum = st,
+                SamplingFrequency = 0
+            };
+
+            Assert.IsNull(sg.MakeSampleSelecter());
+            Assert.IsNull(sg.Sampler);
+
+            //test: if sampling freq is > 0
+            //AND SampleSelectorType is not defined
+            //THEN Sampler is not null
+            //AND is of type Systematic
+            sg = new SampleGroupVM()
+            {
+                Stratum = st,
+                SamplingFrequency = 1,
+                InsuranceFrequency = 1
+            };
+
+            Assert.IsNotNull(sg.MakeSampleSelecter());
+            Assert.IsNotNull(sg.Sampler);
+            Assert.IsInstanceOfType(sg.Sampler, typeof(FMSC.Sampling.SystematicSelecter));
+
+            var sampler = sg.Sampler as FMSC.Sampling.IFrequencyBasedSelecter;
+            Assert.AreEqual(1, sampler.Frequency);
+            Assert.AreEqual(1, sampler.ITreeFrequency);
+        }
+
+        [TestMethod]
         public void MakeSampleSelecterTest_3P()
         {
-            var st = new StratumVM() { Method = "3P" };
+            var st = new StratumVM()
+            {
+                Method = "3P"
+            };
 
             var sg = new SampleGroupVM()
             {
                 Stratum = st,
-                SampleSelectorState = null
+                SampleSelectorState = null,
+                KZ = 100
             };
 
-            sg.MakeSampleSelecter();
-
-            Assert.IsNull(sg.Sampler);
+            Assert.IsNotNull(sg.MakeSampleSelecter());
+            Assert.IsNotNull(sg.Sampler);
+            Assert.IsInstanceOfType(sg.Sampler, typeof(FMSC.Sampling.ThreePSelecter));
+            Assert.AreEqual(100, ((ThreePSelecter)sg.Sampler).KZ);
         }
     }
 }
