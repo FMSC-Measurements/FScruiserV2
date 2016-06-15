@@ -3,41 +3,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
+using CruiseDAL.Schema;
 using FMSC.Sampling;
 
 namespace FSCruiser.Core.Models
 {
     public class StratumVM : StratumDO, ITreeFieldProvider, ILogFieldProvider
     {
-        private Dictionary<char, CountTreeVM> _hotKeyLookup;
+        Dictionary<char, CountTreeVM> _hotKeyLookup;
 
         /// <summary>
         /// for 3ppnt
         /// </summary>
         public ThreePSelecter SampleSelecter { get; set; }
 
-        public string[] TreeFieldNames { get; set; }
-
-        //public StratumDO Stratum { get; set; }
-        //public List<PlotVM> Plots { get; set; }
-
-        List<SampleGroupVM> _sampleGroups;
-
-        public List<SampleGroupVM> SampleGroups
+        public bool Is3P
         {
             get
             {
-                if (_sampleGroups == null)
-                {
-                    _sampleGroups = DAL.From<SampleGroupVM>()
-                        .Where("Stratum_CN = ?")
-                        .Read(Stratum_CN).ToList();
-                }
-                return _sampleGroups;
+                return Method == CruiseMethods.THREEP
+                    || Method == CruiseMethods.P3P
+                    || Method == CruiseMethods.S3P;
             }
         }
 
-        public List<CountTreeVM> Counts { get; set; }
+        public List<SampleGroupVM> SampleGroups { get; set; }
+
+        public IEnumerable<CountTreeVM> Counts
+        {
+            get
+            {
+                if (SampleGroups != null)
+                {
+                    foreach (var sg in SampleGroups)
+                    {
+                        if (sg.Counts != null)
+                        {
+                            foreach (var cnt in sg.Counts)
+                            {
+                                yield return cnt;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         public Dictionary<char, CountTreeVM> HotKeyLookup
         {
@@ -53,62 +63,47 @@ namespace FSCruiser.Core.Models
 
         public Control TallyContainer { get; set; }
 
+        public CountTreeVM GetCountByHotKey(char hotKey)
+        {
+            if (Counts == null) { return null; }
+            foreach (var cnt in Counts)
+            {
+                if (cnt.Tally != null
+                    && !string.IsNullOrEmpty(cnt.Tally.Hotkey))
+                {
+                    char hk = cnt.Tally.Hotkey[0];
+                    hk = char.ToUpper(hk);
+                    if (hk == hotKey) { return cnt; }
+                }
+            }
+            return null;
+        }
+
         public void PopulateHotKeyLookup()
         {
             _hotKeyLookup = new Dictionary<char, CountTreeVM>();
             foreach (CountTreeVM count in Counts)
             {
-                try
+                if (count.Tally != null
+                    && !string.IsNullOrEmpty(count.Tally.Hotkey))
                 {
                     char hotkey = count.Tally.Hotkey[0];
                     hotkey = char.ToUpper(hotkey);
                     HotKeyLookup.Add(hotkey, count);
                 }
-                catch
-                { }
             }
+        }
+
+        public void LoadSampleGroups()
+        {
+            SampleGroups = ReadSampleGroups().ToList();
         }
 
         public void LoadCounts(CuttingUnitDO unit)
         {
-            var counts = new List<CountTreeVM>();
-            var tallySettings = DAL.From<TallySettingsDO>()
-                .Join("SampleGroup", "USING (SampleGroup_CN)")
-                .Where("SampleGroup.Stratum_CN = ?")
-                .GroupBy("CountTree.SampleGroup_CN", "CountTree.TreeDefaultValue_CN", "CountTree.Tally_CN")
-                .Read(Stratum_CN);
-
-            foreach (TallySettingsDO ts in tallySettings)
+            foreach (var sg in SampleGroups)
             {
-                CountTreeVM count = DAL.From<CountTreeVM>()
-                    .Where("CuttingUnit_CN = ? AND SampleGroup_CN = ? AND Tally_CN = ?")
-                    .Read(unit.CuttingUnit_CN
-                    , ts.SampleGroup_CN
-                    , ts.Tally_CN).FirstOrDefault();
-                if (count == null)
-                {
-                    count = new CountTreeVM(DAL);
-                    count.CuttingUnit = unit;
-                    count.SampleGroup_CN = ts.SampleGroup_CN;
-                    count.TreeDefaultValue_CN = ts.TreeDefaultValue_CN;
-                    count.Tally_CN = ts.Tally_CN;
-
-                    count.Save();
-                    //this.Unit.Counts.Add(count);
-                }
-                counts.Add(count);
-            }
-
-            Counts = counts;
-        }
-
-        public void LoadTreeFieldNames()
-        {
-            string command = String.Concat("Select group_concat(distinct Field) FROM TreeFieldSetup WHERE Stratum_CN = ", this.Stratum_CN, ";");
-            string result = (string)this.DAL.ExecuteScalar(command);
-            if (!string.IsNullOrEmpty(result))
-            {
-                this.TreeFieldNames = result.Split(',');
+                sg.LoadCounts(unit);
             }
         }
 
@@ -123,35 +118,56 @@ namespace FSCruiser.Core.Models
 
         public void SaveCounts()
         {
-            if (Counts == null) { return; } // if this is a h_pct stratum then counts won't be populated
-            foreach (CountTreeVM count in Counts)
+            if (SampleGroups == null) { return; }
+            foreach (var sg in SampleGroups)
             {
-                count.Save();
+                sg.SaveCounts();
             }
         }
 
         public bool TrySaveCounts()
         {
             bool success = true;
-            foreach (var count in Counts)
+            if (SampleGroups == null) { return true; }
+            foreach (var sg in SampleGroups)
             {
-                try
-                {
-                    count.Save();
-                }
-                catch (Exception e)
-                {
-                    System.Diagnostics.Debug.WriteLine(e, "Exception");
-                    success = false;
-                }
+                success = sg.TrySaveCounts() & success;
             }
 
             return success;
         }
 
+        IEnumerable<SampleGroupVM> ReadSampleGroups()
+        {
+            foreach (var sg in DAL.From<SampleGroupVM>()
+                        .Where("Stratum_CN = ?")
+                        .Read(Stratum_CN))
+            {
+                sg.Stratum = this;
+                yield return sg;
+            }
+        }
+
         #region ITreeFieldProvider Members
 
-        public virtual List<TreeFieldSetupDO> ReadTreeFields()
+        object _treeFieldsReadLock;
+        IEnumerable<TreeFieldSetupDO> _treeFields;
+
+        public IEnumerable<TreeFieldSetupDO> TreeFields
+        {
+            get
+            {
+                lock (_treeFieldsReadLock)
+                {
+                    if (_treeFields == null && DAL != null)
+                    { _treeFields = ReadTreeFields().ToList(); }
+                    return _treeFields;
+                }
+            }
+            set { _treeFields = value; }
+        }
+
+        protected virtual IEnumerable<TreeFieldSetupDO> ReadTreeFields()
         {
             return InternalReadTreeFields();
         }
@@ -176,7 +192,25 @@ namespace FSCruiser.Core.Models
 
         #region ILogFieldProvider Members
 
-        public List<LogFieldSetupDO> ReadLogFields()
+        IEnumerable<LogFieldSetupDO> _logFields;
+        object _logFieldsReadLock = new object();
+
+        public IEnumerable<LogFieldSetupDO> LogFields
+        {
+            get
+            {
+                lock (_logFieldsReadLock)
+                {
+                    if (_logFields == null && DAL != null)
+                    {
+                        _logFields = ReadLogFields();
+                    }
+                    return _logFields;
+                }
+            }
+        }
+
+        protected IEnumerable<LogFieldSetupDO> ReadLogFields()
         {
             var fields = DAL.From<LogFieldSetupDO>()
                 .Where("Stratum_CN = ?")

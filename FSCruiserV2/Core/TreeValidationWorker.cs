@@ -41,14 +41,7 @@ namespace FSCruiser.Core
 
             foreach (TreeVM tree in _treesLocal)
             {
-                string[] visableFields = null;
-                try
-                {
-                    visableFields = tree.Stratum.TreeFieldNames;
-                }
-                catch
-                { }//ingnore exceptions
-
+                var visableFields = tree.Stratum.TreeFields;
                 if (visableFields != null)
                 {
                     valid = tree.Validate(visableFields) && valid;

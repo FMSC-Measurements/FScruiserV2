@@ -45,6 +45,7 @@ namespace FSCruiser.Core
         public void LoadData()
         {
             InitializeNonPlotTrees();
+            InitializeTallyBuffer();
 
             this.OnDoneLoading();
         }

@@ -9,11 +9,9 @@ namespace FSCruiser.WinForms
     {
         public static List<DataGridViewColumn> MakeLogColumns(this ILogFieldProvider provider)
         {
-            var fields = provider.ReadLogFields();
-
             List<DataGridViewColumn> columns = new List<DataGridViewColumn>();
 
-            foreach (LogFieldSetupDO field in fields)
+            foreach (LogFieldSetupDO field in provider.LogFields)
             {
                 var col = MakeColumn(field.ColumnType);
                 col.DataPropertyName = field.Field;

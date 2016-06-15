@@ -75,7 +75,11 @@ namespace FScruiser.Core.Test
                     new CountTreeVM() {Tally = new TallyDO() { Hotkey = "Banana" } },
                 new CountTreeVM() {Tally = new TallyDO() { Hotkey = "cat" } }};
 
-            stratum.Counts = new List<CountTreeVM>(counts);
+            var samplegroups = new SampleGroupVM[] {
+                new SampleGroupVM() { Counts = counts }
+            };
+
+            stratum.SampleGroups = new List<SampleGroupVM>(samplegroups);
 
             Assert.IsNotNull(stratum.HotKeyLookup);
 
@@ -96,7 +100,11 @@ namespace FScruiser.Core.Test
                     new CountTreeVM() {Tally = new TallyDO() { Hotkey = "Banana" } },
                 new CountTreeVM() {Tally = new TallyDO() { Hotkey = "cat" } }};
 
-            stratum.Counts = new List<CountTreeVM>(counts);
+            var samplegroups = new SampleGroupVM[] {
+                new SampleGroupVM() { Counts = counts }
+            };
+
+            stratum.SampleGroups = new List<SampleGroupVM>(samplegroups);
 
             Assert.IsTrue(stratum.GetCountByHotKey('A') == counts[0]);
             Assert.IsTrue(stratum.GetCountByHotKey('B') == counts[1]);

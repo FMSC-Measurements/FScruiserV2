@@ -251,6 +251,7 @@ namespace FSCruiser.Core.Models
                 + "AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')")
                 .Query(CuttingUnit_CN))
             {
+                st.LoadSampleGroups();
                 st.LoadCounts(this);
                 st.PopulateHotKeyLookup();
                 yield return st;
@@ -262,6 +263,7 @@ namespace FSCruiser.Core.Models
                 + "AND Stratum.Method = '" + CruiseDAL.Schema.CruiseMethods.FIXCNT + "'")
                 .Query(CuttingUnit_CN))
             {
+                st.LoadSampleGroups();
                 st.LoadCounts(this);
                 st.PopulateHotKeyLookup();
                 yield return st;
@@ -277,11 +279,11 @@ namespace FSCruiser.Core.Models
                 .Join("CuttingUnitStratum", "USING (Stratum_CN)")
                 .Where("CuttingUnitStratum.CuttingUnit_CN = ?" +
                         "AND Method IN ( '100', 'STR', '3P', 'S3P')")
-                .Read(CuttingUnit_CN))
+                .Query(CuttingUnit_CN))
             {
+                st.LoadSampleGroups();
                 st.LoadCounts(this);
                 st.PopulateHotKeyLookup();
-                st.LoadTreeFieldNames();
                 yield return st;
             }
         }
@@ -292,37 +294,7 @@ namespace FSCruiser.Core.Models
             this.NonPlotTrees = null;
             TreeStrata = null;
             PlotStrata = null;
-        }
-
-        public List<TreeFieldSetupDO> ReadTreeFields()
-        {
-            var fields = DAL.From<TreeFieldSetupDO>()
-                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
-                .Where("CuttingUnit_CN = ?")
-                .GroupBy("Field")
-                .OrderBy("FieldOrder")
-                .Query(CuttingUnit_CN).ToList();
-
-            if (fields.Count == 0)
-            {
-                fields.AddRange(Constants.DEFAULT_TREE_FIELDS);
-            }
-
-            //if unit has multiple tree strata
-            //but stratum column is missing
-            if (this.TreeStrata.Count > 1
-                && fields.FindIndex(x => x.Field == "Stratum") == -1)
-            {
-                //find the location of the tree number field
-                int indexOfTreeNum = fields.FindIndex(x => x.Field == CruiseDAL.Schema.TREE.TREENUMBER);
-                //if user doesn't have a tree number field, fall back to the last field index
-                if (indexOfTreeNum == -1) { indexOfTreeNum = fields.Count - 1; }//last item index
-                //add the stratum field to the filed list
-                TreeFieldSetupDO tfs = new TreeFieldSetupDO() { Field = "Stratum", Heading = "St", Format = "[Code]" };
-                fields.Insert(indexOfTreeNum + 1, tfs);
-            }
-
-            return fields;
+            DefaultStratum = null;
         }
 
         #region save methods
@@ -406,6 +378,58 @@ namespace FSCruiser.Core.Models
         }
 
         #endregion save methods
+
+        #region ITreeFieldProvider
+
+        object _treeFieldsReadLock;
+        IEnumerable<TreeFieldSetupDO> _treeFields;
+
+        public IEnumerable<TreeFieldSetupDO> TreeFields
+        {
+            get
+            {
+                lock (_treeFieldsReadLock)
+                {
+                    if (_treeFields == null && DAL != null)
+                    { _treeFields = ReadTreeFields().ToList(); }
+                    return _treeFields;
+                }
+            }
+            set { _treeFields = value; }
+        }
+
+        public IEnumerable<TreeFieldSetupDO> ReadTreeFields()
+        {
+            var fields = DAL.From<TreeFieldSetupDO>()
+                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
+                .Where("CuttingUnit_CN = ?")
+                .GroupBy("Field")
+                .OrderBy("FieldOrder")
+                .Query(CuttingUnit_CN).ToList();
+
+            if (fields.Count == 0)
+            {
+                fields.AddRange(Constants.DEFAULT_TREE_FIELDS);
+            }
+
+            //if unit has multiple tree strata
+            //but stratum column is missing
+            if (this.TreeStrata.Count > 1
+                && fields.FindIndex(x => x.Field == "Stratum") == -1)
+            {
+                //find the location of the tree number field
+                int indexOfTreeNum = fields.FindIndex(x => x.Field == CruiseDAL.Schema.TREE.TREENUMBER);
+                //if user doesn't have a tree number field, fall back to the last field index
+                if (indexOfTreeNum == -1) { indexOfTreeNum = fields.Count - 1; }//last item index
+                //add the stratum field to the filed list
+                TreeFieldSetupDO tfs = new TreeFieldSetupDO() { Field = "Stratum", Heading = "St", Format = "[Code]" };
+                fields.Insert(indexOfTreeNum + 1, tfs);
+            }
+
+            return fields;
+        }
+
+        #endregion ITreeFieldProvider
 
         public override string ToString()
         {

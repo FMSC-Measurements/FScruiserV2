@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CruiseDAL;
 using CruiseDAL.DataObjects;
+using CruiseDAL.Schema;
 using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
@@ -14,7 +15,7 @@ namespace FSCruiser.Core.Models
         {
             get
             {
-                return Method == CruiseDAL.Schema.CruiseMethods.THREEPPNT;
+                return Method == CruiseMethods.THREEPPNT;
             }
         }
 
@@ -23,8 +24,8 @@ namespace FSCruiser.Core.Models
         {
             get
             {
-                return this.Method == CruiseDAL.Schema.CruiseMethods.PNT
-                    || this.Method == CruiseDAL.Schema.CruiseMethods.FIX;
+                return this.Method == CruiseMethods.PNT
+                    || this.Method == CruiseMethods.FIX;
             }
         }
 
@@ -53,16 +54,20 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        protected virtual IEnumerable<PlotVM> ReadPlots(long cuttingUnit_CN)
+        {
+            foreach (var plot in DAL.From<PlotVM>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
+                .OrderBy("PlotNumber")
+                .Query(this.Stratum_CN, cuttingUnit_CN))
+            {
+                plot.Stratum = this;
+                yield return plot;
+            }
+        }
+
         public virtual void PopulatePlots(long cuttingUnit_CN)
         {
-            this.Plots = this.DAL.From<PlotVM>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
-                .OrderBy("PlotNumber")
-                .Query(this.Stratum_CN, cuttingUnit_CN)
-                .ToList();
-
-            //this.Plots = this.DAL.Read<PlotVM>("WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber"
-            //            , this.Stratum_CN
-            //            , cuttingUnit_CN);
+            this.Plots = ReadPlots(cuttingUnit_CN).ToList();
         }
 
         protected int GetNextPlotNumber(long cuttingUnit_CN)
@@ -106,7 +111,7 @@ namespace FSCruiser.Core.Models
             return true;
         }
 
-        public override List<TreeFieldSetupDO> ReadTreeFields()
+        protected override IEnumerable<TreeFieldSetupDO> ReadTreeFields()
         {
             var fields = InternalReadTreeFields();
 

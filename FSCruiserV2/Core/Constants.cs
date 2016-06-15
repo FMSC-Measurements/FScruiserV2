@@ -17,7 +17,6 @@ namespace FSCruiser.Core
         public const string BACKUP_PREFIX = "BACK_";
         public const string BACKUP_TIME_FORMAT = "(yyyy_MM_dd__HH_mm)";
 
-        public const bool ALLOW_STR_SYSTEMATIC = true;
         public const int MAX_TALLY_HISTORY_SIZE = 20;
         public const int SAVE_INTERVAL = 10;
 

@@ -119,7 +119,7 @@ namespace FSCruiser.Core.DataEntry
             SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Sampler;
             DataEntryMode mode = count.SampleGroup.Stratum.GetDataEntryMode();
 
-            if ((mode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP)//threeP sampling
+            if (count.SampleGroup.Stratum.Is3P)//threeP sampling
             {
                 int kpi = 0;
                 int? value = ViewController.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
@@ -353,10 +353,7 @@ namespace FSCruiser.Core.DataEntry
                 }
                 else
                 {
-                    List<SampleGroupVM> sgList = this.Database.From<SampleGroupVM>()
-                        .Where("Stratum_CN = ?")
-                        .Read(stratum.Stratum_CN).ToList();
-                    view.MakeSGList(sgList, container);
+                    view.MakeSGList(stratum.SampleGroups, container);
                 }
             }
             else

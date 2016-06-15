@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using CruiseDAL.DataObjects;
 
 namespace FSCruiser.Core.Models
 {
     public interface ILogFieldProvider
     {
-        List<CruiseDAL.DataObjects.LogFieldSetupDO> ReadLogFields();
+        IEnumerable<LogFieldSetupDO> LogFields { get; }
+
+        //List<CruiseDAL.DataObjects.LogFieldSetupDO> ReadLogFields();
     }
 }

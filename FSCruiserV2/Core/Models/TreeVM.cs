@@ -184,6 +184,16 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public bool Validate(IEnumerable<TreeFieldSetupDO> fields)
+        {
+            bool isValid = true;
+            foreach (var f in fields)
+            {
+                isValid = this.ValidateProperty(f.Field) && isValid;
+            }
+            return isValid;
+        }
+
         #endregion overridden methods
 
         public bool HandleSampleGroupChanging(SampleGroupDO newSG, IView view)

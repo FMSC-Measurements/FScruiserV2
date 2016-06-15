@@ -10,7 +10,7 @@ namespace FSCruiser.WinForms
     {
         public static IEnumerable<DataGridViewColumn> MakeTreeColumns(this ITreeFieldProvider provider)
         {
-            List<TreeFieldSetupDO> fieldSetups = provider.ReadTreeFields();
+            var fieldSetups = provider.TreeFields;
             List<DataGridViewColumn> columns = new List<DataGridViewColumn>();
 
             foreach (var fieldSetup in fieldSetups)

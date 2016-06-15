@@ -5,6 +5,8 @@ namespace FSCruiser.Core.Models
 {
     public interface ITreeFieldProvider
     {
-        List<TreeFieldSetupDO> ReadTreeFields();
+        IEnumerable<TreeFieldSetupDO> TreeFields { get; }
+
+        //IEnumerable<TreeFieldSetupDO> ReadTreeFields();
     }
 }

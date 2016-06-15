@@ -60,19 +60,18 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public override void PopulatePlots(long cuttingUnit_CN)
+        protected override IEnumerable<PlotVM> ReadPlots(long cuttingUnit_CN)
         {
-            this.Plots = new List<PlotVM>();
-
             foreach (var plot in this.DAL.From<FixCNTPlot>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
                 .OrderBy("PlotNumber")
                 .Query(this.Stratum_CN, cuttingUnit_CN))
             {
-                Plots.Add(plot);
+                plot.Stratum = this;
+                yield return plot;
             }
         }
 
-        public override List<TreeFieldSetupDO> ReadTreeFields()
+        protected override IEnumerable<TreeFieldSetupDO> ReadTreeFields()
         {
             return InternalReadTreeFields();
         }

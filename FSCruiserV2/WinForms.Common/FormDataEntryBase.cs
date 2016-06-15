@@ -149,7 +149,6 @@ namespace FSCruiser.WinForms.DataEntry
                     }
                     st.SampleSelecter = new ThreePSelecter((int)st.KZ3PPNT, 1000000, 0);
                 }
-                st.LoadTreeFieldNames();
 
                 st.PopulatePlots(Unit.CuttingUnit_CN.GetValueOrDefault());
 
