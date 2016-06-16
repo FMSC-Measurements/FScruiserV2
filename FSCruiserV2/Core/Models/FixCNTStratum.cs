@@ -47,7 +47,7 @@ namespace FSCruiser.Core.Models
 
             foreach (var tallyPop in tallyPopulations)
             {
-                tallyPop.SampleGroup = DAL.From<SampleGroupVM>()
+                tallyPop.SampleGroup = DAL.From<SampleGroupModel>()
                     .Where("SampleGroup_CN = ?")
                     .Read(tallyPop.SampleGroup_CN).FirstOrDefault();
 

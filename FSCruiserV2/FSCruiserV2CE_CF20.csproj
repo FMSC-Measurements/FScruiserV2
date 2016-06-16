@@ -79,11 +79,12 @@
     <Compile Include="Core\Models\FixCNTTallyBucket.cs" />
     <Compile Include="Core\Models\FixCNTTallyClass.cs" />
     <Compile Include="Core\Models\FixCNTTallyPopulation.cs" />
-    <Compile Include="Core\Models\ILogFieldProvider.cs" />
-    <Compile Include="Core\Models\ITreeContaningModel.cs" />
-    <Compile Include="Core\Models\ITreeFieldProvider.cs" />
+    <Compile Include="Core\Models\Interfaces\ILogFieldProvider.cs" />
+    <Compile Include="Core\Models\Interfaces\ITreeContaningModel.cs" />
+    <Compile Include="Core\Models\Interfaces\ITreeFieldProvider.cs" />
     <Compile Include="Core\Models\LogHeightClass.cs" />
     <Compile Include="Core\Models\LogRule.cs" />
+    <Compile Include="Core\Models\Plot.cs" />
     <Compile Include="Core\Models\Plot3PPNT.cs" />
     <Compile Include="Core\Models\PlotStratum.cs" />
     <Compile Include="Core\Models\RecentProject.cs" />
@@ -258,9 +259,8 @@
     <Compile Include="Core\ViewInterfaces\ITreeView.cs" />
     <Compile Include="Core\IViewController.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
-    <Compile Include="Core\Models\PlotInfo.cs" />
     <Compile Include="Core\Models\SampleGroupVM.cs" />
-    <Compile Include="Core\Models\StratumInfo.cs" />
+    <Compile Include="Core\Models\Stratum.cs" />
     <Compile Include="Core\Models\SubPopInfo.cs" />
     <Compile Include="Core\Models\TallyAction.cs" />
     <Compile Include="Core\Models\TallySettingsDO.cs" />

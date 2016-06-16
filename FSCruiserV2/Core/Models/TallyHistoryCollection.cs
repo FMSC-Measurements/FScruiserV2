@@ -12,8 +12,7 @@ namespace FSCruiser.Core.Models
     public class TallyHistoryCollection : IList<TallyAction>, System.ComponentModel.IBindingList, ICollection, IList
     {
         object syncLock = new object();
-        ListChangedEventHandler onListChanged;
-        List<TallyAction> _list;
+        List<TallyAction> _list = new List<TallyAction>();
 
         //private LinkedList<TallyAction> _tallyActions = new LinkedList<TallyAction>();
         protected CuttingUnitVM _unit;
@@ -244,23 +243,13 @@ namespace FSCruiser.Core.Models
             get { return true; }
         }
 
-        public event ListChangedEventHandler ListChanged
-        {
-            add
-            {
-                onListChanged += value;
-            }
-            remove
-            {
-                onListChanged -= value;
-            }
-        }
+        public event ListChangedEventHandler ListChanged;
 
         protected virtual void OnListChanged(ListChangedEventArgs ev)
         {
-            if (onListChanged != null)
+            if (ListChanged != null)
             {
-                onListChanged(this, ev);
+                ListChanged(this, ev);
             }
         }
 
@@ -395,22 +384,17 @@ namespace FSCruiser.Core.Models
 
         void ICollection.CopyTo(Array array, int index)
         {
-            throw new NotImplementedException();
-        }
-
-        int ICollection.Count
-        {
-            get { throw new NotImplementedException(); }
+            ((ICollection)_list).CopyTo(array, index);
         }
 
         bool ICollection.IsSynchronized
         {
-            get { throw new NotImplementedException(); }
+            get { return ((ICollection)_list).IsSynchronized; }
         }
 
         object ICollection.SyncRoot
         {
-            get { throw new NotImplementedException(); }
+            get { return ((ICollection)_list).SyncRoot; }
         }
 
         #endregion ICollection Members
@@ -419,22 +403,17 @@ namespace FSCruiser.Core.Models
 
         int IList.Add(object value)
         {
-            throw new NotImplementedException();
-        }
-
-        void IList.Clear()
-        {
-            throw new NotImplementedException();
+            return ((IList)_list).Add(value);
         }
 
         bool IList.Contains(object value)
         {
-            throw new NotImplementedException();
+            return ((IList)_list).Contains(value);
         }
 
         int IList.IndexOf(object value)
         {
-            throw new NotImplementedException();
+            return ((IList)_list).IndexOf(value);
         }
 
         void IList.Insert(int index, object value)
@@ -444,33 +423,26 @@ namespace FSCruiser.Core.Models
 
         bool IList.IsFixedSize
         {
-            get { throw new NotImplementedException(); }
-        }
-
-        bool IList.IsReadOnly
-        {
-            get { throw new NotImplementedException(); }
+            get { return false; }
         }
 
         void IList.Remove(object value)
         {
-            throw new NotImplementedException();
-        }
-
-        void IList.RemoveAt(int index)
-        {
-            throw new NotImplementedException();
+            ((IList)_list).Remove(value);
         }
 
         object IList.this[int index]
         {
             get
             {
-                throw new NotImplementedException();
+                return this[index];
             }
             set
             {
-                throw new NotImplementedException();
+                if (value is TallyAction)
+                {
+                    this[index] = (TallyAction)value;
+                }
             }
         }
 

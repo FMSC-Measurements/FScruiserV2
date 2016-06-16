@@ -88,7 +88,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = AppController._cDal.From<SampleGroupVM>().Read().ToList();
+                _sgColumn.DataSource = stratum.SampleGroups;
             }
             if (_initialsColoumn != null)
             {
@@ -257,7 +257,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             else if (_sgColumn != null && cell.ColumnIndex == _sgColumn.Index)
             {
-                SampleGroupVM sg = cellValue as SampleGroupVM;
+                var sg = cellValue as SampleGroupModel;
                 if (curTree.HandleSampleGroupChanging(sg, this))
                 {
                     curTree.SampleGroup = sg;
@@ -475,9 +475,9 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void MakeSGList(List<SampleGroupVM> list, Panel container)
+        public void MakeSGList(IEnumerable<SampleGroupModel> sampleGroups, Panel container)
         {
-            foreach (SampleGroupVM sg in list.Reverse<SampleGroupVM>())
+            foreach (var sg in sampleGroups.Reverse())
             {
                 var sgRow = new SampleGroupRow()
                 {

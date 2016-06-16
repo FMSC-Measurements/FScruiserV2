@@ -15,7 +15,7 @@ namespace FSCruiser.WinForms.DataEntry
         BindingList<LogDO> _logs;
         DataGridViewTextBoxColumn _logNumColumn;
 
-        public FormLogs(IApplicationController controller, StratumVM stratum)
+        public FormLogs(IApplicationController controller, StratumModel stratum)
         {
             this.Controller = controller;
             InitializeComponent();

@@ -16,10 +16,25 @@ namespace FSCruiser.Core.Models
         public IList<PlotStratum> PlotStrata { get; set; }
 
         [IgnoreField]
-        public IList<StratumVM> TreeStrata { get; set; }
+        public IList<StratumModel> TreeStrata { get; set; }
 
         [IgnoreField]
-        public StratumVM DefaultStratum { get; set; }
+        public IEnumerable<SampleGroupModel> TreeSampleGroups
+        {
+            get
+            {
+                foreach (var st in TreeStrata)
+                {
+                    foreach (var sg in st.SampleGroups)
+                    {
+                        yield return sg;
+                    }
+                }
+            }
+        }
+
+        [IgnoreField]
+        public StratumModel DefaultStratum { get; set; }
 
         [IgnoreField]
         public IList<TreeVM> NonPlotTrees { get; set; }
@@ -77,11 +92,11 @@ namespace FSCruiser.Core.Models
         #endregion treeNumbering
 
         public TreeVM UserAddTree(TreeVM templateTree
-            , StratumVM knownStratum
+            , StratumModel knownStratum
             , IViewController viewController)
         {
             TreeVM newTree;
-            SampleGroupVM assumedSG = null;
+            SampleGroupModel assumedSG = null;
             TreeDefaultValueDO assumedTDV = null;
 
             //extrapolate stratum
@@ -106,7 +121,7 @@ namespace FSCruiser.Core.Models
             //extrapolate sample group
             if (knownStratum != null && assumedSG == null)//if we have a stratum but no sample group, pick the first one
             {
-                List<SampleGroupVM> samplegroups = DAL.From<SampleGroupVM>().Where("Stratum_CN = ?").Read(knownStratum.Stratum_CN).ToList();
+                List<SampleGroupModel> samplegroups = DAL.From<SampleGroupModel>().Where("Stratum_CN = ?").Read(knownStratum.Stratum_CN).ToList();
                 if (samplegroups.Count == 1)
                 {
                     assumedSG = samplegroups[0];
@@ -135,8 +150,8 @@ namespace FSCruiser.Core.Models
             return CreateNewTreeEntry(count.SampleGroup.Stratum, count.SampleGroup, count.TreeDefaultValue, isMeasure);
         }
 
-        public TreeVM CreateNewTreeEntry(StratumVM stratum
-            , SampleGroupVM sg
+        public TreeVM CreateNewTreeEntry(StratumModel stratum
+            , SampleGroupModel sg
             , TreeDefaultValueDO tdv
             , bool isMeasure)
         {
@@ -145,8 +160,8 @@ namespace FSCruiser.Core.Models
             return tree;
         }
 
-        internal TreeVM CreateNewTreeEntryInternal(StratumVM stratum
-            , SampleGroupVM sg
+        internal TreeVM CreateNewTreeEntryInternal(StratumModel stratum
+            , SampleGroupModel sg
             , TreeDefaultValueDO tdv
             , bool isMeasure)
         {
@@ -225,7 +240,7 @@ namespace FSCruiser.Core.Models
             this.PlotStrata = this.ReadPlotStrata().ToList();
 
             this.DefaultStratum = null;
-            foreach (StratumVM stratum in this.TreeStrata)
+            foreach (StratumModel stratum in this.TreeStrata)
             {
                 if (stratum.Method == CruiseDAL.Schema.CruiseMethods.H_PCT)
                 {
@@ -270,12 +285,12 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public IEnumerable<StratumVM> ReadTreeBasedStrata()
+        public IEnumerable<StratumModel> ReadTreeBasedStrata()
         {
             Debug.Assert(DAL != null);
 
             foreach (var st in
-                DAL.From<StratumVM>()
+                DAL.From<StratumModel>()
                 .Join("CuttingUnitStratum", "USING (Stratum_CN)")
                 .Where("CuttingUnitStratum.CuttingUnit_CN = ?" +
                         "AND Method IN ( '100', 'STR', '3P', 'S3P')")
@@ -319,11 +334,11 @@ namespace FSCruiser.Core.Models
 
         public void SaveCounts()
         {
-            foreach (StratumVM stratum in TreeStrata)
+            foreach (StratumModel stratum in TreeStrata)
             {
                 stratum.SaveCounts();
             }
-            foreach (StratumVM stratum in PlotStrata)
+            foreach (StratumModel stratum in PlotStrata)
             {
                 stratum.SaveCounts();
             }
@@ -332,11 +347,11 @@ namespace FSCruiser.Core.Models
         public bool TrySaveCounts()
         {
             bool success = true;
-            foreach (StratumVM stratum in TreeStrata)
+            foreach (StratumModel stratum in TreeStrata)
             {
                 success = stratum.TrySaveCounts() && success;
             }
-            foreach (StratumVM stratum in PlotStrata)
+            foreach (StratumModel stratum in PlotStrata)
             {
                 success = stratum.TrySaveCounts() && success;
             }
@@ -381,7 +396,7 @@ namespace FSCruiser.Core.Models
 
         #region ITreeFieldProvider
 
-        object _treeFieldsReadLock;
+        object _treeFieldsReadLock = new object();
         IEnumerable<TreeFieldSetupDO> _treeFields;
 
         public IEnumerable<TreeFieldSetupDO> TreeFields

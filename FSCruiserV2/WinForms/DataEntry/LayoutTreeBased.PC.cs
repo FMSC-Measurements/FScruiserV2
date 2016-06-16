@@ -207,7 +207,7 @@ namespace FSCruiser.WinForms.DataEntry
         //    this._viewLoading = false;
         //}
 
-        public override void MakeSGList(List<SampleGroupVM> list, Panel container)
+        public override void MakeSGList(IEnumerable<SampleGroupModel> sampleGroups, Panel container)
         {
             try
             {

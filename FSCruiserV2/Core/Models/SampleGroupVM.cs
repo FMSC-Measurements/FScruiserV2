@@ -11,18 +11,18 @@ using FMSC.Sampling;
 
 namespace FSCruiser.Core.Models
 {
-    public class SampleGroupVM : SampleGroupDO
+    public class SampleGroupModel : SampleGroupDO
     {
-        public SampleGroupVM()
+        public SampleGroupModel()
             : base()
         { }
 
         [IgnoreField]
-        public new StratumVM Stratum
+        public new StratumModel Stratum
         {
             get
             {
-                return (StratumVM)base.Stratum;
+                return (StratumModel)base.Stratum;
             }
             set
             {
@@ -50,7 +50,7 @@ namespace FSCruiser.Core.Models
         public override StratumDO GetStratum()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<StratumVM>(this.Stratum_CN);
+            return DAL.ReadSingleRow<StratumModel>(this.Stratum_CN);
         }
 
         public void LoadCounts(CuttingUnitDO unit)
@@ -250,7 +250,7 @@ namespace FSCruiser.Core.Models
             }
             catch (Exception e)
             {
-                System.Diagnostics.Trace.Write(e, "Exception");
+                System.Diagnostics.Debug.Write(e, "Exception");
                 /*keep calm and carry on*/
                 return null;
             }

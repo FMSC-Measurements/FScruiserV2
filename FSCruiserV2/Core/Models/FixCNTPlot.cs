@@ -75,7 +75,7 @@ namespace FSCruiser.Core.Models
             base.PopulateTrees();
         }
 
-        public override TreeVM CreateNewTreeEntry(SampleGroupVM sg, TreeDefaultValueDO tdv, bool isMeasure)
+        public override TreeVM CreateNewTreeEntry(SampleGroupModel sg, TreeDefaultValueDO tdv, bool isMeasure)
         {
             return base.CreateNewTreeEntry(sg, tdv, false);
         }

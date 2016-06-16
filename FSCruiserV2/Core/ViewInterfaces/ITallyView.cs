@@ -16,7 +16,7 @@ namespace FSCruiser.Core.ViewInterfaces
         bool HotKeyEnabled { get; }
 
         //bool HandleHotKeyFirst(char key);
-        void MakeSGList(List<SampleGroupVM> list, Panel container);
+        void MakeSGList(IEnumerable<SampleGroupModel> sampleGroups, Panel container);
 
         //SampleSelecter MakeSampleSelecter(CountTreeDO count, DataEntryMode mode);
         Control MakeTallyRow(Control container, CountTreeVM count);

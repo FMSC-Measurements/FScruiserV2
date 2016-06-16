@@ -68,18 +68,18 @@ namespace FScruiser.Core.Test
         [TestMethod()]
         public void PopulateHotKeyLookupTest()
         {
-            var stratum = new StratumVM();
+            var stratum = new StratumModel();
 
             var counts = new CountTreeVM[]
                 { new CountTreeVM() { Tally = new TallyDO() { Hotkey = "A" } },
                     new CountTreeVM() {Tally = new TallyDO() { Hotkey = "Banana" } },
                 new CountTreeVM() {Tally = new TallyDO() { Hotkey = "cat" } }};
 
-            var samplegroups = new SampleGroupVM[] {
-                new SampleGroupVM() { Counts = counts }
+            var samplegroups = new SampleGroupModel[] {
+                new SampleGroupModel() { Counts = counts }
             };
 
-            stratum.SampleGroups = new List<SampleGroupVM>(samplegroups);
+            stratum.SampleGroups = new List<SampleGroupModel>(samplegroups);
 
             Assert.IsNotNull(stratum.HotKeyLookup);
 
@@ -93,18 +93,18 @@ namespace FScruiser.Core.Test
         [TestMethod()]
         public void GetCountByHotKeyTest()
         {
-            var stratum = new StratumVM();
+            var stratum = new StratumModel();
 
             var counts = new CountTreeVM[]
                 { new CountTreeVM() { Tally = new TallyDO() { Hotkey = "A" } },
                     new CountTreeVM() {Tally = new TallyDO() { Hotkey = "Banana" } },
                 new CountTreeVM() {Tally = new TallyDO() { Hotkey = "cat" } }};
 
-            var samplegroups = new SampleGroupVM[] {
-                new SampleGroupVM() { Counts = counts }
+            var samplegroups = new SampleGroupModel[] {
+                new SampleGroupModel() { Counts = counts }
             };
 
-            stratum.SampleGroups = new List<SampleGroupVM>(samplegroups);
+            stratum.SampleGroups = new List<SampleGroupModel>(samplegroups);
 
             Assert.IsTrue(stratum.GetCountByHotKey('A') == counts[0]);
             Assert.IsTrue(stratum.GetCountByHotKey('B') == counts[1]);

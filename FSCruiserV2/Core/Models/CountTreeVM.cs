@@ -16,11 +16,11 @@ namespace FSCruiser.Core.Models
         { }
 
         [IgnoreField]
-        public new SampleGroupVM SampleGroup
+        public new SampleGroupModel SampleGroup
         {
             get
             {
-                return (SampleGroupVM)base.SampleGroup;
+                return (SampleGroupModel)base.SampleGroup;
             }
             set
             {
@@ -31,7 +31,7 @@ namespace FSCruiser.Core.Models
         public override SampleGroupDO GetSampleGroup()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<SampleGroupVM>(this.SampleGroup_CN);
+            return DAL.ReadSingleRow<SampleGroupModel>(this.SampleGroup_CN);
         }
 
         public long GetCountsFromTrees()

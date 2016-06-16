@@ -179,7 +179,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this.UserCanAddTrees == false) { return null; }
             TreeVM prevTree = null;
-            StratumVM assumedSt = DataEntryController.Unit.DefaultStratum;
+            var assumedSt = DataEntryController.Unit.DefaultStratum;
             if (_BS_trees.Count > 0)
             {
                 prevTree = (TreeVM)_BS_trees[_BS_trees.Count - 1];

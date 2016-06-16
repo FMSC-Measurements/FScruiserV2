@@ -149,7 +149,7 @@ namespace FSCruiser.Core.Models
                 return Constants.EMPTY_SG_LIST;
             }
 
-            return tree.DAL.From<SampleGroupVM>()
+            return tree.DAL.From<SampleGroupModel>()
                 .Where("Stratum_CN = ?")
                 .Read(tree.Stratum_CN).ToList();
         }
@@ -164,7 +164,7 @@ namespace FSCruiser.Core.Models
                 //if stratum has only one sampleGroup, make it this tree's SG
                 if (tree.DAL.GetRowCount("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN) == 1)
                 {
-                    tree.SampleGroup = tree.DAL.From<SampleGroupVM>()
+                    tree.SampleGroup = tree.DAL.From<SampleGroupModel>()
                         .Where("Stratum_CN = ?")
                         .Read(tree.Stratum_CN)
                         .FirstOrDefault();

@@ -14,7 +14,7 @@ namespace FSCruiser.Core.Models
 
         TreeVM CreateNewTreeEntry(CountTreeVM count);
 
-        TreeVM CreateNewTreeEntry(StratumVM stratum, SampleGroupVM sg, TreeDefaultValueDO tdv, bool isMeasure);
+        TreeVM CreateNewTreeEntry(StratumModel stratum, SampleGroupModel sg, TreeDefaultValueDO tdv, bool isMeasure);
 
         long GetNextTreeNumber();
 

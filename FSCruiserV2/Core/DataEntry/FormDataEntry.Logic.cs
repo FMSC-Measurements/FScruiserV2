@@ -79,7 +79,7 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public bool ShowLimitingDistanceDialog(StratumVM stratum, PlotVM plot, TreeVM optTree)
+        public bool ShowLimitingDistanceDialog(StratumModel stratum, PlotVM plot, TreeVM optTree)
         {
             string logMessage = String.Empty;
             bool isVariableRadius = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS, stratum.Method) > -1;
@@ -339,7 +339,7 @@ namespace FSCruiser.Core.DataEntry
             this.StratumHotKeyLookup.Add(stratumHotKey, pageIndex);
         }
 
-        public void PopulateTallies(StratumVM stratum, CuttingUnitVM unit, Panel container, ITallyView view)
+        public void PopulateTallies(StratumModel stratum, CuttingUnitVM unit, Panel container, ITallyView view)
         {
             if (stratum is FixCNTStratum)
             {

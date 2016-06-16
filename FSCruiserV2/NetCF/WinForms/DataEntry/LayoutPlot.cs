@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using FMSC.Controls;
@@ -872,16 +873,18 @@ namespace FSCruiser.WinForms.DataEntry
             return;
         }
 
-        public void MakeSGList(List<SampleGroupVM> list, Panel container)
+        public void MakeSGList(IEnumerable<SampleGroupModel> sampleGroups, Panel container)
         {
+            var list = sampleGroups.ToList();
             if (list.Count == 1)
             {
-                SampleGroupVM sg = list[0];
+                SampleGroupModel sg = list[0];
 
                 if (sg.TreeDefaultValues.IsPopulated == false)
                 {
                     sg.TreeDefaultValues.Populate();
                 }
+
                 foreach (TreeDefaultValueDO tdv in sg.TreeDefaultValues)
                 {
                     SubPop subPop = new SubPop(sg, tdv);
@@ -890,7 +893,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             else
             {
-                foreach (SampleGroupVM sg in list)
+                foreach (SampleGroupModel sg in list)
                 {
                     Button sgButton = new Button();
                     Panel spContainer = new Panel();

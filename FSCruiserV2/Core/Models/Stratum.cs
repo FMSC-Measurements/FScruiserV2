@@ -8,7 +8,7 @@ using FMSC.Sampling;
 
 namespace FSCruiser.Core.Models
 {
-    public class StratumVM : StratumDO, ITreeFieldProvider, ILogFieldProvider
+    public class StratumModel : StratumDO, ITreeFieldProvider, ILogFieldProvider
     {
         Dictionary<char, CountTreeVM> _hotKeyLookup;
 
@@ -27,7 +27,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public List<SampleGroupVM> SampleGroups { get; set; }
+        public List<SampleGroupModel> SampleGroups { get; set; }
 
         public IEnumerable<CountTreeVM> Counts
         {
@@ -109,7 +109,7 @@ namespace FSCruiser.Core.Models
 
         public void SaveSampleGroups()
         {
-            foreach (SampleGroupVM sg in SampleGroups)
+            foreach (SampleGroupModel sg in SampleGroups)
             {
                 sg.SerializeSamplerState();
                 sg.Save();
@@ -137,9 +137,9 @@ namespace FSCruiser.Core.Models
             return success;
         }
 
-        IEnumerable<SampleGroupVM> ReadSampleGroups()
+        IEnumerable<SampleGroupModel> ReadSampleGroups()
         {
-            foreach (var sg in DAL.From<SampleGroupVM>()
+            foreach (var sg in DAL.From<SampleGroupModel>()
                         .Where("Stratum_CN = ?")
                         .Read(Stratum_CN))
             {
@@ -150,7 +150,7 @@ namespace FSCruiser.Core.Models
 
         #region ITreeFieldProvider Members
 
-        object _treeFieldsReadLock;
+        object _treeFieldsReadLock = new object();
         IEnumerable<TreeFieldSetupDO> _treeFields;
 
         public IEnumerable<TreeFieldSetupDO> TreeFields

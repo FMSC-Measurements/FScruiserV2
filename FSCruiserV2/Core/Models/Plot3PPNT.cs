@@ -56,7 +56,7 @@ namespace FSCruiser.Core.Models
         {
             for (long i = 0; i < this.TreeCount; i++)
             {
-                TreeVM t = this.CreateNewTreeEntry((SampleGroupVM)null, (TreeDefaultValueDO)null, false);
+                TreeVM t = this.CreateNewTreeEntry((SampleGroupModel)null, (TreeDefaultValueDO)null, false);
                 t.TreeCount = 1;
                 t.CountOrMeasure = "M";
                 t.TreeNumber = i + 1;

@@ -6,13 +6,13 @@ namespace FSCruiser.Core.Models
     {
         public SubPop() { }
 
-        public SubPop(SampleGroupVM sg, TreeDefaultValueDO tdv)
+        public SubPop(SampleGroupModel sg, TreeDefaultValueDO tdv)
         {
             this.SG = sg;
             this.TDV = tdv;
         }
 
-        public SampleGroupVM SG { get; set; }
+        public SampleGroupModel SG { get; set; }
 
         public TreeDefaultValueDO TDV { get; set; }
     }

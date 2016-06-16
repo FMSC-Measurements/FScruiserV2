@@ -8,7 +8,7 @@ using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
-    public class PlotStratum : StratumVM
+    public class PlotStratum : StratumModel
     {
         [IgnoreField]
         public bool Is3PPNT
@@ -58,7 +58,7 @@ namespace FSCruiser.Core.Models
         {
             foreach (var plot in DAL.From<PlotVM>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
                 .OrderBy("PlotNumber")
-                .Query(this.Stratum_CN, cuttingUnit_CN))
+                .Read(this.Stratum_CN, cuttingUnit_CN))
             {
                 plot.Stratum = this;
                 yield return plot;

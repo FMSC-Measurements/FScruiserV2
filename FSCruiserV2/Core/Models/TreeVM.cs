@@ -37,11 +37,11 @@ namespace FSCruiser.Core.Models
         }
 
         [IgnoreField]
-        public new SampleGroupVM SampleGroup
+        public new SampleGroupModel SampleGroup
         {
             get
             {
-                return (SampleGroupVM)base.SampleGroup;
+                return (SampleGroupModel)base.SampleGroup;
             }
             set
             {
@@ -50,11 +50,11 @@ namespace FSCruiser.Core.Models
         }
 
         [IgnoreField]
-        public new StratumVM Stratum
+        public new StratumModel Stratum
         {
             get
             {
-                return (StratumVM)base.Stratum;
+                return (StratumModel)base.Stratum;
             }
             set
             {
@@ -164,13 +164,13 @@ namespace FSCruiser.Core.Models
         public override StratumDO GetStratum()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<StratumVM>(this.Stratum_CN);
+            return DAL.ReadSingleRow<StratumModel>(this.Stratum_CN);
         }
 
         public override SampleGroupDO GetSampleGroup()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<SampleGroupVM>(this.SampleGroup_CN);
+            return DAL.ReadSingleRow<SampleGroupModel>(this.SampleGroup_CN);
         }
 
         protected override void NotifyPropertyChanged(string name)

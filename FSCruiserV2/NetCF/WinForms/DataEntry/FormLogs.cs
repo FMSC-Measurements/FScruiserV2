@@ -29,7 +29,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.InitializeComponent();
         }
 
-        public FormLogs(IApplicationController controller, StratumVM stratum)
+        public FormLogs(IApplicationController controller, StratumModel stratum)
             : base()
         {
             this.Controller = controller;

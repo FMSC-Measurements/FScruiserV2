@@ -89,7 +89,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = Controller._cDal.From<SampleGroupVM>().Read().ToList();
+                _sgColumn.DataSource = DataEntryController.Unit.TreeSampleGroups.ToList();
             }
             if (_stratumColumn != null)
             {
@@ -235,7 +235,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             else if (_sgColumn != null && e.ColumnIndex == _sgColumn.Index)
             {
-                SampleGroupVM sg = cellValue as SampleGroupVM;
+                var sg = cellValue as SampleGroupModel;
                 if (curTree.HandleSampleGroupChanging(sg, this))
                 {
                     curTree.SampleGroup = sg;
@@ -254,7 +254,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             else if (_stratumColumn != null && e.ColumnIndex == _stratumColumn.Index)
             {
-                StratumVM newSt = cellValue as StratumVM;
+                StratumModel newSt = cellValue as StratumModel;
                 if (curTree.HandleStratumChanging(newSt, this))
                 {
                     curTree.Stratum = newSt;
@@ -440,7 +440,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this.UserCanAddTrees == false) { return null; }
             TreeVM prevTree = null;
-            StratumVM assumedSt = DataEntryController.Unit.DefaultStratum;
+            StratumModel assumedSt = DataEntryController.Unit.DefaultStratum;
             if (_BS_trees.Count > 0)
             {
                 prevTree = (TreeVM)_BS_trees[_BS_trees.Count - 1];

@@ -42,12 +42,10 @@ namespace FSCruiser.WinForms
 
         public static DataGridTableStyle InitializeLogColumns(this ILogFieldProvider stratum, EditableDataGrid grid)
         {
-            var fields = stratum.ReadLogFields();
-
             DataGridTableStyle tblStyle = new DataGridTableStyle();
             tblStyle.MappingName = "LogDO";
 
-            foreach (LogFieldSetupDO field in fields)
+            foreach (LogFieldSetupDO field in stratum.LogFields)
             {
                 CustomColumnBase col = MakeColumn(field.ColumnType);
                 col.MappingName = field.Field;
@@ -87,15 +85,13 @@ namespace FSCruiser.WinForms
         {
             DataGridTableStyle tblStyle = new System.Windows.Forms.DataGridTableStyle() { MappingName = "TreeVM" };
 
-            var fields = provider.ReadTreeFields();
-
             int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
             int charWidth = MeasureTextWidth(grid, "0");
 
             // Loop through each item in the fields list,
             // set up a column style and add it to the table style.
 
-            foreach (TreeFieldSetupDO field in fields)
+            foreach (TreeFieldSetupDO field in provider.TreeFields)
             {
                 CustomColumnBase col;
 
