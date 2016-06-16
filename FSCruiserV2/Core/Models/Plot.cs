@@ -26,11 +26,11 @@ namespace FSCruiser.Core.Models
         { }
 
         [IgnoreField]
-        public new StratumVM Stratum
+        public new StratumModel Stratum
         {
             get
             {
-                return (StratumVM)base.Stratum;
+                return (StratumModel)base.Stratum;
             }
             set
             {
@@ -93,7 +93,7 @@ namespace FSCruiser.Core.Models
         public override StratumDO GetStratum()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<StratumVM>(this.Stratum_CN);
+            return DAL.ReadSingleRow<StratumModel>(this.Stratum_CN);
         }
 
         public override CuttingUnitDO GetCuttingUnit()
@@ -158,7 +158,7 @@ namespace FSCruiser.Core.Models
         public TreeVM UserAddTree(TreeVM templateTree, IViewController viewController)
         {
             TreeVM newTree;
-            SampleGroupVM assumedSG = null;
+            SampleGroupModel assumedSG = null;
             TreeDefaultValueDO assumedTDV = null;
 
             if (templateTree != null)
@@ -170,7 +170,7 @@ namespace FSCruiser.Core.Models
             //extrapolate sample group
             if (assumedSG == null)//if we have a stratum but no sample group, pick the first one
             {
-                List<SampleGroupVM> samplegroups = this.DAL.From<SampleGroupVM>()
+                List<SampleGroupModel> samplegroups = this.DAL.From<SampleGroupModel>()
                     .Where("Stratum_CN = ?")
                     .Read(this.Stratum.Stratum_CN).ToList();
                 if (samplegroups.Count == 1)
@@ -209,7 +209,7 @@ namespace FSCruiser.Core.Models
             return this.CreateNewTreeEntry(count.SampleGroup, count.TreeDefaultValue, isMeasure);
         }
 
-        public virtual TreeVM CreateNewTreeEntry(SampleGroupVM sg, TreeDefaultValueDO tdv, bool isMeasure)
+        public virtual TreeVM CreateNewTreeEntry(SampleGroupModel sg, TreeDefaultValueDO tdv, bool isMeasure)
         {
             Debug.Assert(this.CuttingUnit != null);
             var newTree = this.CuttingUnit.CreateNewTreeEntryInternal(this.Stratum, sg, tdv, isMeasure);
