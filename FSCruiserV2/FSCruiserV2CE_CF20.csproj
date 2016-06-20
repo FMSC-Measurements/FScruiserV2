@@ -72,7 +72,6 @@
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="Core\IExceptionHandler.cs" />
     <Compile Include="Core\LoadCuttingUnitWorker.cs" />
-    <Compile Include="Core\Models\DataEntryMode.cs" />
     <Compile Include="Core\Models\DataModelExtensions.cs" />
     <Compile Include="Core\Models\FixCNTPlot.cs" />
     <Compile Include="Core\Models\FixCNTStratum.cs" />
@@ -260,7 +259,7 @@
     <Compile Include="Core\IViewController.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="Core\Models\SampleGroupVM.cs" />
-    <Compile Include="Core\Models\Stratum.cs" />
+    <Compile Include="Core\Models\StratumModel.cs" />
     <Compile Include="Core\Models\SubPopInfo.cs" />
     <Compile Include="Core\Models\TallyAction.cs" />
     <Compile Include="Core\Models\TallySettingsDO.cs" />

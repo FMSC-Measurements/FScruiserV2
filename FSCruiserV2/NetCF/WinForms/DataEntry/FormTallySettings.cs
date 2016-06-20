@@ -94,9 +94,9 @@ namespace FSCruiser.WinForms.DataEntry
 
         public DialogResult ShowDialog(CountTreeVM count)
         {
-            DataEntryMode stMode = count.SampleGroup.Stratum.GetDataEntryMode();
-            bool isPlot = ((stMode & DataEntryMode.Plot) == DataEntryMode.Plot);
-            bool isThreep = ((stMode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP);
+            var method = count.SampleGroup.Stratum.Method;
+            bool isPlot = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.PLOT_METHODS, method) >= 0;
+            bool isThreep = count.SampleGroup.Stratum.Is3P;
 
             this.EnableTallyCount = !isPlot;
             this.EnableBigBAF = isPlot;

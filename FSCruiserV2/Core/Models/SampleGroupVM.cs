@@ -226,6 +226,7 @@ namespace FSCruiser.Core.Models
                 case "3P":
                 case "S3P":
                 case "P3P":
+                case "F3P":
                     {
                         return MakeThreePSampleSelector();
                     }

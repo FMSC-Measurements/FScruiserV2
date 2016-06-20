@@ -319,10 +319,11 @@ namespace FSCruiser.Core.Models
             try
             {
                 //this._cDal.BeginTransaction();//not doing transactions right now, need to do http://fmsc-projects.herokuapp.com/issues/526 first
-                this.TallyHistoryBuffer.Save();
+
                 this.TrySaveTrees();
-                //this.SaveCounts();
-                this.SaveSampleGroups();
+
+                this.TallyHistoryBuffer.Save();
+                this.SaveSampleGroups(); // save sampler states
 
                 return true;
             }

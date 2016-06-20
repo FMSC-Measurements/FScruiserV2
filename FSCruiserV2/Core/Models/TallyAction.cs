@@ -62,17 +62,18 @@ namespace FSCruiser.Core.Models
 
         public TallyAction()
         {
+            Time = DateTime.Now.ToString("hh:mm");
         }
 
         public TallyAction(CountTreeVM count)
+            : this()
         {
-            this.Count = count;
+            Count = count;
         }
 
         public TallyAction(TreeVM treeRecord, CountTreeVM count)
         {
-            this.TreeRecord = treeRecord;
-            this.Count = count;
+            TreeRecord = treeRecord;
         }
 
         public void PopulateData(CruiseDAL.DAL dal)

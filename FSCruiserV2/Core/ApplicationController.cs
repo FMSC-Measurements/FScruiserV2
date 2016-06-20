@@ -349,33 +349,9 @@ namespace FSCruiser.Core
 
         public void OnLeavingCurrentUnit(System.ComponentModel.CancelEventArgs e)
         {
-            if (!this.Save())
-            {
-                this.HandleNonCriticalException(null, "Something went wrong saving the data for this unit, check trees for errors and try again");
-                //MessageBox.Show("Something went wrong saving the data for this unit, check trees for errors and try again");
-                e.Cancel = true;
-            }
             if (!e.Cancel && this.Settings.BackUpMethod == BackUpMethod.LeaveUnit)
             {
                 this.PerformBackup(false);
-            }
-        }
-
-        public bool Save()
-        {
-            this.ViewController.ShowWait();
-
-            try
-            {
-                return this.CurrentUnit.SaveFieldData();
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            finally
-            {
-                this.ViewController.HideWait();
             }
         }
 

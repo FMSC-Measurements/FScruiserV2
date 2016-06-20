@@ -9,6 +9,30 @@ namespace FSCruiser.Core.ViewInterfaces
 
     public static class ViewExtentions
     {
+        //public static void ShowWait(this IView view)
+        //{
+        //    if (view is Form)
+        //    {
+        //        ((Form)view).Cursor = Cursors.WaitCursor;
+        //    }
+        //    else if (view is Control)
+        //    {
+        //        ((Control)view).Cursor = Cursors.WaitCursor;
+        //    }
+        //}
+
+        //public static void HideWait(this IView view)
+        //{
+        //    if (view is Form)
+        //    {
+        //        ((Form)view).Cursor = Cursors.Default;
+        //    }
+        //    else if (view is Control)
+        //    {
+        //        ((Control)view).Cursor = Cursors.Default;
+        //    }
+        //}
+
         public static void ShowMessage(this IView view, string message)
         {
 #if NetCF

@@ -315,8 +315,7 @@ namespace FSCruiser.Core.DataEntry
 
             SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Sampler;
             TreeVM tree = null;
-            DataEntryMode mode = count.SampleGroup.Stratum.GetDataEntryMode();
-            if ((mode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP)
+            if (count.SampleGroup.Stratum.Is3P)
             {
                 int kpi = 0;
                 int? value = ViewController.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);

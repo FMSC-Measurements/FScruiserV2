@@ -23,6 +23,7 @@ namespace FSCruiser.Core.Models
             {
                 return Method == CruiseMethods.THREEP
                     || Method == CruiseMethods.P3P
+                    || Method == CruiseMethods.F3P
                     || Method == CruiseMethods.S3P;
             }
         }

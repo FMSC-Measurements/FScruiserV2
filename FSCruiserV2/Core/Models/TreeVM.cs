@@ -9,6 +9,28 @@ using FSCruiser.Core.ViewInterfaces;
 
 namespace FSCruiser.Core.Models
 {
+    [EntitySource(SourceName = CruiseDAL.Schema.TREEFIELDSETUP._NAME)]
+    public class StratumFieldCollection
+    {
+        [Field(Alias = "FieldStr", SQLExpression = "group_concat(Field)")]
+        public string FieldsStr { get; set; }
+
+        string[] _fieldNames;
+
+        public IEnumerable<string> FieldNames
+        {
+            get
+            {
+                if (_fieldNames == null
+                    && !string.IsNullOrEmpty(FieldsStr))
+                {
+                    _fieldNames = FieldsStr.Split(',');
+                }
+                return _fieldNames;
+            }
+        }
+    }
+
     public class TreeVM : TreeDO
     {
         int cachedLogCount = -1;
@@ -184,17 +206,43 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public bool Validate(IEnumerable<TreeFieldSetupDO> fields)
+        #endregion overridden methods
+
+        #region validation
+
+        static Dictionary<long, StratumFieldCollection> _stratumFieldsLookup = new Dictionary<long, StratumFieldCollection>();
+
+        protected StratumFieldCollection GetStratumFieldCollection(long? stratum_CN)
         {
-            bool isValid = true;
-            foreach (var f in fields)
+            if (stratum_CN == null) { return null; }
+            if (!_stratumFieldsLookup.ContainsKey(stratum_CN.Value))
             {
-                isValid = this.ValidateProperty(f.Field) && isValid;
+                var stFields = DAL.From<StratumFieldCollection>()
+                    .Where("Stratum_CN = ?")
+                    .Query(stratum_CN.Value).FirstOrDefault();
+                _stratumFieldsLookup.Add(stratum_CN.Value, stFields);
+                return stFields;
             }
-            return isValid;
+            else
+            {
+                return _stratumFieldsLookup[stratum_CN.Value];
+            }
         }
 
-        #endregion overridden methods
+        public bool ValidateVisableFields()
+        {
+            var stFields = GetStratumFieldCollection(Stratum_CN);
+            if (stFields != null)
+            {
+                return Validate(stFields.FieldNames);
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        #endregion validation
 
         public bool HandleSampleGroupChanging(SampleGroupDO newSG, IView view)
         {
@@ -352,9 +400,6 @@ namespace FSCruiser.Core.Models
                 .Where("Tree_CN = ?")
                 .OrderBy("CAST (LogNumber AS NUMERIC)")
                 .Query(Tree_CN);
-
-            //return tree.DAL.Query<LogDO>(new FMSC.ORM.Core.SQL.WhereClause("Log.Tree_CN = ? ORDER BY CAST (LogNumber AS NUMERIC)")
-            //    , tree.Tree_CN);
         }
 
         public IList<LogDO> LoadLogs()

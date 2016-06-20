@@ -85,7 +85,7 @@
     <Compile Include="Core\Models\LogRule.cs" />
     <Compile Include="Core\Models\RegionLogInfo.cs" />
     <Compile Include="Core\Models\Sale.cs" />
-    <Compile Include="Core\Models\Stratum.cs" />
+    <Compile Include="Core\Models\StratumModel.cs" />
     <Compile Include="Core\ViewInterfaces\IView.cs" />
     <Compile Include="Core\Workers\FileLoadWorker.cs" />
     <Compile Include="Core\FormCruiserSelection.Logic.cs" />
@@ -95,7 +95,6 @@
     <Compile Include="Core\Models\CountTreeVM.cs" />
     <Compile Include="Core\Models\CruiserVM.cs" />
     <Compile Include="Core\Models\CuttingUnitInfo.cs" />
-    <Compile Include="Core\Models\DataEntryMode.cs" />
     <Compile Include="Core\Models\DataModelExtensions.cs" />
     <Compile Include="Core\Models\Plot3PPNT.cs" />
     <Compile Include="Core\Models\Plot.cs" />

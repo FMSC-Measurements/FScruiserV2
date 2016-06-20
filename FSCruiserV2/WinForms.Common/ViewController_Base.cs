@@ -249,6 +249,16 @@ namespace FSCruiser.WinForms.Common
 
         public void ShowTallySettings(CountTreeVM count)
         {
+            try
+            {
+                count.Save();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e);
+                return;
+            }
+
             using (FormTallySettings view = new FormTallySettings(this.ApplicationController))
             {
                 view.ShowDialog(count);

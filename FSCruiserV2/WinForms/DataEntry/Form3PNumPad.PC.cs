@@ -50,7 +50,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             if (!_canReturnNull && this.UserEnteredValue == null)
             {
-                MessageBox.Show("No Value Entered");
+                MessageBox.Show(this, "No Value Entered");
                 e.Cancel = true;
             }
 

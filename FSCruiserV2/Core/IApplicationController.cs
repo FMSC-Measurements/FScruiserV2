@@ -43,8 +43,6 @@ namespace FSCruiser.Core
 
         void PerformBackup(bool incluedTimeStamp);
 
-        bool Save();
-
         #endregion Methods
     }
 }

@@ -22,47 +22,6 @@ namespace FSCruiser.Core.Models
             }
             return String.Format("{0}-{1} {2}", stratum.Code, stratum.Method, stratum.Description);
         }
-
-        public static DataEntryMode GetDataEntryMode(this StratumDO stratum)
-        {
-            switch (stratum.Method)
-            {
-                case "100":
-                    {
-                        return DataEntryMode.Tree | DataEntryMode.HundredPct;
-                    }
-                case "STR":
-                    {
-                        return DataEntryMode.Tree | DataEntryMode.TallyTree;
-                    }
-                case "3P":
-                    {
-                        return DataEntryMode.Tree | DataEntryMode.ThreeP | DataEntryMode.TallyTree;
-                    }
-                case "PNT":
-                case "FIX":
-                    {
-                        return DataEntryMode.Plot | DataEntryMode.OneStagePlot;
-                    }
-                case "FCM":
-                case "PCM":
-                    {
-                        return DataEntryMode.Plot;
-                    }
-
-                case "F3P":
-                case "P3P":
-                case "3PPNT":
-                    {
-                        return DataEntryMode.Plot | DataEntryMode.ThreeP;
-                    }
-                case "S3P":
-                default:
-                    {
-                        return DataEntryMode.HundredPct;//fall back on 100pct
-                    }
-            }
-        }
     }
 
     public static class PlotExtensions
@@ -182,18 +141,6 @@ namespace FSCruiser.Core.Models
                 .Read(tree.SampleGroup_CN).ToList();
 
             return tdvs;
-
-            //if (Constants.NEW_SPECIES_OPTION)
-            //{
-            //    throw new NotImplementedException();
-            //    //tdvs.Add(_newPopPlaceHolder);
-            //    //return tdvs;
-            //}
-            //else
-            //{
-            //    return tdvs;
-            //    //return tree.SampleGroup.TreeDefaultValues;
-            //}
         }
     }
 }

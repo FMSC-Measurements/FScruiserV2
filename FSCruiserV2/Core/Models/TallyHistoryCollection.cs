@@ -13,8 +13,6 @@ namespace FSCruiser.Core.Models
     {
         object syncLock = new object();
         List<TallyAction> _list = new List<TallyAction>();
-
-        //private LinkedList<TallyAction> _tallyActions = new LinkedList<TallyAction>();
         protected CuttingUnitVM _unit;
 
         public int MaxSize { get; protected set; }
@@ -27,28 +25,17 @@ namespace FSCruiser.Core.Models
             this._unit = unit;
         }
 
-        public void Initialize()
-        {
-            if (!String.IsNullOrEmpty(_unit.TallyHistory))
-            {
-                foreach (TallyAction action in this.DeserializeTallyHistory(_unit.TallyHistory))
-                {
-                    _list.Add(action);
-                }
-            }
-        }
-
         public void Add(TallyAction action)
         {
-            if (action.KPI != 0)
-            {
-                TreeEstimateDO te = new TreeEstimateDO(_unit.DAL);
-                te.KPI = action.KPI;
-                te.CountTree = action.Count;
-                action.TreeEstimate = te;
-                te.Save();
-            }
-            action.Time = DateTime.Now.ToString("hh:mm");
+            //if (action.KPI != 0)
+            //{
+            //    TreeEstimateDO te = new TreeEstimateDO(_unit.DAL);
+            //    te.KPI = action.KPI;
+            //    te.CountTree = action.Count;
+            //    action.TreeEstimate = te;
+            //    te.Save();
+            //}
+            //action.Time = DateTime.Now.ToString("hh:mm");
 
             lock (syncLock)
             {
@@ -69,26 +56,6 @@ namespace FSCruiser.Core.Models
                 {
                     OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, Count - 1));
                 }
-            }
-        }
-
-        public void Save()
-        {
-            try
-            {
-                var xmlStr = this.SerializeTallyHistory();
-
-                if (!String.IsNullOrEmpty(xmlStr))
-                {
-                    _unit.TallyHistory = xmlStr;
-                    _unit.Save();
-                }
-            }
-            catch (Exception e)
-            {
-                throw new TallyHistoryPersistanceException("Unable to save tally history", e);
-                //this.HandleException(e, "Unable to save tally history", false, true);
-                //this.HandleNonCriticalException(e, "Unable to save tally history");
             }
         }
 
@@ -166,15 +133,32 @@ namespace FSCruiser.Core.Models
 
         //}
 
-        protected string SerializeTallyHistory()
+        public void Initialize()
         {
-            using (StringWriter writer = new StringWriter())
+            if (!String.IsNullOrEmpty(_unit.TallyHistory))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(TallyAction[]));
-                TallyAction[] array = new TallyAction[Count];
-                CopyTo(array, 0);
-                serializer.Serialize(writer, array);
-                return writer.ToString();
+                foreach (TallyAction action in this.DeserializeTallyHistory(_unit.TallyHistory))
+                {
+                    _list.Add(action);
+                }
+            }
+        }
+
+        public void Save()
+        {
+            try
+            {
+                var xmlStr = SerializeTallyHistory();
+
+                if (!String.IsNullOrEmpty(xmlStr))
+                {
+                    _unit.TallyHistory = xmlStr;
+                    _unit.Save();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new TallyHistoryPersistanceException("Unable to save tally history", e);
             }
         }
 
@@ -204,11 +188,21 @@ namespace FSCruiser.Core.Models
             catch (Exception e)
             {
                 throw new TallyHistoryPersistanceException("Unable to load tally history", e);
-
-                //this.HandleNonCriticalException(e, "Unable to load tally history");
             }
 
             return tallyHistory;
+        }
+
+        protected string SerializeTallyHistory()
+        {
+            using (StringWriter writer = new StringWriter())
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(TallyAction[]));
+                TallyAction[] array = new TallyAction[Count];
+                CopyTo(array, 0);
+                serializer.Serialize(writer, array);
+                return writer.ToString();
+            }
         }
 
         #region IBindingList Members

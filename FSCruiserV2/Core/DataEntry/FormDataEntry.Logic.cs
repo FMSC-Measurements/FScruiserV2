@@ -93,11 +93,11 @@ namespace FSCruiser.Core.DataEntry
             return false;
         }
 
-        public int? ShowNumericValueInput(int? min, int? max, int? initialValue, bool acceptNullInput)
-        {
-            ViewController.NumPadDialog.ShowDialog(min, max, initialValue, acceptNullInput);
-            return ViewController.NumPadDialog.UserEnteredValue;
-        }
+        //public int? ShowNumericValueInput(int? min, int? max, int? initialValue, bool acceptNullInput)
+        //{
+        //    ViewController.NumPadDialog.ShowDialog(min, max, initialValue, acceptNullInput);
+        //    return ViewController.NumPadDialog.UserEnteredValue;
+        //}
 
         public void OnTally(CountTreeVM count)
         {
@@ -117,8 +117,6 @@ namespace FSCruiser.Core.DataEntry
             //}
 
             SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Sampler;
-            DataEntryMode mode = count.SampleGroup.Stratum.GetDataEntryMode();
-
             if (count.SampleGroup.Stratum.Is3P)//threeP sampling
             {
                 int kpi = 0;
@@ -143,8 +141,10 @@ namespace FSCruiser.Core.DataEntry
                 }
                 else
                 {
+                    action.TreeEstimate = count.LogTreeEstimate(kpi);
                     action.KPI = kpi;
                     count.SumKPI += kpi;
+
                     ThreePItem item = (ThreePItem)((ThreePSelecter)sampler).NextItem();
                     if (item != null && kpi > item.KPI)
                     {
@@ -242,8 +242,7 @@ namespace FSCruiser.Core.DataEntry
 
             SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Sampler;
             TreeVM tree = null;
-            DataEntryMode mode = count.SampleGroup.Stratum.GetDataEntryMode();
-            if ((mode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP)
+            if (count.SampleGroup.Stratum.Is3P)
             {
                 int kpi = 0;
                 int? value = ViewController.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
@@ -549,31 +548,46 @@ namespace FSCruiser.Core.DataEntry
 
         public void HandleViewClosing(CancelEventArgs e)
         {
-            //Go through all the tree views and validate
-            //if a tree view has invalid trees lets ask the user if they want to continue
-            int viewIndex;
-            if (!this.ValidateTreeViews(out viewIndex)
-                && this.ViewController.AskYesNo("Error(s) found on tree records. Would you like to continue", "Continue?", MessageBoxIcon.Question, true) == false)
-            {
-                e.Cancel = true;
-                this.View.GoToPageIndex(viewIndex);
-                return;
-            }
+            ViewController.ShowWait();
 
-            //save all the plot views, this will save all trees and plots in them
-            for (int i = 0; i < this.View.Layouts.Count; i++)
+            try
             {
-                IPlotLayout view = this.View.Layouts[i] as IPlotLayout;
-                if (view != null)
+                //Go through all the tree views and validate
+                //if a tree view has invalid trees lets ask the user if they want to continue
+                int viewIndex;
+                if (!this.ValidateTreeViews(out viewIndex)
+                    && this.ViewController.AskYesNo("Error(s) found on tree records. Would you like to continue", "Continue?", MessageBoxIcon.Question, true) == false)
                 {
-                    view.ViewLogicController.Save();
+                    e.Cancel = true;
+                    this.View.GoToPageIndex(viewIndex);
+                    return;
+                }
+
+                //save all the plot views, this will save all trees and plots in them
+                for (int i = 0; i < this.View.Layouts.Count; i++)
+                {
+                    IPlotLayout view = this.View.Layouts[i] as IPlotLayout;
+                    if (view != null)
+                    {
+                        view.ViewLogicController.Save();
+                    }
+                }
+
+                if (!Unit.TrySaveCounts())
+                {
+                    e.Cancel = true;
+                    ViewController.ShowMessage("Something went wrong while saving the tally count for this unit", null, MessageBoxIcon.Asterisk);
+                }
+
+                if (!Unit.SaveFieldData())
+                {
+                    e.Cancel = true;
+                    ViewController.ShowMessage("Something went wrong saving the data for this unit, check trees for errors and try again", null, MessageBoxIcon.Asterisk);
                 }
             }
-
-            if (!Unit.TrySaveCounts())
+            finally
             {
-                e.Cancel = true;
-                this.ViewController.ShowMessage("Something went wrong while saving the tally count for this unit", null, MessageBoxIcon.Asterisk);
+                ViewController.HideWait();
             }
 
             this.Controller.OnLeavingCurrentUnit(e);
