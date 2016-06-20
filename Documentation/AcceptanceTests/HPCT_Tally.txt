@@ -10,7 +10,7 @@ AND the folling strata exist:
     |01     |h_pct  |01&02  |01     |
     |02     |02     |02     |02     |
 
-Senario: display unit with just h_pct tally
+Senario: when displaying unit with only H_pct, show tree tab but not tally tab
     GIVEN unit 02 is the current unit
     WHEN the user enters data entry
     THEN the data entry screen contains the folling tabs: Trees

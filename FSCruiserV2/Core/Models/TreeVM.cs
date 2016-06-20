@@ -68,6 +68,7 @@ namespace FSCruiser.Core.Models
             set
             {
                 base.SampleGroup = value;
+                NotifyPropertyChanged("SampleGroup");
             }
         }
 
@@ -192,7 +193,12 @@ namespace FSCruiser.Core.Models
         public override SampleGroupDO GetSampleGroup()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<SampleGroupModel>(this.SampleGroup_CN);
+            base.BeginInit();
+            try
+            {
+                return DAL.ReadSingleRow<SampleGroupModel>(this.SampleGroup_CN);
+            }
+            finally { base.EndInit(); }
         }
 
         protected override void NotifyPropertyChanged(string name)

@@ -4,10 +4,11 @@ automaticly add nessicary fields to the tree view.
 
 
 
-Senario: User has multiple tree strata in a unit but didn't set up the stratum column
+Senario: Unit has multiple tree strata but none of them have stratum selected, automaticly add stratum column
 
 
-Senario: User didn't set up any tree fields, for tree based strata
 
-Senario: User didn't set up any tree fields, for plot based strata
+Senario: unit has tree based strata but none have any columns selected, automaticly add default columns
+
+Senario: unit has plot based strata but none have any columns selected, automaticly add default columns
 

@@ -131,7 +131,8 @@ namespace FSCruiser.Core.Models
         //     using the System.Exception.InnerException property.
         public void SerializeSamplerState()
         {
-            SampleSelecter selector = this.Sampler;
+            if (_sampler == null) { return; }
+            SampleSelecter selector = _sampler;
             if (selector != null && (selector is BlockSelecter || selector is SystematicSelecter))
             {
                 XmlSerializer serializer = new XmlSerializer(selector.GetType());
