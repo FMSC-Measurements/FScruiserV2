@@ -123,7 +123,6 @@ namespace FSCruiser.Core.DataEntry
                 int? value = ViewController.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
                 if (value == null)
                 {
-                    this.ViewController.ShowMessage("No Value Entered", null, MessageBoxIcon.None);
                     return;
                 }
                 else

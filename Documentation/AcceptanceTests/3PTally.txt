@@ -37,7 +37,7 @@ Senario: user doen't enter a kpi value
     WHEN the user doesn't enter a number 
     AND clicks accept
     THEN the message "No Value Entered" is displayed
-    AND the three p number pad is closed                //should we have a cancel button instead?
+    AND the three p number pad is not closed                
     AND the device squaks                               //fail
     AND nothing is added to the tally history
 

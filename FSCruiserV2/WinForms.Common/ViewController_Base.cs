@@ -298,7 +298,7 @@ namespace FSCruiser.WinForms.Common
         /// <returns>KPI, value is -1 if STM</returns>
         public int? AskKPI(int min, int max)
         {
-            ThreePNumPad.ShowDialog(min, max, null, true);
+            ThreePNumPad.ShowDialog(min, max, null, false);
             return ThreePNumPad.UserEnteredValue;
         }
 

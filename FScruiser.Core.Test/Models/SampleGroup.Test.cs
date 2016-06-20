@@ -198,5 +198,47 @@ namespace FSCruiser.Core.Models
             Assert.IsInstanceOfType(sg.Sampler, typeof(FMSC.Sampling.ThreePSelecter));
             Assert.AreEqual(100, ((ThreePSelecter)sg.Sampler).KZ);
         }
+
+        [TestMethod]
+        public void MakeSampleSelecterTest_F3P()
+        {
+            var st = new StratumModel()
+            {
+                Method = "F3P"
+            };
+
+            var sg = new SampleGroupModel()
+            {
+                Stratum = st,
+                SampleSelectorState = null,
+                KZ = 100
+            };
+
+            Assert.IsNotNull(sg.MakeSampleSelecter());
+            Assert.IsNotNull(sg.Sampler);
+            Assert.IsInstanceOfType(sg.Sampler, typeof(FMSC.Sampling.ThreePSelecter));
+            Assert.AreEqual(100, ((ThreePSelecter)sg.Sampler).KZ);
+        }
+
+        [TestMethod]
+        public void MakeSampleSelecterTest_P3P()
+        {
+            var st = new StratumModel()
+            {
+                Method = "P3P"
+            };
+
+            var sg = new SampleGroupModel()
+            {
+                Stratum = st,
+                SampleSelectorState = null,
+                KZ = 100
+            };
+
+            Assert.IsNotNull(sg.MakeSampleSelecter());
+            Assert.IsNotNull(sg.Sampler);
+            Assert.IsInstanceOfType(sg.Sampler, typeof(FMSC.Sampling.ThreePSelecter));
+            Assert.AreEqual(100, ((ThreePSelecter)sg.Sampler).KZ);
+        }
     }
 }
