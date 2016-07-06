@@ -6,7 +6,7 @@ Senario: first time setup of cruisers
     GIVEN in the application directory the file Settings.xml doesn't exist
     WHEN the user adds a cruiser with the initials "A"
     AND exist the program
-    THEN in the application directory the file Settings.xml exists
+    THEN in the %localappdata%/FScruiser directory the file Settings.xml exists
     AND when the program is restarted the cruisers list contains A
     
 Senario: cruiser popup shows when a measure tree is tallyed 
@@ -27,3 +27,4 @@ Senario: cruiser popup doesn't show when disabled
     WHEN a measure tree is tallyed 
     THEN the cruiser selection popup doesn't show
     
+Senario: when there are no cruisers, cruiser popup doesn't display 

@@ -86,21 +86,18 @@ Scenario: tree audit error is removed when the value is fixed
 Scenario: error are updated, when c/m is changed to M
     GIVEN unit 01 is loaded
     WHEN the c/m on tree 03 is changed to M
-    THEN tree 03 shows and error on dbh         //fails
+    THEN tree 03 shows and error on dbh         //pass
 
 Scenario: error are updated, when c/m is changed to C
     GIVEN unit 02 is loaded
     WHEN the c/m on tree 05 is changed to C
-    THEN tree 05 doesn't have any errors    //fails tree still has "MerchHtS, or UStemHT must be greater than 0" error
+    THEN tree 05 doesn't have any errors    //pass
 
 Scenario: when leaving unit, aleart user of tree errors
     GIVEN at least one tree has an error
     WHEN the user closes the data entry screen 
     THEN the user is told that there are errors and asked if they would like to continue //pass
 
-//known issues: on pc when trees are loaded, row level error indicator doesn't show until the row is selected
-// this is because when errors are set they don't notify the data grid that an error has been added
-// - when c/m is changed from c to m, the tree record is not being revalidated, but it will when the user leaves the unit
 
 
 

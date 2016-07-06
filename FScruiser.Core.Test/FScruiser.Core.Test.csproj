@@ -50,10 +50,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LoadCuttingUnitWorker.Test.cs" />
     <Compile Include="Models\SampleGroup.Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\StratumVM.Test.cs" />
+    <Compile Include="Workers\WorkerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AuthoringTests.txt" />
@@ -85,7 +85,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Workers\" />
+    <Shadow Include="Test References\FScruiserPC.accessor" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
