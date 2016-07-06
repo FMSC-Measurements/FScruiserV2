@@ -294,7 +294,7 @@ namespace FSCruiser.Core.Models
                 .Join("CuttingUnitStratum", "USING (Stratum_CN)")
                 .Where("CuttingUnitStratum.CuttingUnit_CN = ?" +
                         "AND Method IN ( '100', 'STR', '3P', 'S3P')")
-                .Query(CuttingUnit_CN))
+                .Read(CuttingUnit_CN))
             {
                 st.LoadSampleGroups();
                 st.LoadCounts(this);

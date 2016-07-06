@@ -133,7 +133,7 @@ namespace FSCruiser.Core
             worker.ExceptionThrown += this.HandleFileLoadError;
             worker.Ended += this.HandleFileLoadEnd;
             worker.Starting += this.HandleFileLoadStart;
-            worker.BeginWork();
+            worker.Start();
 
             this.FileLoadWorker = worker;
         }

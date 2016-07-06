@@ -61,23 +61,11 @@ namespace FSCruiser.Core.Workers
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool isDisposing)
+        protected override void Dispose(bool isDisposing)
         {
-            if (_disposed)
-            {
-                return;
-            }
+            base.Dispose(isDisposing);
             if (isDisposing)
             {
-                if (this.IsWorking)
-                {
-                    this.Cancel();
-                    if (this.Wait(1000))
-                    {
-                        this.Kill();
-                    }
-                }
-
                 if (DataStore != null)
                 {
                     DataStore.Dispose();
@@ -85,8 +73,6 @@ namespace FSCruiser.Core.Workers
                 }
                 CuttingUnits = null;
             }
-
-            _disposed = true;
         }
 
         #endregion IDisposable Members

@@ -93,7 +93,7 @@ namespace FSCruiser.WinForms.DataEntry
                     {
                         _plot.Save();
 
-                        ThreePItem item = (ThreePItem)_plot.Stratum.SampleSelecter.NextItem();
+                        ThreePItem item = (ThreePItem)_stratum.SampleSelecter.NextItem();
 
                         if (_plot.KPI >= item.KPI)
                         {

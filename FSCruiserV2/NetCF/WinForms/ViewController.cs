@@ -21,6 +21,8 @@ namespace FSCruiser.WinForms
 
         #endregion static members
 
+        FormCruiserSelection _cruiserSelectionView;
+
         //private Dictionary<StratumDO, FormLogs> _logViews = new Dictionary<StratumDO, FormLogs>();
 
         public ViewController()
@@ -43,6 +45,18 @@ namespace FSCruiser.WinForms
         public override void SignalInvalidAction()
         {
             FSCruiser.WinForms.Win32.MessageBeep(-1);
+        }
+
+        public override void ShowCruiserSelection(TreeVM tree)
+        {
+            if (this.ApplicationController.Settings.EnableCruiserPopup)
+            {
+                if (_cruiserSelectionView == null)
+                {
+                    _cruiserSelectionView = new FormCruiserSelection(ApplicationController);
+                }
+                _cruiserSelectionView.ShowDialog(tree);
+            }
         }
 
         public override DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage)
@@ -191,6 +205,16 @@ namespace FSCruiser.WinForms
         }
 
         #region IDisposable Members
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing && _cruiserSelectionView != null)
+            {
+                this._cruiserSelectionView.Dispose();
+                this._cruiserSelectionView = null;
+            }
+        }
 
         #endregion IDisposable Members
     }

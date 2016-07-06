@@ -5,6 +5,7 @@ using CruiseDAL;
 using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
 using FMSC.ORM.EntityModel.Attributes;
+using FMSC.Sampling;
 
 namespace FSCruiser.Core.Models
 {
@@ -18,6 +19,11 @@ namespace FSCruiser.Core.Models
                 return Method == CruiseMethods.THREEPPNT;
             }
         }
+
+        /// <summary>
+        /// for 3ppnt
+        /// </summary>
+        public ThreePSelecter SampleSelecter { get; set; }
 
         [IgnoreField]
         public bool IsSingleStage

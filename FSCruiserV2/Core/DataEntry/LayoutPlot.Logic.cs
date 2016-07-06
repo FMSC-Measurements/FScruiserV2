@@ -467,14 +467,14 @@ namespace FSCruiser.Core.DataEntry
             if (Controller.ViewController.ShowPlotInfo(CurrentPlot, Stratum, false) == DialogResult.OK)
             {
                 CurrentPlot.Save();
-                this._BS_Plots.ResetCurrentItem();
-                this.UpdateCurrentPlot();
+                _BS_Plots.ResetCurrentItem();
+                UpdateCurrentPlot();
             }
         }
 
         public void Save()
         {
-            foreach (PlotVM p in this.Stratum.Plots)
+            foreach (PlotVM p in Stratum.Plots)
             {
                 p.Save();
 

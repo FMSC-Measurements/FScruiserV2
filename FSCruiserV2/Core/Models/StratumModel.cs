@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
-using FMSC.Sampling;
 
 namespace FSCruiser.Core.Models
 {
     public class StratumModel : StratumDO, ITreeFieldProvider, ILogFieldProvider
     {
         Dictionary<char, CountTreeVM> _hotKeyLookup;
-
-        /// <summary>
-        /// for 3ppnt
-        /// </summary>
-        public ThreePSelecter SampleSelecter { get; set; }
 
         public bool Is3P
         {

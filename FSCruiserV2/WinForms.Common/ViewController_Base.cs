@@ -17,7 +17,6 @@ namespace FSCruiser.WinForms.Common
         private FormMain _main;
         private FormNumPad _numPadDialog;
         private Form3PNumPad _threePNumPad;
-        private FormCruiserSelection _cruiserSelectionView;
         protected FormDataEntry _dataEntryView;
 
         private int _showWait = 0;
@@ -47,18 +46,6 @@ namespace FSCruiser.WinForms.Common
         }
 
         //public bool EnableCruiserSelectionPopup { get; set; }
-
-        public FormCruiserSelection CruiserSelectionView
-        {
-            get
-            {
-                if (_cruiserSelectionView == null)
-                {
-                    _cruiserSelectionView = new FormCruiserSelection(this.ApplicationController);
-                }
-                return _cruiserSelectionView;
-            }
-        }
 
         public FormMain MainView
         {
@@ -183,13 +170,8 @@ namespace FSCruiser.WinForms.Common
 
         public abstract void ShowBackupUtil();
 
-        public void ShowCruiserSelection(TreeVM tree)
-        {
-            if (this.ApplicationController.Settings.EnableCruiserPopup)
-            {
-                this.CruiserSelectionView.ShowDialog(tree);
-            }
-        }
+        public virtual void ShowCruiserSelection(TreeVM tree)
+        { }
 
         public abstract System.Windows.Forms.DialogResult ShowEditSampleGroup(CruiseDAL.DataObjects.SampleGroupDO sg, bool allowEdit);
 
@@ -343,11 +325,6 @@ namespace FSCruiser.WinForms.Common
                 {
                     this._numPadDialog.Dispose();
                     this._numPadDialog = null;
-                }
-                if (this._cruiserSelectionView != null)
-                {
-                    this._cruiserSelectionView.Dispose();
-                    this._cruiserSelectionView = null;
                 }
             }
         }

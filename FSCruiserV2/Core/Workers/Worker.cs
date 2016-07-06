@@ -3,9 +3,9 @@ using System.Threading;
 
 namespace FSCruiser.Core.Workers
 {
-    public abstract class Worker
+    public abstract class Worker : IDisposable
     {
-        static int runCount = 0;
+        static int runCount = 0; //for diagnostics
 
         bool _isDone;
         bool _isCanceled;
@@ -14,6 +14,8 @@ namespace FSCruiser.Core.Workers
         protected int _defaultTimeout = Timeout.Infinite;
         object _threadLock = new object();
 
+        #region events
+
         public event EventHandler<WorkerExceptionThrownEventArgs> ExceptionThrown;
 
         public event EventHandler<WorkerProgressChangedEventArgs> ProgressChanged;
@@ -21,6 +23,8 @@ namespace FSCruiser.Core.Workers
         public event EventHandler<WorkerProgressChangedEventArgs> Ended;
 
         public event EventHandler<WorkerProgressChangedEventArgs> Starting;
+
+        #endregion events
 
         protected int UnitsOfWorkExpected { get; set; }
 
@@ -83,22 +87,24 @@ namespace FSCruiser.Core.Workers
 
         public object ThreadLock { get { return _threadLock; } }
 
-        public void BeginWork()
+        public void Start()
         {
             if (IsWorking)
             {
                 throw new InvalidOperationException("Cancel or wait for current job to finish before starting again");
             }
 
-            System.Threading.Interlocked.Increment(ref Worker.runCount);
-
-            ThreadStart ts = new ThreadStart(this.DoWork);
-            this._thread = new Thread(ts)
+            if (_thread == null)
             {
-                IsBackground = true,
-                Name = this.Name + Worker.runCount.ToString()
-            };
+                ThreadStart ts = new ThreadStart(this.Run);
+                this._thread = new Thread(ts)
+                {
+                    IsBackground = true
+                };
+            }
 
+            System.Threading.Interlocked.Increment(ref Worker.runCount);
+            _thread.Name = this.Name + Worker.runCount.ToString();
             this._thread.Start();
         }
 
@@ -179,11 +185,11 @@ namespace FSCruiser.Core.Workers
 
         #region virtual methods
 
-        protected virtual void DoWork()
+        protected virtual void Run()
         {
-            NotifyWorkStarting();
             try
             {
+                NotifyWorkStarting();
                 WorkerMain();
                 IsDone = true;
                 NotifyWorkEnded("Done");
@@ -202,10 +208,6 @@ namespace FSCruiser.Core.Workers
                 {
                     throw;
                 }
-            }
-            finally
-            {
-                _thread = null;
             }
         }
 
@@ -265,5 +267,37 @@ namespace FSCruiser.Core.Workers
             float frac = (float)workDone / workExpected;
             return (int)(100 * frac);
         }
+
+        #region IDisposable Members
+
+        public bool Disposed { get; private set; }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (this.IsWorking)
+            {
+                this.Cancel();
+                if (this.Wait(1000))
+                {
+                    this.Kill();
+                }
+            }
+            if (disposing)
+            {
+                ExceptionThrown = null;
+                ProgressChanged = null;
+                Ended = null;
+                Starting = null;
+            }
+            Disposed = true;
+        }
+
+        #endregion IDisposable Members
     }
 }
