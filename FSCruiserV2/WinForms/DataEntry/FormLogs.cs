@@ -40,8 +40,10 @@ namespace FSCruiser.WinForms.DataEntry
 
             this._dataGrid.DataSource = this._logs;
             this._dataGrid.Focus();
+
+            var result = ShowDialog();
             tree.LogCountDirty = true;
-            return this.ShowDialog();
+            return result;
         }
 
         int GetHighestLogNum()
