@@ -120,8 +120,21 @@ namespace FSCruiser.Core.Models
             set;
         }
 
+        bool _logCountDirty;
+
         [IgnoreField]
-        public bool LogCountDirty { get; set; }
+        public bool LogCountDirty
+        {
+            get { return _logCountDirty; }
+            set
+            {
+                _logCountDirty = value;
+                if (value)
+                {
+                    NotifyPropertyChanged("LogCountActual");
+                }
+            }
+        }
 
         [IgnoreField]
         public string LogLevelDiscription
@@ -206,9 +219,18 @@ namespace FSCruiser.Core.Models
             base.NotifyPropertyChanged(name);
             if (base.PropertyChangedEventsDisabled) { return; }
 
-            if (name == CruiseDAL.Schema.TREE.TREEDEFAULTVALUE_CN)
+            switch (name)
             {
-                base.NotifyPropertyChanged(CruiseDAL.Schema.TREE.HIDDENPRIMARY);
+                case CruiseDAL.Schema.TREE.TREEDEFAULTVALUE_CN:
+                    {
+                        base.NotifyPropertyChanged(CruiseDAL.Schema.TREE.HIDDENPRIMARY);
+                        break;
+                    }
+                case CruiseDAL.Schema.TREE.COUNTORMEASURE:
+                    {
+                        ValidateVisableFields();
+                        break;
+                    }
             }
         }
 
