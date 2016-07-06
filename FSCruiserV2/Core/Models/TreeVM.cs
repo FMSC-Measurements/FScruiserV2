@@ -1,14 +1,36 @@
-﻿using CruiseDAL.DataObjects;
-using CruiseDAL;
-using FMSC.ORM.Core;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using CruiseDAL;
+using CruiseDAL.DataObjects;
+using FMSC.ORM.Core;
 using FMSC.ORM.EntityModel.Attributes;
 using FSCruiser.Core.ViewInterfaces;
-using System.Collections.Generic;
 
 namespace FSCruiser.Core.Models
 {
+    [EntitySource(SourceName = CruiseDAL.Schema.TREEFIELDSETUP._NAME)]
+    public class StratumFieldCollection
+    {
+        [Field(Alias = "FieldStr", SQLExpression = "group_concat(Field)")]
+        public string FieldsStr { get; set; }
+
+        string[] _fieldNames;
+
+        public IEnumerable<string> FieldNames
+        {
+            get
+            {
+                if (_fieldNames == null
+                    && !string.IsNullOrEmpty(FieldsStr))
+                {
+                    _fieldNames = FieldsStr.Split(',');
+                }
+                return _fieldNames;
+            }
+        }
+    }
+
     public class TreeVM : TreeDO
     {
         int cachedLogCount = -1;
@@ -34,35 +56,34 @@ namespace FSCruiser.Core.Models
             {
                 base.CuttingUnit = value;
             }
-
         }
 
         [IgnoreField]
-        public new SampleGroupVM SampleGroup
+        public new SampleGroupModel SampleGroup
         {
             get
             {
-                return (SampleGroupVM)base.SampleGroup;
+                return (SampleGroupModel)base.SampleGroup;
             }
             set
             {
                 base.SampleGroup = value;
+                NotifyPropertyChanged("SampleGroup");
             }
         }
 
         [IgnoreField]
-        public new StratumVM Stratum
+        public new StratumModel Stratum
         {
             get
             {
-                return (StratumVM)base.Stratum;
+                return (StratumModel)base.Stratum;
             }
             set
             {
                 base.Stratum = value;
             }
         }
-
 
         public override float TreeCount
         {
@@ -72,12 +93,12 @@ namespace FSCruiser.Core.Models
             }
             set
             {
-                if (!base.PropertyChangedEventsDisabled // if not being inflated 
+                if (!base.PropertyChangedEventsDisabled // if not being inflated
                     && value < 0) { return; }
                 base.TreeCount = value;
             }
         }
-        
+
         [IgnoreField]
         public int LogCountActual
         {
@@ -99,8 +120,21 @@ namespace FSCruiser.Core.Models
             set;
         }
 
+        bool _logCountDirty;
+
         [IgnoreField]
-        public bool LogCountDirty { get; set; }
+        public bool LogCountDirty
+        {
+            get { return _logCountDirty; }
+            set
+            {
+                _logCountDirty = value;
+                if (value)
+                {
+                    NotifyPropertyChanged("LogCountActual");
+                }
+            }
+        }
 
         [IgnoreField]
         public string LogLevelDiscription
@@ -149,6 +183,7 @@ namespace FSCruiser.Core.Models
         //}
 
         #region overridden methods
+
         public override CuttingUnitDO GetCuttingUnit()
         {
             if (DAL == null) { return null; }
@@ -164,15 +199,19 @@ namespace FSCruiser.Core.Models
 
         public override StratumDO GetStratum()
         {
-
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<StratumVM>(this.Stratum_CN);
+            return DAL.ReadSingleRow<StratumModel>(this.Stratum_CN);
         }
 
         public override SampleGroupDO GetSampleGroup()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<SampleGroupVM>(this.SampleGroup_CN);
+            base.BeginInit();
+            try
+            {
+                return DAL.ReadSingleRow<SampleGroupModel>(this.SampleGroup_CN);
+            }
+            finally { base.EndInit(); }
         }
 
         protected override void NotifyPropertyChanged(string name)
@@ -180,18 +219,63 @@ namespace FSCruiser.Core.Models
             base.NotifyPropertyChanged(name);
             if (base.PropertyChangedEventsDisabled) { return; }
 
-            if (name == CruiseDAL.Schema.TREE.TREEDEFAULTVALUE_CN)
+            switch (name)
             {
-                base.NotifyPropertyChanged(CruiseDAL.Schema.TREE.HIDDENPRIMARY);
+                case CruiseDAL.Schema.TREE.TREEDEFAULTVALUE_CN:
+                    {
+                        base.NotifyPropertyChanged(CruiseDAL.Schema.TREE.HIDDENPRIMARY);
+                        break;
+                    }
+                case CruiseDAL.Schema.TREE.COUNTORMEASURE:
+                    {
+                        ValidateVisableFields();
+                        break;
+                    }
             }
         }
-        #endregion
 
+        #endregion overridden methods
+
+        #region validation
+
+        static Dictionary<long, StratumFieldCollection> _stratumFieldsLookup = new Dictionary<long, StratumFieldCollection>();
+
+        protected StratumFieldCollection GetStratumFieldCollection(long? stratum_CN)
+        {
+            if (stratum_CN == null) { return null; }
+            if (!_stratumFieldsLookup.ContainsKey(stratum_CN.Value))
+            {
+                var stFields = DAL.From<StratumFieldCollection>()
+                    .Where("Stratum_CN = ?")
+                    .Query(stratum_CN.Value).FirstOrDefault();
+                _stratumFieldsLookup.Add(stratum_CN.Value, stFields);
+                return stFields;
+            }
+            else
+            {
+                return _stratumFieldsLookup[stratum_CN.Value];
+            }
+        }
+
+        public bool ValidateVisableFields()
+        {
+            var stFields = GetStratumFieldCollection(Stratum_CN);
+            if (stFields != null)
+            {
+                return Validate(stFields.FieldNames);
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        #endregion validation
 
         public bool HandleSampleGroupChanging(SampleGroupDO newSG, IView view)
         {
             if (newSG == null) { return false; }
-            if (SampleGroup != null 
+            if (SampleGroup != null
                 && SampleGroup.SampleGroup_CN == newSG.SampleGroup_CN) { return true; }
 
             if (SampleGroup != null)
@@ -205,7 +289,6 @@ namespace FSCruiser.Core.Models
                 }
                 else
                 {
-
                     DAL.LogMessage(String.Format("Tree Sample Group Changed (Cu:{0} St:{1} Sg:{2} -> {3} Tdv_CN:{4} T#: {5}",
                         CuttingUnit.Code,
                         Stratum.Code,
@@ -237,8 +320,8 @@ namespace FSCruiser.Core.Models
         public bool HandleStratumChanging(StratumDO newStratum, IView view)
         {
             if (newStratum == null) { return false; }
-            if (Stratum != null 
-                && Stratum.Stratum_CN == newStratum.Stratum_CN) 
+            if (Stratum != null
+                && Stratum.Stratum_CN == newStratum.Stratum_CN)
             { return false; }
 
             if (Stratum != null)
@@ -267,7 +350,6 @@ namespace FSCruiser.Core.Models
             {
                 return true;
             }
-
         }
 
         public bool HandleStratumChanged()
@@ -346,9 +428,6 @@ namespace FSCruiser.Core.Models
                 .Where("Tree_CN = ?")
                 .OrderBy("CAST (LogNumber AS NUMERIC)")
                 .Query(Tree_CN);
-
-            //return tree.DAL.Query<LogDO>(new FMSC.ORM.Core.SQL.WhereClause("Log.Tree_CN = ? ORDER BY CAST (LogNumber AS NUMERIC)")
-            //    , tree.Tree_CN);
         }
 
         public IList<LogDO> LoadLogs()
@@ -373,6 +452,5 @@ namespace FSCruiser.Core.Models
 
             return logs;
         }
-
     }
 }

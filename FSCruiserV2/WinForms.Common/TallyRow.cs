@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using FSCruiser.Core.Models;
 
@@ -13,20 +8,22 @@ namespace FSCruiser.WinForms.DataEntry
     public partial class TallyRow : UserControl
     {
         protected class TallyRowButton
-#if NetCF        
-            : FMSC.Controls.Mobile.ButtonPanel
+#if NetCF
+ : FMSC.Controls.Mobile.ButtonPanel
 #else
-            : Button
+ : Button
 #endif
         {
             public TallyRowButton() : base() { }
         }
 
         public event EventHandler TallyButtonClicked;
-        public event EventHandler SettingsButtonClicked; 
+
+        public event EventHandler SettingsButtonClicked;
 
         CountTreeVM _count;
-        public CountTreeVM Count 
+
+        public CountTreeVM Count
         {
             get { return _count; }
             set
@@ -50,27 +47,32 @@ namespace FSCruiser.WinForms.DataEntry
         void UpdateTallyButton()
         {
             System.Diagnostics.Debug.Assert(Count != null);
-            var buttonText = string.Empty;
-            if (Count.Tally.Hotkey != null && Count.Tally.Hotkey.Length > 0)
-            {
-                buttonText = "[" + Count.Tally.Hotkey.Substring(0, 1) +"] ";
-            }
-            buttonText += string.Format("{0}\r\n Count:{1}", Count.Tally.Description, Count.TreeCount);
+            var hotkey = (!String.IsNullOrEmpty(Count.Tally.Hotkey)) ?
+                "[" + Count.Tally.Hotkey.Substring(0, 1) + "] "
+                : String.Empty;
 
-            this._tallyBTN.Text = buttonText;
+            this._tallyBTN.Text = string.Format("{0}{1} {2}"
+                , hotkey
+                , Count.Tally.Description
+                , Count.TreeCount);
         }
 
         public void AdjustHeight()
         {
-            
             var g = base.CreateGraphics();
             var fHeight = g.MeasureString("|", _tallyBTN.Font).Height;
-            this.Height = (int)Math.Ceiling(2.2 * fHeight);
+            this.Height = (int)Math.Ceiling(fHeight) + 5;
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            AdjustHeight();
         }
 
         protected void OnTallyButtonClicked(object sender, EventArgs e)
         {
-            if(TallyButtonClicked != null)
+            if (TallyButtonClicked != null)
             {
                 this.TallyButtonClicked(this, e);
             }
@@ -101,17 +103,12 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        void  Count_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void Count_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "TreeCount")
             {
                 UpdateTallyButton();
             }
         }
-
-
-        
-
-        
     }
 }

@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using CruiseDAL.DataObjects;
 using FMSC.Sampling;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
@@ -77,7 +71,6 @@ namespace FSCruiser.WinForms.DataEntry
                 this._iFreq_LBL.Visible = value;
                 this._iFreqTB.Visible = value;
             }
-
         }
 
         public bool EnableTotalTreeCount
@@ -97,9 +90,9 @@ namespace FSCruiser.WinForms.DataEntry
 
         public DialogResult ShowDialog(CountTreeVM count)
         {
-            DataEntryMode stMode = count.SampleGroup.Stratum.GetDataEntryMode();
-            bool isPlot = ((stMode & DataEntryMode.Plot) == DataEntryMode.Plot);
-            bool isThreep = ((stMode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP);
+            var method = count.SampleGroup.Stratum.Method;
+            bool isPlot = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.PLOT_METHODS, method) >= 0;
+            bool isThreep = count.SampleGroup.Stratum.Is3P;
 
             this.EnableTallyCount = !isPlot;
             this.EnableBigBAF = isPlot;
@@ -142,7 +135,6 @@ namespace FSCruiser.WinForms.DataEntry
                 }
             }
             this._samplingMethod_TB.Text = samplingMethod;
-
 
             _count = count;
             DialogResult result = this.ShowDialog();

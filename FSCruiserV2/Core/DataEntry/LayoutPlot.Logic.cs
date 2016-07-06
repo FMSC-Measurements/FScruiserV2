@@ -1,27 +1,26 @@
 ﻿using System;
-
-using System.Collections.Generic;
 using System.Windows.Forms;
-using System.ComponentModel;
+using CruiseDAL.DataObjects;
+using FMSC.Sampling;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.DataEntry;
-using CruiseDAL.DataObjects;
-using FMSC.Sampling;
 
 namespace FSCruiser.Core.DataEntry
 {
     public class LayoutPlotLogic
     {
-        private bool _disableCheckPlot = false; 
+        private bool _disableCheckPlot = false;
         private PlotVM _prevPlot;
         private System.Windows.Forms.BindingSource _BS_Plots;
         public System.Windows.Forms.BindingSource _BS_Trees;
 
-
         public IPlotLayout View { get; set; }
+
         public IApplicationController Controller { get { return this.DataEntryController.Controller; } }
-        public IViewController ViewController { get; set; } 
+
+        public IViewController ViewController { get; set; }
+
         public FormDataEntryLogic DataEntryController { get; protected set; }
 
         public bool UserCanAddTrees { get; set; }
@@ -66,7 +65,6 @@ namespace FSCruiser.Core.DataEntry
             this.DataEntryController = dataEntryController;
             this.ViewController = viewController;
 
-
             this._BS_Plots = new BindingSource();
             this._BS_Trees = new BindingSource();
             ((System.ComponentModel.ISupportInitialize)(this._BS_Plots)).BeginInit();
@@ -93,7 +91,7 @@ namespace FSCruiser.Core.DataEntry
         {
             if (pInfo != null)
             {
-                this.EndEdit();                
+                this.EndEdit();
                 if (!pInfo.ValidateTrees())
                 {
                     return this.View.AskContinueOnCurrnetPlotTreeError();
@@ -111,7 +109,7 @@ namespace FSCruiser.Core.DataEntry
 
         public void EndEdit()
         {
-            this.View.ViewEndEdit();   //HACK force datagrid to end edits to cause data validation to occure  
+            this.View.ViewEndEdit();   //HACK force datagrid to end edits to cause data validation to occure
             this._BS_Plots.EndEdit();
             this._BS_Trees.EndEdit();
         }
@@ -158,7 +156,6 @@ namespace FSCruiser.Core.DataEntry
                 }
             }
             return goOn;
-
         }
 
         public bool SavePlotTrees()
@@ -181,14 +178,12 @@ namespace FSCruiser.Core.DataEntry
                 this._BS_Trees.DataSource = new TreeVM[0];
             }
             this.View.RefreshTreeView(this.CurrentPlot);
-
         }
-
 
         public void HandleAddPlot()
         {
-            if (this.CurrentPlot != null 
-                &&(!this.SavePlotTrees(this.CurrentPlot) || !this.CheckCurrentPlot()))
+            if (this.CurrentPlot != null
+                && (!this.SavePlotTrees(this.CurrentPlot) || !this.CheckCurrentPlot()))
             {
                 return;
             }
@@ -201,7 +196,6 @@ namespace FSCruiser.Core.DataEntry
                 {
                     this._BS_Plots.ResetBindings(false);
                     this._BS_Plots.MoveLast();
- 
                 }
                 finally
                 {
@@ -238,7 +232,7 @@ namespace FSCruiser.Core.DataEntry
         }
 
         public void HandleDeletePlot()
-        {            
+        {
             if (CurrentPlot == null)
             {
                 this.View.ShowNoPlotSelectedMessage();
@@ -250,7 +244,7 @@ namespace FSCruiser.Core.DataEntry
                 this._disableCheckPlot = true;
                 CurrentPlot.Delete();
                 _BS_Plots.Remove(CurrentPlot);
-                this._disableCheckPlot = false; 
+                this._disableCheckPlot = false;
             }
         }
 
@@ -264,8 +258,7 @@ namespace FSCruiser.Core.DataEntry
             TreeVM curTree = this._BS_Trees.Current as TreeVM;
             if (curTree != null)
             {
-
-                if (!this.Controller.ViewController.AskCancel("Delete Tree #" + curTree.TreeNumber.ToString(), 
+                if (!this.Controller.ViewController.AskCancel("Delete Tree #" + curTree.TreeNumber.ToString(),
                     "Delete Tree", MessageBoxIcon.Question, true))
                 {
                     //this._BS_Trees.Remove(curTree);
@@ -283,7 +276,6 @@ namespace FSCruiser.Core.DataEntry
         //{
         //    try
         //    {
-
         //        if (!this.CurrentPlot.IsTreeNumberAvalible(newTreeNumber))
         //        {
         //            cancel = true;
@@ -323,14 +315,12 @@ namespace FSCruiser.Core.DataEntry
 
             SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Sampler;
             TreeVM tree = null;
-            DataEntryMode mode = count.SampleGroup.Stratum.GetDataEntryMode();
-            if ((mode & DataEntryMode.ThreeP) == DataEntryMode.ThreeP)
+            if (count.SampleGroup.Stratum.Is3P)
             {
                 int kpi = 0;
                 int? value = ViewController.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
                 if (value == null)
                 {
-                    this.ViewController.ShowMessage("No Value Entered", null, MessageBoxIcon.None);
                     return;
                 }
                 else
@@ -338,7 +328,7 @@ namespace FSCruiser.Core.DataEntry
                     kpi = value.Value;
                 }
 
-                //if kpi == -1 then tree is sure to measure 
+                //if kpi == -1 then tree is sure to measure
                 if (kpi != -1)
                 {
                     ThreePItem item = (ThreePItem)((ThreePSelecter)sampler).NextItem();
@@ -346,7 +336,7 @@ namespace FSCruiser.Core.DataEntry
                     if (item != null && kpi > item.KPI)
                     {
                         //because the three p sample selector doesn't select insurance trees for us
-                        //we need to select them our selves 
+                        //we need to select them our selves
                         if (sampler.IsSelectingITrees)
                         {
                             item.IsInsuranceItem = sampler.InsuranceCounter.Next();
@@ -362,7 +352,6 @@ namespace FSCruiser.Core.DataEntry
                             this.ViewController.SignalMeasureTree(true);
                             tree = plot.CreateNewTreeEntry(count, true);
                             //tree.CountOrMeasure = "M";
-
                         }
                     }
                     else
@@ -377,12 +366,10 @@ namespace FSCruiser.Core.DataEntry
                     tree = plot.CreateNewTreeEntry(count, true);
                     tree.STM = "Y";
                 }
-
             }
             else
             {
                 //count.TreeCount++; tree count doesn't get incremented for plots
-
 
                 boolItem item = (sampler != null) ? (boolItem)sampler.NextItem() : (boolItem)null;
                 if (item != null && !item.IsInsuranceItem)
@@ -390,7 +377,6 @@ namespace FSCruiser.Core.DataEntry
                     this.ViewController.SignalMeasureTree(true);
                     tree = plot.CreateNewTreeEntry(count, true);
                     //tree.CountOrMeasure = "M";
-
                 }
                 else if (item != null && item.IsInsuranceItem)
                 {
@@ -402,8 +388,6 @@ namespace FSCruiser.Core.DataEntry
                 {
                     tree = plot.CreateNewTreeEntry(count, false);
                 }
-
-
             }
 
             tree.TreeCount = 1;
@@ -413,48 +397,17 @@ namespace FSCruiser.Core.DataEntry
         }
 
         //TODO rename method
-        public void AddTree(SampleGroupVM sg, CruiseDAL.DataObjects.TreeDefaultValueDO tdv)
+        public void AddTree(SubPop subPop)
         {
-            TreeVM tree;
-            tree = this.CurrentPlot.CreateNewTreeEntry(sg, tdv, true);
-            tree.TreeCount = 1;
+            TreeVM tree = CurrentPlot.CreateNewTreeEntry(subPop);
 
             this.Controller.ViewController.ShowCruiserSelection(tree);
 
             tree.TrySave();
-            this.CurrentPlot.AddTree(tree);
+            CurrentPlot.AddTree(tree);
 
-            this.SelectLastTree();
+            SelectLastTree();
         }
-
-        //protected TreeVM GetNewTree()
-        //{
-
-        //    if (!this.EnsureCurrentPlotWorkable())// if no plot is selected cancel action
-        //    {
-        //        return null;
-        //    }
-
-        //    if (this.UserCanAddTrees == false) { return null; }
-
-        //    //adding trees can be allowed in some cases for 3PPNT
-        //    //if (this.StratumInfo.Stratum.Method == "3PPNT")// if this is a 3PPNT stratum users aren't allowed to manualy enter trees
-        //    //{
-        //    //    return null;
-        //    //}
-
-        //    TreeVM prevTree = null;
-        //    if (_BS_Trees.Count > 0)
-        //    {
-        //        prevTree = (TreeVM)_BS_Trees[_BS_Trees.Count - 1];
-        //    }
-
-        //    var newTree = this.CurrentPlot.UserAddTree(prevTree, this.DataEntryController.ViewController);
-        //    //DataEntryController.Controller.OnTally();
-        //    return newTree;
-
-        //    //return Controller.UserAddTree(prevTree, this.StratumInfo, this.CurrentPlotInfo);
-        //}
 
         public TreeVM UserAddTree()
         {
@@ -514,16 +467,14 @@ namespace FSCruiser.Core.DataEntry
             if (Controller.ViewController.ShowPlotInfo(CurrentPlot, Stratum, false) == DialogResult.OK)
             {
                 CurrentPlot.Save();
-                this._BS_Plots.ResetCurrentItem();
-                this.UpdateCurrentPlot();
+                _BS_Plots.ResetCurrentItem();
+                UpdateCurrentPlot();
             }
         }
 
         public void Save()
         {
-
-
-            foreach (PlotVM p in this.Stratum.Plots)
+            foreach (PlotVM p in Stratum.Plots)
             {
                 p.Save();
 
@@ -534,7 +485,7 @@ namespace FSCruiser.Core.DataEntry
                 catch (FMSC.ORM.SQLException e)
                 {
                     this.ViewController.ShowMessage(e.Message
-                        , "Stratum " +this.Stratum.Code + "Plot " + p.PlotNumber.ToString()
+                        , "Stratum " + this.Stratum.Code + "Plot " + p.PlotNumber.ToString()
                         , MessageBoxIcon.None);
                 }
             }
@@ -550,8 +501,8 @@ namespace FSCruiser.Core.DataEntry
             return this.Stratum.TrySaveCounts();
         }
 
+        #region event handlers
 
-        #region event handlers 
         private void _BS_Plots_CurrentChanged(object sender, EventArgs e)
         {
             if (!_disableCheckPlot && _prevPlot != null && _prevPlot != CurrentPlot)
@@ -572,6 +523,6 @@ namespace FSCruiser.Core.DataEntry
             this.View.HandleCurrentTreeChanged(tree);
         }
 
-        #endregion 
+        #endregion event handlers
     }
 }

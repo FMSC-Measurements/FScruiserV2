@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using CruiseDAL.DataObjects;
-using CruiseDAL;
-using FSCruiser.Core.Models;
-using FSCruiser.Core;
+﻿using CruiseDAL.DataObjects;
 
 namespace FSCruiser.WinForms
 {
@@ -35,23 +27,23 @@ namespace FSCruiser.WinForms
 
         //}
 
-//        public static List<TreeFieldSetupDO> GetTreeFieldSetupByUnit(DAL dal, long unit_cn)
-//        {
-//            return dal.From<TreeFieldSetupDO>()
-//                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
-//                .Where("CuttingUnit_CN = ?")
-//                .GroupBy("Field")
-//                .OrderBy("FieldOrder")
-//                .Read(unit_cn).ToList();
+        //        public static List<TreeFieldSetupDO> GetTreeFieldSetupByUnit(DAL dal, long unit_cn)
+        //        {
+        //            return dal.From<TreeFieldSetupDO>()
+        //                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
+        //                .Where("CuttingUnit_CN = ?")
+        //                .GroupBy("Field")
+        //                .OrderBy("FieldOrder")
+        //                .Read(unit_cn).ToList();
 
-////            return dal.Read<TreeFieldSetupDO>(CruiseDAL.Schema.TREEFIELDSETUP._NAME,
-////                    @"JOIN CuttingUnitStratum 
-////                    ON TreeFieldSetup.Stratum_CN = CuttingUnitStratum.Stratum_CN 
-////                    WHERE CuttingUnitStratum.CuttingUnit_CN = ?  
-////                    Group BY TreeFieldSetup.Field 
-////                    ORDER BY TreeFieldSetup.FieldOrder;", unit_cn);
+        ////            return dal.Read<TreeFieldSetupDO>(CruiseDAL.Schema.TREEFIELDSETUP._NAME,
+        ////                    @"JOIN CuttingUnitStratum
+        ////                    ON TreeFieldSetup.Stratum_CN = CuttingUnitStratum.Stratum_CN
+        ////                    WHERE CuttingUnitStratum.CuttingUnit_CN = ?
+        ////                    Group BY TreeFieldSetup.Field
+        ////                    ORDER BY TreeFieldSetup.FieldOrder;", unit_cn);
 
-//        }
+        //        }
 
         //TODO GetTreeFieldSetups and GetTreeFieldNames should be extracted to a common base class
         //private static List<TreeFieldSetupDO> GetTreeFieldSetups(DAL db, CuttingUnitDO unit, StratumVM stratum)
@@ -92,7 +84,7 @@ namespace FSCruiser.WinForms
         //            //find the location of the tree number field
         //            int indexOfTreeNum = fieldSetups.FindIndex(x => x.Field == CruiseDAL.Schema.TREE.TREENUMBER);
         //            //if user doesn't have a tree number field, fall back to the last field index
-        //            if (indexOfTreeNum == -1) { indexOfTreeNum = fieldSetups.Count - 1; }//last item index 
+        //            if (indexOfTreeNum == -1) { indexOfTreeNum = fieldSetups.Count - 1; }//last item index
         //            //add the stratum field to the filed list
         //            TreeFieldSetupDO tfs = new TreeFieldSetupDO() { Field = "Stratum", Heading = "St", Format = "[Code]" };
         //            fieldSetups.Insert(indexOfTreeNum + 1, tfs);
@@ -157,7 +149,6 @@ namespace FSCruiser.WinForms
         //                }
         //            case "Stratum":
         //                {
-
         //                    if (unit != null && unit.Strata.Count > 1)
         //                    {
         //                        col = new DataGridViewComboBoxColumn()
@@ -215,8 +206,8 @@ namespace FSCruiser.WinForms
         //        {
         //            col.HeaderText = fieldSetup.Heading;
         //        }
-                
-        //        if (!string.IsNullOrEmpty(fieldSetup.Format)    //field has format 
+
+        //        if (!string.IsNullOrEmpty(fieldSetup.Format)    //field has format
         //            && (col.DefaultCellStyle == null            //and column doesn't have format set yet
         //            || string.IsNullOrEmpty(col.DefaultCellStyle.Format)))
         //        {
@@ -238,7 +229,6 @@ namespace FSCruiser.WinForms
         //        HeaderText = "Logs",
         //        DataPropertyName = "LogCountActual"
         //    });
-
 
         //    return columns.ToArray();
         //}
@@ -289,7 +279,7 @@ namespace FSCruiser.WinForms
         //        col.DataPropertyName = field.Field;
         //        col.HeaderText = field.Heading;
 
-        //        if(!string.IsNullOrEmpty(field.Format))                                // AND field has format 
+        //        if(!string.IsNullOrEmpty(field.Format))                                // AND field has format
         //        {
         //            col.DefaultCellStyle = new DataGridViewCellStyle()
         //                {
@@ -297,18 +287,11 @@ namespace FSCruiser.WinForms
         //                };
         //        }
 
-
-
-
         //        columns.Add(col);
         //    }
-
 
         //    return columns;
 
         //}
-
     }//end class
-
-
 }

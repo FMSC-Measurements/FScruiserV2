@@ -1,0 +1,14 @@
+Feature: 
+If a user forgets to set up a critical field, or forgets to set up any fields, 
+automaticly add nessicary fields to the tree view. 
+
+
+
+Senario: Unit has multiple tree strata but none of them have stratum selected, automaticly add stratum column
+
+
+
+Senario: unit has tree based strata but none have any columns selected, automaticly add default columns
+
+Senario: unit has plot based strata but none have any columns selected, automaticly add default columns
+

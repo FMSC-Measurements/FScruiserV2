@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using CruiseDAL;
 using FSCruiser.Core;
 
 namespace FSCruiser.WinForms
@@ -23,22 +18,19 @@ namespace FSCruiser.WinForms
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
             {
                 this.WindowState = FormWindowState.Maximized;
-                
+
                 this.Menu = null;
                 this._ceControlPanel.Visible = true;
                 this.mainMenu1.Dispose();
                 this.mainMenu1 = null;
             }
-
         }
 
-        public FormBackupUtility(IApplicationController controller): this()
+        public FormBackupUtility(IApplicationController controller)
+            : this()
         {
             this._controller = controller;
         }
-
-        
-
 
         protected override void OnLoad(EventArgs e)
         {
@@ -70,7 +62,7 @@ namespace FSCruiser.WinForms
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            if(this.DialogResult == DialogResult.OK)
+            if (this.DialogResult == DialogResult.OK)
             {
                 PushSettings();
             }
@@ -114,9 +106,5 @@ namespace FSCruiser.WinForms
         {
             OnRadioButtonsChanged();
         }
-
-        
-
-
     }
 }

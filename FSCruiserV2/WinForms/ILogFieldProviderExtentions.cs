@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FSCruiser.Core.Models;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
+using FSCruiser.Core.Models;
 
 namespace FSCruiser.WinForms
 {
@@ -12,17 +9,15 @@ namespace FSCruiser.WinForms
     {
         public static List<DataGridViewColumn> MakeLogColumns(this ILogFieldProvider provider)
         {
-            var fields = provider.ReadLogFields();
-
             List<DataGridViewColumn> columns = new List<DataGridViewColumn>();
 
-            foreach (LogFieldSetupDO field in fields)
+            foreach (LogFieldSetupDO field in provider.LogFields)
             {
                 var col = MakeColumn(field.ColumnType);
                 col.DataPropertyName = field.Field;
                 col.HeaderText = field.Heading;
 
-                if (!string.IsNullOrEmpty(field.Format))                                // AND field has format 
+                if (!string.IsNullOrEmpty(field.Format))                                // AND field has format
                 {
                     col.DefaultCellStyle = new DataGridViewCellStyle()
                     {
@@ -32,7 +27,6 @@ namespace FSCruiser.WinForms
 
                 columns.Add(col);
             }
-
 
             return columns;
         }

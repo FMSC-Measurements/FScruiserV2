@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
@@ -19,6 +14,7 @@ namespace FSCruiser.WinForms
             InitializeComponent();
             this.Controller = controller;
 
+#if NetCF
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
             {
                 this.WindowState = FormWindowState.Maximized;
@@ -26,8 +22,7 @@ namespace FSCruiser.WinForms
                 this.mainMenu1.Dispose();
                 this.mainMenu1 = null;
             }
-
-
+#endif
         }
 
         protected override void OnLoad(EventArgs e)
@@ -35,7 +30,6 @@ namespace FSCruiser.WinForms
             this.UpdateCruiserList();
             this._enableCruiserPopupCB.Checked = this.Controller.Settings.EnableCruiserPopup;
             base.OnLoad(e);
-            
         }
 
         protected override void OnClosed(EventArgs e)
@@ -74,10 +68,9 @@ namespace FSCruiser.WinForms
             panel.Controls.Add(lbl);
             panel.Controls.Add(btn);
             panel.Size = new System.Drawing.Size(240, 25);
-            panel.Dock = System.Windows.Forms.DockStyle.Top;            
+            panel.Dock = System.Windows.Forms.DockStyle.Top;
             //panel.Location = new System.Drawing.Point(0, 0);
             //panel.Name = "panel3";
-            
 
             btn.BackColor = System.Drawing.Color.Crimson;
             btn.Dock = System.Windows.Forms.DockStyle.Right;
@@ -96,14 +89,13 @@ namespace FSCruiser.WinForms
             panel.Tag = cruiser;
             panel.Parent = parent;
 
+#if NetCF
             FMSC.Controls.DpiHelper.AdjustControl(panel);
             FMSC.Controls.DpiHelper.AdjustControl(lbl);
             FMSC.Controls.DpiHelper.AdjustControl(btn);
-            
+#endif
+
             panel.ResumeLayout(false);
-
-
-            
         }
 
         private void _addBTN_Click(object sender, EventArgs e)
@@ -141,7 +133,5 @@ namespace FSCruiser.WinForms
                 this.OnAddCruiser();
             }
         }
-
-
     }
 }

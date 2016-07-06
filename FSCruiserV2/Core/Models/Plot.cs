@@ -1,26 +1,23 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
-using CruiseDAL.DataObjects;
 using System.ComponentModel;
-using CruiseDAL;
-using CruiseDAL.Schema;
 using System.Diagnostics;
+using System.Linq;
+using CruiseDAL;
+using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
     public class PlotVM : PlotDO
     {
-        private bool _isTreeDataPopulated = false;
         private IList<TreeVM> _trees;
 
-        public PlotVM() 
+        public PlotVM()
             : base()
         { }
 
-        public PlotVM(DAL dal) 
+        public PlotVM(DAL dal)
             : base(dal)
         { }
 
@@ -29,11 +26,11 @@ namespace FSCruiser.Core.Models
         { }
 
         [IgnoreField]
-        public new StratumVM Stratum
+        public new StratumModel Stratum
         {
             get
             {
-                return (StratumVM)base.Stratum;
+                return (StratumModel)base.Stratum;
             }
             set
             {
@@ -96,7 +93,7 @@ namespace FSCruiser.Core.Models
         public override StratumDO GetStratum()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<StratumVM>(this.Stratum_CN);
+            return DAL.ReadSingleRow<StratumModel>(this.Stratum_CN);
         }
 
         public override CuttingUnitDO GetCuttingUnit()
@@ -131,8 +128,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-
-        public void PopulateTrees()
+        public virtual void PopulateTrees()
         {
             if (this._trees == null)
             {
@@ -162,7 +158,7 @@ namespace FSCruiser.Core.Models
         public TreeVM UserAddTree(TreeVM templateTree, IViewController viewController)
         {
             TreeVM newTree;
-            SampleGroupVM assumedSG = null;
+            SampleGroupModel assumedSG = null;
             TreeDefaultValueDO assumedTDV = null;
 
             if (templateTree != null)
@@ -174,7 +170,7 @@ namespace FSCruiser.Core.Models
             //extrapolate sample group
             if (assumedSG == null)//if we have a stratum but no sample group, pick the first one
             {
-                List<SampleGroupVM> samplegroups = this.DAL.From<SampleGroupVM>()
+                List<SampleGroupModel> samplegroups = this.DAL.From<SampleGroupModel>()
                     .Where("Stratum_CN = ?")
                     .Read(this.Stratum.Stratum_CN).ToList();
                 if (samplegroups.Count == 1)
@@ -187,20 +183,25 @@ namespace FSCruiser.Core.Models
 
             viewController.ShowCruiserSelection(newTree);
 
-            //if a 3P plot method set Count Measure to empty. 
-            if (Array.IndexOf(CruiseDAL.Schema.CruiseMethods.THREE_P_METHODS, 
+            //if a 3P plot method set Count Measure to empty.
+            if (Array.IndexOf(CruiseDAL.Schema.CruiseMethods.THREE_P_METHODS,
                 this.Stratum.Method) >= 0)
             {
                 newTree.CountOrMeasure = string.Empty;
             }
 
-            newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied 
+            newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied
             newTree.TrySave();
             this.AddTree(newTree);
 
-
             return newTree;
+        }
 
+        public TreeVM CreateNewTreeEntry(SubPop subPop)
+        {
+            var tree = CreateNewTreeEntry(subPop.SG, subPop.TDV, true);
+            tree.TreeCount = 1;
+            return tree;
         }
 
         public TreeVM CreateNewTreeEntry(CountTreeVM count, bool isMeasure)
@@ -208,7 +209,7 @@ namespace FSCruiser.Core.Models
             return this.CreateNewTreeEntry(count.SampleGroup, count.TreeDefaultValue, isMeasure);
         }
 
-        public TreeVM CreateNewTreeEntry(SampleGroupVM sg, TreeDefaultValueDO tdv, bool isMeasure)
+        public virtual TreeVM CreateNewTreeEntry(SampleGroupModel sg, TreeDefaultValueDO tdv, bool isMeasure)
         {
             Debug.Assert(this.CuttingUnit != null);
             var newTree = this.CuttingUnit.CreateNewTreeEntryInternal(this.Stratum, sg, tdv, isMeasure);

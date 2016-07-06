@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using CruiseDAL;
 using FSCruiser.Core.Models;
 
@@ -10,15 +8,17 @@ namespace FSCruiser.Core.Workers
 {
     public class FileLoadWorker : Worker, IDisposable
     {
-
         public FileLoadWorker(string path, ApplicationController appController)
         {
             this.Path = path;
         }
 
         public ApplicationController AppController { get; set; }
+
         public String Path { get; protected set; }
+
         public DAL DataStore { get; set; }
+
         public IList<CuttingUnitVM> CuttingUnits { get; set; }
 
         protected override void WorkerMain()
@@ -28,7 +28,6 @@ namespace FSCruiser.Core.Workers
             this.UnitsOfWorkCompleated = 1;
             this.NotifyProgressChanged(null);
 
-            
             this.CuttingUnits = DataStore.From<CuttingUnitVM>().Read().ToList();
             UnitsOfWorkCompleated = 2;
         }
@@ -43,7 +42,6 @@ namespace FSCruiser.Core.Workers
             this.CuttingUnits = null;
 
             base.OnExceptionThrown(e);
-
         }
 
         protected override void OnStarting(WorkerProgressChangedEventArgs e)
@@ -57,30 +55,17 @@ namespace FSCruiser.Core.Workers
 
         bool _disposed = false;
 
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool isDisposing)
+        protected override void Dispose(bool isDisposing)
         {
-            if (_disposed)
-            {
-                return;
-            }
+            base.Dispose(isDisposing);
             if (isDisposing)
             {
-                if (this.IsWorking)
-                {
-                    this.Cancel();
-                    if (this.Wait(1000))
-                    {
-                        this.Kill();
-                    }
-                }
-
                 if (DataStore != null)
                 {
                     DataStore.Dispose();
@@ -88,10 +73,8 @@ namespace FSCruiser.Core.Workers
                 }
                 CuttingUnits = null;
             }
-
-            _disposed = true;
         }
 
-        #endregion
+        #endregion IDisposable Members
     }
 }

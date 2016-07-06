@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
-using Microsoft.WindowsCE.Forms;
-using FMSC.Controls;
 using CruiseDAL.DataObjects;
-using FSCruiser.Core.Models;
+using FMSC.Controls;
 using FSCruiser.Core;
-using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core.DataEntry;
+using FSCruiser.Core.Models;
+using FSCruiser.Core.ViewInterfaces;
+using Microsoft.WindowsCE.Forms;
 
 namespace FSCruiser.WinForms.DataEntry
 {
     public class ControlTreeDataGrid : FMSC.Controls.EditableDataGrid, ITreeView
     {
         private bool _viewLoading = true;
+
         //private bool _changingTree = false;
         private EditableComboBoxColumn _speciesColumn; //handle to the species column in the datagrid, if displayed otherwise null
+
         private EditableComboBoxColumn _sgColumn; //handle to the sample group column in the datagird, if displayed otherwise null
         private EditableComboBoxColumn _stratumColumn; //handle to the stratum column in the datagrid, if displayed otherwise null
         private EditableTextBoxColumn _treeNumberColumn;
@@ -25,13 +26,15 @@ namespace FSCruiser.WinForms.DataEntry
         private EditableTextBoxColumn _kpiColumn;
         private DataGridTextBoxColumn _errorsColumn;
         private System.Windows.Forms.BindingSource _BS_trees;
+
         private IApplicationController Controller { get; set; }
 
-        private bool _userCanAddTrees; 
-        public bool UserCanAddTrees 
+        private bool _userCanAddTrees;
+
+        public bool UserCanAddTrees
         {
             get { return _userCanAddTrees; }
-            set { _userCanAddTrees = value; } 
+            set { _userCanAddTrees = value; }
         }
 
         public bool ViewLoading { get { return _viewLoading; } }
@@ -84,7 +87,6 @@ namespace FSCruiser.WinForms.DataEntry
                 _initialsColoumn.DataSource = this.Controller.Settings.Cruisers.ToArray();
             }
         }
-
 
         protected override void OnCellValidating(EditableDataGridCellValidatingEventArgs e)
         {
@@ -177,7 +179,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this.UserCanAddTrees == false) { return null; }
             TreeVM prevTree = null;
-            StratumVM assumedSt = DataEntryController.Unit.DefaultStratum;
+            var assumedSt = DataEntryController.Unit.DefaultStratum;
             if (_BS_trees.Count > 0)
             {
                 prevTree = (TreeVM)_BS_trees[_BS_trees.Count - 1];
@@ -202,15 +204,13 @@ namespace FSCruiser.WinForms.DataEntry
                 t.TreeCount = 1;
 
                 this._BS_trees.MoveLast();
-                this.MoveFirstEmptyCell();                
+                this.MoveFirstEmptyCell();
             }
             return t;
         }
 
-
         private void _BS_trees_CurrentChanged(object sender, EventArgs e)
         {
-
             TreeVM tree = _BS_trees.Current as TreeVM;
 
             //_changingTree = true;
@@ -240,7 +240,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_stratumColumn != null)
             {
-                _stratumColumn.DataSource = DataEntryController.Unit.GetTreeBasedStrata();
+                _stratumColumn.DataSource = DataEntryController.Unit.TreeStrata;
             }
         }
 
@@ -298,7 +298,7 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         public void MoveLastTree()
-        {            
+        {
             this._BS_trees.MoveLast();
             this.MoveHomeField();
         }
@@ -312,7 +312,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             UpdateStratumColumn();
             this._BS_trees.DataSource = DataEntryController.Unit.NonPlotTrees;
-            
+
             _viewLoading = false;
         }
 
@@ -351,7 +351,6 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-
         public void DeleteSelectedTree()
         {
             TreeVM curTree = this._BS_trees.Current as TreeVM;
@@ -372,9 +371,8 @@ namespace FSCruiser.WinForms.DataEntry
                     //Controller.DeleteTree(curTree);
                 }
             }
-            
         }
 
-        #endregion
+        #endregion ITreeView Members
     }
 }

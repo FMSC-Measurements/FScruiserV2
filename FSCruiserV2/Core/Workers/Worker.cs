@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace FSCruiser.Core.Workers
 {
-    public abstract class Worker
+    public abstract class Worker : IDisposable
     {
-        static int runCount = 0;
+        static int runCount = 0; //for diagnostics
 
         bool _isDone;
         bool _isCanceled;
@@ -17,16 +14,23 @@ namespace FSCruiser.Core.Workers
         protected int _defaultTimeout = Timeout.Infinite;
         object _threadLock = new object();
 
+        #region events
+
         public event EventHandler<WorkerExceptionThrownEventArgs> ExceptionThrown;
+
         public event EventHandler<WorkerProgressChangedEventArgs> ProgressChanged;
+
         public event EventHandler<WorkerProgressChangedEventArgs> Ended;
+
         public event EventHandler<WorkerProgressChangedEventArgs> Starting;
 
+        #endregion events
+
         protected int UnitsOfWorkExpected { get; set; }
+
         protected int UnitsOfWorkCompleated { get; set; }
 
         public virtual string Name { get; protected set; }
-
 
         public bool IsDone
         {
@@ -45,17 +49,18 @@ namespace FSCruiser.Core.Workers
                 }
             }
         }
-        public virtual bool IsWorking 
-        { 
-            get 
+
+        public virtual bool IsWorking
+        {
+            get
             {
-                if(_thread == null) { return false; }
+                if (_thread == null) { return false; }
 #if NetCF
                 try
                 {
                     return !_thread.Join(0);
                 }
-                catch(ThreadStateException) { return false; }
+                catch (ThreadStateException) { return false; }
 #else
                 return (_thread.ThreadState & ThreadState.Running) == ThreadState.Running;
 #endif
@@ -82,22 +87,24 @@ namespace FSCruiser.Core.Workers
 
         public object ThreadLock { get { return _threadLock; } }
 
-        public void BeginWork()
+        public void Start()
         {
             if (IsWorking)
             {
                 throw new InvalidOperationException("Cancel or wait for current job to finish before starting again");
             }
 
-            System.Threading.Interlocked.Increment(ref Worker.runCount);
-
-            ThreadStart ts = new ThreadStart(this.DoWork);
-            this._thread = new Thread(ts)
+            if (_thread == null)
             {
-                IsBackground = true,
-                Name = this.Name + Worker.runCount.ToString()
-            };
+                ThreadStart ts = new ThreadStart(this.Run);
+                this._thread = new Thread(ts)
+                {
+                    IsBackground = true
+                };
+            }
 
+            System.Threading.Interlocked.Increment(ref Worker.runCount);
+            _thread.Name = this.Name + Worker.runCount.ToString();
             this._thread.Start();
         }
 
@@ -106,40 +113,8 @@ namespace FSCruiser.Core.Workers
             this.IsCanceled = true;
         }
 
-        protected virtual void DoWork()
-        {
-            NotifyWorkStarting();
-            try
-            {
-                WorkerMain();
-                IsDone = true;
-                NotifyWorkEnded("Done");
-            }
-            catch (ThreadAbortException)
-            {
-                NotifyWorkEnded("Aborted");
-            }
-            catch (CancelWorkerException)
-            {
-                NotifyWorkEnded("Canceled");
-            }
-            catch (Exception e)
-            {
-                if (!NotifyExceptionThrown(e))
-                {
-                    throw;
-                }
-            }
-            finally
-            {
-                _thread = null;
-            }
-        }
-
-        protected abstract void WorkerMain();
-
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns>true if worker ended successfuly</returns>
         public bool Wait(int millSecTimeout)
@@ -208,6 +183,36 @@ namespace FSCruiser.Core.Workers
             OnEnded(eArg);
         }
 
+        #region virtual methods
+
+        protected virtual void Run()
+        {
+            try
+            {
+                NotifyWorkStarting();
+                WorkerMain();
+                IsDone = true;
+                NotifyWorkEnded("Done");
+            }
+            catch (ThreadAbortException)
+            {
+                NotifyWorkEnded("Aborted");
+            }
+            catch (CancelWorkerException)
+            {
+                NotifyWorkEnded("Canceled");
+            }
+            catch (Exception e)
+            {
+                if (!NotifyExceptionThrown(e))
+                {
+                    throw;
+                }
+            }
+        }
+
+        protected abstract void WorkerMain();
+
         protected virtual void OnExceptionThrown(WorkerExceptionThrownEventArgs e)
         {
             if (ExceptionThrown != null)
@@ -242,8 +247,9 @@ namespace FSCruiser.Core.Workers
             {
                 this.Starting(this, e);
             }
-
         }
+
+        #endregion virtual methods
 
         protected void CheckCanceled()
         {
@@ -262,5 +268,36 @@ namespace FSCruiser.Core.Workers
             return (int)(100 * frac);
         }
 
+        #region IDisposable Members
+
+        public bool Disposed { get; private set; }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (this.IsWorking)
+            {
+                this.Cancel();
+                if (this.Wait(1000))
+                {
+                    this.Kill();
+                }
+            }
+            if (disposing)
+            {
+                ExceptionThrown = null;
+                ProgressChanged = null;
+                Ended = null;
+                Starting = null;
+            }
+            Disposed = true;
+        }
+
+        #endregion IDisposable Members
     }
 }

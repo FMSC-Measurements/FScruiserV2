@@ -1,15 +1,11 @@
 ﻿using System;
-
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
-using FSCruiser.Core.ViewInterfaces;
-using FSCruiser.Core.Models;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
+using FSCruiser.Core.Models;
+using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.DataEntry;
 
 namespace FSCruiser.WinForms
@@ -17,11 +13,13 @@ namespace FSCruiser.WinForms
     public partial class TreeBasedTallyView_Base : UserControl, ITallyView
     {
         #region Fields
+
         Panel _visableTallyPanel;
-        
-        #endregion
+
+        #endregion Fields
 
         #region properties
+
         public IApplicationController Controller { get; protected set; }
 
         public IDataEntryView DataEntryForm
@@ -32,25 +30,25 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public Dictionary<char, StratumVM> StrataHotKeyLookup { get; protected set; }
-        public Dictionary<StratumVM, Panel> StrataViews { get; protected set; }
+        public Dictionary<char, StratumModel> StrataHotKeyLookup { get; protected set; }
 
-        public IList<StratumVM> Strata { get; protected set; }
-        public StratumVM SelectedStratum { get; protected set; }
+        public Dictionary<StratumModel, Panel> StrataViews { get; protected set; }
+
+        public IList<StratumModel> Strata { get; protected set; }
+
+        public StratumModel SelectedStratum { get; protected set; }
 
         protected Panel StrataViewContainer { get; set; }
-        #endregion
+
+        #endregion properties
 
         protected TreeBasedTallyView_Base()
         {
-            this.StrataHotKeyLookup = new Dictionary<char, StratumVM>();
-            this.StrataViews = new Dictionary<StratumVM, Panel>();
+            this.StrataHotKeyLookup = new Dictionary<char, StratumModel>();
+            this.StrataViews = new Dictionary<StratumModel, Panel>();
 
             InitializeComponent();
         }
-
-        
-
 
         protected void Initialize(IApplicationController controller
             , FormDataEntryLogic dataEntryController, Panel strataViewContainer)
@@ -67,7 +65,7 @@ namespace FSCruiser.WinForms
 
             this.PopulateStrata();
 
-            //if there is only one strata in the unit 
+            //if there is only one strata in the unit
             //display the counts for that stratum
             if (this.Strata.Count == 1)
             {
@@ -79,10 +77,10 @@ namespace FSCruiser.WinForms
 
         private void PopulateStrata()
         {
-            foreach (StratumVM stratum in this.Strata)
+            foreach (StratumModel stratum in this.Strata)
             {
                 if (stratum.Method == CruiseDAL.Schema.CruiseMethods.H_PCT) { continue; }
-                //if ((Controller.GetStrataDataEntryMode(stratum) & DataEntryMode.Plot) 
+                //if ((Controller.GetStrataDataEntryMode(stratum) & DataEntryMode.Plot)
                 //    == DataEntryMode.Plot) { continue; }
 
                 Button strataButton = new Button();
@@ -117,11 +115,11 @@ namespace FSCruiser.WinForms
 
                 StrataViews.Add(stratum, tallyContainer);
 
-                this.DataEntryController.PopulateTallies(stratum
-                    , DataEntryController.Unit
-                    , tallyContainer
-                    , this);
-
+                foreach (CountTreeVM count in stratum.Counts)
+                {
+                    MakeTallyRow(tallyContainer, count);
+                    AdjustPanelHeight(tallyContainer);
+                }
 
                 if (string.IsNullOrEmpty(stratum.Hotkey) == false)
                 {
@@ -131,6 +129,7 @@ namespace FSCruiser.WinForms
         }
 
         #region overrid methods
+
         //protected override void OnKeyUp(KeyEventArgs e)
         //{
         //    base.OnKeyUp(e);
@@ -138,16 +137,7 @@ namespace FSCruiser.WinForms
         //    e.Handled = this.DataEntryController.ProcessHotKey(key, this);
         //}
 
-        #endregion
-
-        //protected virtual Control MakeTallyRow(Control container, SubPop subPop)
-        //{ }
-
-        //protected virtual Control MakeTallyRow(Control container, CountTreeVM count)
-        //{ }
-
-        //protected virtual void MakeSGList(List<SampleGroupVM> list, Panel container)
-        //{ }
+        #endregion overrid methods
 
         protected void OnSgButtonClick(object sender, EventArgs e)
         {
@@ -180,7 +170,7 @@ namespace FSCruiser.WinForms
         }
 
         protected void OnTallyButtonClicked(object sender, EventArgs e)
-        {            
+        {
             TallyRow row = (TallyRow)sender;
             CountTreeVM count = row.Count;
             OnTally(count);
@@ -189,10 +179,9 @@ namespace FSCruiser.WinForms
         protected void OnStrataButtonClicked(object sender, EventArgs e)
         {
             Button strataButton = (Button)sender;
-            StratumVM stratumInfo = (StratumVM)strataButton.Tag;
+            StratumModel stratumInfo = (StratumModel)strataButton.Tag;
 
             DisplayTallyPanel(stratumInfo);
-
         }
 
         protected void OnUntallyButtonClicked(object sender, EventArgs e)
@@ -218,14 +207,14 @@ namespace FSCruiser.WinForms
             panel.Height = totalChildHeight;
         }
 
-        protected void DisplayTallyPanel(StratumVM stratumInfo)
+        protected void DisplayTallyPanel(StratumModel stratumInfo)
         {
             System.Diagnostics.Debug.Assert(StrataViews.ContainsKey(stratumInfo));
             if (!StrataViews.ContainsKey(stratumInfo)) { return; }
 
             Panel tallyContainer = StrataViews[stratumInfo];
 
-            // if strata is already displayed 
+            // if strata is already displayed
             if (_visableTallyPanel != null
                 && _visableTallyPanel == tallyContainer
                 && tallyContainer.Visible == true)
@@ -249,11 +238,10 @@ namespace FSCruiser.WinForms
             {
                 _visableTallyPanel.Visible = true;
             }
-
         }
 
-
         #region ITallyView members
+
         public FormDataEntryLogic DataEntryController { get; protected set; }
 
         public Dictionary<char, CountTreeVM> HotKeyLookup
@@ -283,11 +271,10 @@ namespace FSCruiser.WinForms
         //    }
         //    return false;
 
-
         //    //return Controller.ProcessHotKey(key, this);
         //}
 
-        public virtual void MakeSGList(List<FSCruiser.Core.Models.SampleGroupVM> list, Panel container)
+        public virtual void MakeSGList(IEnumerable<SampleGroupModel> sampleGroups, Panel container)
         {
             try
             {
@@ -305,7 +292,6 @@ namespace FSCruiser.WinForms
             row.TallyButtonClicked += new EventHandler(this.OnTallyButtonClicked);
             row.SettingsButtonClicked += new EventHandler(this.OnTallySettingsClicked);
 
-            
             row.Parent = container;
             row.AdjustHeight();
 
@@ -347,7 +333,7 @@ namespace FSCruiser.WinForms
 
         public void SaveCounts()
         {
-            foreach (StratumVM stratum in Strata)
+            foreach (StratumModel stratum in Strata)
             {
                 stratum.SaveCounts();
             }
@@ -356,7 +342,7 @@ namespace FSCruiser.WinForms
         public bool TrySaveCounts()
         {
             bool success = true;
-            foreach (StratumVM stratum in Strata)
+            foreach (StratumModel stratum in Strata)
             {
                 if (!stratum.TrySaveCounts())
                 {
@@ -368,9 +354,10 @@ namespace FSCruiser.WinForms
             return success;
         }
 
-        #endregion
+        #endregion ITallyView members
 
         #region IDataEntryPage Members
+
         bool _viewLoading = true;
 
         public bool ViewLoading { get { return _viewLoading; } }
@@ -403,6 +390,6 @@ namespace FSCruiser.WinForms
             return false;
         }
 
-        #endregion
+        #endregion IDataEntryPage Members
     }
 }

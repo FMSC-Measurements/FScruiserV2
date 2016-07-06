@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
@@ -14,6 +9,7 @@ namespace FSCruiser.WinForms
     public partial class FormMain : Form
     {
         public Panel ViewContentPanel { get { return this._viewContentPanel; } }
+
         public Panel ViewNavPanel { get { return this._viewNavPanel; } }
 
         public IApplicationController Controller { get; protected set; }
@@ -24,11 +20,9 @@ namespace FSCruiser.WinForms
         {
             get
             {
-
                 return this._cuttingUnitSelectView;
             }
         }
-
 
         public FormMain(IApplicationController controller)
         {
@@ -38,7 +32,7 @@ namespace FSCruiser.WinForms
             this.Text = "FScruiser - " + FSCruiser.Core.Constants.FSCRUISER_VERSION;
 
             this.ClearNavPanel();
-            
+
             this._dataEntryButton = this.AddNavButton("Data Entry", this.HandleDataEntryClick);
             this._dataEntryButton.Enabled = false;
 
@@ -47,10 +41,8 @@ namespace FSCruiser.WinForms
             this._cuttingUnitSelectView.Controller = controller;
         }
 
-
         public Control AddNavButton(String text, EventHandler eventHandler)
         {
-
             Button newNavButton = new Button();
             newNavButton.AutoSize = true;
             newNavButton.BackColor = System.Drawing.Color.Yellow;
@@ -79,7 +71,6 @@ namespace FSCruiser.WinForms
             }
             else
             {
-
                 if (Controller._cDal != null && Controller._cDal.Exists)
                 {
                     var fileName = System.IO.Path.GetFileName(Controller._cDal.Path);
@@ -110,8 +101,8 @@ namespace FSCruiser.WinForms
             CuttingUnitVM unit = this.CuttingUnitSelectView.SelectedUnit;
             if (unit != null)
             {
-                this.Controller.LoadCuttingUnit(unit);
-                this.Controller.ViewController.ShowDataEntry(this.CuttingUnitSelectView.SelectedUnit);
+                Controller.CurrentUnit = unit;
+                Controller.ViewController.ShowDataEntry(this.CuttingUnitSelectView.SelectedUnit);
             }
         }
 

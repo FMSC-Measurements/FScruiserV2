@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Threading;
 using System.Windows.Forms;
-using System.ComponentModel;
-using System.Threading;
 using CruiseDAL.DataObjects;
-using FMSC.Controls;
-using FSCruiser.Core;
-using FSCruiser.WinForms;
 using FSCruiser.Core.Models;
-using FSCruiser.WinForms.DataEntry;
 using FSCruiser.WinForms.Common;
+using FSCruiser.WinForms.DataEntry;
 
 namespace FSCruiser.WinForms
 {
-    
-
     public class ViewController : WinFormsViewControllerBase
     {
         #region static members
+
         public static FMSC.Controls.PlatformType PlatformType
         {
             get
@@ -26,11 +18,12 @@ namespace FSCruiser.WinForms
                 return FMSC.Controls.DeviceInfo.DevicePlatform;
             }
         }
-        #endregion
+
+        #endregion static members
+
+        FormCruiserSelection _cruiserSelectionView;
 
         //private Dictionary<StratumDO, FormLogs> _logViews = new Dictionary<StratumDO, FormLogs>();
-
-        
 
         public ViewController()
         {
@@ -47,19 +40,28 @@ namespace FSCruiser.WinForms
         //    _logViews.Add(stratum, logView);
 
         //    return logView;
-        //}             
-
-
+        //}
 
         public override void SignalInvalidAction()
         {
             FSCruiser.WinForms.Win32.MessageBeep(-1);
         }
 
+        public override void ShowCruiserSelection(TreeVM tree)
+        {
+            if (this.ApplicationController.Settings.EnableCruiserPopup)
+            {
+                if (_cruiserSelectionView == null)
+                {
+                    _cruiserSelectionView = new FormCruiserSelection(ApplicationController);
+                }
+                _cruiserSelectionView.ShowDialog(tree);
+            }
+        }
 
         public override DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage)
         {
-            using (FormLimitingDistance view = new FormLimitingDistance(this.ApplicationController))
+            using (FormLimitingDistance view = new FormLimitingDistance())
             {
                 return view.ShowDialog(baf, isVariableRadius, optTree, out logMessage);
             }
@@ -81,7 +83,6 @@ namespace FSCruiser.WinForms
                 view.ShowDialog();
             }
         }
-
 
         public override TreeDefaultValueDO ShowAddPopulation()
         {
@@ -139,7 +140,6 @@ namespace FSCruiser.WinForms
                 //Application.Run(a);
             }
         }
-        
 
         public override void ShowDataEntry(CuttingUnitVM unit)
         {
@@ -153,7 +153,6 @@ namespace FSCruiser.WinForms
                 _dataEntryView = new FormDataEntry(this.ApplicationController, unit);
             }
             _dataEntryView.ShowDialog();
-
         }
 
         public override DialogResult ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit)
@@ -188,7 +187,6 @@ namespace FSCruiser.WinForms
                 }
                 return result;
             }
-
         }
 
         public override void SignalMeasureTree(bool showMessage)
@@ -206,11 +204,18 @@ namespace FSCruiser.WinForms
             MessageBox.Show("Insurance Tree");
         }
 
-
         #region IDisposable Members
 
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing && _cruiserSelectionView != null)
+            {
+                this._cruiserSelectionView.Dispose();
+                this._cruiserSelectionView = null;
+            }
+        }
 
-        #endregion
-
+        #endregion IDisposable Members
     }
 }

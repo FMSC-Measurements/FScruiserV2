@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CruiseDAL.DataObjects;
-using FMSC.Sampling;
-using System.Xml.Serialization;
-using System.IO;
-
-namespace FSCruiser.Core
+﻿namespace FSCruiser.Core
 {
     public static class CountTreeExtensions
     {
@@ -27,7 +19,7 @@ namespace FSCruiser.Core
         // internal static SampleSelecter DeserializeCountSampleState(this CountTreeDO count)
         // {
         //     XmlSerializer serializer = null;
-             
+
         //     switch (count.SampleSelectorType)
         //     {
         //         case "BlockSelecter":
@@ -51,7 +43,5 @@ namespace FSCruiser.Core
         //     StringReader reader = new StringReader(count.SampleSelectorState);
         //     return (SampleSelecter) serializer.Deserialize(reader);
         // }
- 
-
     }
 }

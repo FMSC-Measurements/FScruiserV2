@@ -1,18 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
 using System.Xml.Serialization;
 using FSCruiser.Core.Models;
-using System.Linq;
-using System.IO;
 
 namespace FSCruiser.Core
 {
     [Serializable]
     public class ApplicationSettings
     {
+        #region static properties
+
+        static ApplicationSettings _instance;
+
+        public static ApplicationSettings Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    Initialize();
+                }
+                return _instance;
+            }
+        }
+
+        public static string ApplicationSettingDirectory
+        {
+            get
+            {
+#if NetCF
+                return System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FScruiser"); ;
+
+#else
+                return System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FScruiser");
+#endif
+            }
+        }
+
+        public static string ApplicationSettingFilePath
+        {
+            get
+            {
+                var dir = ApplicationSettingDirectory;
+                return System.IO.Path.Combine(dir, Constants.APP_SETTINGS_PATH);
+            }
+        }
+
+        public static IExceptionHandler ExceptionHandler { get; set; }
+
+        #endregion static properties
+
         string _backupDir;
         List<CruiserVM> _cruisers;
+
         public List<RecentProject> RecentProjects { get; set; }
 
         public ApplicationSettings()
@@ -24,7 +65,7 @@ namespace FSCruiser.Core
         public bool BackUpToCurrentDir { get; set; }
 
         [XmlAttribute]
-        public string BackupDir 
+        public string BackupDir
         {
             get { return _backupDir; }
             set
@@ -47,7 +88,7 @@ namespace FSCruiser.Core
         public bool EnableCruiserPopup { get; set; }
 
         [XmlElement]
-        public List<CruiserVM> Cruisers 
+        public List<CruiserVM> Cruisers
         {
             get
             {
@@ -57,11 +98,51 @@ namespace FSCruiser.Core
                 }
                 return _cruisers;
             }
-            set { _cruisers = value; } 
+            set { _cruisers = value; }
         }
 
         [XmlElement]
         public float DataGridFontSize { get; set; }
+
+        public static void Initialize()
+        {
+            try
+            {
+                if (File.Exists(ApplicationSettingFilePath))
+                {
+                    var appSettingsPath = ApplicationSettingFilePath;
+
+                    _instance = Deserialize(appSettingsPath);
+                }
+                else
+                {
+                    //previous versions stored app settings in the executing dir
+                    //so if no app setting file exists check old location
+
+                    var oldSettingsPath = System.IO.Path.Combine(GetExecutionDirectory()
+                        , Constants.APP_SETTINGS_PATH);
+
+                    if (File.Exists(oldSettingsPath))
+                    {
+                        _instance = ApplicationSettings.Deserialize(oldSettingsPath);
+                        try
+                        {
+                            System.IO.File.Delete(oldSettingsPath);
+                        }
+                        catch { }
+                    }
+                    else
+                    {
+                        _instance = new ApplicationSettings();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.HandelEx(new UserFacingException("Fail to load application settings", e));
+                _instance = new ApplicationSettings();
+            }
+        }
 
         public static ApplicationSettings Deserialize(string path)
         {
@@ -69,11 +150,55 @@ namespace FSCruiser.Core
             using (StreamReader reader = new StreamReader(path))
             {
                 return (ApplicationSettings)serializer.Deserialize(reader);
-            }            
+            }
         }
 
+        public static void Save()
+        {
+            if (_instance == null)
+            {
+                return;
+            }
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
+                var dir = ApplicationSettingDirectory;
+
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                var path = ApplicationSettingFilePath;
+
+                using (StreamWriter writer = new StreamWriter(path))
+                {
+                    serializer.Serialize(writer, _instance);
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.HandelEx(new UserFacingException("Unabel to save user settings", e));
+            }
+        }
+
+        static string GetExecutionDirectory()
+        {
+            string name = System.Reflection.Assembly
+                .GetCallingAssembly()
+                .GetName().CodeBase;
+
+            //clean up path, in FF name is a URI
+            if (name.StartsWith(@"file:///"))
+            {
+                name = name.Replace("file:///", string.Empty);
+            }
+            string dir = System.IO.Path.GetDirectoryName(name);
+            return dir;
+        }
 
         #region Cruisers
+
         //public CruiserVM[] GetCruiserList()
         //{
         //    if (this.Cruisers == null)
@@ -100,8 +225,8 @@ namespace FSCruiser.Core
         {
             this.Cruisers.Remove(cruiser);
         }
-        #endregion
 
+        #endregion Cruisers
 
         #region Recent Files
 
@@ -126,6 +251,7 @@ namespace FSCruiser.Core
                 RecentProjects.Clear();
             }
         }
-        #endregion
+
+        #endregion Recent Files
     }
 }

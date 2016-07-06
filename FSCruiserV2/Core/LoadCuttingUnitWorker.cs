@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using FSCruiser.Core.Models;
-using System.Diagnostics;
-using System.ComponentModel;
 
 namespace FSCruiser.Core
 {
@@ -31,7 +30,7 @@ namespace FSCruiser.Core
             }
             this._loadCuttingUnitDataThread = new Thread(this.LoadData);
             this._loadCuttingUnitDataThread.IsBackground = true;
-            this._loadCuttingUnitDataThread.Priority = Constants.LOAD_CUTTINGUNITDATA_PRIORITY;
+            this._loadCuttingUnitDataThread.Priority = System.Threading.ThreadPriority.BelowNormal;
             this._loadCuttingUnitDataThread.Start();
         }
 
@@ -45,42 +44,17 @@ namespace FSCruiser.Core
 
         public void LoadData()
         {
-            InitializeSampleGroups();
-
-            //InitializeCounts();
-            //InitializeUnitTreeNumIndex();
-            _unit.TallyHistoryBuffer = new TallyHistoryCollection(_unit, Constants.MAX_TALLY_HISTORY_SIZE);
-            _unit.TallyHistoryBuffer.Initialize();
-
-
             InitializeNonPlotTrees();
+            InitializeTallyBuffer();
 
             this.OnDoneLoading();
         }
 
-        //public void InitializeCounts()
-        //{
-        //    _unit.Counts = _unit.DAL.Read<CountTreeVM>((string)null);
-        //}
-
-        public void InitializeSampleGroups()
+        public void InitializeTallyBuffer()
         {
-            //create a list of all samplegroups in the unit
-            _unit.SampleGroups = _unit.DAL.From<SampleGroupVM>()
-                .Join("Stratum", "USING (Stratum_CN)")
-                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
-                .Where("CuttingUnitStratum.CuttingUnit_CN = ?")
-                .Read(_unit.CuttingUnit_CN).ToList();
-
-            //initialize sample selectors for all sampleGroups
-            foreach (SampleGroupVM sg in _unit.SampleGroups)
-            {
-                //DataEntryMode mode = GetStrataDataEntryMode(sg.Stratum);
-                sg.Sampler = sg.MakeSampleSelecter();
-            }
+            _unit.TallyHistoryBuffer = new TallyHistoryCollection(_unit, Constants.MAX_TALLY_HISTORY_SIZE);
+            _unit.TallyHistoryBuffer.Initialize();
         }
-
-        
 
         public void InitializeNonPlotTrees()
         {
@@ -91,7 +65,7 @@ namespace FSCruiser.Core
                         "Stratum.Method IN ('100','STR','3P','S3P')")
                 .OrderBy("TreeNumber")
                 .Read(_unit.CuttingUnit_CN).ToList();
-            
+
             _unit.NonPlotTrees = new BindingList<TreeVM>(nonPlotTrees);
             _unit.ValidateTreesAsync();
         }

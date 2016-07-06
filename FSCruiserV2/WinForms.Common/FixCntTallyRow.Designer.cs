@@ -27,73 +27,73 @@ namespace FSCruiser.WinForms.Common
         /// Required method for Designer support - do not modify 
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent(int width, int height, IFixCntObject obj)
+        private void InitializeComponent()
         {
-            int panelContentWidth = width - lblTitle.Width;
-            int panelButtonHeight = height - 25;
-
-            this.lblTitle = new System.Windows.Forms.Label();
-            this.panel = new System.Windows.Forms.Panel();
-            this.pnlHeaders = new System.Windows.Forms.Panel();
-            this.pnlButtons = new System.Windows.Forms.Panel();
-            this.panel.SuspendLayout();
+            System.Windows.Forms.Panel panel1;
+            this._tallyContainer_PNL = new System.Windows.Forms.Panel();
+            this._speciesName_LBL = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            panel1 = new System.Windows.Forms.Panel();
+            panel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // lblTitle
+            // _tallyContainer_PNL
             // 
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblTitle.Location = new System.Drawing.Point(0, 0);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(50, height);
-            this.lblTitle.Text = obj.Name;
-            this.lblTitle.Font = new Font(FontFamily.GenericSansSerif, 25);
+            this._tallyContainer_PNL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._tallyContainer_PNL.Location = new System.Drawing.Point(62, 0);
+            this._tallyContainer_PNL.Name = "_tallyContainer_PNL";
+            this._tallyContainer_PNL.Size = new System.Drawing.Size(336, 62);
+            this._tallyContainer_PNL.TabIndex = 0;
             // 
-            // panel
+            // _speciesName_LBL
             // 
-            this.panel.Controls.Add(this.pnlButtons);
-            this.panel.Controls.Add(this.pnlHeaders);
-            this.panel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel.Location = new System.Drawing.Point(50, 0);
-            this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(panelContentWidth, height);
+            this._speciesName_LBL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._speciesName_LBL.Location = new System.Drawing.Point(0, 13);
+            this._speciesName_LBL.Name = "_speciesName_LBL";
+            this._speciesName_LBL.Size = new System.Drawing.Size(62, 49);
+            this._speciesName_LBL.TabIndex = 1;
+            this._speciesName_LBL.Text = "<sp>";
             // 
-            // pnlHeaders
+            // panel1
             // 
-            //this.pnlHeaders.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.pnlHeaders.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlHeaders.Location = new System.Drawing.Point(0, 0);
-            this.pnlHeaders.Name = "pnlHeaders";
-            this.pnlHeaders.Size = new System.Drawing.Size(panelContentWidth, 25);
+            panel1.Controls.Add(this._speciesName_LBL);
+            panel1.Controls.Add(this.label1);
+            panel1.Dock = System.Windows.Forms.DockStyle.Left;
+            panel1.Location = new System.Drawing.Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(62, 62);
+            panel1.TabIndex = 0;
             // 
-            // pnlButtons
+            // label1
             // 
-            this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlButtons.Location = new System.Drawing.Point(0, 25);
-            this.pnlButtons.Name = "pnlButtons";
-            this.pnlButtons.Size = new System.Drawing.Size(panelContentWidth, panelButtonHeight);
-
+#if !NetCF
+            this.label1.AutoSize = true;
+#endif
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(48, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Species:";
             // 
             // FixCntTallyRow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panel);
-            this.Controls.Add(this.lblTitle);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.Controls.Add(this._tallyContainer_PNL);
+            this.Controls.Add(panel1);
             this.Name = "FixCntTallyRow";
-            this.Size = new System.Drawing.Size(width, height);
-            this.panel.ResumeLayout(false);
+            this.Size = new System.Drawing.Size(398, 62);
+            panel1.ResumeLayout(true);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label lblTitle;
-        private System.Windows.Forms.Panel panel;
-        private System.Windows.Forms.Panel pnlButtons;
-        private System.Windows.Forms.Panel pnlHeaders;
+        private System.Windows.Forms.Panel _tallyContainer_PNL;
+        private System.Windows.Forms.Label _speciesName_LBL;
+        private System.Windows.Forms.Label label1;
+
 
     }
 }

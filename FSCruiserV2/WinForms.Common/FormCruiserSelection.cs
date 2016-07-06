@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using FSCruiser.Core.ViewInterfaces;
 
 namespace FSCruiser.WinForms
 {
     public partial class FormCruiserSelection : Form, ICruiserSelectionView
     {
         private FormCruiserSelectionLogic _logicController;
+
         public FormCruiserSelection(IApplicationController controller)
         {
             _logicController = new FormCruiserSelectionLogic(controller, this);
@@ -36,11 +33,10 @@ namespace FSCruiser.WinForms
             set { _sampleGroupLBL.Text = value; }
         }
 
-
         public DialogResult ShowDialog(TreeVM tree)
         {
             _logicController.Tree = tree;
-            
+
             return base.ShowDialog();
         }
 
@@ -74,7 +70,7 @@ namespace FSCruiser.WinForms
                 {
                     b.Text = String.Format(" {0}", cruisers[i].Initials);
                 }
-                b.Click +=new EventHandler(button_Click);
+                b.Click += new EventHandler(button_Click);
                 b.Tag = cruisers[i];
 #if NetCF
                 FMSC.Controls.DpiHelper.AdjustControl(b);
@@ -83,9 +79,9 @@ namespace FSCruiser.WinForms
             }
         }
 
-        void  button_Click(object sender, EventArgs e)
+        void button_Click(object sender, EventArgs e)
         {
- 	        Button b = (Button)sender;
+            Button b = (Button)sender;
             CruiserVM cruiser = (CruiserVM)b.Tag;
             _logicController.HandleCruiserSelected(cruiser);
         }

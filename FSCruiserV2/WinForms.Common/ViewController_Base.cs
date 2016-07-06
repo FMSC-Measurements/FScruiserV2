@@ -1,32 +1,23 @@
 ﻿using System;
-
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
-using System.Threading;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
-using FSCruiser.WinForms;
-using FSCruiser.Core.Models;
-using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.Core;
+using FSCruiser.Core.Models;
 using FSCruiser.WinForms.DataEntry;
 
 namespace FSCruiser.WinForms.Common
 {
     public abstract class WinFormsViewControllerBase : IViewController
     {
-        private static Thread _splashThread;
-
         private Dictionary<StratumDO, FormLogs> _logViews = new Dictionary<StratumDO, FormLogs>();
 
         protected object _dataEntrySyncLock = new object();
         private FormMain _main;
         private FormNumPad _numPadDialog;
         private Form3PNumPad _threePNumPad;
-        private FormCruiserSelection _cruiserSelectionView;
         protected FormDataEntry _dataEntryView;
-
 
         private int _showWait = 0;
         private bool _enableLogGrading = true;
@@ -35,7 +26,7 @@ namespace FSCruiser.WinForms.Common
 
         #region IViewController Members
 
-        public event CancelEventHandler ApplicationClosing;        
+        public event CancelEventHandler ApplicationClosing;
 
         public bool EnableLogGrading
         {
@@ -55,18 +46,6 @@ namespace FSCruiser.WinForms.Common
         }
 
         //public bool EnableCruiserSelectionPopup { get; set; }
-
-        public FormCruiserSelection CruiserSelectionView
-        {
-            get
-            {
-                if (_cruiserSelectionView == null)
-                {
-                    _cruiserSelectionView = new FormCruiserSelection(this.ApplicationController);
-                }
-                return _cruiserSelectionView;
-            }
-        }
 
         public FormMain MainView
         {
@@ -128,7 +107,7 @@ namespace FSCruiser.WinForms.Common
 
         public abstract void BeginShowSplash();
 
-        public FormLogs GetLogsView(StratumVM stratum)
+        public FormLogs GetLogsView(StratumModel stratum)
         {
             if (_logViews.ContainsKey(stratum))
             {
@@ -138,8 +117,7 @@ namespace FSCruiser.WinForms.Common
             _logViews.Add(stratum, logView);
 
             return logView;
-        }   
-
+        }
 
         //public void HandleCuttingUnitDataLoaded()
         //{
@@ -173,7 +151,6 @@ namespace FSCruiser.WinForms.Common
 
         public abstract void SignalInvalidAction();
 
-
         public void ShowMain()
         {
             this.MainView.Show();
@@ -188,31 +165,21 @@ namespace FSCruiser.WinForms.Common
         }
 
         public abstract CruiseDAL.DataObjects.TreeDefaultValueDO ShowAddPopulation();
-       
-        public abstract CruiseDAL.DataObjects.TreeDefaultValueDO ShowAddPopulation(CruiseDAL.DataObjects.SampleGroupDO sg);
 
+        public abstract CruiseDAL.DataObjects.TreeDefaultValueDO ShowAddPopulation(CruiseDAL.DataObjects.SampleGroupDO sg);
 
         public abstract void ShowBackupUtil();
 
-
-        public void ShowCruiserSelection(TreeVM tree)
-        {
-            if (this.ApplicationController.Settings.EnableCruiserPopup)
-            {
-                this.CruiserSelectionView.ShowDialog(tree);
-            }
-        }
+        public virtual void ShowCruiserSelection(TreeVM tree)
+        { }
 
         public abstract System.Windows.Forms.DialogResult ShowEditSampleGroup(CruiseDAL.DataObjects.SampleGroupDO sg, bool allowEdit);
 
-
         public abstract System.Windows.Forms.DialogResult ShowEditTreeDefault(CruiseDAL.DataObjects.TreeDefaultValueDO tdv);
-
 
         public abstract System.Windows.Forms.DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage);
 
-
-        public void ShowLogsView(StratumVM stratum, TreeVM tree)
+        public void ShowLogsView(StratumModel stratum, TreeVM tree)
         {
             if (stratum == null)
             {
@@ -221,12 +188,9 @@ namespace FSCruiser.WinForms.Common
             this.GetLogsView(stratum).ShowDialog(tree);
         }
 
-
         public abstract void ShowManageCruisers();
 
-
         public abstract System.Windows.Forms.DialogResult ShowOpenCruiseFileDialog(out string fileName);
-
 
         public abstract void ShowDataEntry(CuttingUnitVM unit);
 
@@ -256,7 +220,7 @@ namespace FSCruiser.WinForms.Common
             {
                 using (var view = new FormPlotInfo())
                 {
-#if !NetCF 
+#if !NetCF
                     view.Owner = this._dataEntryView;
                     view.StartPosition = FormStartPosition.CenterParent;
 #endif
@@ -265,10 +229,19 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-
         public void ShowTallySettings(CountTreeVM count)
         {
-            using(FormTallySettings view = new FormTallySettings(this.ApplicationController))
+            try
+            {
+                count.Save();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e);
+                return;
+            }
+
+            using (FormTallySettings view = new FormTallySettings(this.ApplicationController))
             {
                 view.ShowDialog(count);
             }
@@ -307,19 +280,13 @@ namespace FSCruiser.WinForms.Common
         /// <returns>KPI, value is -1 if STM</returns>
         public int? AskKPI(int min, int max)
         {
-            ThreePNumPad.ShowDialog(min, max, null, true);
+            ThreePNumPad.ShowDialog(min, max, null, false);
             return ThreePNumPad.UserEnteredValue;
         }
-        
- 
 
         public abstract void SignalMeasureTree(bool showMessage);
 
-
         public abstract void SignalInsuranceTree();
-
-        
-
 
         public void ShowWait()
         {
@@ -335,7 +302,7 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-        #endregion
+        #endregion IViewController Members
 
         #region IDisposable Members
 
@@ -349,7 +316,6 @@ namespace FSCruiser.WinForms.Common
         {
             if (disposing)
             {
-
                 if (this._main != null)
                 {
                     this._main.Dispose();
@@ -360,17 +326,10 @@ namespace FSCruiser.WinForms.Common
                     this._numPadDialog.Dispose();
                     this._numPadDialog = null;
                 }
-                if (this._cruiserSelectionView != null)
-                {
-                    this._cruiserSelectionView.Dispose();
-                    this._cruiserSelectionView = null; 
-                }
-
             }
-
         }
 
-        #endregion
+        #endregion IDisposable Members
 
         protected void OnApplicationClosing(object sender, CancelEventArgs e)
         {

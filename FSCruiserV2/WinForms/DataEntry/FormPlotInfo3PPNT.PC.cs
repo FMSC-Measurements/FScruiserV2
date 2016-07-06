@@ -1,33 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using FMSC.Sampling;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
-using CruiseDAL.DataObjects;
 
 namespace FSCruiser.WinForms.DataEntry
 {
     public partial class Form3PPNTPlotInfo : Form
     {
-
-
         public Form3PPNTPlotInfo(IViewController viewController)
         {
             InitializeComponent();
         }
 
-
-        private bool _blockTBClick = false;
         Plot3PPNT _plot;
         PlotStratum _stratum;
-
-
 
         public DialogResult ShowDialog(PlotVM plot, PlotStratum stratum, bool allowEdit)
         {
@@ -89,13 +77,12 @@ namespace FSCruiser.WinForms.DataEntry
 
                 lock (_plot.DAL.TransactionSyncLock)
                 {
-
                     _plot.DAL.BeginTransaction();
                     try
                     {
                         _plot.Save();
 
-                        ThreePItem item = (ThreePItem)_plot.Stratum.SampleSelecter.NextItem();
+                        ThreePItem item = (ThreePItem)_stratum.SampleSelecter.NextItem();
 
                         if (_plot.KPI >= item.KPI)
                         {
@@ -117,7 +104,6 @@ namespace FSCruiser.WinForms.DataEntry
                 }
             }
         }
-       
 
         void SignalMeasurePlot()
         {
@@ -131,14 +117,9 @@ namespace FSCruiser.WinForms.DataEntry
             MessageBox.Show("Count Plot");
         }
 
-        private void TB_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-
         private void _BS_plot_CurrentItemChanged(object sender, EventArgs e)
         {
             _plot.KPI = _plot.CalculateKPI();
-        }        
+        }
     }
 }

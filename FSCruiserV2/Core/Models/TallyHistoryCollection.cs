@@ -1,23 +1,23 @@
 ﻿using System;
-
+using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using CruiseDAL.DataObjects;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Xml.Serialization;
-using System.ComponentModel;
+using CruiseDAL.DataObjects;
 
 namespace FSCruiser.Core.Models
 {
-    public class TallyHistoryCollection : List<TallyAction>, System.ComponentModel.IBindingList
+    public class TallyHistoryCollection : IList<TallyAction>, System.ComponentModel.IBindingList, ICollection, IList
     {
-        private object syncLock = new object();
-        private ListChangedEventHandler onListChanged;
-
-        //private LinkedList<TallyAction> _tallyActions = new LinkedList<TallyAction>();
+        object syncLock = new object();
+        List<TallyAction> _list = new List<TallyAction>();
         protected CuttingUnitVM _unit;
 
         public int MaxSize { get; protected set; }
+
+        public int Count { get { return _list.Count; } }
 
         public TallyHistoryCollection(CuttingUnitVM unit, int maxSize)
         {
@@ -25,42 +25,28 @@ namespace FSCruiser.Core.Models
             this._unit = unit;
         }
 
-        public void Initialize()
+        public void Add(TallyAction action)
         {
-            if (!String.IsNullOrEmpty(_unit.TallyHistory))
-            {
-                foreach (TallyAction action in this.DeserializeTallyHistory(_unit.TallyHistory))
-                {
-                    Add(action);
-                }
-            }
-        }
-
-
-
-        public new void Add(TallyAction action)
-        {
-            if (action.KPI != 0)
-            {
-                TreeEstimateDO te = new TreeEstimateDO(_unit.DAL);
-                te.KPI = action.KPI;
-                te.CountTree = action.Count;
-                action.TreeEstimate = te;
-                te.Save();
-            }
-            action.Time = DateTime.Now.ToString("hh:mm");
+            //if (action.KPI != 0)
+            //{
+            //    TreeEstimateDO te = new TreeEstimateDO(_unit.DAL);
+            //    te.KPI = action.KPI;
+            //    te.CountTree = action.Count;
+            //    action.TreeEstimate = te;
+            //    te.Save();
+            //}
+            //action.Time = DateTime.Now.ToString("hh:mm");
 
             lock (syncLock)
             {
-                base.Add(action);
-                if (base.Count > MaxSize)
+                _list.Add(action);
+                if (Count > MaxSize)
                 {
-
-                    while (base.Count > MaxSize)
+                    while (Count > MaxSize)
                     {
                         try
                         {
-                            base.RemoveAt(0);
+                            _list.RemoveAt(0);
                         }
                         catch { }//do nothing
                     }
@@ -68,42 +54,19 @@ namespace FSCruiser.Core.Models
                 }
                 else
                 {
-                    OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, base.Count - 1));
+                    OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, Count - 1));
                 }
             }
         }
-
-        public void Save()
-        {
-            try
-            {
-                var xmlStr = this.SerializeTallyHistory();
-                
-                if (!String.IsNullOrEmpty(xmlStr))
-                {
-                    _unit.TallyHistory = xmlStr;
-                    _unit.Save();
-                }
-            }
-            catch (Exception e)
-            {
-                throw new TallyHistoryPersistanceException("Unable to save tally history", e);
-                //this.HandleException(e, "Unable to save tally history", false, true);
-                //this.HandleNonCriticalException(e, "Unable to save tally history");
-            }
-        }
-
-        
 
         public new bool Remove(TallyAction action)
         {
             lock (syncLock)
             {
-
-                int itemIndex = base.IndexOf(action);
+                int itemIndex = IndexOf(action);
                 if (itemIndex != -1)
                 {
-                    base.RemoveAt(itemIndex);
+                    RemoveAt(itemIndex);
                     action.Count.TreeCount--;
                     //action.Sampler.Count -= 1;
                     if (action.KPI > 0)
@@ -116,7 +79,7 @@ namespace FSCruiser.Core.Models
                     {
                         _unit.DeleteTree(action.TreeRecord);
                     }
-                    OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, itemIndex));
+
                     return true;
                 }
                 else
@@ -138,7 +101,6 @@ namespace FSCruiser.Core.Models
         //    }
         //    action.Time = DateTime.Now.ToString("hh:mm");
         //    Add(action);
-
 
         //    OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         //}
@@ -169,22 +131,38 @@ namespace FSCruiser.Core.Models
         //        }
         //    }
 
-
         //}
 
-        protected string SerializeTallyHistory()
+        public void Initialize()
         {
-            using (StringWriter writer = new StringWriter())
+            if (!String.IsNullOrEmpty(_unit.TallyHistory))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(TallyAction[]));
-                TallyAction[] array = new TallyAction[base.Count];
-                base.CopyTo(array, 0);
-                serializer.Serialize(writer, array);
-                return writer.ToString();
+                foreach (TallyAction action in this.DeserializeTallyHistory(_unit.TallyHistory))
+                {
+                    _list.Add(action);
+                }
             }
         }
 
-        protected TallyAction[] DeserializeTallyHistory( string xmlStr)
+        public void Save()
+        {
+            try
+            {
+                var xmlStr = SerializeTallyHistory();
+
+                if (!String.IsNullOrEmpty(xmlStr))
+                {
+                    _unit.TallyHistory = xmlStr;
+                    _unit.Save();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new TallyHistoryPersistanceException("Unable to save tally history", e);
+            }
+        }
+
+        protected TallyAction[] DeserializeTallyHistory(string xmlStr)
         {
             TallyAction[] tallyHistory = null;
             try
@@ -207,19 +185,28 @@ namespace FSCruiser.Core.Models
                     action.PopulateData(_unit.DAL);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new TallyHistoryPersistanceException("Unable to load tally history", e);
-
-                //this.HandleNonCriticalException(e, "Unable to load tally history");
             }
 
             return tallyHistory;
         }
 
-
+        protected string SerializeTallyHistory()
+        {
+            using (StringWriter writer = new StringWriter())
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(TallyAction[]));
+                TallyAction[] array = new TallyAction[Count];
+                CopyTo(array, 0);
+                serializer.Serialize(writer, array);
+                return writer.ToString();
+            }
+        }
 
         #region IBindingList Members
+
         bool System.ComponentModel.IBindingList.SupportsSearching
         {
             get { return false; }
@@ -250,27 +237,18 @@ namespace FSCruiser.Core.Models
             get { return true; }
         }
 
-        public event ListChangedEventHandler ListChanged
-        {
-            add
-            {
-                onListChanged += value;
-            }
-            remove
-            {
-                onListChanged -= value;
-            }
-        }
+        public event ListChangedEventHandler ListChanged;
 
         protected virtual void OnListChanged(ListChangedEventArgs ev)
         {
-            if (onListChanged != null)
+            if (ListChanged != null)
             {
-                onListChanged(this, ev);
+                ListChanged(this, ev);
             }
         }
 
         #region unsupported IBindingList Members
+
         bool System.ComponentModel.IBindingList.IsSorted
         {
             get { throw new NotSupportedException(); }
@@ -315,8 +293,153 @@ namespace FSCruiser.Core.Models
         {
             throw new NotSupportedException();
         }
-        #endregion
-        #endregion
 
+        #endregion unsupported IBindingList Members
+
+        #endregion IBindingList Members
+
+        #region IList<TallyAction> Members
+
+        public int IndexOf(TallyAction item)
+        {
+            return _list.IndexOf(item);
+        }
+
+        public void Insert(int index, TallyAction item)
+        {
+            _list.Insert(index, item);
+            OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
+        }
+
+        public void RemoveAt(int index)
+        {
+            _list.RemoveAt(index);
+            OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
+        }
+
+        public TallyAction this[int index]
+        {
+            get
+            {
+                return _list[index];
+            }
+            set
+            {
+                _list[index] = value;
+            }
+        }
+
+        #endregion IList<TallyAction> Members
+
+        #region ICollection<TallyAction> Members
+
+        public void Clear()
+        {
+            _list.Clear();
+            OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+        }
+
+        public bool Contains(TallyAction item)
+        {
+            return _list.Contains(item);
+        }
+
+        public void CopyTo(TallyAction[] array, int arrayIndex)
+        {
+            _list.CopyTo(array, arrayIndex);
+        }
+
+        public bool IsReadOnly
+        {
+            get { return false; }
+        }
+
+        #endregion ICollection<TallyAction> Members
+
+        #region IEnumerable<TallyAction> Members
+
+        public IEnumerator<TallyAction> GetEnumerator()
+        {
+            return _list.GetEnumerator();
+        }
+
+        #endregion IEnumerable<TallyAction> Members
+
+        #region IEnumerable Members
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return _list.GetEnumerator();
+        }
+
+        #endregion IEnumerable Members
+
+        #region ICollection Members
+
+        void ICollection.CopyTo(Array array, int index)
+        {
+            ((ICollection)_list).CopyTo(array, index);
+        }
+
+        bool ICollection.IsSynchronized
+        {
+            get { return ((ICollection)_list).IsSynchronized; }
+        }
+
+        object ICollection.SyncRoot
+        {
+            get { return ((ICollection)_list).SyncRoot; }
+        }
+
+        #endregion ICollection Members
+
+        #region IList Members
+
+        int IList.Add(object value)
+        {
+            return ((IList)_list).Add(value);
+        }
+
+        bool IList.Contains(object value)
+        {
+            return ((IList)_list).Contains(value);
+        }
+
+        int IList.IndexOf(object value)
+        {
+            return ((IList)_list).IndexOf(value);
+        }
+
+        void IList.Insert(int index, object value)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IList.IsFixedSize
+        {
+            get { return false; }
+        }
+
+        void IList.Remove(object value)
+        {
+            ((IList)_list).Remove(value);
+        }
+
+        object IList.this[int index]
+        {
+            get
+            {
+                return this[index];
+            }
+            set
+            {
+                if (value is TallyAction)
+                {
+                    this[index] = (TallyAction)value;
+                }
+            }
+        }
+
+        #endregion IList Members
     }
 }

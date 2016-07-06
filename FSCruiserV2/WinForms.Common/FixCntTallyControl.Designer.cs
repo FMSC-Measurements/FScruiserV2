@@ -1,6 +1,6 @@
 ﻿namespace FSCruiser.WinForms.Common
 {
-    partial class FixCntTallyControl
+    partial class FixCNTTallyControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,10 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.SuspendLayout();
+            // 
+            // FixCntTallyControl
+            // 
+            this.AutoScroll = true;
+            this.Name = "FixCntTallyControl";
+            this.Size = new System.Drawing.Size(257, 205);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
     }
 }

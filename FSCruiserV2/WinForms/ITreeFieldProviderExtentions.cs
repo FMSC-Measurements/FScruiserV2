@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FSCruiser.Core.Models;
-using CruiseDAL.DataObjects;
 using System.Windows.Forms;
+using CruiseDAL.DataObjects;
+using FSCruiser.Core.Models;
 
 namespace FSCruiser.WinForms
 {
@@ -12,7 +10,7 @@ namespace FSCruiser.WinForms
     {
         public static IEnumerable<DataGridViewColumn> MakeTreeColumns(this ITreeFieldProvider provider)
         {
-            List<TreeFieldSetupDO> fieldSetups = provider.ReadTreeFields();
+            var fieldSetups = provider.TreeFields;
             List<DataGridViewColumn> columns = new List<DataGridViewColumn>();
 
             foreach (var fieldSetup in fieldSetups)
@@ -20,11 +18,15 @@ namespace FSCruiser.WinForms
                 DataGridViewColumn col = null;
                 switch (fieldSetup.Field)
                 {
+                    case "CuttingUnit":
+                        {
+                            continue;
+                        }
                     case "Species":
                         {
                             col = new DataGridViewComboBoxColumn()
                             {
-                                DataPropertyName = "TreeDefaultValue",                                
+                                DataPropertyName = "TreeDefaultValue",
                                 DisplayMember = "Species",
                                 ValueMember = "Self",
                                 FlatStyle = FlatStyle.Flat
@@ -89,7 +91,6 @@ namespace FSCruiser.WinForms
                             col = MakeColumn(fieldSetup.ColumnType);
                             break;
                         }
-
                 }
 
                 if (String.IsNullOrEmpty(col.DataPropertyName)) //see if we have already set the Mapping Name
@@ -103,7 +104,7 @@ namespace FSCruiser.WinForms
                     col.HeaderText = fieldSetup.Heading;
                 }
 
-                if (!string.IsNullOrEmpty(fieldSetup.Format)    //field has format 
+                if (!string.IsNullOrEmpty(fieldSetup.Format)    //field has format
                     && (col.DefaultCellStyle == null            //and column doesn't have format set yet
                     || string.IsNullOrEmpty(col.DefaultCellStyle.Format)))
                 {
@@ -126,10 +127,9 @@ namespace FSCruiser.WinForms
                 DataPropertyName = "LogCountActual"
             });
 
-
             return columns.ToArray();
-
         }
+
         private static DataGridViewColumn MakeColumn(string columnType)
         {
             switch (columnType)

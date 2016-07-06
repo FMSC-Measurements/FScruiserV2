@@ -1,7 +1,5 @@
 ﻿using System;
 
-using System.Collections.Generic;
-using System.Text;
 using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
 
@@ -10,8 +8,9 @@ namespace FSCruiser.Core.Models
     public class Plot3PPNT : PlotVM
     {
         uint _treeCount;
+
         [IgnoreField]
-        public uint TreeCount 
+        public uint TreeCount
         {
             get { return _treeCount; }
             set
@@ -22,8 +21,9 @@ namespace FSCruiser.Core.Models
         }
 
         uint _averageHeight;
+
         [IgnoreField]
-        public uint AverageHeight 
+        public uint AverageHeight
         {
             get { return _averageHeight; }
             set
@@ -33,28 +33,30 @@ namespace FSCruiser.Core.Models
             }
         }
 
-
         decimal _volFactor = Constants.DEFAULT_VOL_FACTOR;
+
         [IgnoreField]
-        public decimal VolFactor 
+        public decimal VolFactor
         {
             get { return _volFactor; }
-            set 
-            { 
+            set
+            {
                 _volFactor = value;
                 NotifyPropertyChanged("VolFactor");
             }
         }
 
         public Plot3PPNT() : base() { }
+
         public Plot3PPNT(CruiseDAL.DAL dal) : base(dal) { }
+
         public Plot3PPNT(PlotDO plot) : base(plot) { }
 
         public void CreateTrees()
         {
             for (long i = 0; i < this.TreeCount; i++)
             {
-                TreeVM t = this.CreateNewTreeEntry((SampleGroupVM)null, (TreeDefaultValueDO)null, false);
+                TreeVM t = this.CreateNewTreeEntry((SampleGroupModel)null, (TreeDefaultValueDO)null, false);
                 t.TreeCount = 1;
                 t.CountOrMeasure = "M";
                 t.TreeNumber = i + 1;

@@ -1,10 +1,8 @@
 ﻿using System;
-
 using System.Collections.Generic;
-using System.Text;
-using FSCruiser.Core.Models;
-using System.Threading;
 using System.Diagnostics;
+using System.Threading;
+using FSCruiser.Core.Models;
 
 namespace FSCruiser.Core
 {
@@ -44,35 +42,34 @@ namespace FSCruiser.Core
 
             foreach (TreeVM tree in _treesLocal)
             {
-                string[] visableFields = null;
                 try
                 {
-                    visableFields = tree.Stratum.TreeFieldNames;
+                    valid = tree.ValidateVisableFields() && valid;
                 }
-                catch
-                { }//ingnore exceptions
-
-                if (visableFields != null)
+                catch (Exception e)
                 {
-                    valid = tree.Validate(visableFields) && valid;
+                    Debug.WriteLine(e);
                 }
-                else
-                {
-                    valid = tree.Validate() && valid;
-                }
-                try
-                {
-                    tree.SaveErrors();
-                }
-                catch
-                {
-                    valid = false;
-                    //TODO should we do something if tree error unable to save
-                }
+                //var visableFields = tree.Stratum.TreeFields;
+                //if (visableFields != null)
+                //{
+                //    valid = tree.Validate(visableFields) && valid;
+                //}
+                //else
+                //{
+                //    valid = tree.Validate() && valid;
+                //}
+                //try
+                //{
+                //    tree.SaveErrors();
+                //}
+                //catch
+                //{
+                //    //TODO should we do something if tree error unable to save
+                //}
             }
+
             return valid;
         }
-
-
     }
 }

@@ -1,12 +1,8 @@
-﻿using System;
-
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using FSCruiser.Core.Models;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using CruiseDAL;
-
+using FSCruiser.Core.Models;
 
 namespace FSCruiser.Core
 {
@@ -60,7 +56,7 @@ namespace FSCruiser.Core
             {
                 this._saveTreesWorkerThread = new Thread(this.TrySaveAll);
                 this._saveTreesWorkerThread.IsBackground = true;
-                this._saveTreesWorkerThread.Priority = Constants.SAVE_TREES_THREAD_PRIORISTY;
+                this._saveTreesWorkerThread.Priority = System.Threading.ThreadPriority.BelowNormal;
                 this._saveTreesWorkerThread.Start();
             }
             catch
@@ -82,7 +78,6 @@ namespace FSCruiser.Core
             {
                 throw new FMSC.ORM.SQLException("not all trees were able to be saved", null);
             }
-
         }
 
         public void SaveAll()

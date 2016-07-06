@@ -1,24 +1,31 @@
 ﻿using System.Collections.Generic;
 using FSCruiser.Core.Models;
 
-
 namespace FSCruiser.Core.ViewInterfaces
 {
-    public interface ITreeView: IDataEntryPage
+    public interface ITreeView : IDataEntryPage
     {
         bool UserCanAddTrees { get; set; }
+
         //String[] VisableFields { get; }
         IList<TreeVM> Trees { get; }
 
         bool ErrorColumnVisable { get; set; }
+
         bool LogColumnVisable { get; set; }
-        
+
         void HandleEnableLogGradingChanged();
+
         void HandleCruisersChanged();
+
         void DeleteSelectedTree();
+
         void EndEdit();
+
         void MoveLastTree();
+
         void MoveHomeField();
+
         TreeVM UserAddTree();
 
         //void UpdateSpeciesColumn(TreeVM tree);
@@ -36,8 +43,7 @@ namespace FSCruiser.Core.ViewInterfaces
         public static void ToggleLogColumn(this ITreeView view)
         {
             if (view == null) { return; }
-            view.LogColumnVisable = !view.LogColumnVisable; 
+            view.LogColumnVisable = !view.LogColumnVisable;
         }
     }
-
 }

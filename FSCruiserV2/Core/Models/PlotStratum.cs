@@ -1,39 +1,44 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using CruiseDAL;
-using FMSC.ORM.EntityModel.Attributes;
 using CruiseDAL.DataObjects;
+using CruiseDAL.Schema;
+using FMSC.ORM.EntityModel.Attributes;
+using FMSC.Sampling;
 
 namespace FSCruiser.Core.Models
 {
-    public class PlotStratum : StratumVM
+    public class PlotStratum : StratumModel
     {
         [IgnoreField]
         public bool Is3PPNT
         {
             get
             {
-                return Method == CruiseDAL.Schema.CruiseMethods.THREEPPNT;
+                return Method == CruiseMethods.THREEPPNT;
             }
         }
+
+        /// <summary>
+        /// for 3ppnt
+        /// </summary>
+        public ThreePSelecter SampleSelecter { get; set; }
 
         [IgnoreField]
         public bool IsSingleStage
         {
             get
             {
-                return this.Method == CruiseDAL.Schema.CruiseMethods.PNT
-                    || this.Method == CruiseDAL.Schema.CruiseMethods.FIX;
+                return this.Method == CruiseMethods.PNT
+                    || this.Method == CruiseMethods.FIX;
             }
         }
 
         [IgnoreField]
         public IList<PlotVM> Plots { get; protected set; }
 
-
-        public PlotVM MakePlot(CuttingUnitVM cuttingUnit)
+        public virtual PlotVM MakePlot(CuttingUnitVM cuttingUnit)
         {
             if (this.Is3PPNT)
             {
@@ -55,19 +60,23 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public void PopulatePlots(long cuttingUnit_CN)
+        protected virtual IEnumerable<PlotVM> ReadPlots(long cuttingUnit_CN)
         {
-            this.Plots = this.DAL.From<PlotVM>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
+            foreach (var plot in DAL.From<PlotVM>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
                 .OrderBy("PlotNumber")
-                .Query(this.Stratum_CN, cuttingUnit_CN)
-                .ToList();
-
-            //this.Plots = this.DAL.Read<PlotVM>("WHERE Stratum_CN = ? AND CuttingUnit_CN = ? ORDER BY PlotNumber"
-            //            , this.Stratum_CN
-            //            , cuttingUnit_CN);
+                .Read(this.Stratum_CN, cuttingUnit_CN))
+            {
+                plot.Stratum = this;
+                yield return plot;
+            }
         }
 
-        int GetNextPlotNumber(long cuttingUnit_CN)
+        public virtual void PopulatePlots(long cuttingUnit_CN)
+        {
+            this.Plots = ReadPlots(cuttingUnit_CN).ToList();
+        }
+
+        protected int GetNextPlotNumber(long cuttingUnit_CN)
         {
             try
             {
@@ -81,7 +90,6 @@ namespace FSCruiser.Core.Models
                 string query2 = string.Format("Select Max(PlotNumber) FROM Plot WHERE CuttingUnit_CN = {0} AND Stratum_CN = {1}", cuttingUnit_CN, Stratum_CN);
                 int? result2 = DAL.ExecuteScalar<int?>(query2);
                 highestInStratum = result2.GetValueOrDefault(0);
-
 
                 if (highestInUnit > highestInStratum && highestInUnit > 0)
                 {
@@ -109,21 +117,23 @@ namespace FSCruiser.Core.Models
             return true;
         }
 
-
-        public override List<TreeFieldSetupDO> ReadTreeFields()
+        protected override IEnumerable<TreeFieldSetupDO> ReadTreeFields()
         {
-            var fields = base.ReadTreeFields();
+            var fields = InternalReadTreeFields();
 
-            //if not a single stage plot strata 
-            //and count measure field is missing 
+            //if not a single stage plot strata
+            //and count measure field is missing
             //automaticly add it
             if (!IsSingleStage
                 && fields.FindIndex(((tfs) => tfs.Field == CruiseDAL.Schema.TREE.COUNTORMEASURE)) < 0)
             {
                 fields.Insert(5
-                    , new TreeFieldSetupDO() { 
+                    , new TreeFieldSetupDO()
+                    {
                         Field = CruiseDAL.Schema.TREE.COUNTORMEASURE
-                        , Heading = "C/M" });
+                        ,
+                        Heading = "C/M"
+                    });
             }
 
             return fields;

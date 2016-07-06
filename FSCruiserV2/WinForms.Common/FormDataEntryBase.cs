@@ -1,59 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Forms;
+using System.Diagnostics;
 using System.Linq;
-using FSCruiser.Core.ViewInterfaces;
-using FSCruiser.Core;
-using FSCruiser.Core.Models;
-using FSCruiser.Core.DataEntry;
-using FSCruiser.WinForms.DataEntry;
+using System.Windows.Forms;
 using FMSC.Sampling;
+using FSCruiser.Core;
+using FSCruiser.Core.DataEntry;
+using FSCruiser.Core.Models;
+using FSCruiser.Core.ViewInterfaces;
+using FSCruiser.WinForms.DataEntry;
 
 #if NetCF
+
 using Microsoft.WindowsCE.Forms;
+
 #endif
 
-namespace FSCruiser.WinForms.Common
+namespace FSCruiser.WinForms.DataEntry
 {
     /// <summary>
     /// Base class for winform Data Entry Form
     /// </summary>
-    public class FormDataEntryBase : FMSC.Controls.CustomForm, IDataEntryView
+    public partial class FormDataEntry : FMSC.Controls.CustomForm, IDataEntryView
     {
         private IDataEntryPage _previousLayout;
         protected List<IDataEntryPage> _layouts = new List<IDataEntryPage>();
         protected LayoutTreeBased _tallyLayout;
-        //protected TabControl _pageContainer;
+
         protected TabPage _tallyPage;
+
         protected TabPage _treePage;
         protected ControlTreeDataGrid _treeView;
 
 #if NetCF
+
         public InputPanel SIP { get; set; }
+
 #endif
 
         protected virtual TabControl PageContainer
         {
-            get { throw new NotSupportedException(); }
+            get { return _pageContainer; }
         }
 
         public IApplicationController Controller { get; protected set; }
-        public FormDataEntryLogic LogicController { get; protected set; }
 
-        public CuttingUnitVM Unit
+        protected void InitializeCommon(IApplicationController controller
+            , CuttingUnitVM unit)
         {
-            get
-            {
-                return LogicController.Unit;
-            }
+            KeyPreview = true;
+
+            Controller = controller;
+            LogicController = new FormDataEntryLogic(unit, Controller, this);
+
+            // Set the form title (Text) with current cutting unit and description.
+            this.Text = this.LogicController.GetViewTitle();
+
+            InitializePageContainer();
         }
 
-
-        protected FormDataEntryBase():base()
-        {
-            this.KeyPreview = true;
-        }
+        #region Inialize Controlls
 
         protected virtual TabControl MakePageContainer()
         {
@@ -65,30 +72,19 @@ namespace FSCruiser.WinForms.Common
             return pc;
         }
 
-        protected void Initialize(IApplicationController controller
-            , CuttingUnitVM unit)
+        protected void InitializePageContainer()
         {
-            this.Controller = controller;
-            this.LogicController = new FormDataEntryLogic(unit, this.Controller, this);
+            Debug.Assert(Unit != null);
 
-            this.SuspendLayout();
-
-            ////if the unit contains Tree based methods or multiple plot strata then we need a tab control
-            //if ((unitMode & DataEntryMode.Tree) == DataEntryMode.Tree ||
-            //    ((unitMode & DataEntryMode.Plot) == DataEntryMode.Plot && unit.Strata.Count > 1))
-            //{
-            //    this._pageContainer = MakePageContainer();
-            //}
-
-
+            PageContainer.SuspendLayout();
 
             //do we have any tree based strata in the unit
-            if (unit.TreeStrata != null && unit.TreeStrata.Count > 0)
+            if (Unit.TreeStrata != null && Unit.TreeStrata.Count > 0)
             {
                 InitializeTreesTab();
 
                 // if any strata are not H_PCT
-                if (unit.TreeStrata.Any(
+                if (Unit.TreeStrata.Any(
                     x => x.Method != CruiseDAL.Schema.CruiseMethods.H_PCT))
                 {
                     InitializeTallyTab();
@@ -97,20 +93,16 @@ namespace FSCruiser.WinForms.Common
 
             InitializePlotTabs();
 
-            this.PageContainer.ResumeLayout(false);
-
-            // Set the form title (Text) with current cutting unit and description.
-            this.Text = this.LogicController.GetViewTitle();
+            PageContainer.ResumeLayout(false);
 
             this.ResumeLayout(false);
         }
 
-        #region virtual methods
         protected void InitializeTreesTab()
         {
-            this._treePage = new TabPage();
+            _treePage = new TabPage();
             //this._treePage.SuspendLayout();
-            this._treePage.Text = "Trees";
+            _treePage.Text = "Trees";
 
 #if NetCF
             _treeView = new ControlTreeDataGrid(this.Controller
@@ -131,7 +123,6 @@ namespace FSCruiser.WinForms.Common
             this.PageContainer.TabPages.Add(_treePage);
             this._layouts.Add(_treeView);
         }
-
 
         protected void InitializeTallyTab()
         {
@@ -158,10 +149,8 @@ namespace FSCruiser.WinForms.Common
                     }
                     st.SampleSelecter = new ThreePSelecter((int)st.KZ3PPNT, 1000000, 0);
                 }
-                st.LoadTreeFieldNames();
 
                 st.PopulatePlots(Unit.CuttingUnit_CN.GetValueOrDefault());
-
 
                 TabPage page = new TabPage();
                 page.Text = String.Format("{0}-{1}[{2}]", st.Code, st.Method, st.Hotkey);
@@ -177,14 +166,13 @@ namespace FSCruiser.WinForms.Common
 
                 int pageIndex = PageContainer.TabPages.IndexOf(page);
                 this.LogicController.AddStratumHotKey(st.Hotkey, pageIndex);
-
             }
-
         }
 
-        #endregion
+        #endregion Inialize Controlls
 
         #region Overrides
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -206,42 +194,83 @@ namespace FSCruiser.WinForms.Common
             base.OnKeyDown(e);
             if (e.Handled) { return; }
 
-            // HACK when the escape key is pressed on some controls 
+            // HACK when the escape key is pressed on some controls
             // the device will make a invalid key press sound if OnKeyDown is not handled
             // we handle the key press in OnKeyUp
             if (e.KeyCode == Keys.Escape)
             {
                 e.Handled = true;
-            }         
+            }
         }
 
-        protected override void OnKeyUp(KeyEventArgs e)
+        protected void OnKeyUpInternal(KeyEventArgs e)
         {
             base.OnKeyUp(e);
             if (e.Handled) { return; }
 
-
             e.Handled = this.LogicController.HandleKeyPress(e);
-
-            //switch(e.KeyData)
-            //{
-            //    case Keys.Escape:
-            //        {
-            //            e.Handled = this.LogicController.HandleEscKey();
-            //            break;
-            //        }
-                
-            //    default:
-            //        {
-            //            char key = (char)e.KeyValue;
-            //            e.Handled = this.LogicController.HandleHotKey(key);
-            //            break;
-            //        }
-            //}
         }
 
+        #endregion Overrides
 
-        #endregion
+        #region Event Handlers
+
+        private void _addTreeBTN_Clicked(object sender, EventArgs e)
+        {
+            this.LogicController.HandleAddTreeClick();
+        }
+
+        private void _deleteTreeBTN_Click(object sender, EventArgs e)
+        {
+            this.LogicController.HandleDeleteRowButtonClick();
+        }
+
+        protected void OnFocusedLayoutChangedInternal(object sender, EventArgs e)
+        {
+            if (_previousLayout != null)
+            {
+                var oldTreeView = _previousLayout as ITreeView;
+                if (oldTreeView != null)
+                {
+                    oldTreeView.EndEdit();
+                    if (oldTreeView.Trees != null)
+                    {
+                        try
+                        {
+                            var worker = new SaveTreesWorker(LogicController.Database, oldTreeView.Trees);
+                            worker.SaveAll();
+                            //this.Controller.SaveTrees(((ITreeView)_previousLayout).Trees);
+                        }
+                        catch (Exception ex)
+                        {
+                            this.Controller.HandleNonCriticalException(ex, "Unable to compleate last tree save");
+                        }
+                    }
+                }
+
+                var tallyView = _previousLayout as ITallyView;
+                if (tallyView != null)
+                {
+                    tallyView.TrySaveCounts();
+                }
+            }
+
+            _previousLayout = this.FocusedLayout;
+        }
+
+        #endregion Event Handlers
+
+        #region IDataEntryView
+
+        public FormDataEntryLogic LogicController { get; protected set; }
+
+        public CuttingUnitVM Unit
+        {
+            get
+            {
+                return LogicController.Unit;
+            }
+        }
 
         public IDataEntryPage FocusedLayout
         {
@@ -270,6 +299,10 @@ namespace FSCruiser.WinForms.Common
             get { return _layouts; }
         }
 
+        public bool AskEnterMeasureTreeData()
+        {
+            return this.AskYesNo("Would you like to enter tree data now?", "Sample", MessageBoxIcon.Question, false);
+        }
 
         public void HandleCuttingUnitDataLoaded()
         {
@@ -355,55 +388,6 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-        
-        protected virtual void OnFocusedLayoutChanged(object sender, EventArgs e)
-        {
-            if (_previousLayout != null)
-            {
-                ITreeView treeView = _previousLayout as ITreeView;
-                if (treeView != null)
-                {
-                    
-                    treeView.EndEdit();
-                    if (treeView.Trees != null)
-                    {
-                        try
-                        {
-                            var worker = new SaveTreesWorker(LogicController.Database, treeView.Trees);
-                            worker.SaveAll();
-                            //this.Controller.SaveTrees(((ITreeView)_previousLayout).Trees);
-                        }
-                        catch (Exception ex)
-                        {
-                            this.Controller.HandleNonCriticalException(ex, "Unable to compleate last tree save");
-                        }
-                    }
-                }
-
-                var tallyView = _previousLayout as ITallyView;
-                if (tallyView != null)
-                {
-                    tallyView.TrySaveCounts();
-                }
-            }
-
-            _previousLayout = this.FocusedLayout;
-        }
-
-
-        private void InitializeComponent()
-        {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDataEntryBase));
-            this.SuspendLayout();
-            // 
-            // FormDataEntryBase
-            // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.ClientSize = new System.Drawing.Size(240, 294);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "FormDataEntryBase";
-            this.ResumeLayout(false);
-
-        }
+        #endregion IDataEntryView
     }
 }

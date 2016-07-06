@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace FSCruiser.WinForms
@@ -36,7 +31,7 @@ namespace FSCruiser.WinForms
 
             treeView1.Nodes[0].Nodes[0].Nodes[0].Nodes.Add("Sample Group PP");
             treeView1.Nodes[0].Nodes[0].Nodes[0].Nodes.Add("Sample Group SP");
- 
+
             treeView1.Nodes[0].Nodes[0].Nodes[1].Nodes.Add("Sample Group RF");
             treeView1.Nodes[0].Nodes[0].Nodes[1].Nodes.Add("Sample Group WF");
 
@@ -69,7 +64,7 @@ namespace FSCruiser.WinForms
         {
             TreeNode node = treeView1.SelectedNode;
 
-         //   MessageBox.Show(string.Format("You selected: {0}", node.Text));
+            //   MessageBox.Show(string.Format("You selected: {0}", node.Text));
 
             string messageString;
 
@@ -119,11 +114,10 @@ namespace FSCruiser.WinForms
                     messageString = node.Text + ": White Fir Saw, 1:10\r\nTotal trees: 48\r\nMeasured trees: 5";
                     MessageBox.Show(messageString);
                     break;
-               
+
                 default:
                     break;
             }
-
         }
     }
 }

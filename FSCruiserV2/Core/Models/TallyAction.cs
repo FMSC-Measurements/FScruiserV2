@@ -1,7 +1,6 @@
 ﻿using System;
-using CruiseDAL.DataObjects;
-using FMSC.Sampling;
 using System.Xml.Serialization;
+using CruiseDAL.DataObjects;
 
 namespace FSCruiser.Core.Models
 {
@@ -10,6 +9,7 @@ namespace FSCruiser.Core.Models
     {
         [XmlIgnore]
         public TreeVM TreeRecord { get; set; }
+
         //[XmlIgnore]
         //public SampleSelecter Sampler { get { return Count.Tag as SampleSelecter; } }
         [XmlIgnore]
@@ -25,6 +25,7 @@ namespace FSCruiser.Core.Models
         public int KPI { get; set; }
 
         private long _countCN = 0L;
+
         [XmlAttribute]
         public long CountCN
         {
@@ -36,17 +37,19 @@ namespace FSCruiser.Core.Models
         }
 
         private long _treeEstCN;
+
         [XmlAttribute]
         public long TreeEstimateCN
         {
-            get { return (this.TreeEstimate != null && this.TreeEstimate.TreeEstimate_CN != null) ? this.TreeEstimate.TreeEstimate_CN.Value : 0L;}
+            get { return (this.TreeEstimate != null && this.TreeEstimate.TreeEstimate_CN != null) ? this.TreeEstimate.TreeEstimate_CN.Value : 0L; }
             set
             {
                 _treeEstCN = value;
             }
         }
 
-        private long _treeCN; 
+        private long _treeCN;
+
         [XmlAttribute]
         public long TreeCN
         {
@@ -59,17 +62,18 @@ namespace FSCruiser.Core.Models
 
         public TallyAction()
         {
+            Time = DateTime.Now.ToString("hh:mm");
         }
 
         public TallyAction(CountTreeVM count)
+            : this()
         {
-            this.Count = count;
+            Count = count;
         }
 
         public TallyAction(TreeVM treeRecord, CountTreeVM count)
         {
-            this.TreeRecord = treeRecord;
-            this.Count = count;
+            TreeRecord = treeRecord;
         }
 
         public void PopulateData(CruiseDAL.DAL dal)
@@ -110,7 +114,7 @@ namespace FSCruiser.Core.Models
             a[0] = string.Format("{0} {1}", stCode, sgCode);
             if (KPI != 0)
             {
-                a[1] = KPI.ToString("' ['#']'"); 
+                a[1] = KPI.ToString("' ['#']'");
             }
             if (TreeRecord != null)
             {

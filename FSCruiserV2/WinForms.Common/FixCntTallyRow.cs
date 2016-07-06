@@ -1,64 +1,65 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using FSCruiser.Core.Models;
 
 namespace FSCruiser.WinForms.Common
 {
     public partial class FixCntTallyRow : UserControl
     {
-        public FixCntTallyRow(int width, int height, IFixCntObject obj)
+        public FixCntTallyRow()
         {
-            InitializeComponent(width, height, obj);
+            InitializeComponent();
+        }
 
-            int buttonZoneWidth = pnlHeaders.Width;
-            int buttonWidth = buttonZoneWidth / obj.Tallys.Count;
+        public FixCntTallyRow(IFixCNTTallyPopulation population, FixCNTTallyControl tallyLayout)
+        {
+            InitializeComponent();
 
-            int buttonHeight = height - pnlHeaders.Height;
-            int offsetX = 0;
+            TallyLayout = tallyLayout;
 
-            foreach (IFixCntTally tally in obj.Tallys)
+            _speciesName_LBL.Text = population.TreeDefaultValue.Species;
+            this.SuspendLayout();
+            foreach (var tally in population.Buckets)
             {
-                Button button = new Button();
-                button.Dock = DockStyle.Fill;
-                button.Size = new Size(buttonWidth, buttonHeight);
-                button.DataBindings.Add(new Binding("Text", tally, "Count"));
-                button.Location = new Point(offsetX, 0);
-                button.Click += new EventHandler(tally.Clicked);
-                button.TextAlign = ContentAlignment.MiddleCenter;
-                button.Font = new Font(FontFamily.GenericSansSerif, 25, FontStyle.Bold);
-                button.FlatStyle = FlatStyle.Flat;
+                var tallyButton = new FixCNTTallyButton(tally, tallyLayout);
+                tallyButton.Dock = DockStyle.Right;
+                _tallyContainer_PNL.Controls.Add(tallyButton);
+            }
+            ResumeLayout(false);
+        }
 
-                Label label = new Label();
-                label.Dock = DockStyle.Fill;
-                label.Size = new Size(buttonWidth, 25);
-                label.TextAlign = ContentAlignment.MiddleCenter;
-                label.Text = tally.Title;
-                label.Location = new Point(offsetX, 0);
-                label.Font = new Font(FontFamily.GenericSansSerif, 18, FontStyle.Bold);
+        public FixCNTTallyControl TallyLayout { get; set; }
 
-                pnlButtons.Controls.Add(button);
-                pnlHeaders.Controls.Add(label);
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            if (this.Visible == false) { return; }
+
+            InternalPerformLayout();
+        }
+
+        protected void InternalPerformLayout()
+        {
+            var tallyContainerWidth = _tallyContainer_PNL.Width;
+            var tallyContainerChildCount = _tallyContainer_PNL.Controls.Count;
+
+            var childWidth = (tallyContainerChildCount > 0) ? tallyContainerWidth / tallyContainerChildCount
+                : 0;
+
+            foreach (Control child in _tallyContainer_PNL.Controls)
+            {
+                child.Width = childWidth;
             }
         }
-    }
 
-    public interface IFixCntObject
-    {
-        string Name { get; }
-
-        List<IFixCntTally> Tallys { get; }
-    }
-
-    public interface IFixCntTally : INotifyPropertyChanged
-    {
-        string Title { get; }
-        string Count { get; }
-
-        void Clicked(object sender, EventArgs e);
+        public void HandleTreeCountChanged(TallyCountChangedEventArgs ea)
+        {
+            foreach (Control c in _tallyContainer_PNL.Controls)
+            {
+                var tallyButton = c as FixCNTTallyButton;
+                if (tallyButton != null)
+                { tallyButton.HandleTreeCountChanged(ea); }
+            }
+        }
     }
 }
