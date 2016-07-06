@@ -7,7 +7,7 @@ namespace FSCruiser.Core
     {
         public static bool NEW_SPECIES_OPTION = false;
 
-        public const string FSCRUISER_VERSION = "2016.06.08";
+        public const string FSCRUISER_VERSION = "2016.07.06";
 
         public const string APP_TITLE = "FScruiser - " + FSCRUISER_VERSION;
 
