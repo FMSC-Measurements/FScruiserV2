@@ -32,6 +32,7 @@ Additional Troubleshooting
 --------------------------
 - https://support.microsoft.com/en-us/kb/938323
 - https://support.microsoft.com/en-us/kb/915152
+- http://www.junipersys.com/Juniper-Systems-Rugged-Handheld-Computers/support/Knowledge-Base/Support-Knowledge-Base-Topics/Desktop-Connection-ActiveSync-or-Windows-Mobile-Device-Center/Common-connection-issues-with-ActiveSync-WMDC
 
 
 
