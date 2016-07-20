@@ -125,7 +125,7 @@ namespace FSCruiser.Core.Models
             if (SampleGroups == null) { return true; }
             foreach (var sg in SampleGroups)
             {
-                success = sg.TrySaveCounts() & success;
+                success = sg.TrySaveCounts() && success;
             }
 
             return success;

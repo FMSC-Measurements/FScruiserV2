@@ -231,6 +231,9 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_previousLayout != null)
             {
+                //note: a view can be a tree view and a tally view,
+                //so we'll handle both conditions
+
                 var oldTreeView = _previousLayout as ITreeView;
                 if (oldTreeView != null)
                 {

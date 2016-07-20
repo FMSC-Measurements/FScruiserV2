@@ -9,7 +9,7 @@ namespace FSCruiser.WinForms.DataEntry
     {
         protected class TallyRowButton
 #if NetCF
- : FMSC.Controls.Mobile.ButtonPanel
+ : FMSC.Controls.ButtonPanel
 #else
  : Button
 #endif

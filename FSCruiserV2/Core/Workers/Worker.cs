@@ -18,19 +18,13 @@ namespace FSCruiser.Core.Workers
 
         public event EventHandler<WorkerExceptionThrownEventArgs> ExceptionThrown;
 
-        public event EventHandler<WorkerProgressChangedEventArgs> ProgressChanged;
-
         public event EventHandler<WorkerProgressChangedEventArgs> Ended;
+
+        public event EventHandler<WorkerProgressChangedEventArgs> ProgressChanged;
 
         public event EventHandler<WorkerProgressChangedEventArgs> Starting;
 
         #endregion events
-
-        protected int UnitsOfWorkExpected { get; set; }
-
-        protected int UnitsOfWorkCompleated { get; set; }
-
-        public virtual string Name { get; protected set; }
 
         public bool IsDone
         {
@@ -85,7 +79,26 @@ namespace FSCruiser.Core.Workers
             }
         }
 
+        public virtual string Name { get; protected set; }
+
         public object ThreadLock { get { return _threadLock; } }
+
+        protected int UnitsOfWorkCompleated { get; set; }
+
+        protected int UnitsOfWorkExpected { get; set; }
+
+        public void Cancel()
+        {
+            this.IsCanceled = true;
+        }
+
+        public void Kill()
+        {
+            if (this._thread != null)
+            {
+                this._thread.Abort();
+            }
+        }
 
         public void Start()
         {
@@ -108,11 +121,6 @@ namespace FSCruiser.Core.Workers
             this._thread.Start();
         }
 
-        public void Cancel()
-        {
-            this.IsCanceled = true;
-        }
-
         /// <summary>
         ///
         /// </summary>
@@ -131,16 +139,28 @@ namespace FSCruiser.Core.Workers
             return this.Wait(_defaultTimeout);
         }
 
-        public void Kill()
+        private static int CalcPercentDone(int workExpected, int workDone)
         {
-            if (this._thread != null)
+            if (workDone <= 0) { return 0; }
+            if (workExpected <= 0) { return 0; }
+
+            float frac = (float)workDone / workExpected;
+            return (int)(100 * frac);
+        }
+
+        protected void CheckCanceled()
+        {
+            if (this.IsCanceled)
             {
-                this._thread.Abort();
+                throw new CancelWorkerException();
             }
         }
 
         protected bool NotifyExceptionThrown(Exception ex)
         {
+            if (ex is ThreadAbortException
+                || ex is CancelWorkerException) { return false; }
+
             var arg = new WorkerExceptionThrownEventArgs()
             {
                 Exception = ex
@@ -250,23 +270,6 @@ namespace FSCruiser.Core.Workers
         }
 
         #endregion virtual methods
-
-        protected void CheckCanceled()
-        {
-            if (this.IsCanceled)
-            {
-                throw new CancelWorkerException();
-            }
-        }
-
-        private static int CalcPercentDone(int workExpected, int workDone)
-        {
-            if (workDone <= 0) { return 0; }
-            if (workExpected <= 0) { return 0; }
-
-            float frac = (float)workDone / workExpected;
-            return (int)(100 * frac);
-        }
 
         #region IDisposable Members
 
