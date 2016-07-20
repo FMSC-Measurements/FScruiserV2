@@ -45,16 +45,16 @@ namespace FSCruiser.WinForms.DataEntry
             this.components = new System.ComponentModel.Container();
             this._plotNavPanel = new System.Windows.Forms.Panel();
             this._plotSelectCB = new System.Windows.Forms.ComboBox();
-            this._nextPlotButton = new FMSC.Controls.Mobile.ButtonPanel();
+            this._nextPlotButton = new FMSC.Controls.ButtonPanel();
 
-            this._gotoLastPlotButton = new FMSC.Controls.Mobile.ButtonPanel();
-            this._addPlotButton = new FMSC.Controls.Mobile.ButtonPanel();
-            this._deletePlotButton = new FMSC.Controls.Mobile.ButtonPanel();
-            this._plotInfoButton = new FMSC.Controls.Mobile.ButtonPanel();
-            this._prevPlotButton = new FMSC.Controls.Mobile.ButtonPanel();
-            this._gotoFirstPlotButton = new FMSC.Controls.Mobile.ButtonPanel();
+            this._gotoLastPlotButton = new FMSC.Controls.ButtonPanel();
+            this._addPlotButton = new FMSC.Controls.ButtonPanel();
+            this._deletePlotButton = new FMSC.Controls.ButtonPanel();
+            this._plotInfoButton = new FMSC.Controls.ButtonPanel();
+            this._prevPlotButton = new FMSC.Controls.ButtonPanel();
+            this._gotoFirstPlotButton = new FMSC.Controls.ButtonPanel();
             this._dataGrid = new FMSC.Controls.EditableDataGrid();
-            this._expandGridButton = new FMSC.Controls.Mobile.ButtonPanel();
+            this._expandGridButton = new FMSC.Controls.ButtonPanel();
             this._tallyListPanel = new System.Windows.Forms.Panel();
             this._BS_TDV = new System.Windows.Forms.BindingSource(this.components);
             this._plotNavPanel.SuspendLayout();
@@ -213,15 +213,15 @@ namespace FSCruiser.WinForms.DataEntry
         #endregion Component Designer generated code
 
         private System.Windows.Forms.Panel _plotNavPanel;
-        private FMSC.Controls.Mobile.ButtonPanel _gotoFirstPlotButton;
-        private FMSC.Controls.Mobile.ButtonPanel _prevPlotButton;
-        private FMSC.Controls.Mobile.ButtonPanel _deletePlotButton;
-        private FMSC.Controls.Mobile.ButtonPanel _plotInfoButton;
-        private FMSC.Controls.Mobile.ButtonPanel _nextPlotButton;
-        private FMSC.Controls.Mobile.ButtonPanel _addPlotButton;
-        private FMSC.Controls.Mobile.ButtonPanel _gotoLastPlotButton;
+        private FMSC.Controls.ButtonPanel _gotoFirstPlotButton;
+        private FMSC.Controls.ButtonPanel _prevPlotButton;
+        private FMSC.Controls.ButtonPanel _deletePlotButton;
+        private FMSC.Controls.ButtonPanel _plotInfoButton;
+        private FMSC.Controls.ButtonPanel _nextPlotButton;
+        private FMSC.Controls.ButtonPanel _addPlotButton;
+        private FMSC.Controls.ButtonPanel _gotoLastPlotButton;
         private FMSC.Controls.EditableDataGrid _dataGrid;
-        private FMSC.Controls.Mobile.ButtonPanel _expandGridButton;
+        private FMSC.Controls.ButtonPanel _expandGridButton;
         public System.Windows.Forms.ComboBox _plotSelectCB;
         public System.Windows.Forms.Panel _tallyListPanel;
 
@@ -471,7 +471,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         void _dataGrid_CellValidating(object sender, EditableDataGridCellValidatingEventArgs e)
         {
-            bool cancel = false;
             TreeVM tree = null;
             try
             {
@@ -509,15 +508,16 @@ namespace FSCruiser.WinForms.DataEntry
                 }
                 catch
                 {
-                    cancel = true;
+                    e.Cancel = true;
                 }
             }
             else if (e.Column == _kpiColumn)
             {
+                bool cancel = false;
                 this.ViewLogicController.DataEntryController.HandleKPIChanging(tree, (float)e.Value, true, out cancel);
                 //this.HandleKPIChanging(tree, (float)e.Value, out cancel);
+                e.Cancel = cancel;
             }
-            e.Cancel = cancel;
         }
 
         void _dataGrid_CellValueChanged(object sender, EditableDataGridCellEventArgs e)
