@@ -123,5 +123,10 @@ namespace FSCruiser.WinForms.DataEntry
         {
             _outputView.Text = "STM";
         }
+
+        private void _clearBTN_Click(object sender, EventArgs e)
+        {
+            _outputView.Text = string.Empty;
+        }
     }
 }
