@@ -1,7 +1,7 @@
 #define APP "FSCruiserV2"
 
-#define APP_VERSION "2016.07.06"
-#define SETUPVERSION "20160706"
+#define APP_VERSION "2016.07.21"
+#define SETUPVERSION "20160721"
 #define SPECIALTAG "Production"
 #define BASEURL "http://www.fs.fed.us/fmsc/measure"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"

@@ -62,15 +62,15 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region Inialize Controlls
 
-        protected virtual TabControl MakePageContainer()
-        {
-            TabControl pc = new TabControl();
-            pc.SelectedIndexChanged += new EventHandler(OnFocusedLayoutChanged);
-            pc.SuspendLayout();
-            pc.Dock = DockStyle.Fill;
+        //protected virtual TabControl MakePageContainer()
+        //{
+        //    TabControl pc = new TabControl();
+        //    pc.SelectedIndexChanged += new EventHandler(OnFocusedLayoutChanged);
+        //    pc.SuspendLayout();
+        //    pc.Dock = DockStyle.Fill;
 
-            return pc;
-        }
+        //    return pc;
+        //}
 
         protected void InitializePageContainer()
         {
@@ -92,6 +92,8 @@ namespace FSCruiser.WinForms.DataEntry
             }
 
             InitializePlotTabs();
+
+            PageContainer.SelectedIndexChanged += new EventHandler(OnFocusedLayoutChanged);
 
             PageContainer.ResumeLayout(false);
 
@@ -229,6 +231,9 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_previousLayout != null)
             {
+                //note: a view can be a tree view and a tally view,
+                //so we'll handle both conditions
+
                 var oldTreeView = _previousLayout as ITreeView;
                 if (oldTreeView != null)
                 {

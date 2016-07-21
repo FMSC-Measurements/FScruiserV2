@@ -98,6 +98,7 @@
             this._clearBTN.TabIndex = 3;
             this._clearBTN.Text = "Clear";
             this._clearBTN.UseVisualStyleBackColor = true;
+            this._clearBTN.Click += new System.EventHandler(this._clearBTN_Click);
             // 
             // _cancelBTN
             // 

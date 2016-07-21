@@ -9,7 +9,7 @@ namespace FSCruiser.WinForms.DataEntry
     {
         protected class TallyRowButton
 #if NetCF
- : FMSC.Controls.Mobile.ButtonPanel
+ : FMSC.Controls.ButtonPanel
 #else
  : Button
 #endif
@@ -34,9 +34,12 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public TallyRow(CountTreeVM count)
+        public bool ShowTallyCount { get; set; }
+
+        public TallyRow(CountTreeVM count, bool showTallyCount)
         {
             InitializeComponent();
+            ShowTallyCount = showTallyCount;
 
             _tallyBTN.Click += new EventHandler(this.OnTallyButtonClicked);
             _settingsBTN.Click += new EventHandler(this.OnSettingsButtonClicked);
@@ -51,10 +54,19 @@ namespace FSCruiser.WinForms.DataEntry
                 "[" + Count.Tally.Hotkey.Substring(0, 1) + "] "
                 : String.Empty;
 
-            this._tallyBTN.Text = string.Format("{0}{1} {2}"
-                , hotkey
-                , Count.Tally.Description
-                , Count.TreeCount);
+            if (ShowTallyCount)
+            {
+                this._tallyBTN.Text = string.Format("{0}{1}|{2}"
+                    , hotkey
+                    , Count.Tally.Description
+                    , Count.TreeCount);
+            }
+            else
+            {
+                this._tallyBTN.Text = string.Format("{0}{1}"
+                    , hotkey
+                    , Count.Tally.Description);
+            }
         }
 
         public void AdjustHeight()

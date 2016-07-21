@@ -120,6 +120,7 @@
     <Compile Include="Core\ViewInterfaces\ITreeView.cs" />
     <Compile Include="Core\Workers\CancelWorkerException.cs" />
     <Compile Include="Core\Workers\IWorker.cs" />
+    <Compile Include="Core\Workers\SaveTreeWorker2.cs" />
     <Compile Include="Core\Workers\Worker.cs" />
     <Compile Include="Core\Workers\WorkerExceptionThrownEventArgs.cs" />
     <Compile Include="Core\Workers\WorkerProgressChangedEventArgs.cs" />

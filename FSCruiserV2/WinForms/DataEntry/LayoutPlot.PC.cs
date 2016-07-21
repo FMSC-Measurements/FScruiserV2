@@ -505,7 +505,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public Control MakeTallyRow(Control container, CountTreeVM count)
         {
-            TallyRow row = new TallyRow(count);
+            TallyRow row = new TallyRow(count, false);
             row.SuspendLayout();
 
             row.TallyButtonClicked += new EventHandler(this.tallyRow_TallyButtonClicked);
