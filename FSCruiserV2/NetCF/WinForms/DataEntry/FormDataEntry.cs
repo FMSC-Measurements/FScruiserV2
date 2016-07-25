@@ -10,12 +10,6 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormDataEntry : FMSC.Controls.CustomForm, IDataEntryView
     {
-        protected FormDataEntry()
-            : base()
-        {
-            InitializeComponent();
-        }
-
         public FormDataEntry(IApplicationController controller
             , CuttingUnitVM unit)
         {
@@ -33,6 +27,12 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
+        protected FormDataEntry()
+            : base()
+        {
+            InitializeComponent();
+        }
+
         protected void OnFocusedLayoutChanged(object sender, EventArgs e)
         {
             OnFocusedLayoutChangedInternal(sender, e);
@@ -40,19 +40,29 @@ namespace FSCruiser.WinForms.DataEntry
             _addTreeMI.Enabled = view != null && view.UserCanAddTrees;
         }
 
-        private void showHideErrorMessages_Click(object sender, EventArgs e)
+        protected override void OnKeyUp(KeyEventArgs e)
         {
-            this.LogicController.HandleShowHideErrorCol();
+            OnKeyUpInternal(e);
         }
 
-        private void LimitingDistance_Click(object sender, EventArgs e)
+        private void _addTreeMI_Click(object sender, EventArgs e)
         {
-            this.LogicController.HandleDisplayLimitingDistance();
+            this.LogicController.HandleAddTreeClick();
         }
 
         private void _editCruisersMI_Click(object sender, EventArgs e)
         {
             Controller.ViewController.ShowManageCruisers();
+        }
+
+        private void _showHideLogColMI_Click(object sender, EventArgs e)
+        {
+            this.LogicController.HandleShowHideLogCol();
+        }
+
+        private void LimitingDistance_Click(object sender, EventArgs e)
+        {
+            this.LogicController.HandleDisplayLimitingDistance();
         }
 
         private void menuItem1_Popup(object sender, EventArgs e)
@@ -63,14 +73,9 @@ namespace FSCruiser.WinForms.DataEntry
             this._showHideLogColMI.Enabled = this.FocusedLayout is ITreeView;
         }
 
-        private void _showHideLogColMI_Click(object sender, EventArgs e)
+        private void showHideErrorMessages_Click(object sender, EventArgs e)
         {
-            this.LogicController.HandleShowHideLogCol();
-        }
-
-        private void _addTreeMI_Click(object sender, EventArgs e)
-        {
-            this.LogicController.HandleAddTreeClick();
+            this.LogicController.HandleShowHideErrorCol();
         }
     }
 }

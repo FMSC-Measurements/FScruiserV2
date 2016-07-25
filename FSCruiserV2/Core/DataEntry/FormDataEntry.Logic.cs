@@ -383,25 +383,28 @@ namespace FSCruiser.Core.DataEntry
                 }
                 else
                 {
-                    var tallyView = view as ITallyView;
-                    if (tallyView == null) { return false; }
-                    if (tallyView.HotKeyEnabled == false) { return false; }
-
                     var key = PlatformHelper.KeyToChar(ea.KeyData);
                     if (key == char.MinValue) { return false; }
                     key = char.ToUpper(key);
                     if (!IsHotkeyKey(key)) { return false; }
 
+                    var tallyView = view as ITallyView;
+                    if (tallyView != null)
+                    {
+                        if (tallyView.HotKeyEnabled == false) { return false; }
+
+                        if (tallyView.HotKeyLookup != null && tallyView.HotKeyLookup.ContainsKey(key))//maybe a tally hotkey
+                        {
+                            CountTreeVM count = tallyView.HotKeyLookup[key];
+                            tallyView.OnTally(count);
+                            return true;
+                        }
+                    }
+
                     //if valid stratm hot key, go to view that stratum belongs to
                     if (this.StratumHotKeyLookup.ContainsKey(key))
                     {
                         this.View.GoToPageIndex(this.StratumHotKeyLookup[key]);
-                        return true;
-                    }
-                    else if (tallyView.HotKeyLookup != null && tallyView.HotKeyLookup.ContainsKey(key))//maybe a tally hotkey
-                    {
-                        CountTreeVM count = tallyView.HotKeyLookup[key];
-                        tallyView.OnTally(count);
                         return true;
                     }
                     else//not valid hotkey, get grumpy
