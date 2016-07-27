@@ -388,7 +388,7 @@ namespace FSCruiser.WinForms.DataEntry
                     MakeTallyRow(_tallyListPanel, count);
                 }
             }
-
+            //_tallyListPanel.AutoScroll = true;
             this._tallyListPanel.ResumeLayout();
         }
 
@@ -555,8 +555,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         void SettingsButton_Click(object sender, EventArgs e)
         {
-            TallyRow row = (TallyRow)sender;
-            CountTreeVM count = row.Count;
+            var row = (ITallyButton)sender;
+            var count = row.Count;
             this.ViewLogicController.SavePlotTrees();
             this.ViewLogicController.ViewController.ShowTallySettings(count);
         }
@@ -576,7 +576,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (!ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
 
-            var row = (TallyRow)sender;
+            var row = (ITallyButton)sender;
             var count = row.Count;
             OnTally(count);
         }
@@ -938,7 +938,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public Control MakeTallyRow(Control container, CountTreeVM count)
         {
-            TallyRow row = new TallyRow(count, false);
+            var row = new PlotTallyButton(count);
             row.SuspendLayout();
 
             row.TallyButtonClicked += new EventHandler(this.TallyButton_Click);
@@ -947,30 +947,9 @@ namespace FSCruiser.WinForms.DataEntry
             row.Width = 90;
             row.Parent = container;
 
-            row.Dock = DockStyle.Right;
-            row.ResumeLayout(true);
+            row.Dock = DockStyle.Left;
+            row.ResumeLayout(false);
             return row;
-
-            //char hotKey = count.Tally.Hotkey[0];
-            //Button row = new Button();
-            //row.Text = count.Tally.Description + "[" + hotKey + "]";
-            //row.Click += new EventHandler(TallyButton_Click);
-            //Button settingsButton = new Button();
-            //settingsButton.Text = "i";
-            //settingsButton.Click += new EventHandler(SettingsButton_Click);
-
-            //settingsButton.Tag = count;
-            //settingsButton.Width = 15;
-            //settingsButton.Parent = container;
-            //settingsButton.Dock = DockStyle.Left;
-            //FMSC.Controls.DpiHelper.AdjustControl(settingsButton);
-
-            //row.Tag = count;
-            //row.Width = 80;
-            //row.Parent = container;
-            //row.Dock = DockStyle.Left;
-
-            //return row;
         }
 
         public void OnTally(CountTreeVM count)

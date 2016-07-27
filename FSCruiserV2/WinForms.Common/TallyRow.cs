@@ -5,23 +5,23 @@ using FSCruiser.Core.Models;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public partial class TallyRow : UserControl
+    public partial class TallyRow : UserControl, ITallyButton
     {
-        protected class TallyRowButton
-#if NetCF
- : FMSC.Controls.ButtonPanel
-#else
- : Button
-#endif
-        {
-            public TallyRowButton() : base() { }
-        }
+        CountTreeVM _count;
 
-        public event EventHandler TallyButtonClicked;
+        public TallyRow(CountTreeVM count)
+        {
+            InitializeComponent();
+
+            _tallyBTN.Click += new EventHandler(this.OnTallyButtonClicked);
+            _settingsBTN.Click += new EventHandler(this.OnSettingsButtonClicked);
+            this.Count = count;
+            UpdateTallyButton();
+        }
 
         public event EventHandler SettingsButtonClicked;
 
-        CountTreeVM _count;
+        public event EventHandler TallyButtonClicked;
 
         public CountTreeVM Count
         {
@@ -31,41 +31,6 @@ namespace FSCruiser.WinForms.DataEntry
                 UnWireCount();
                 _count = value;
                 WireUpCount();
-            }
-        }
-
-        public bool ShowTallyCount { get; set; }
-
-        public TallyRow(CountTreeVM count, bool showTallyCount)
-        {
-            InitializeComponent();
-            ShowTallyCount = showTallyCount;
-
-            _tallyBTN.Click += new EventHandler(this.OnTallyButtonClicked);
-            _settingsBTN.Click += new EventHandler(this.OnSettingsButtonClicked);
-            this.Count = count;
-            UpdateTallyButton();
-        }
-
-        void UpdateTallyButton()
-        {
-            System.Diagnostics.Debug.Assert(Count != null);
-            var hotkey = (!String.IsNullOrEmpty(Count.Tally.Hotkey)) ?
-                "[" + Count.Tally.Hotkey.Substring(0, 1) + "] "
-                : String.Empty;
-
-            if (ShowTallyCount)
-            {
-                this._tallyBTN.Text = string.Format("{0}{1}|{2}"
-                    , hotkey
-                    , Count.Tally.Description
-                    , Count.TreeCount);
-            }
-            else
-            {
-                this._tallyBTN.Text = string.Format("{0}{1}"
-                    , hotkey
-                    , Count.Tally.Description);
             }
         }
 
@@ -82,14 +47,6 @@ namespace FSCruiser.WinForms.DataEntry
             AdjustHeight();
         }
 
-        protected void OnTallyButtonClicked(object sender, EventArgs e)
-        {
-            if (TallyButtonClicked != null)
-            {
-                this.TallyButtonClicked(this, e);
-            }
-        }
-
         protected void OnSettingsButtonClicked(object sender, EventArgs e)
         {
             if (SettingsButtonClicked != null)
@@ -99,11 +56,19 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        void WireUpCount()
+        protected void OnTallyButtonClicked(object sender, EventArgs e)
         {
-            if (Count != null)
+            if (TallyButtonClicked != null)
             {
-                this.Count.PropertyChanged += new PropertyChangedEventHandler(Count_PropertyChanged);
+                this.TallyButtonClicked(this, e);
+            }
+        }
+
+        void Count_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "TreeCount")
+            {
+                UpdateTallyButton();
             }
         }
 
@@ -115,12 +80,35 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        void Count_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void UpdateTallyButton()
         {
-            if (e.PropertyName == "TreeCount")
+            System.Diagnostics.Debug.Assert(Count != null);
+            var hotkey = (!String.IsNullOrEmpty(Count.Tally.Hotkey)) ?
+                "[" + Count.Tally.Hotkey.Substring(0, 1) + "] "
+                : String.Empty;
+
+            this._tallyBTN.Text = string.Format("{0}{1}|{2}"
+                    , hotkey
+                    , Count.Tally.Description
+                    , Count.TreeCount);
+        }
+
+        void WireUpCount()
+        {
+            if (Count != null)
             {
-                UpdateTallyButton();
+                this.Count.PropertyChanged += new PropertyChangedEventHandler(Count_PropertyChanged);
             }
+        }
+
+        protected class TallyRowButton
+#if NetCF
+ : FMSC.Controls.ButtonPanel
+#else
+ : Button
+#endif
+        {
+            public TallyRowButton() : base() { }
         }
     }
 }
