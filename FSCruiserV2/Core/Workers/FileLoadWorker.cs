@@ -53,14 +53,6 @@ namespace FSCruiser.Core.Workers
 
         #region IDisposable Members
 
-        bool _disposed = false;
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
         protected override void Dispose(bool isDisposing)
         {
             base.Dispose(isDisposing);
