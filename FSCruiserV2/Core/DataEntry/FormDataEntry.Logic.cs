@@ -174,6 +174,7 @@ namespace FSCruiser.Core.DataEntry
             TreeVM tree = Unit.CreateNewTreeEntry(count, !isInsurance);
             tree.KPI = kpi;
             tree.CountOrMeasure = (isInsurance) ? "I" : "M";
+            action.TreeRecord = tree; 
 
             if (!isInsurance)
             {
