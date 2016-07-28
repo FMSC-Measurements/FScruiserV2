@@ -278,9 +278,6 @@
     <Compile Include="WinForms.Common\TallyRow.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="WinForms.Common\TallyRow.Designer.cs">
-      <DependentUpon>TallyRow.cs</DependentUpon>
-    </Compile>
     <Compile Include="WinForms.Common\TreeBasedTallyView_Base.cs">
       <SubType>UserControl</SubType>
     </Compile>
