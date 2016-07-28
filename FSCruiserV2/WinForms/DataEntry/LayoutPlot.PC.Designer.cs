@@ -36,8 +36,6 @@
             this._tallyListPanel = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this._dataGrid = new System.Windows.Forms.DataGridView();
-            this._contexMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.logToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._bindingNavigator = new System.Windows.Forms.BindingNavigator(this.components);
             this.bindingNavigatorMoveFirstItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMovePreviousItem = new System.Windows.Forms.ToolStripButton();
@@ -50,14 +48,16 @@
             this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
             this._plotInfoBTN = new System.Windows.Forms.ToolStripButton();
+            this._contexMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.logToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._dataGrid)).BeginInit();
-            this._contexMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._bindingNavigator)).BeginInit();
             this._bindingNavigator.SuspendLayout();
+            this._contexMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -104,27 +104,13 @@
             this._dataGrid.AllowUserToDeleteRows = false;
             this._dataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this._dataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._dataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnF2;
+            this._dataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this._dataGrid.Location = new System.Drawing.Point(0, 25);
             this._dataGrid.Margin = new System.Windows.Forms.Padding(0);
             this._dataGrid.Name = "_dataGrid";
             this._dataGrid.Size = new System.Drawing.Size(331, 258);
             this._dataGrid.TabIndex = 0;
             this._dataGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this._dataGrid_ColumnHeaderMouseClick);
-            // 
-            // _contexMenu
-            // 
-            this._contexMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.logToolStripMenuItem});
-            this._contexMenu.Name = "_contexMenu";
-            this._contexMenu.Size = new System.Drawing.Size(181, 26);
-            // 
-            // logToolStripMenuItem
-            // 
-            this.logToolStripMenuItem.Name = "logToolStripMenuItem";
-            this.logToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.logToolStripMenuItem.Text = "Disable Log Grading";
-            this.logToolStripMenuItem.Click += logToolStripMenuItem_Click;
             // 
             // _bindingNavigator
             // 
@@ -240,6 +226,19 @@
             this._plotInfoBTN.Size = new System.Drawing.Size(35, 22);
             this._plotInfoBTN.Text = " Info";
             // 
+            // _contexMenu
+            // 
+            this._contexMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.logToolStripMenuItem});
+            this._contexMenu.Name = "_contexMenu";
+            this._contexMenu.Size = new System.Drawing.Size(181, 26);
+            // 
+            // logToolStripMenuItem
+            // 
+            this.logToolStripMenuItem.Name = "logToolStripMenuItem";
+            this.logToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logToolStripMenuItem.Text = "Disable Log Grading";
+            // 
             // LayoutPlot
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -254,10 +253,10 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this._dataGrid)).EndInit();
-            this._contexMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this._bindingNavigator)).EndInit();
             this._bindingNavigator.ResumeLayout(false);
             this._bindingNavigator.PerformLayout();
+            this._contexMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
