@@ -163,7 +163,7 @@ namespace FSCruiser.WinForms
 
         protected void OnTallySettingsClicked(object sender, EventArgs e)
         {
-            TallyRow row = (TallyRow)sender;
+            var row = (ITallyButton)sender;
             CountTreeVM count = row.Count;
             Controller.ViewController.ShowTallySettings(count);
             //row.DiscriptionLabel.Text = count.Tally.Description;
@@ -171,7 +171,7 @@ namespace FSCruiser.WinForms
 
         protected void OnTallyButtonClicked(object sender, EventArgs e)
         {
-            TallyRow row = (TallyRow)sender;
+            var row = (ITallyButton)sender;
             CountTreeVM count = row.Count;
             OnTally(count);
         }
@@ -286,7 +286,7 @@ namespace FSCruiser.WinForms
 
         public Control MakeTallyRow(Control container, CountTreeVM count)
         {
-            TallyRow row = new TallyRow(count);
+            var row = new TallyRow(count);
             row.SuspendLayout();
 
             row.TallyButtonClicked += new EventHandler(this.OnTallyButtonClicked);
