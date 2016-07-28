@@ -387,36 +387,12 @@
     }
     "Configurations"
     {
-        "Debug"
-        {
-        "DisplayName" = "8:Debug"
-        "IsDebugOnly" = "11:TRUE"
-        "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\FSCruiserV2CECF20_CAB.cab"
-        "PackageFileSize" = "3:-2147483648"
-        "CabType" = "3:1"
-        "SignOutput" = "11:FALSE"
-        "CertificateHash" = "8:"
-        "TimeStampServer" = "8:"
-        }
         "Release"
         {
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
         "OutputFilename" = "8:Release\\FSCruiserV2.cab"
-        "PackageFileSize" = "3:-2147483648"
-        "CabType" = "3:1"
-        "SignOutput" = "11:FALSE"
-        "CertificateHash" = "8:"
-        "TimeStampServer" = "8:"
-        }
-        "Release PC"
-        {
-        "DisplayName" = "8:Release PC"
-        "IsDebugOnly" = "11:FALSE"
-        "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Release PC\\FSCruiserV2CECF20_CAB.cab"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
         "SignOutput" = "11:FALSE"
