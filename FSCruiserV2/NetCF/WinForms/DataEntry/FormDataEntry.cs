@@ -14,7 +14,6 @@ namespace FSCruiser.WinForms.DataEntry
             , CuttingUnitVM unit)
         {
             InitializeComponent();
-            InitializeCommon(controller, unit);
 
             if (ViewController.PlatformType == PlatformType.WM)
             {
@@ -25,6 +24,8 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 this.WindowState = FormWindowState.Maximized;
             }
+
+            InitializeCommon(controller, unit);
         }
 
         protected FormDataEntry()

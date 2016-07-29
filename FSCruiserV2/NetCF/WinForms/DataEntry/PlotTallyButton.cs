@@ -1,23 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text;
 using System.Windows.Forms;
 using FSCruiser.Core.Models;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public partial class TallyRow : UserControl, ITallyButton
+    class PlotTallyButton : UserControl, ITallyButton
     {
         CountTreeVM _count;
-
-        private TallyRowButton _settingsBTN;
-        private TallyRowButton _tallyBTN;
+        TallyRowButton _settingsBTN;
+        TallyRowButton _tallyBTN;
 
         /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        public TallyRow(CountTreeVM count)
+        public PlotTallyButton(CountTreeVM count)
         {
             InitializeComponent();
 
@@ -42,11 +43,11 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void AdjustHeight()
+        public void AdjustWidth()
         {
             var g = base.CreateGraphics();
-            var fHeight = g.MeasureString("|", _tallyBTN.Font).Height;
-            this.Height = (int)Math.Ceiling(fHeight) + 5;
+            var fWidth = g.MeasureString(_tallyBTN.Text, _tallyBTN.Font).Width;
+            this.Width = (int)Math.Ceiling(fWidth) + 5;
         }
 
         /// <summary>
@@ -66,11 +67,11 @@ namespace FSCruiser.WinForms.DataEntry
             base.Dispose(disposing);
         }
 
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            AdjustHeight();
-        }
+        //protected override void OnResize(EventArgs e)
+        //{
+        //    base.OnResize(e);
+        //    AdjustWidth();
+        //}
 
         protected void OnSettingsButtonClicked(object sender, EventArgs e)
         {
@@ -97,35 +98,6 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        void UnWireCount()
-        {
-            if (Count != null)
-            {
-                Count.PropertyChanged -= Count_PropertyChanged;
-            }
-        }
-
-        void UpdateTallyButton()
-        {
-            System.Diagnostics.Debug.Assert(Count != null);
-            var hotkey = (!String.IsNullOrEmpty(Count.Tally.Hotkey)) ?
-                "[" + Count.Tally.Hotkey.Substring(0, 1) + "] "
-                : String.Empty;
-
-            this._tallyBTN.Text = string.Format("{0}{1}|{2}"
-                    , hotkey
-                    , Count.Tally.Description
-                    , Count.TreeCount);
-        }
-
-        void WireUpCount()
-        {
-            if (Count != null)
-            {
-                this.Count.PropertyChanged += new PropertyChangedEventHandler(Count_PropertyChanged);
-            }
-        }
-
         #region Component Designer generated code
 
         /// <summary>
@@ -134,8 +106,8 @@ namespace FSCruiser.WinForms.DataEntry
         /// </summary>
         private void InitializeComponent()
         {
-            this._tallyBTN = new FSCruiser.WinForms.DataEntry.TallyRow.TallyRowButton();
-            this._settingsBTN = new FSCruiser.WinForms.DataEntry.TallyRow.TallyRowButton();
+            this._tallyBTN = new FSCruiser.WinForms.DataEntry.PlotTallyButton.TallyRowButton();
+            this._settingsBTN = new FSCruiser.WinForms.DataEntry.PlotTallyButton.TallyRowButton();
             this.SuspendLayout();
             //
             // _tallyBTN
@@ -158,7 +130,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._settingsBTN.TabIndex = 2;
             this._settingsBTN.Text = "i";
             //
-            // TallyRow
+            // PlotTallyButton
             //
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this._tallyBTN);
@@ -169,6 +141,36 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         #endregion Component Designer generated code
+
+        void UnWireCount()
+        {
+            if (Count != null)
+            {
+                Count.PropertyChanged -= Count_PropertyChanged;
+            }
+        }
+
+        void UpdateTallyButton()
+        {
+            System.Diagnostics.Debug.Assert(Count != null);
+            var hotkey = (!String.IsNullOrEmpty(Count.Tally.Hotkey)) ?
+                "[" + Count.Tally.Hotkey.Substring(0, 1) + "] "
+                : String.Empty;
+
+            this._tallyBTN.Text = string.Format("{0}\r\n{1}"
+                    , Count.Tally.Description
+                    , hotkey);
+
+            AdjustWidth();
+        }
+
+        void WireUpCount()
+        {
+            if (Count != null)
+            {
+                this.Count.PropertyChanged += new PropertyChangedEventHandler(Count_PropertyChanged);
+            }
+        }
 
         protected class TallyRowButton
 #if NetCF

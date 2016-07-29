@@ -5,10 +5,9 @@ using FSCruiser.Core.Models;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public partial class TallyRow : UserControl, ITallyButton
+    public partial class PlotTallyRow : UserControl, ITallyButton
     {
         CountTreeVM _count;
-
         private TallyRowButton _settingsBTN;
         private TallyRowButton _tallyBTN;
 
@@ -17,7 +16,7 @@ namespace FSCruiser.WinForms.DataEntry
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        public TallyRow(CountTreeVM count)
+        public PlotTallyRow(CountTreeVM count)
         {
             InitializeComponent();
 
@@ -66,9 +65,9 @@ namespace FSCruiser.WinForms.DataEntry
             base.Dispose(disposing);
         }
 
-        protected override void OnResize(EventArgs e)
+        protected override void OnLayout(LayoutEventArgs e)
         {
-            base.OnResize(e);
+            base.OnLayout(e);
             AdjustHeight();
         }
 
@@ -108,14 +107,9 @@ namespace FSCruiser.WinForms.DataEntry
         void UpdateTallyButton()
         {
             System.Diagnostics.Debug.Assert(Count != null);
-            var hotkey = (!String.IsNullOrEmpty(Count.Tally.Hotkey)) ?
-                "[" + Count.Tally.Hotkey.Substring(0, 1) + "] "
-                : String.Empty;
 
-            this._tallyBTN.Text = string.Format("{0}{1}|{2}"
-                    , hotkey
-                    , Count.Tally.Description
-                    , Count.TreeCount);
+            this._tallyBTN.Text = string.Format("{0}"
+                    , Count.Tally.Description);
         }
 
         void WireUpCount()
@@ -134,8 +128,8 @@ namespace FSCruiser.WinForms.DataEntry
         /// </summary>
         private void InitializeComponent()
         {
-            this._tallyBTN = new FSCruiser.WinForms.DataEntry.TallyRow.TallyRowButton();
-            this._settingsBTN = new FSCruiser.WinForms.DataEntry.TallyRow.TallyRowButton();
+            this._tallyBTN = new FSCruiser.WinForms.DataEntry.PlotTallyRow.TallyRowButton();
+            this._settingsBTN = new FSCruiser.WinForms.DataEntry.PlotTallyRow.TallyRowButton();
             this.SuspendLayout();
             //
             // _tallyBTN
@@ -170,12 +164,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         #endregion Component Designer generated code
 
-        protected class TallyRowButton
-#if NetCF
- : FMSC.Controls.ButtonPanel
-#else
- : Button
-#endif
+        protected class TallyRowButton : Button
         {
             public TallyRowButton() : base() { }
         }

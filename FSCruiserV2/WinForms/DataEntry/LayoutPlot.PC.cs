@@ -436,13 +436,9 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region ITallyView Members
 
-        //TODO implement ITallyView members
         public bool HotKeyEnabled
         {
-            get
-            {
-                return !this._dataGrid.IsCurrentCellInEditMode;
-            }
+            get { return false; }
         }
 
         public Dictionary<char, CountTreeVM> HotKeyLookup
@@ -505,7 +501,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public Control MakeTallyRow(Control container, CountTreeVM count)
         {
-            TallyRow row = new TallyRow(count, false);
+            var row = new PlotTallyRow(count);
             row.SuspendLayout();
 
             row.TallyButtonClicked += new EventHandler(this.tallyRow_TallyButtonClicked);
@@ -528,14 +524,14 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
 
-            var row = (TallyRow)sender;
+            var row = (PlotTallyRow)sender;
             var count = row.Count;
             OnTally(count);
         }
 
         private void tallyRow_InfoButtonClicked(object sender, EventArgs e)
         {
-            TallyRow row = (TallyRow)sender;
+            PlotTallyRow row = (PlotTallyRow)sender;
             CountTreeVM count = row.Count;
             this.ViewLogicController.SavePlotTrees();
             this.ViewLogicController.ViewController.ShowTallySettings(count);

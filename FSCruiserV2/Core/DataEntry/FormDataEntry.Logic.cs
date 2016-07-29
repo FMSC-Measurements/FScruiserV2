@@ -174,6 +174,7 @@ namespace FSCruiser.Core.DataEntry
             TreeVM tree = Unit.CreateNewTreeEntry(count, !isInsurance);
             tree.KPI = kpi;
             tree.CountOrMeasure = (isInsurance) ? "I" : "M";
+            action.TreeRecord = tree;
 
             if (!isInsurance)
             {
@@ -399,18 +400,18 @@ namespace FSCruiser.Core.DataEntry
                             tallyView.OnTally(count);
                             return true;
                         }
-                    }
 
-                    //if valid stratm hot key, go to view that stratum belongs to
-                    if (this.StratumHotKeyLookup.ContainsKey(key))
-                    {
-                        this.View.GoToPageIndex(this.StratumHotKeyLookup[key]);
-                        return true;
-                    }
-                    else//not valid hotkey, get grumpy
-                    {
-                        this.ViewController.SignalInvalidAction();
-                        return true;
+                        //if valid stratm hot key, go to view that stratum belongs to
+                        if (this.StratumHotKeyLookup.ContainsKey(key))
+                        {
+                            this.View.GoToPageIndex(this.StratumHotKeyLookup[key]);
+                            return true;
+                        }
+                        else//not valid hotkey, get grumpy
+                        {
+                            this.ViewController.SignalInvalidAction();
+                            return true;
+                        }
                     }
                 }
             }

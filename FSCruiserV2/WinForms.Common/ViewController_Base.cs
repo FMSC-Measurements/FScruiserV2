@@ -192,7 +192,32 @@ namespace FSCruiser.WinForms.Common
 
         public abstract System.Windows.Forms.DialogResult ShowOpenCruiseFileDialog(out string fileName);
 
-        public abstract void ShowDataEntry(CuttingUnitVM unit);
+        public void ShowDataEntry(CuttingUnitVM unit)
+        {
+            lock (_dataEntrySyncLock)
+            {
+                try
+                {
+                    using (_dataEntryView = new FormDataEntry(this.ApplicationController, unit))
+                    {
+#if !NetCF
+                        _dataEntryView.Owner = MainView;
+#endif
+                        _dataEntryView.ShowDialog();
+                    }
+                }
+                catch (UserFacingException e)
+                {
+                    var exType = e.GetType();
+
+                    MessageBox.Show(e.Message, exType.Name);
+                }
+                finally
+                {
+                    _dataEntryView = null;
+                }
+            }
+        }
 
         //public int? ShowNumericValueInput(int? min, int? max, int? initialValue, bool acceptNullInput)
         //{

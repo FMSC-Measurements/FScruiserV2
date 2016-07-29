@@ -54,32 +54,5 @@ namespace FSCruiser.WinForms
                 }
             }
         }
-
-        //http://stackoverflow.com/questions/548915/preloading-assemblies
-        //private static void PreJit()
-        //{
-        //    ThreadPool.QueueUserWorkItem((t) =>
-        //    {
-        //        Thread.Sleep(1000); // Or whatever reasonable amount of time
-        //        try
-        //        {
-        //            XmlSerializer c = new XmlSerializer(typeof(object));
-        //        }
-        //        catch (Exception) { }
-
-        //        try
-        //        {
-        //            FormDataEntry de = new FormDataEntry();
-        //        }
-        //        catch { }
-
-        //        try
-        //        {
-        //            LayoutTreeBased l = new LayoutTreeBased();
-        //        }
-        //        catch { }
-
-        //    });
-        //}
     }
 }
