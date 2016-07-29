@@ -35,15 +35,6 @@ namespace FSCruiser.WinForms
             throw new NotImplementedException();
         }
 
-        public override void ShowDataEntry(CuttingUnitVM unit)
-        {
-            _dataEntryView = null;
-
-            _dataEntryView = new FormDataEntry(this.ApplicationController, unit);
-            _dataEntryView.Owner = this.MainView;
-            _dataEntryView.ShowDialog();
-        }
-
         public override DialogResult ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit)
         {
             throw new NotImplementedException();

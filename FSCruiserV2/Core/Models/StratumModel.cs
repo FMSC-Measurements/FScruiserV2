@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
@@ -83,7 +84,15 @@ namespace FSCruiser.Core.Models
                 {
                     char hotkey = count.Tally.Hotkey[0];
                     hotkey = char.ToUpper(hotkey);
-                    HotKeyLookup.Add(hotkey, count);
+                    try
+                    {
+                        HotKeyLookup.Add(hotkey, count);
+                    }
+                    catch (ArgumentException e)
+                    {
+                        //MessageBox.Show("Duplicate Tally, File My Have Bad Setup Data");
+                        throw new CruiseConfigurationException("Duplicate Tally Setup Information, Please Contact FMSC", e);
+                    }
                 }
             }
         }

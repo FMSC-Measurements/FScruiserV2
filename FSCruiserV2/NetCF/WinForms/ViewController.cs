@@ -141,18 +141,6 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public override void ShowDataEntry(CuttingUnitVM unit)
-        {
-            lock (_dataEntrySyncLock)
-            {
-                using (_dataEntryView = new FormDataEntry(this.ApplicationController, unit))
-                {
-                    _dataEntryView.ShowDialog();
-                }
-                _dataEntryView = null;
-            }
-        }
-
         public override DialogResult ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit)
         {
             using (FormEditSampleGroup view = new FormEditSampleGroup())
