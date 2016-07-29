@@ -47,10 +47,6 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FMSC.Core_CF20, Version=1.0.0.26521, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\FMSC.Core\NetCF20\FMSC.Core_CF20.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.WindowsCE.Forms" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
@@ -67,8 +63,10 @@
     <Compile Include="Core\CountTreeExtensions.cs" />
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LimitingDistanceCalculator.cs" />
+    <Compile Include="Core\DoubleExtentions.cs" />
     <Compile Include="Core\ExceptionHandler.cs" />
     <Compile Include="Core\Exceptions.cs" />
+    <Compile Include="Core\FloatExtentions.cs" />
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="Core\IExceptionHandler.cs" />
     <Compile Include="Core\LoadCuttingUnitWorker.cs" />
@@ -100,6 +98,7 @@
     <Compile Include="Core\Workers\Worker.cs" />
     <Compile Include="Core\Workers\WorkerExceptionThrownEventArgs.cs" />
     <Compile Include="Core\Workers\WorkerProgressChangedEventArgs.cs" />
+    <Compile Include="NetCF\NamedMutex.cs" />
     <Compile Include="NetCF\WinForms\DataEntry\ControlTreeDataGrid.cs">
       <SubType>Component</SubType>
     </Compile>
