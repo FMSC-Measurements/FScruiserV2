@@ -376,6 +376,13 @@ namespace FSCruiser.WinForms.DataEntry
                     //no need to initialize any counts or samplegroup info for 3PPNT
                     IsGridExpanded = false;
                 }
+                else if (stratum.Counts.Count() > 0)
+                {
+                    foreach (CountTreeVM count in stratum.Counts)
+                    {
+                        MakeTallyRow(_tallyListPanel, count);
+                    }
+                }
                 else
                 {
                     MakeSGList(stratum.SampleGroups, _tallyListPanel);
