@@ -708,7 +708,7 @@ namespace FSCruiser.WinForms.DataEntry
                 return;
             }
 
-            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot, null);
+            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot);
         }
 
         public void RefreshTreeView(PlotVM currentPlot)

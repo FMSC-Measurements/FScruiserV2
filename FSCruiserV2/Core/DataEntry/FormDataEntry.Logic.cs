@@ -79,12 +79,12 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public bool ShowLimitingDistanceDialog(StratumModel stratum, PlotVM plot, TreeVM optTree)
+        public bool ShowLimitingDistanceDialog(StratumModel stratum, PlotVM plot)
         {
             string logMessage = String.Empty;
             bool isVariableRadius = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS, stratum.Method) > -1;
             float bafOrFixedPlotSize = (isVariableRadius) ? stratum.BasalAreaFactor : stratum.FixedPlotSize;
-            DialogResult dResult = ViewController.ShowLimitingDistanceDialog(bafOrFixedPlotSize, isVariableRadius, optTree, out logMessage);
+            DialogResult dResult = ViewController.ShowLimitingDistanceDialog(bafOrFixedPlotSize, isVariableRadius, out logMessage);
             if (dResult == DialogResult.OK)
             {
                 plot.Remarks += logMessage;

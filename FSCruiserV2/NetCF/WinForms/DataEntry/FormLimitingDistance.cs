@@ -7,16 +7,27 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormLimitingDistance : Form
     {
-        public FormLimitingDistance()
+        LimitingDistanceCalculator _calculator;
+
+        public FormLimitingDistance(float bafOrFPS, bool isVariableRadius)
         {
+            _calculator = new LimitingDistanceCalculator(isVariableRadius)
+                {
+                    BAForFPSize = bafOrFPS
+                };
+
             InitializeComponent();
 
-            _calculator.LimitingDistanceChanged += new EventHandler(_calculator_LimitingDistanceChanged);
+            //initailize form state
+            this._calculateMI.Enabled = false;
+            this._bafOrfpsLBL.Text = (_calculator.IsVariableRadius) ? "BAF" : "FPS";
+
+            _calculator.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_calculator_PropertyChanged);
 
             _BS_calculator.DataSource = _calculator;
 
-            _measureToCB.Items.Add("Face");
-            _measureToCB.Items.Add("Center");
+            foreach (var i in LimitingDistanceCalculator.MEASURE_TO_OPTIONS)
+            { _measureToCB.Items.Add(i); }
 
 #if NetCF
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
@@ -37,55 +48,53 @@ namespace FSCruiser.WinForms.DataEntry
 #endif
         }
 
-        LimitingDistanceCalculator _calculator = new LimitingDistanceCalculator();
-
         public bool IsVariableRadius { get; set; }
 
-        public string LogMessage { get; set; }
-
-        public DialogResult ShowDialog(float bafOrFPS, bool isVariableRadius, TreeVM optTree, out string logMessage)
+        public string Report
         {
-            _calculator.Reset();
-            _calculator.BAForFPSize = bafOrFPS;
-            _calculator.IsVariableRadius = isVariableRadius;
-
-            _BS_calculator.ResetBindings(false);
-
-            //initailize form state
-            this._calculateMI.Enabled = false;
-            this._bafOrfpsLBL.Text = (isVariableRadius) ? "BAF" : "FPS";
-
-            var dialogResult = this.ShowDialog();
-            if (dialogResult == DialogResult.OK)
+            get
             {
-                logMessage = _calculator.GenerateReport();
+                return _calculator.GenerateReport();
             }
-            else
-            {
-                logMessage = string.Empty;
-            }
-
-            return dialogResult;
         }
 
-        void UpdateTreeInOrOut()
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            if (_calculator.SlopeDistance <= 0
-                || _calculator.LimitingDistance <= 0.0)
-            {
-                _treeIsLBL.Text = string.Empty;
-            }
+            _BS_calculator.EndEdit();
+            base.OnClosing(e);
+        }
 
-            // FSH 2409.12 35.22a
-            var isTreeIn = _calculator.SlopeDistance <= _calculator.LimitingDistance;
-            if (isTreeIn)
+        private void _calculateBTN_Click(object sender, EventArgs e)
+        {
+            _BS_calculator.EndEdit();
+            _BS_calculator.ResetBindings(false);
+            //_calculator.Recalculate();
+        }
+
+        void _calculator_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "LimitingDistance")
             {
-                this._treeIsLBL.Text = "IN";
+                UpdateLimitingDistance();
             }
-            else
-            {
-                this._treeIsLBL.Text = "OUT";
-            }
+        }
+
+        private void _cancelMI_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        void _sip_EnabledChanged(object sender, EventArgs e)
+        {
+            this._sipPlaceholder.Height = (this._sip.Enabled) ? this._sip.Bounds.Height : 0;
+        }
+
+        void _TB_GotFocus(object sender, EventArgs e)
+        {
+            var tb = sender as TextBox;
+            if (tb == null) { return; }
+            tb.BeginInvoke(new Action(tb.SelectAll));
         }
 
         void UpdateLimitingDistance()
@@ -105,36 +114,8 @@ namespace FSCruiser.WinForms.DataEntry
                 this._limitingDistanceLBL.Text = string.Format(
                     "{0:F}' to {1} of tree"
                     , limitingDistance
-                    , _calculator.MeasureToStr);
+                    , _calculator.MeasureTo);
             }
-        }
-
-        void _calculator_LimitingDistanceChanged(object sender, EventArgs e)
-        {
-            UpdateLimitingDistance();
-        }
-
-        private void _calculateBTN_Click(object sender, EventArgs e)
-        {
-            UpdateTreeInOrOut();
-        }
-
-        private void _cancelMI_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
-        }
-
-        void _TB_GotFocus(object sender, EventArgs e)
-        {
-            var tb = sender as TextBox;
-            if (tb == null) { return; }
-            tb.BeginInvoke(new Action(tb.SelectAll));
-        }
-
-        void _sip_EnabledChanged(object sender, EventArgs e)
-        {
-            this._sipPlaceholder.Height = (this._sip.Enabled) ? this._sip.Bounds.Height : 0;
         }
     }
 }

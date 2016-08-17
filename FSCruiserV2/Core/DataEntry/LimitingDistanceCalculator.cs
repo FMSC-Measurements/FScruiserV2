@@ -5,9 +5,9 @@ namespace FSCruiser.Core.DataEntry
 {
     public class LimitingDistanceCalculator : INotifyPropertyChanged
     {
-        public event EventHandler LimitingDistanceChanged;
-
-        public enum MeasurmentLocation { Face, Center }
+        public static readonly String MEASURE_TO_FACE = "Face";
+        public static readonly String MEASURE_TO_CENTER = "Center";
+        public static readonly String[] MEASURE_TO_OPTIONS = new String[] { MEASURE_TO_FACE, MEASURE_TO_CENTER };
 
         double _bafOrFPS;
         double _dbh;
@@ -21,7 +21,8 @@ namespace FSCruiser.Core.DataEntry
             {
                 if (value < 0.0) { return; }
                 _bafOrFPS = value;
-                UpdateLimitingDistance();
+                NotifyPropertyChanged("BAForFPSize");
+                Recalculate();
             }
         }
 
@@ -32,7 +33,8 @@ namespace FSCruiser.Core.DataEntry
             {
                 if (value < 0.0) { return; }
                 _dbh = value;
-                UpdateLimitingDistance();
+                NotifyPropertyChanged("DBH");
+                Recalculate();
             }
         }
 
@@ -43,7 +45,8 @@ namespace FSCruiser.Core.DataEntry
             {
                 if (value < 0) { return; }
                 _slopePCT = value;
-                UpdateLimitingDistance();
+                NotifyPropertyChanged("SlopePCT");
+                Recalculate();
             }
         }
 
@@ -54,6 +57,8 @@ namespace FSCruiser.Core.DataEntry
             {
                 if (_slopeDistance < 0.0) { return; }
                 _slopeDistance = value;
+                NotifyPropertyChanged("SlopeDistance");
+                Recalculate();
             }
         }
 
@@ -65,62 +70,80 @@ namespace FSCruiser.Core.DataEntry
             set
             {
                 _limitingDistance = value;
-                OnLimitingDistanceChanged();
+                NotifyPropertyChanged("LimitingDistance");
             }
         }
 
-        MeasurmentLocation _measureTo;
+        String _measureTo = MEASURE_TO_FACE;
 
-        public MeasurmentLocation MeasureTo
+        public string MeasureTo
         {
             get { return _measureTo; }
             set
             {
+                if (value == _measureTo) { return; }
                 _measureTo = value;
-                UpdateLimitingDistance();
+                NotifyPropertyChanged("MeasureTo");
+                Recalculate();
             }
         }
 
-        public string MeasureToStr
+        String _treeStatus;
+
+        public String TreeStatus
         {
-            get { return MeasureTo.ToString(); }
+            get
+            { return _treeStatus; }
             set
             {
-                try
-                {
-                    MeasureTo = (MeasurmentLocation)Enum.Parse(typeof(MeasurmentLocation), value, true);
-                }
-                catch { }
+                if (_treeStatus == value) { return; }
+                _treeStatus = value;
+                NotifyPropertyChanged("TreeStatus");
             }
         }
 
-        public bool IsVariableRadius { get; set; }
+        public bool IsVariableRadius { get; protected set; }
 
-        protected void UpdateLimitingDistance()
+        public LimitingDistanceCalculator(bool isVariableRadius)
+        {
+            IsVariableRadius = IsVariableRadius;
+            Reset();
+        }
+
+        public void Recalculate()
         {
             LimitingDistance = CalculateLimitingDistance(BAForFPSize,
                 DBH, SlopePCT, IsVariableRadius, MeasureTo);
-        }
 
-        protected void OnLimitingDistanceChanged()
-        {
-            if (LimitingDistanceChanged != null)
+            if (SlopeDistance <= 0
+                || LimitingDistance <= 0.0)
             {
-                LimitingDistanceChanged(this, null);
+                TreeStatus = string.Empty;
+            }
+            else
+            {
+                // FSH 2409.12 35.22a
+                var isTreeIn = SlopeDistance.LessThanOrEqualsEx(LimitingDistance);
+                if (isTreeIn)
+                {
+                    TreeStatus = "IN";
+                }
+                else
+                {
+                    TreeStatus = "OUT";
+                }
             }
         }
 
         public string GenerateReport()
         {
-            UpdateLimitingDistance();
+            Recalculate();
 
-            if (LimitingDistance <= 0.0 || SlopeDistance <= 0.0)
+            if (String.IsNullOrEmpty(TreeStatus))
             { return string.Empty; }
 
-            var isTreeIn = SlopeDistance.LessThanOrEqualsEx(LimitingDistance);
-
             return String.Format("Tree was {0} (DBH:{1}, slope:{2}%, slope distance:{3}', limiting distance:{4:F}' to {5} of tree, {6}:{7}) \r\n",
-                    (isTreeIn) ? "IN" : "OUT",
+                    TreeStatus,
                     DBH,
                     SlopePCT,
                     SlopeDistance,
@@ -132,20 +155,23 @@ namespace FSCruiser.Core.DataEntry
 
         public void Reset()
         {
-            _bafOrFPS = 0.0;
-            _slopePCT = 0;
-            _slopeDistance = 0.0;
-            _dbh = 0.0;
-            _measureTo = LimitingDistanceCalculator.MeasurmentLocation.Face;
+            BAForFPSize = 0.0;
+            SlopePCT = 0;
+            SlopeDistance = 0.0;
+            DBH = 0.0;
+            MeasureTo = MEASURE_TO_FACE;
+            TreeStatus = String.Empty;
         }
 
         public static double CalculateLimitingDistance(double BAForFPSize, double dbh,
-            int slopPct, bool isVariableRadius, MeasurmentLocation measureTo)
+            int slopPct, bool isVariableRadius, String measureTo)
         {
             if (dbh <= 0.0
                 || BAForFPSize <= 0) { return 0.0; }
 
-            double toFaceCorrection = (measureTo == MeasurmentLocation.Face) ? (dbh / 12.0) * 0.5 : 0.0;
+            double toFaceCorrection = (measureTo == MEASURE_TO_FACE) ?
+                (dbh / 12.0) * 0.5
+                : 0.0;
 
             double slope = slopPct / 100.0d;
 

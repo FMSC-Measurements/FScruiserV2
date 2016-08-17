@@ -177,7 +177,7 @@ namespace FSCruiser.WinForms.Common
 
         public abstract System.Windows.Forms.DialogResult ShowEditTreeDefault(CruiseDAL.DataObjects.TreeDefaultValueDO tdv);
 
-        public abstract System.Windows.Forms.DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage);
+        public abstract System.Windows.Forms.DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);
 
         public void ShowLogsView(StratumModel stratum, TreeVM tree)
         {

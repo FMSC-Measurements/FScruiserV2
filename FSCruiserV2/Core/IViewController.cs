@@ -60,7 +60,7 @@ namespace FSCruiser.Core
 
         DialogResult ShowEditTreeDefault(TreeDefaultValueDO tdv);
 
-        DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage);
+        DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);
 
         void ShowLogsView(StratumModel stratum, TreeVM tree);
 

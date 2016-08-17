@@ -694,20 +694,20 @@ namespace FSCruiser.WinForms.DataEntry
                 return;
             }
 
-            TreeVM tree = null;
-            //see if the user is in the DBH column
-            if (this._dataGrid.CurrentCollumn != null
-                && this._dataGrid.CurrentCollumn.MappingName == "DBH")
-            {
-                //is a tree selected and if so grab it and take its dbh
-                TreeVM curTree = this.ViewLogicController.CurrentTree;
-                if (curTree != null && curTree.DBH == 0)
-                {
-                    tree = curTree;
-                }
-            }
+            //TreeVM tree = null;
+            ////see if the user is in the DBH column
+            //if (this._dataGrid.CurrentCollumn != null
+            //    && this._dataGrid.CurrentCollumn.MappingName == "DBH")
+            //{
+            //    //is a tree selected and if so grab it and take its dbh
+            //    TreeVM curTree = this.ViewLogicController.CurrentTree;
+            //    if (curTree != null && curTree.DBH == 0)
+            //    {
+            //        tree = curTree;
+            //    }
+            //}
 
-            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot, tree);
+            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot);
         }
 
         public void ViewEndEdit()
