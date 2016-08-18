@@ -1,14 +1,24 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using FSCruiserV2.Forms;
+using FSCruiser.Core.ViewInterfaces;
 
 namespace FSCruiserV2.Test.Mocks
 {
     public class DataEntryViewMock : IDataEntryView
     {
         #region IDataEntryView Members
+
+        public FSCruiser.Core.Models.CuttingUnitVM Unit
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public FSCruiser.Core.DataEntry.FormDataEntryLogic LogicController
+        {
+            get { throw new NotImplementedException(); }
+        }
 
         public IDataEntryPage FocusedLayout
         {
@@ -20,14 +30,9 @@ namespace FSCruiserV2.Test.Mocks
             get { throw new NotImplementedException(); }
         }
 
-        public FSCruiserV2.Logic.FormDataEntryLogic LogicController
+        public bool AskEnterMeasureTreeData()
         {
-            get { throw new NotImplementedException(); }
-        }
-
-        public IList<FSCruiserV2.Logic.StratumVM> PlotStrata
-        {
-            get { throw new NotImplementedException(); }
+            throw new NotImplementedException();
         }
 
         public void HandleCuttingUnitDataLoaded()
@@ -65,6 +70,6 @@ namespace FSCruiserV2.Test.Mocks
             throw new NotImplementedException();
         }
 
-        #endregion
+        #endregion IDataEntryView Members
     }
 }

@@ -14,7 +14,7 @@
     <PlatformID>b2c48bd2-963d-4549-9169-1fa021dce484</PlatformID>
     <OSVersion>5.02</OSVersion>
     <DeployDirSuffix>FScruiserCETest</DeployDirSuffix>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <NativePlatformName>Windows Mobile 6 Professional SDK</NativePlatformName>
     <FormFactorID>
     </FormFactorID>
@@ -45,15 +45,16 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FMSC.Core_CF20, Version=1.2.0.29775, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FMSC.Core\NetCF20\FMSC.Core_CF20.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Foms\OnTallyTestForm.cs">
@@ -68,8 +69,8 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Mocks\ApplicationControllerMock.cs" />
     <Compile Include="DataEntryTests.cs" />
+    <Compile Include="Mocks\ApplicationControllerMock.cs" />
     <Compile Include="Mocks\DataEntryViewMock.cs" />
     <Compile Include="Mocks\ViewControllerMock.cs" />
     <Compile Include="Program.cs" />
@@ -98,10 +99,17 @@
       <Project>{DC8A4894-F4A8-4554-B475-2EBAD49AF148}</Project>
       <Name>CruiseDAL_CF20</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CruiseDAL\FMSC.ORM\FMSC.ORM.NetCF20.csproj">
+      <Project>{D346BFEA-85A0-4A5D-BD89-D07E073B065E}</Project>
+      <Name>FMSC.ORM.NetCF20</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FSCruiserV2\FSCruiserV2CE_CF20.csproj">
       <Project>{AFD7A43E-A691-4A30-859A-28C9245EB0FC}</Project>
       <Name>FSCruiserV2CE_CF20</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tests\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>
@@ -111,7 +119,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
