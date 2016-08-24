@@ -31,13 +31,13 @@
         {
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.LimitingDistance = new System.Windows.Forms.Button();
             this._plotInfo_BTN = new System.Windows.Forms.Button();
             this._editTDV_BTN = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.STRSampplingTest_BTN = new System.Windows.Forms.Button();
-            this.LimitingDistance = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -51,6 +51,15 @@
             this.panel1.Location = new System.Drawing.Point(0, 20);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(240, 100);
+            // 
+            // LimitingDistance
+            // 
+            this.LimitingDistance.Location = new System.Drawing.Point(4, 30);
+            this.LimitingDistance.Name = "LimitingDistance";
+            this.LimitingDistance.Size = new System.Drawing.Size(110, 20);
+            this.LimitingDistance.TabIndex = 2;
+            this.LimitingDistance.Text = "LimitingDistance";
+            this.LimitingDistance.Click += new System.EventHandler(this.LimitingDistance_Click);
             // 
             // _plotInfo_BTN
             // 
@@ -102,15 +111,6 @@
             this.STRSampplingTest_BTN.TabIndex = 0;
             this.STRSampplingTest_BTN.Text = "STR Sampling";
             this.STRSampplingTest_BTN.Click += new System.EventHandler(this.STRSampplingTest_BTN_Click);
-            // 
-            // LimitingDistance
-            // 
-            this.LimitingDistance.Location = new System.Drawing.Point(4, 30);
-            this.LimitingDistance.Name = "LimitingDistance";
-            this.LimitingDistance.Size = new System.Drawing.Size(110, 20);
-            this.LimitingDistance.TabIndex = 2;
-            this.LimitingDistance.Text = "LimitingDistance";
-            this.LimitingDistance.Click += new System.EventHandler(this.LimitingDistance_Click);
             // 
             // MainForm
             // 
