@@ -44,7 +44,7 @@ namespace FSCruiserV2.Test
                         view.Controls.Find<TextBox>(TREEDEFAULTVALUE.FORMCLASS).Text = .2f.ToString();
                         view.Controls.Find<TextBox>(TREEDEFAULTVALUE.HIDDENPRIMARY).Text = .2f.ToString();
                         view.Controls.Find<TextBox>(TREEDEFAULTVALUE.HIDDENSECONDARY).Text = .2f.ToString();
-                        view.Controls.Find<TextBox>(TREEDEFAULTVALUE.MERCHHEIGHTLOGLENGTH).Text = .2f.ToString();
+                        view.Controls.Find<TextBox>(TREEDEFAULTVALUE.MERCHHEIGHTLOGLENGTH).Text = 1.ToString();
                         view.Controls.Find<TextBox>(TREEDEFAULTVALUE.MERCHHEIGHTTYPE).Text = "test";
                         view.Controls.Find<TextBox>(TREEDEFAULTVALUE.RECOVERABLE).Text = .2f.ToString();
                         view.Controls.Find<TextBox>(TREEDEFAULTVALUE.REFERENCEHEIGHTPERCENT).Text = .2f.ToString();
