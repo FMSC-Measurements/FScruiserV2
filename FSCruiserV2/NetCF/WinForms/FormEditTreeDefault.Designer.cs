@@ -44,7 +44,6 @@
             System.Windows.Forms.Label label7;
             System.Windows.Forms.Label label6;
             System.Windows.Forms.Label label5;
-            System.Windows.Forms.Label label4;
             System.Windows.Forms.Label label3;
             System.Windows.Forms.Label label2;
             System.Windows.Forms.Label label1;
@@ -55,26 +54,25 @@
             this._ce_ok_BTN = new System.Windows.Forms.Button();
             this._mainContentPanel = new System.Windows.Forms.Panel();
             this._moreFieldsPanel = new System.Windows.Forms.Panel();
-            this._refHtPctTB = new System.Windows.Forms.TextBox();
+            this.RefHtPct = new System.Windows.Forms.TextBox();
             this._BS_TreeDefaultValue = new System.Windows.Forms.BindingSource(this.components);
-            this._aveZTB = new System.Windows.Forms.TextBox();
-            this._barkThicknessRatioTB = new System.Windows.Forms.TextBox();
-            this._formClassTB = new System.Windows.Forms.TextBox();
-            this._mrchHtTypeTB = new System.Windows.Forms.TextBox();
-            this._mrchHtLLTB = new System.Windows.Forms.TextBox();
-            this._treeGradeTB = new System.Windows.Forms.TextBox();
-            this._contractSpTB = new System.Windows.Forms.TextBox();
-            this._recoverableTB = new System.Windows.Forms.TextBox();
-            this._hiddenSTB = new System.Windows.Forms.TextBox();
-            this._cullSTB = new System.Windows.Forms.TextBox();
-            this._hiddenPTB = new System.Windows.Forms.TextBox();
-            this._cullPTB = new System.Windows.Forms.TextBox();
-            this._FIACodeTB = new System.Windows.Forms.TextBox();
+            this.AveZ = new System.Windows.Forms.TextBox();
+            this.BarkThicknessRatio = new System.Windows.Forms.TextBox();
+            this.FormClass = new System.Windows.Forms.TextBox();
+            this.MrchHtType = new System.Windows.Forms.TextBox();
+            this.MrchHtLL = new System.Windows.Forms.TextBox();
+            this.TreeGrade = new System.Windows.Forms.TextBox();
+            this.ContractSp = new System.Windows.Forms.TextBox();
+            this.Recoverable = new System.Windows.Forms.TextBox();
+            this.HiddenS = new System.Windows.Forms.TextBox();
+            this.CullS = new System.Windows.Forms.TextBox();
+            this.HiddenP = new System.Windows.Forms.TextBox();
+            this.CullP = new System.Windows.Forms.TextBox();
+            this.FIACode = new System.Windows.Forms.TextBox();
             this._primaryFieldsPanel = new System.Windows.Forms.Panel();
-            this._pProd_CB = new System.Windows.Forms.ComboBox();
-            this._chargableTB = new System.Windows.Forms.TextBox();
-            this._liveDeadCB = new System.Windows.Forms.ComboBox();
-            this._speciesTB = new System.Windows.Forms.TextBox();
+            this.PProd = new System.Windows.Forms.ComboBox();
+            this.LiveDead = new System.Windows.Forms.ComboBox();
+            this.Species = new System.Windows.Forms.TextBox();
             label18 = new System.Windows.Forms.Label();
             label17 = new System.Windows.Forms.Label();
             label16 = new System.Windows.Forms.Label();
@@ -89,7 +87,6 @@
             label7 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
             label5 = new System.Windows.Forms.Label();
-            label4 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
@@ -198,16 +195,9 @@
             label5.Size = new System.Drawing.Size(100, 20);
             label5.Text = "FIA Code";
             // 
-            // label4
-            // 
-            label4.Location = new System.Drawing.Point(3, 52);
-            label4.Name = "label4";
-            label4.Size = new System.Drawing.Size(66, 20);
-            label4.Text = "Chargable";
-            // 
             // label3
             // 
-            label3.Location = new System.Drawing.Point(3, 28);
+            label3.Location = new System.Drawing.Point(3, 35);
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(66, 20);
             label3.Text = "Live/Dead";
@@ -218,6 +208,13 @@
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(66, 20);
             label2.Text = "Species";
+            // 
+            // label1
+            // 
+            label1.Location = new System.Drawing.Point(4, 61);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(100, 20);
+            label1.Text = "Primary Product";
             // 
             // mainMenu1
             // 
@@ -269,20 +266,20 @@
             // 
             // _moreFieldsPanel
             // 
-            this._moreFieldsPanel.Controls.Add(this._refHtPctTB);
-            this._moreFieldsPanel.Controls.Add(this._aveZTB);
-            this._moreFieldsPanel.Controls.Add(this._barkThicknessRatioTB);
-            this._moreFieldsPanel.Controls.Add(this._formClassTB);
-            this._moreFieldsPanel.Controls.Add(this._mrchHtTypeTB);
-            this._moreFieldsPanel.Controls.Add(this._mrchHtLLTB);
-            this._moreFieldsPanel.Controls.Add(this._treeGradeTB);
-            this._moreFieldsPanel.Controls.Add(this._contractSpTB);
-            this._moreFieldsPanel.Controls.Add(this._recoverableTB);
-            this._moreFieldsPanel.Controls.Add(this._hiddenSTB);
-            this._moreFieldsPanel.Controls.Add(this._cullSTB);
-            this._moreFieldsPanel.Controls.Add(this._hiddenPTB);
-            this._moreFieldsPanel.Controls.Add(this._cullPTB);
-            this._moreFieldsPanel.Controls.Add(this._FIACodeTB);
+            this._moreFieldsPanel.Controls.Add(this.RefHtPct);
+            this._moreFieldsPanel.Controls.Add(this.AveZ);
+            this._moreFieldsPanel.Controls.Add(this.BarkThicknessRatio);
+            this._moreFieldsPanel.Controls.Add(this.FormClass);
+            this._moreFieldsPanel.Controls.Add(this.MrchHtType);
+            this._moreFieldsPanel.Controls.Add(this.MrchHtLL);
+            this._moreFieldsPanel.Controls.Add(this.TreeGrade);
+            this._moreFieldsPanel.Controls.Add(this.ContractSp);
+            this._moreFieldsPanel.Controls.Add(this.Recoverable);
+            this._moreFieldsPanel.Controls.Add(this.HiddenS);
+            this._moreFieldsPanel.Controls.Add(this.CullS);
+            this._moreFieldsPanel.Controls.Add(this.HiddenP);
+            this._moreFieldsPanel.Controls.Add(this.CullP);
+            this._moreFieldsPanel.Controls.Add(this.FIACode);
             this._moreFieldsPanel.Controls.Add(label18);
             this._moreFieldsPanel.Controls.Add(label17);
             this._moreFieldsPanel.Controls.Add(label16);
@@ -302,177 +299,175 @@
             this._moreFieldsPanel.Name = "_moreFieldsPanel";
             this._moreFieldsPanel.Size = new System.Drawing.Size(240, 330);
             // 
-            // _refHtPctTB
+            // RefHtPct
             // 
-            this._refHtPctTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "ReferenceHeightPercent", true));
-            this._refHtPctTB.Location = new System.Drawing.Point(110, 292);
-            this._refHtPctTB.Name = "_refHtPctTB";
-            this._refHtPctTB.Size = new System.Drawing.Size(100, 23);
-            this._refHtPctTB.TabIndex = 18;
+            this.RefHtPct.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "ReferenceHeightPercent", true));
+            this.RefHtPct.Location = new System.Drawing.Point(110, 292);
+            this.RefHtPct.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.REFERENCEHEIGHTPERCENT;
+            this.RefHtPct.Size = new System.Drawing.Size(100, 23);
+            this.RefHtPct.TabIndex = 18;
+            this.RefHtPct.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
             // _BS_TreeDefaultValue
             // 
             this._BS_TreeDefaultValue.DataSource = typeof(CruiseDAL.DataObjects.TreeDefaultValueDO);
             // 
-            // _aveZTB
+            // AveZ
             // 
-            this._aveZTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "AverageZ", true));
-            this._aveZTB.Location = new System.Drawing.Point(110, 270);
-            this._aveZTB.Name = "_aveZTB";
-            this._aveZTB.Size = new System.Drawing.Size(100, 23);
-            this._aveZTB.TabIndex = 17;
+            this.AveZ.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "AverageZ", true));
+            this.AveZ.Location = new System.Drawing.Point(110, 270);
+            this.AveZ.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.AVERAGEZ;
+            this.AveZ.Size = new System.Drawing.Size(100, 23);
+            this.AveZ.TabIndex = 17;
+            this.AveZ.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
-            // _barkThicknessRatioTB
+            // BarkThicknessRatio
             // 
-            this._barkThicknessRatioTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "BarkThicknessRatio", true));
-            this._barkThicknessRatioTB.Location = new System.Drawing.Point(110, 248);
-            this._barkThicknessRatioTB.Name = "_barkThicknessRatioTB";
-            this._barkThicknessRatioTB.Size = new System.Drawing.Size(100, 23);
-            this._barkThicknessRatioTB.TabIndex = 16;
+            this.BarkThicknessRatio.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "BarkThicknessRatio", true));
+            this.BarkThicknessRatio.Location = new System.Drawing.Point(110, 248);
+            this.BarkThicknessRatio.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.BARKTHICKNESSRATIO;
+            this.BarkThicknessRatio.Size = new System.Drawing.Size(100, 23);
+            this.BarkThicknessRatio.TabIndex = 16;
+            this.BarkThicknessRatio.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
-            // _formClassTB
+            // FormClass
             // 
-            this._formClassTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "FormClass", true));
-            this._formClassTB.Location = new System.Drawing.Point(110, 226);
-            this._formClassTB.Name = "_formClassTB";
-            this._formClassTB.Size = new System.Drawing.Size(100, 23);
-            this._formClassTB.TabIndex = 15;
+            this.FormClass.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "FormClass", true));
+            this.FormClass.Location = new System.Drawing.Point(110, 226);
+            this.FormClass.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.FORMCLASS;
+            this.FormClass.Size = new System.Drawing.Size(100, 23);
+            this.FormClass.TabIndex = 15;
+            this.FormClass.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
-            // _mrchHtTypeTB
+            // MrchHtType
             // 
-            this._mrchHtTypeTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "MerchHeightType", true));
-            this._mrchHtTypeTB.Location = new System.Drawing.Point(110, 204);
-            this._mrchHtTypeTB.Name = "_mrchHtTypeTB";
-            this._mrchHtTypeTB.Size = new System.Drawing.Size(100, 23);
-            this._mrchHtTypeTB.TabIndex = 14;
+            this.MrchHtType.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "MerchHeightType", true));
+            this.MrchHtType.Location = new System.Drawing.Point(110, 204);
+            this.MrchHtType.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.MERCHHEIGHTTYPE;
+            this.MrchHtType.Size = new System.Drawing.Size(100, 23);
+            this.MrchHtType.TabIndex = 14;
+            this.MrchHtType.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
-            // _mrchHtLLTB
+            // MrchHtLL
             // 
-            this._mrchHtLLTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "MerchHeightLogLength", true));
-            this._mrchHtLLTB.Location = new System.Drawing.Point(110, 182);
-            this._mrchHtLLTB.Name = "_mrchHtLLTB";
-            this._mrchHtLLTB.Size = new System.Drawing.Size(100, 23);
-            this._mrchHtLLTB.TabIndex = 13;
+            this.MrchHtLL.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "MerchHeightLogLength", true));
+            this.MrchHtLL.Location = new System.Drawing.Point(110, 182);
+            this.MrchHtLL.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.MERCHHEIGHTLOGLENGTH;
+            this.MrchHtLL.Size = new System.Drawing.Size(100, 23);
+            this.MrchHtLL.TabIndex = 13;
+            this.MrchHtLL.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
-            // _treeGradeTB
+            // TreeGrade
             // 
-            this._treeGradeTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "TreeGrade", true));
-            this._treeGradeTB.Location = new System.Drawing.Point(110, 160);
-            this._treeGradeTB.Name = "_treeGradeTB";
-            this._treeGradeTB.Size = new System.Drawing.Size(100, 23);
-            this._treeGradeTB.TabIndex = 12;
+            this.TreeGrade.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "TreeGrade", true));
+            this.TreeGrade.Location = new System.Drawing.Point(110, 160);
+            this.TreeGrade.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.TREEGRADE;
+            this.TreeGrade.Size = new System.Drawing.Size(100, 23);
+            this.TreeGrade.TabIndex = 12;
+            this.TreeGrade.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
-            // _contractSpTB
+            // ContractSp
             // 
-            this._contractSpTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "ContractSpecies", true));
-            this._contractSpTB.Location = new System.Drawing.Point(110, 138);
-            this._contractSpTB.Name = "_contractSpTB";
-            this._contractSpTB.Size = new System.Drawing.Size(100, 23);
-            this._contractSpTB.TabIndex = 11;
+            this.ContractSp.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "ContractSpecies", true));
+            this.ContractSp.Location = new System.Drawing.Point(110, 138);
+            this.ContractSp.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.CONTRACTSPECIES;
+            this.ContractSp.Size = new System.Drawing.Size(100, 23);
+            this.ContractSp.TabIndex = 11;
+            this.ContractSp.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
-            // _recoverableTB
+            // Recoverable
             // 
-            this._recoverableTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "Recoverable", true));
-            this._recoverableTB.Location = new System.Drawing.Point(110, 116);
-            this._recoverableTB.Name = "_recoverableTB";
-            this._recoverableTB.Size = new System.Drawing.Size(100, 23);
-            this._recoverableTB.TabIndex = 10;
+            this.Recoverable.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "Recoverable", true));
+            this.Recoverable.Location = new System.Drawing.Point(110, 116);
+            this.Recoverable.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.RECOVERABLE;
+            this.Recoverable.Size = new System.Drawing.Size(100, 23);
+            this.Recoverable.TabIndex = 10;
+            this.Recoverable.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
-            // _hiddenSTB
+            // HiddenS
             // 
-            this._hiddenSTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "HiddenSecondary", true));
-            this._hiddenSTB.Location = new System.Drawing.Point(110, 94);
-            this._hiddenSTB.Name = "_hiddenSTB";
-            this._hiddenSTB.Size = new System.Drawing.Size(100, 23);
-            this._hiddenSTB.TabIndex = 9;
+            this.HiddenS.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "HiddenSecondary", true));
+            this.HiddenS.Location = new System.Drawing.Point(110, 94);
+            this.HiddenS.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.HIDDENSECONDARY;
+            this.HiddenS.Size = new System.Drawing.Size(100, 23);
+            this.HiddenS.TabIndex = 9;
+            this.HiddenS.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
-            // _cullSTB
+            // CullS
             // 
-            this._cullSTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "CullSecondary", true));
-            this._cullSTB.Location = new System.Drawing.Point(110, 72);
-            this._cullSTB.Name = "_cullSTB";
-            this._cullSTB.Size = new System.Drawing.Size(100, 23);
-            this._cullSTB.TabIndex = 8;
+            this.CullS.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "CullSecondary", true));
+            this.CullS.Location = new System.Drawing.Point(110, 72);
+            this.CullS.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.CULLSECONDARY;
+            this.CullS.Size = new System.Drawing.Size(100, 23);
+            this.CullS.TabIndex = 8;
+            this.CullS.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
-            // _hiddenPTB
+            // HiddenP
             // 
-            this._hiddenPTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "HiddenPrimary", true));
-            this._hiddenPTB.Location = new System.Drawing.Point(110, 50);
-            this._hiddenPTB.Name = "_hiddenPTB";
-            this._hiddenPTB.Size = new System.Drawing.Size(100, 23);
-            this._hiddenPTB.TabIndex = 7;
+            this.HiddenP.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "HiddenPrimary", true));
+            this.HiddenP.Location = new System.Drawing.Point(110, 50);
+            this.HiddenP.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.HIDDENPRIMARY;
+            this.HiddenP.Size = new System.Drawing.Size(100, 23);
+            this.HiddenP.TabIndex = 7;
+            this.HiddenP.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
-            // _cullPTB
+            // CullP
             // 
-            this._cullPTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "CullPrimary", true));
-            this._cullPTB.Location = new System.Drawing.Point(110, 29);
-            this._cullPTB.Name = "_cullPTB";
-            this._cullPTB.Size = new System.Drawing.Size(100, 23);
-            this._cullPTB.TabIndex = 6;
+            this.CullP.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "CullPrimary", true));
+            this.CullP.Location = new System.Drawing.Point(110, 29);
+            this.CullP.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.CULLPRIMARY;
+            this.CullP.Size = new System.Drawing.Size(100, 23);
+            this.CullP.TabIndex = 6;
+            this.CullP.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
-            // _FIACodeTB
+            // FIACode
             // 
-            this._FIACodeTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "FIAcode", true));
-            this._FIACodeTB.Location = new System.Drawing.Point(110, 6);
-            this._FIACodeTB.Name = "_FIACodeTB";
-            this._FIACodeTB.Size = new System.Drawing.Size(100, 23);
-            this._FIACodeTB.TabIndex = 5;
+            this.FIACode.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "FIAcode", true));
+            this.FIACode.Location = new System.Drawing.Point(110, 6);
+            this.FIACode.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.FIACODE;
+            this.FIACode.Size = new System.Drawing.Size(100, 23);
+            this.FIACode.TabIndex = 5;
+            this.FIACode.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
             // _primaryFieldsPanel
             // 
-            this._primaryFieldsPanel.Controls.Add(this._pProd_CB);
+            this._primaryFieldsPanel.Controls.Add(this.PProd);
             this._primaryFieldsPanel.Controls.Add(label1);
-            this._primaryFieldsPanel.Controls.Add(this._chargableTB);
-            this._primaryFieldsPanel.Controls.Add(label4);
-            this._primaryFieldsPanel.Controls.Add(this._liveDeadCB);
+            this._primaryFieldsPanel.Controls.Add(this.LiveDead);
             this._primaryFieldsPanel.Controls.Add(label3);
-            this._primaryFieldsPanel.Controls.Add(this._speciesTB);
+            this._primaryFieldsPanel.Controls.Add(this.Species);
             this._primaryFieldsPanel.Controls.Add(label2);
             this._primaryFieldsPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this._primaryFieldsPanel.Location = new System.Drawing.Point(0, 0);
             this._primaryFieldsPanel.Name = "_primaryFieldsPanel";
             this._primaryFieldsPanel.Size = new System.Drawing.Size(240, 105);
             // 
-            // _pProd_CB
+            // PProd
             // 
-            this._pProd_CB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "PrimaryProduct", true));
-            this._pProd_CB.Location = new System.Drawing.Point(110, 75);
-            this._pProd_CB.Name = "_pProd_CB";
-            this._pProd_CB.Size = new System.Drawing.Size(100, 23);
-            this._pProd_CB.TabIndex = 4;
+            this.PProd.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "PrimaryProduct", true));
+            this.PProd.Location = new System.Drawing.Point(110, 61);
+            this.PProd.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.PRIMARYPRODUCT;
+            this.PProd.Size = new System.Drawing.Size(100, 23);
+            this.PProd.TabIndex = 4;
             // 
-            // label1
+            // LiveDead
             // 
-            label1.Location = new System.Drawing.Point(4, 75);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(100, 20);
-            label1.Text = "Primary Product";
+            this.LiveDead.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "LiveDead", true));
+            this.LiveDead.Items.Add("L");
+            this.LiveDead.Items.Add("D");
+            this.LiveDead.Location = new System.Drawing.Point(110, 32);
+            this.LiveDead.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.LIVEDEAD;
+            this.LiveDead.Size = new System.Drawing.Size(39, 23);
+            this.LiveDead.TabIndex = 2;
             // 
-            // _chargableTB
+            // Species
             // 
-            this._chargableTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "Chargeable", true));
-            this._chargableTB.Location = new System.Drawing.Point(75, 52);
-            this._chargableTB.Name = "_chargableTB";
-            this._chargableTB.Size = new System.Drawing.Size(100, 23);
-            this._chargableTB.TabIndex = 3;
-            // 
-            // _liveDeadCB
-            // 
-            this._liveDeadCB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "LiveDead", true));
-            this._liveDeadCB.Items.Add("L");
-            this._liveDeadCB.Items.Add("D");
-            this._liveDeadCB.Location = new System.Drawing.Point(75, 26);
-            this._liveDeadCB.Name = "_liveDeadCB";
-            this._liveDeadCB.Size = new System.Drawing.Size(39, 23);
-            this._liveDeadCB.TabIndex = 2;
-            // 
-            // _speciesTB
-            // 
-            this._speciesTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "Species", true));
-            this._speciesTB.Location = new System.Drawing.Point(75, 3);
-            this._speciesTB.Name = "_speciesTB";
-            this._speciesTB.Size = new System.Drawing.Size(100, 23);
-            this._speciesTB.TabIndex = 1;
+            this.Species.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_TreeDefaultValue, "Species", true));
+            this.Species.Location = new System.Drawing.Point(110, 3);
+            this.Species.Name = CruiseDAL.Schema.TREEDEFAULTVALUE.SPECIES;
+            this.Species.Size = new System.Drawing.Size(100, 23);
+            this.Species.TabIndex = 1;
+            this.Species.GotFocus += new System.EventHandler(this._editControl_GotFocus);
             // 
             // FormEditTreeDefault
             // 
@@ -486,7 +481,6 @@
             this.Menu = this.mainMenu1;
             this.Name = "FormEditTreeDefault";
             this.Text = "Tree Default";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormEditTreeDefault_KeyDown);
             this._ceDialogPanel.ResumeLayout(false);
             this._mainContentPanel.ResumeLayout(false);
             this._moreFieldsPanel.ResumeLayout(false);
@@ -502,27 +496,26 @@
         private System.Windows.Forms.Panel _ceDialogPanel;
         private System.Windows.Forms.Panel _mainContentPanel;
         private System.Windows.Forms.Panel _moreFieldsPanel;
-        private System.Windows.Forms.TextBox _refHtPctTB;
-        private System.Windows.Forms.TextBox _aveZTB;
-        private System.Windows.Forms.TextBox _barkThicknessRatioTB;
-        private System.Windows.Forms.TextBox _formClassTB;
-        private System.Windows.Forms.TextBox _mrchHtTypeTB;
-        private System.Windows.Forms.TextBox _mrchHtLLTB;
-        private System.Windows.Forms.TextBox _treeGradeTB;
-        private System.Windows.Forms.TextBox _contractSpTB;
-        private System.Windows.Forms.TextBox _recoverableTB;
-        private System.Windows.Forms.TextBox _hiddenSTB;
-        private System.Windows.Forms.TextBox _cullSTB;
-        private System.Windows.Forms.TextBox _hiddenPTB;
-        private System.Windows.Forms.TextBox _cullPTB;
-        private System.Windows.Forms.TextBox _FIACodeTB;
+        private System.Windows.Forms.TextBox RefHtPct;
+        private System.Windows.Forms.TextBox AveZ;
+        private System.Windows.Forms.TextBox BarkThicknessRatio;
+        private System.Windows.Forms.TextBox FormClass;
+        private System.Windows.Forms.TextBox MrchHtType;
+        private System.Windows.Forms.TextBox MrchHtLL;
+        private System.Windows.Forms.TextBox TreeGrade;
+        private System.Windows.Forms.TextBox ContractSp;
+        private System.Windows.Forms.TextBox Recoverable;
+        private System.Windows.Forms.TextBox HiddenS;
+        private System.Windows.Forms.TextBox CullS;
+        private System.Windows.Forms.TextBox HiddenP;
+        private System.Windows.Forms.TextBox CullP;
+        private System.Windows.Forms.TextBox FIACode;
         private System.Windows.Forms.Panel _primaryFieldsPanel;
-        private System.Windows.Forms.TextBox _chargableTB;
-        private System.Windows.Forms.ComboBox _liveDeadCB;
-        private System.Windows.Forms.TextBox _speciesTB;
+        private System.Windows.Forms.ComboBox LiveDead;
+        private System.Windows.Forms.TextBox Species;
         private System.Windows.Forms.Button _ce_cancel_BTN;
         private System.Windows.Forms.Button _ce_ok_BTN;
-        private System.Windows.Forms.ComboBox _pProd_CB;
+        private System.Windows.Forms.ComboBox PProd;
         private System.Windows.Forms.BindingSource _BS_TreeDefaultValue;
 
     }

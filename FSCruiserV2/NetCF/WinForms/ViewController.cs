@@ -154,7 +154,7 @@ namespace FSCruiser.WinForms
 
         public override DialogResult ShowEditTreeDefault(TreeDefaultValueDO tdv)
         {
-            using (FormEditTreeDefault view = new FormEditTreeDefault(this.ApplicationController))
+            using (FormEditTreeDefault view = new FormEditTreeDefault(ApplicationController._cDal))
             {
                 return view.ShowDialog(tdv);
             }

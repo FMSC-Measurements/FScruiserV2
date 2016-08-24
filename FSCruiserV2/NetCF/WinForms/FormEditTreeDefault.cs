@@ -10,6 +10,8 @@ namespace FSCruiser.WinForms
     {
         private bool _viewLoading;
 
+        public FMSC.ORM.Core.DatastoreRedux Datastore { get; set; }
+
         //private TreeDefaultValueDO _treeDefaultValue;
         public TreeDefaultValueDO TreeDefaultValue
         {
@@ -23,13 +25,11 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public IApplicationController Controller { get; protected set; }
-
-        public FormEditTreeDefault(IApplicationController controller)
+        public FormEditTreeDefault(FMSC.ORM.Core.DatastoreRedux dataStore)
         {
-            this.Controller = controller;
+            Datastore = dataStore;
             InitializeComponent();
-            this._pProd_CB.DataSource = Constants.PRODUCT_CODES;
+            this.PProd.DataSource = Constants.PRODUCT_CODES;
 
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
             {
@@ -92,46 +92,32 @@ namespace FSCruiser.WinForms
                 if (this.HasUniqueConflict(this.TreeDefaultValue))
                 {
                     MessageBox.Show("Tree Default values entered conflict with existing Tree Default.\r\n" +
-                        "Please change Species, Primary Product, Chargeable or Live Dead values");
+                        "Please change Species, Primary Product, or Live Dead values");
                 }
             }
         }
 
         private bool HasUniqueConflict(TreeDefaultValueDO tdv)
         {
-            return (this.Controller._cDal.GetRowCount(CruiseDAL.Schema.TREEDEFAULTVALUE._NAME,
+            if (Datastore == null) { return false; }
+            return (Datastore.GetRowCount(CruiseDAL.Schema.TREEDEFAULTVALUE._NAME,
                 "WHERE PrimaryProduct = ? AND Species = ? AND LiveDead = ?",
                     tdv.PrimaryProduct, tdv.Species, tdv.LiveDead) > 0);
-        }
-
-        private void FormEditTreeDefault_KeyDown(object sender, KeyEventArgs e)
-        {
-            if ((e.KeyCode == System.Windows.Forms.Keys.Up))
-            {
-                // Up
-            }
-            if ((e.KeyCode == System.Windows.Forms.Keys.Down))
-            {
-                // Down
-            }
-            if ((e.KeyCode == System.Windows.Forms.Keys.Left))
-            {
-                // Left
-            }
-            if ((e.KeyCode == System.Windows.Forms.Keys.Right))
-            {
-                // Right
-            }
-            if ((e.KeyCode == System.Windows.Forms.Keys.Enter))
-            {
-                // Enter
-            }
         }
 
         private void _cancel_MI_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        private void _editControl_GotFocus(object sender, EventArgs e)
+        {
+            if (sender == null) { return; }
+            if (sender is TextBox)
+            {
+                ((TextBox)sender).SelectAll();
+            }
         }
     }
 }
