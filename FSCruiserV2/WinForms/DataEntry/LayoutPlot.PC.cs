@@ -131,6 +131,13 @@ namespace FSCruiser.WinForms.DataEntry
                     //no need to initialize any counts or samplegroup info for 3PPNT
                     IsGridExpanded = false;
                 }
+                else if (stratum.Counts.Count() > 0)
+                {
+                    foreach (CountTreeVM count in stratum.Counts)
+                    {
+                        MakeTallyRow(_tallyListPanel, count);
+                    }
+                }
                 else
                 {
                     MakeSGList(stratum.SampleGroups, _tallyListPanel);
@@ -438,7 +445,10 @@ namespace FSCruiser.WinForms.DataEntry
 
         public bool HotKeyEnabled
         {
-            get { return false; }
+            get
+            {
+                return false; //&& !Stratum.IsSingleStage;
+            }
         }
 
         public Dictionary<char, CountTreeVM> HotKeyLookup
@@ -698,7 +708,7 @@ namespace FSCruiser.WinForms.DataEntry
                 return;
             }
 
-            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot, null);
+            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot);
         }
 
         public void RefreshTreeView(PlotVM currentPlot)

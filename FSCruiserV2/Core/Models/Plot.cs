@@ -200,7 +200,6 @@ namespace FSCruiser.Core.Models
         public TreeVM CreateNewTreeEntry(SubPop subPop)
         {
             var tree = CreateNewTreeEntry(subPop.SG, subPop.TDV, true);
-            tree.TreeCount = 1;
             return tree;
         }
 

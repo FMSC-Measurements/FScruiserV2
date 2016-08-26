@@ -79,12 +79,12 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public bool ShowLimitingDistanceDialog(StratumModel stratum, PlotVM plot, TreeVM optTree)
+        public bool ShowLimitingDistanceDialog(StratumModel stratum, PlotVM plot)
         {
             string logMessage = String.Empty;
             bool isVariableRadius = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS, stratum.Method) > -1;
             float bafOrFixedPlotSize = (isVariableRadius) ? stratum.BasalAreaFactor : stratum.FixedPlotSize;
-            DialogResult dResult = ViewController.ShowLimitingDistanceDialog(bafOrFixedPlotSize, isVariableRadius, optTree, out logMessage);
+            DialogResult dResult = ViewController.ShowLimitingDistanceDialog(bafOrFixedPlotSize, isVariableRadius, out logMessage);
             if (dResult == DialogResult.OK)
             {
                 plot.Remarks += logMessage;
@@ -350,6 +350,18 @@ namespace FSCruiser.Core.DataEntry
                 {
                     //no need to initialize any counts or samplegroup info for 3PPNT
                 }
+                else if (stratum.Counts.Count() > 0)
+                {
+                    MakeCountTallyRowHadler f = new MakeCountTallyRowHadler(view.MakeTallyRow);
+                    System.Threading.ThreadPool.QueueUserWorkItem((t) =>
+                    {
+                        foreach (CountTreeVM count in stratum.Counts)
+                        {
+                            container.Invoke(f, container, count);
+                        }
+                        view.HandleStratumLoaded(container);
+                    });
+                }
                 else
                 {
                     view.MakeSGList(stratum.SampleGroups, container);
@@ -357,8 +369,8 @@ namespace FSCruiser.Core.DataEntry
             }
             else
             {
-                stratum.LoadCounts(Unit);
-                stratum.PopulateHotKeyLookup();
+                //stratum.LoadCounts(Unit);
+                //stratum.PopulateHotKeyLookup();
 
                 MakeCountTallyRowHadler f = new MakeCountTallyRowHadler(view.MakeTallyRow);
                 System.Threading.ThreadPool.QueueUserWorkItem((t) =>

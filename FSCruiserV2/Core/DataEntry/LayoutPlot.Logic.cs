@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
+using CruiseDAL.Schema;
 using FMSC.Sampling;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
@@ -301,6 +302,19 @@ namespace FSCruiser.Core.DataEntry
         protected void OnTally(CountTreeVM count, PlotVM plot)
         {
             System.Diagnostics.Debug.Assert(plot != null);
+            TreeVM tree = null;
+            if (Stratum.Method == CruiseMethods.FIX
+                || Stratum.Method == CruiseMethods.PNT)
+            {
+                tree = plot.CreateNewTreeEntry(count, true);
+                this.Controller.ViewController.ShowCruiserSelection(tree);
+
+                tree.TrySave();
+                CurrentPlot.AddTree(tree);
+
+                SelectLastTree();
+                return;
+            }
 
             SampleGroupDO sg = count.SampleGroup;
             //if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
@@ -314,7 +328,6 @@ namespace FSCruiser.Core.DataEntry
             //}
 
             SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Sampler;
-            TreeVM tree = null;
             if (count.SampleGroup.Stratum.Is3P)
             {
                 int kpi = 0;

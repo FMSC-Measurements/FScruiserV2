@@ -25,7 +25,7 @@ namespace FSCruiser.WinForms
             //}
         }
 
-        public override DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage)
+        public override DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage)
         {
             throw new NotImplementedException();
         }

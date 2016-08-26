@@ -59,11 +59,14 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public override DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage)
+        public override DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage)
         {
-            using (FormLimitingDistance view = new FormLimitingDistance())
+            using (FormLimitingDistance view = new FormLimitingDistance(baf, isVariableRadius))
             {
-                return view.ShowDialog(baf, isVariableRadius, optTree, out logMessage);
+                var result = view.ShowDialog();
+                logMessage = view.Report;
+
+                return result;
             }
         }
 
@@ -151,7 +154,7 @@ namespace FSCruiser.WinForms
 
         public override DialogResult ShowEditTreeDefault(TreeDefaultValueDO tdv)
         {
-            using (FormEditTreeDefault view = new FormEditTreeDefault(this.ApplicationController))
+            using (FormEditTreeDefault view = new FormEditTreeDefault(ApplicationController._cDal))
             {
                 return view.ShowDialog(tdv);
             }
