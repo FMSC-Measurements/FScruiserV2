@@ -60,16 +60,23 @@ namespace FSCruiser.WinForms.DataEntry
             this.bindingNavigatorDeleteItem.Click += new System.EventHandler(this._deletePlotButton_Click);
             this._plotInfoBTN.Click += new System.EventHandler(this._plotInfoBTN_Click);
 
-            //this._dataGrid.DataSource = _BS_Trees;
+            InitializeDataGrid(stratum);
 
-            this._dataGrid.SuspendLayout();
+            //no need to load tallies....?
+            //Controller.PopulateTallies(this.StratumInfo, this._mode, Controller.CurrentUnit, this._tallyListPanel, this);
+            this.Parent = parent;
+        }
 
+        void InitializeDataGrid(PlotStratum stratum)
+        {
             this._dataGrid.CellClick += new DataGridViewCellEventHandler(_dataGrid_CellClick);
             this._dataGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this._dataGrid_CellValidating);
             this._dataGrid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this._dataGrid_DataError);
             this._dataGrid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this._datagrid_CellEnter);
 
             this._dataGrid.AutoGenerateColumns = false;
+
+            this._dataGrid.SuspendLayout();
             var columns = stratum.MakeTreeColumns();
             this._dataGrid.Columns.AddRange(columns.ToArray());
             this._dataGrid.ResumeLayout();
@@ -102,15 +109,10 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _stColumn.DataSource = new PlotStratum[] { this.Stratum };
             }
-
-            //no need to load tallies....?
-            //Controller.PopulateTallies(this.StratumInfo, this._mode, Controller.CurrentUnit, this._tallyListPanel, this);
-            this.Parent = parent;
         }
 
-        void InitializeTallyPanel()
+        void InitializeTallyPanel(PlotStratum stratum)
         {
-            var stratum = this.ViewLogicController.Stratum;
             _tallyListPanel.SuspendLayout();
 
             if (stratum is FixCNTStratum)
@@ -160,7 +162,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             var stratum = this.ViewLogicController.Stratum;
 
-            InitializeTallyPanel();
+            InitializeTallyPanel(stratum);
 
             this.ViewLogicController.UpdateCurrentPlot();
 
@@ -171,6 +173,7 @@ namespace FSCruiser.WinForms.DataEntry
         #region splitter
 
         static event SplitterMovedEventHandler SplitterMoved;
+        bool suppressSplitterEvents;
 
         void WireSplitter(PlotStratum stratum)
         {
@@ -195,7 +198,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        bool suppressSplitterEvents;
+        
 
         void LayoutPlot_SplitterMoved(object sender, int newPosition)
         {
