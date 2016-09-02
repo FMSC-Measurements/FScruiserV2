@@ -92,16 +92,30 @@ namespace FSCruiserV2.Test
 
         private void LimitingDistance_Click(object sender, EventArgs e)
         {
-            var fpsOrBaf = 10;
+            var fpsOrBaf = 20;
             var isVariableRadious = true;
             using (var view = new FormLimitingDistance(fpsOrBaf, isVariableRadious))
             {
+                view.Closed += (object obj, EventArgs ea) =>
+                {
+                    if (!String.IsNullOrEmpty(view.Report))
+                    {
+                        MessageBox.Show(view.Report);
+                    }
+                };
+
+                view.Activated += (obj, ea) =>
+                    {
+                        view.Controls.FindByDataMember("DBH").Text = "10";
+                        view.Controls.FindByDataMember("SlopePCT").Text = "0";
+                        //view.Controls.FindByDataMember("BAForFPSize").Text = "20";
+                        view.Controls.FindByDataMember("MeasureTo").Text = FSCruiser.Core.DataEntry.LimitingDistanceCalculator.MEASURE_TO_FACE;
+                    };
+
                 view.ShowDialog();
 
-                if (!String.IsNullOrEmpty(view.Report))
-                {
-                    MessageBox.Show(view.Report);
-                }
+                var ldValue = view.Controls.Find("LimitingDistance").Text;
+                Debug.Assert(ldValue == "19.03");
             }
         }
     }
