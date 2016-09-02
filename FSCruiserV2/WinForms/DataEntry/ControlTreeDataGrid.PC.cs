@@ -425,6 +425,7 @@ namespace FSCruiser.WinForms.DataEntry
         public TreeVM UserAddTree()
         {
             if (_viewLoading) { return null; }
+            EndEdit();
             TreeVM t = this.GetNewTree();
             if (t != null)
             {
