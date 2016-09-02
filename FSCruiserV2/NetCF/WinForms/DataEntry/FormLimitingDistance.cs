@@ -105,13 +105,13 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _calculateBTN.Enabled = _calculateMI.Enabled = false;
 
-                this._limitingDistanceLBL.Text = string.Empty;
+                this.LimitingDistance.Text = string.Empty;
             }
             else
             {
                 _calculateBTN.Enabled = _calculateMI.Enabled = true;
 
-                this._limitingDistanceLBL.Text = string.Format(
+                this.LimitingDistance.Text = string.Format(
                     "{0:F}' to {1} of tree"
                     , limitingDistance
                     , _calculator.MeasureTo);
