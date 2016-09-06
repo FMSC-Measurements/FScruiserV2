@@ -11,21 +11,19 @@ namespace FSCruiser.Core.ViewInterfaces
     {
         FormDataEntryLogic DataEntryController { get; }
 
-        Dictionary<char, CountTreeVM> HotKeyLookup { get; }
-
         bool HotKeyEnabled { get; }
 
-        //bool HandleHotKeyFirst(char key);
+        Dictionary<char, CountTreeVM> HotKeyLookup { get; }
+
+        void HandleStratumLoaded(Control container);
+
         void MakeSGList(IEnumerable<SampleGroupModel> sampleGroups, Panel container);
 
-        //SampleSelecter MakeSampleSelecter(CountTreeDO count, DataEntryMode mode);
         Control MakeTallyRow(Control container, CountTreeVM count);
 
         Control MakeTallyRow(Control container, SubPop subPop);
 
         void OnTally(CountTreeVM count);
-
-        void HandleStratumLoaded(Control container);
 
         void SaveCounts();
 

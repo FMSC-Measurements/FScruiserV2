@@ -426,7 +426,7 @@ namespace FSCruiser.Core.DataEntry
         {
             if (!this.EnsureCurrentPlotWorkable()) { return null; }
             if (!this.UserCanAddTrees) { return null; }
-
+            EndEdit();
             TreeVM prevTree = null;
             if (_BS_Trees.Count > 0)
             {

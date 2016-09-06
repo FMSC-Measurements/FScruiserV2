@@ -42,8 +42,6 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        //public IDataEntryPage FocusedLayout { get; set; }
-
         public FormDataEntryLogic(CuttingUnitVM unit
             , IApplicationController controller
             , IDataEntryView view)
@@ -92,12 +90,6 @@ namespace FSCruiser.Core.DataEntry
             }
             return false;
         }
-
-        //public int? ShowNumericValueInput(int? min, int? max, int? initialValue, bool acceptNullInput)
-        //{
-        //    ViewController.NumPadDialog.ShowDialog(min, max, initialValue, acceptNullInput);
-        //    return ViewController.NumPadDialog.UserEnteredValue;
-        //}
 
         public void OnTally(CountTreeVM count)
         {
@@ -225,163 +217,11 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public void OnTally(CountTreeVM count, PlotVM plot, ITreeView treeView)
-        {
-            System.Diagnostics.Debug.Assert(plot != null);
-
-            SampleGroupDO sg = count.SampleGroup;
-            //if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
-            //{
-            //    TreeVM newTree;
-            //    newTree = Controller.CreateNewTreeEntry(count, plot, true);
-            //    count.TreeCount += sg.SamplingFrequency;
-            //    this.Controller.TrySaveTree(newTree);
-            //    Controller.OnTally();
-            //    return;
-            //}
-
-            SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Sampler;
-            TreeVM tree = null;
-            if (count.SampleGroup.Stratum.Is3P)
-            {
-                int kpi = 0;
-                int? value = ViewController.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
-                if (value == null)
-                {
-                    this.ViewController.ShowMessage("No Value Entered", null, MessageBoxIcon.None);
-                    return;
-                }
-                else
-                {
-                    kpi = value.Value;
-                }
-
-                //if kpi == -1 then tree is sure to measure
-                if (kpi != -1)
-                {
-                    ThreePItem item = (ThreePItem)((ThreePSelecter)sampler).NextItem();
-
-                    if (item != null && kpi > item.KPI)
-                    {
-                        //because the three p sample selector doesn't select insurance trees for us
-                        //we need to select them our selves
-                        if (sampler.IsSelectingITrees)
-                        {
-                            item.IsInsuranceItem = sampler.InsuranceCounter.Next();
-                        }
-                        if (item.IsInsuranceItem)
-                        {
-                            this.ViewController.SignalInsuranceTree();
-                            tree = plot.CreateNewTreeEntry(count, true);
-                            tree.CountOrMeasure = "I";
-                        }
-                        else
-                        {
-                            this.ViewController.SignalMeasureTree(true);
-                            tree = plot.CreateNewTreeEntry(count, true);
-                            //tree.CountOrMeasure = "M";
-                        }
-                    }
-                    else
-                    {
-                        tree = plot.CreateNewTreeEntry(count, false);
-                        //tree.CountOrMeasure = "C";
-                    }
-                    tree.KPI = kpi;
-                }
-                else
-                {
-                    tree = plot.CreateNewTreeEntry(count, true);
-                    tree.STM = "Y";
-                }
-            }
-            else
-            {
-                //count.TreeCount++; tree count doesn't get incremented for plots
-
-                boolItem item = (sampler != null) ? (boolItem)sampler.NextItem() : (boolItem)null;
-                if (item != null && !item.IsInsuranceItem)
-                {
-                    this.ViewController.SignalMeasureTree(true);
-                    tree = plot.CreateNewTreeEntry(count, true);
-                    //tree.CountOrMeasure = "M";
-                }
-                else if (item != null && item.IsInsuranceItem)
-                {
-                    this.ViewController.SignalInsuranceTree();
-                    tree = plot.CreateNewTreeEntry(count, true);
-                    tree.CountOrMeasure = "I";
-                }
-                else
-                {
-                    tree = plot.CreateNewTreeEntry(count, false);
-                }
-            }
-
-            tree.TreeCount = 1;
-            tree.TrySave();
-
-            plot.AddTree(tree);
-
-            //treeView.Trees.Add(tree);
-            treeView.MoveLastTree();
-            //this._dataGrid.CurrentColumnIndex = this._dataGrid.HomeColumnIndex;
-
-            //count.TreeCount++;//TODO double check the rules for tree counts on plots
-            //this.Controller.OnTally();
-        }
-
         public void AddStratumHotKey(string hk, int pageIndex)
         {
             if (string.IsNullOrEmpty(hk)) { return; }
             char stratumHotKey = char.ToUpper(hk[0]);
             this.StratumHotKeyLookup.Add(stratumHotKey, pageIndex);
-        }
-
-        public void PopulateTallies(StratumModel stratum, CuttingUnitVM unit, Panel container, ITallyView view)
-        {
-            if (stratum is FixCNTStratum)
-            {
-                //don't initialize tallies for FixCNT
-            }
-            else if (stratum is PlotStratum && ((PlotStratum)stratum).IsSingleStage)
-            {
-                if (stratum.Method == "3PPNT")
-                {
-                    //no need to initialize any counts or samplegroup info for 3PPNT
-                }
-                else if (stratum.Counts.Count() > 0)
-                {
-                    MakeCountTallyRowHadler f = new MakeCountTallyRowHadler(view.MakeTallyRow);
-                    System.Threading.ThreadPool.QueueUserWorkItem((t) =>
-                    {
-                        foreach (CountTreeVM count in stratum.Counts)
-                        {
-                            container.Invoke(f, container, count);
-                        }
-                        view.HandleStratumLoaded(container);
-                    });
-                }
-                else
-                {
-                    view.MakeSGList(stratum.SampleGroups, container);
-                }
-            }
-            else
-            {
-                //stratum.LoadCounts(Unit);
-                //stratum.PopulateHotKeyLookup();
-
-                MakeCountTallyRowHadler f = new MakeCountTallyRowHadler(view.MakeTallyRow);
-                System.Threading.ThreadPool.QueueUserWorkItem((t) =>
-                {
-                    foreach (CountTreeVM count in stratum.Counts)
-                    {
-                        container.Invoke(f, container, count);
-                    }
-                    view.HandleStratumLoaded(container);
-                });
-            }
         }
 
         public bool HandleKeyPress(KeyEventArgs ea)

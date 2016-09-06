@@ -175,38 +175,19 @@ namespace FSCruiser.WinForms.DataEntry
             this.DataEntryController.ShowLogs(tree);
         }
 
-        private TreeVM GetNewTree()
-        {
-            if (this.UserCanAddTrees == false) { return null; }
-            TreeVM prevTree = null;
-            var assumedSt = DataEntryController.Unit.DefaultStratum;
-            if (_BS_trees.Count > 0)
-            {
-                prevTree = (TreeVM)_BS_trees[_BS_trees.Count - 1];
-                assumedSt = prevTree.Stratum;
-            }
-
-            var newTree = this.DataEntryController.Unit.UserAddTree(prevTree
-                , assumedSt
-                , this.DataEntryController.ViewController);
-            //this.DataEntryController.Controller.OnTally();
-            return newTree;
-
-            //return Controller.UserAddTree(prevTree, assumedSt, null);
-        }
-
         public TreeVM UserAddTree()
         {
-            if (_viewLoading) { return null; }
-            TreeVM t = this.GetNewTree();
-            if (t != null)
-            {
-                t.TreeCount = 1;
+            if (_viewLoading
+                || this.UserCanAddTrees == false) { return null; }
 
+            var newTree = DataEntryController.Unit.UserAddTree(DataEntryController.ViewController);
+
+            if (newTree != null)
+            {
                 this._BS_trees.MoveLast();
                 this.MoveFirstEmptyCell();
             }
-            return t;
+            return newTree;
         }
 
         private void _BS_trees_CurrentChanged(object sender, EventArgs e)

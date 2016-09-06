@@ -106,7 +106,7 @@ namespace FSCruiser.Core.DataEntry
 
         public LimitingDistanceCalculator(bool isVariableRadius)
         {
-            IsVariableRadius = IsVariableRadius;
+            IsVariableRadius = isVariableRadius;
             Reset();
         }
 
