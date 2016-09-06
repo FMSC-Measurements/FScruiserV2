@@ -91,46 +91,39 @@ namespace FSCruiser.Core.Models
 
         #endregion treeNumbering
 
-        public TreeVM UserAddTree(TreeVM templateTree
-            , StratumModel knownStratum
-            , IViewController viewController)
+        public TreeVM UserAddTree(IViewController viewController)
         {
-            TreeVM newTree;
-            SampleGroupModel assumedSG = null;
-            TreeDefaultValueDO assumedTDV = null;
-
-            //extrapolate stratum
-            if (knownStratum == null && this.DefaultStratum != null)//default stratum is going to be our first choice
+            TreeVM templateTree = null;
+            StratumModel stratum = null;
+            SampleGroupModel samplegroup = null;
+            TreeDefaultValueDO tdv = null;
+            if (NonPlotTrees.Count > 0)
             {
-                knownStratum = this.DefaultStratum;
-            }
-            else if (knownStratum == null && templateTree != null)//if no default stratum try to use stratum/samplegroup from previous tree in view
-            {
-                assumedSG = templateTree.SampleGroup;
-                assumedTDV = templateTree.TreeDefaultValue;
-                if (assumedSG != null)
+                templateTree = NonPlotTrees[NonPlotTrees.Count - 1];
+                if (templateTree != null)
                 {
-                    knownStratum = assumedSG.Stratum;
-                }
-                else
-                {
-                    knownStratum = templateTree.Stratum;
+                    stratum = templateTree.Stratum;
+                    samplegroup = templateTree.SampleGroup;
+                    tdv = templateTree.TreeDefaultValue;
                 }
             }
-
-            //extrapolate sample group
-            if (knownStratum != null && assumedSG == null)//if we have a stratum but no sample group, pick the first one
+            else if (DefaultStratum != null)
             {
-                List<SampleGroupModel> samplegroups = DAL.From<SampleGroupModel>().Where("Stratum_CN = ?").Read(knownStratum.Stratum_CN).ToList();
-                if (samplegroups.Count == 1)
+                stratum = this.DefaultStratum;
+
+                //var samplegroups = DAL.From<SampleGroupModel>()
+                //    .Where("Stratum_CN = ?")
+                //    .Read(stratum.Stratum_CN).ToList();
+                if (stratum.SampleGroups != null
+                    && stratum.SampleGroups.Count == 1)
                 {
-                    assumedSG = samplegroups[0];
+                    samplegroup = stratum.SampleGroups[0];
                 }
             }
 
-            newTree = this.CreateNewTreeEntry(knownStratum
-                , assumedSG, assumedTDV, true);
-            newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied
+            var newTree = this.CreateNewTreeEntry(stratum
+                , samplegroup, tdv, true);
+            newTree.TreeCount = 0; //user added trees need a tree count of zero because users seem to be adding counts through tally settings
 
             viewController.ShowCruiserSelection(newTree);
 

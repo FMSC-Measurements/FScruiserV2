@@ -426,29 +426,13 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_viewLoading) { return null; }
             EndEdit();
-            TreeVM t = this.GetNewTree();
-            if (t != null)
+            var newTree = DataEntryController.Unit.UserAddTree(DataEntryController.ViewController);
+            if (newTree != null)
             {
-                //t.TreeCount = 1; //for pc dont set tree count to 1
-                //this._BS_trees.Add(t);
                 this.MoveLastTree();
                 this.MoveHomeField();
             }
-            return t;
-        }
-
-        private TreeVM GetNewTree()
-        {
-            if (this.UserCanAddTrees == false) { return null; }
-            TreeVM prevTree = null;
-            StratumModel assumedSt = DataEntryController.Unit.DefaultStratum;
-            if (_BS_trees.Count > 0)
-            {
-                prevTree = (TreeVM)_BS_trees[_BS_trees.Count - 1];
-                assumedSt = prevTree.Stratum;
-            }
-
-            return DataEntryController.Unit.UserAddTree(prevTree, assumedSt, DataEntryController.ViewController);
+            return newTree;
         }
 
         #endregion ITreeView Members
