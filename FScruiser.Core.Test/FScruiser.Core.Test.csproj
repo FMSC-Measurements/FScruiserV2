@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\LimitingDistanceCalculatorTest.cs" />
     <Compile Include="Models\SampleGroup.Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\StratumVM.Test.cs" />
