@@ -123,7 +123,7 @@ namespace FSCruiser.Core.DataEntry
             else
             {
                 // FSH 2409.12 35.22a
-                var isTreeIn = SlopeDistance.LessThanOrEqualsEx(LimitingDistance);
+                var isTreeIn = DeterminTreeInOrOut(SlopeDistance, LimitingDistance);
                 if (isTreeIn)
                 {
                     TreeStatus = "IN";
@@ -135,6 +135,11 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
+        public static bool DeterminTreeInOrOut(double slopeDistance, double limitingDistance)
+        {
+            return Math.Round(slopeDistance, 2) <= Math.Round(limitingDistance, 2);
+        }
+
         public string GenerateReport()
         {
             Recalculate();
@@ -142,7 +147,7 @@ namespace FSCruiser.Core.DataEntry
             if (String.IsNullOrEmpty(TreeStatus))
             { return string.Empty; }
 
-            return String.Format("Tree was {0} (DBH:{1}, slope:{2}%, slope distance:{3}', limiting distance:{4:F}' to {5} of tree, {6}:{7}) \r\n",
+            return String.Format("Tree was {0} (DBH:{1}, slope:{2}%, slope distance:{3:F2}', limiting distance:{4:F2}' to {5} of tree, {6}:{7}) \r\n",
                     TreeStatus,
                     DBH,
                     SlopePCT,

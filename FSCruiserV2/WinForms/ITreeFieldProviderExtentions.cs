@@ -16,6 +16,10 @@ namespace FSCruiser.WinForms
             foreach (var fieldSetup in fieldSetups)
             {
                 DataGridViewColumn col = null;
+
+                if (fieldSetup.Field == "SureToMeasure")
+                { fieldSetup.Field = "STM"; }
+
                 switch (fieldSetup.Field)
                 {
                     case "CuttingUnit":
@@ -86,6 +90,7 @@ namespace FSCruiser.WinForms
                             };
                             break;
                         }
+
                     default:
                         {
                             col = MakeColumn(fieldSetup.ColumnType);
