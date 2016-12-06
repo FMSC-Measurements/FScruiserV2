@@ -56,10 +56,6 @@ namespace FSCruiser.Core.Models
         {
             get
             {
-                if (this._trees == null)
-                {
-                    this._trees = new BindingList<TreeVM>();
-                }
                 return this._trees;
             }
         }
@@ -238,24 +234,28 @@ namespace FSCruiser.Core.Models
 
         public void SaveTrees()
         {
+            if (Trees == null) { return; }
             var worker = new SaveTreesWorker(this.DAL, this.Trees);
             worker.SaveAll();
         }
 
         public void TrySaveTrees()
         {
+            if (Trees == null) { return; }
             var worker = new SaveTreesWorker(this.DAL, this.Trees);
             worker.TrySaveAll();
         }
 
         public void TrySaveTreesAsync()
         {
+            if (Trees == null) { return; }
             var worker = new SaveTreesWorker(this.DAL, this.Trees);
             worker.TrySaveAllAsync();
         }
 
         public bool ValidateTrees()
         {
+            if (Trees == null) { return true; }
             var worker = new TreeValidationWorker(Trees);
             return worker.ValidateTrees();
         }
