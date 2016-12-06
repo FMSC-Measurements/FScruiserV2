@@ -411,7 +411,9 @@ namespace FSCruiser.Core.Models
         {
             var fields = DAL.From<TreeFieldSetupDO>()
                 .Join("CuttingUnitStratum", "USING (Stratum_CN)")
-                .Where("CuttingUnit_CN = ?")
+                .Join("Stratum", "USING (Stratum_CN)")
+                .Where(String.Format("CuttingUnit_CN = ? AND Stratum.Method NOT IN ({0})"
+                , string.Join(",", CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Select(s => "'" + s + "'").ToArray())))
                 .GroupBy("Field")
                 .OrderBy("FieldOrder")
                 .Query(CuttingUnit_CN).ToList();

@@ -127,13 +127,20 @@ namespace FSCruiser.Core.Models
             if (!IsSingleStage
                 && fields.FindIndex(((tfs) => tfs.Field == CruiseDAL.Schema.TREE.COUNTORMEASURE)) < 0)
             {
-                fields.Insert(5
-                    , new TreeFieldSetupDO()
+                var cmField = new TreeFieldSetupDO()
                     {
                         Field = CruiseDAL.Schema.TREE.COUNTORMEASURE
                         ,
                         Heading = "C/M"
-                    });
+                    };
+                if (fields.Count > 5)
+                {
+                    fields.Insert(5, cmField);
+                }
+                else
+                {
+                    fields.Add(cmField);
+                }
             }
 
             return fields;
