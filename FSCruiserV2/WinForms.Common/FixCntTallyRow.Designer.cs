@@ -30,29 +30,12 @@ namespace FSCruiser.WinForms.Common
         private void InitializeComponent()
         {
             System.Windows.Forms.Panel panel1;
-            this._tallyContainer_PNL = new System.Windows.Forms.Panel();
             this._speciesName_LBL = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this._tallyContainer_PNL = new System.Windows.Forms.Panel();
             panel1 = new System.Windows.Forms.Panel();
             panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // _tallyContainer_PNL
-            // 
-            this._tallyContainer_PNL.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._tallyContainer_PNL.Location = new System.Drawing.Point(62, 0);
-            this._tallyContainer_PNL.Name = "_tallyContainer_PNL";
-            this._tallyContainer_PNL.Size = new System.Drawing.Size(336, 62);
-            this._tallyContainer_PNL.TabIndex = 0;
-            // 
-            // _speciesName_LBL
-            // 
-            this._speciesName_LBL.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._speciesName_LBL.Location = new System.Drawing.Point(0, 13);
-            this._speciesName_LBL.Name = "_speciesName_LBL";
-            this._speciesName_LBL.Size = new System.Drawing.Size(62, 49);
-            this._speciesName_LBL.TabIndex = 1;
-            this._speciesName_LBL.Text = "<sp>";
             // 
             // panel1
             // 
@@ -62,19 +45,29 @@ namespace FSCruiser.WinForms.Common
             panel1.Location = new System.Drawing.Point(0, 0);
             panel1.Name = "panel1";
             panel1.Size = new System.Drawing.Size(62, 62);
-            panel1.TabIndex = 0;
+            // 
+            // _speciesName_LBL
+            // 
+            this._speciesName_LBL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._speciesName_LBL.Location = new System.Drawing.Point(0, 22);
+            this._speciesName_LBL.Name = "_speciesName_LBL";
+            this._speciesName_LBL.Size = new System.Drawing.Size(62, 40);
+            this._speciesName_LBL.Text = "<sp>";
             // 
             // label1
             // 
-#if !NetCF
-            this.label1.AutoSize = true;
-#endif
             this.label1.Dock = System.Windows.Forms.DockStyle.Top;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(48, 13);
-            this.label1.TabIndex = 2;
+            this.label1.Size = new System.Drawing.Size(62, 22);
             this.label1.Text = "Species:";
+            // 
+            // _tallyContainer_PNL
+            // 
+            this._tallyContainer_PNL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._tallyContainer_PNL.Location = new System.Drawing.Point(62, 0);
+            this._tallyContainer_PNL.Name = "_tallyContainer_PNL";
+            this._tallyContainer_PNL.Size = new System.Drawing.Size(336, 62);
             // 
             // FixCntTallyRow
             // 
@@ -83,7 +76,7 @@ namespace FSCruiser.WinForms.Common
             this.Controls.Add(panel1);
             this.Name = "FixCntTallyRow";
             this.Size = new System.Drawing.Size(398, 62);
-            panel1.ResumeLayout(true);
+            panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

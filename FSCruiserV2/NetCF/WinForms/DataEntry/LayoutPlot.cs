@@ -364,7 +364,7 @@ namespace FSCruiser.WinForms.DataEntry
                 {
                     Text = "Open Tally Screen"
                     ,
-                    Dock = DockStyle.Top
+                    Dock = DockStyle.Fill
                 };
                 openFixCNTTallyButton.Click += new EventHandler(openFixCNTTallyButton_Click);
                 this._tallyListPanel.Controls.Add(openFixCNTTallyButton);

@@ -8,6 +8,11 @@ namespace FSCruiser.WinForms.Common
         FixCNTForm()
         {
             InitializeComponent();
+#if !NetCF
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+#else
+            this.Menu = new MainMenu();
+#endif
         }
 
         public FixCNTForm(IFixCNTTallyPopulationProvider populationProvider)
