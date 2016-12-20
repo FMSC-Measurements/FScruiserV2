@@ -378,7 +378,7 @@ namespace FSCruiser.WinForms.DataEntry
                 }
                 else if (stratum.Counts.Count() > 0)
                 {
-                    foreach (CountTreeVM count in stratum.Counts)
+                    foreach (CountTree count in stratum.Counts)
                     {
                         MakeTallyRow(_tallyListPanel, count);
                     }
@@ -390,7 +390,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             else
             {
-                foreach (CountTreeVM count in stratum.Counts)
+                foreach (CountTree count in stratum.Counts)
                 {
                     MakeTallyRow(_tallyListPanel, count);
                 }
@@ -428,7 +428,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._expandGridButton.ImageList = this._imageList;
         }
 
-        void UpdateSpeciesColumn(TreeVM tree)
+        void UpdateSpeciesColumn(Tree tree)
         {
             if (_speciesColumn != null)
             {
@@ -436,7 +436,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        void UpdateSampleGroupColumn(TreeVM tree)
+        void UpdateSampleGroupColumn(Tree tree)
         {
             if (_sgColumn != null)
             {
@@ -464,7 +464,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void LogsClicked(ButtonCellClickEventArgs e)
         {
-            TreeVM tree;
+            Tree tree;
 
             try
             {
@@ -478,7 +478,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         void _dataGrid_CellValidating(object sender, EditableDataGridCellValidatingEventArgs e)
         {
-            TreeVM tree = null;
+            Tree tree = null;
             try
             {
                 tree = this.ViewLogicController.CurrentTree;
@@ -529,7 +529,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         void _dataGrid_CellValueChanged(object sender, EditableDataGridCellEventArgs e)
         {
-            TreeVM tree = this.ViewLogicController.CurrentTree;
+            Tree tree = this.ViewLogicController.CurrentTree;
             if (tree == null || e.Column == null) { return; }
             if (e.Column == _sgColumn)
             {
@@ -647,13 +647,13 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.DataSource = treeBS;
         }
 
-        public void HandleCurrentTreeChanged(TreeVM tree)
+        public void HandleCurrentTreeChanged(Tree tree)
         {
             UpdateSampleGroupColumn(tree);
             UpdateSpeciesColumn(tree);
         }
 
-        public void RefreshTreeView(PlotVM currentPlot)
+        public void RefreshTreeView(Plot currentPlot)
         {
             if (currentPlot != null)
             {
@@ -791,7 +791,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public IList<TreeVM> Trees
+        public IList<Tree> Trees
         {
             get
             {
@@ -849,7 +849,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.MoveFirstEmptyCell();
         }
 
-        public TreeVM UserAddTree()
+        public Tree UserAddTree()
         {
             return this.ViewLogicController.UserAddTree();
         }
@@ -858,7 +858,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region ITallyView
 
-        public Dictionary<char, CountTreeVM> HotKeyLookup
+        public Dictionary<char, CountTree> HotKeyLookup
         {
             get
             {
@@ -880,12 +880,12 @@ namespace FSCruiser.WinForms.DataEntry
             return;
         }
 
-        public void MakeSGList(IEnumerable<SampleGroupModel> sampleGroups, Panel container)
+        public void MakeSGList(IEnumerable<SampleGroup> sampleGroups, Panel container)
         {
             var list = sampleGroups.ToList();
             if (list.Count == 1)
             {
-                SampleGroupModel sg = list[0];
+                SampleGroup sg = list[0];
 
                 if (sg.TreeDefaultValues.IsPopulated == false)
                 {
@@ -900,7 +900,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             else
             {
-                foreach (SampleGroupModel sg in list)
+                foreach (SampleGroup sg in list)
                 {
                     Button sgButton = new Button();
                     Panel spContainer = new Panel();
@@ -943,7 +943,7 @@ namespace FSCruiser.WinForms.DataEntry
             return tallyButton;
         }
 
-        public Control MakeTallyRow(Control container, CountTreeVM count)
+        public Control MakeTallyRow(Control container, CountTree count)
         {
             var row = new PlotTallyButton(count);
             row.SuspendLayout();
@@ -959,7 +959,7 @@ namespace FSCruiser.WinForms.DataEntry
             return row;
         }
 
-        public void OnTally(CountTreeVM count)
+        public void OnTally(CountTree count)
         {
             this.ViewLogicController.OnTally(count);
         }

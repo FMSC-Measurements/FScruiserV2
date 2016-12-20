@@ -10,7 +10,7 @@ namespace FSCruiserV2.Test.Mocks
     {
         #region IDataEntryView Members
 
-        public FSCruiser.Core.Models.CuttingUnitVM Unit
+        public FSCruiser.Core.Models.CuttingUnit Unit
         {
             get { throw new NotImplementedException(); }
         }

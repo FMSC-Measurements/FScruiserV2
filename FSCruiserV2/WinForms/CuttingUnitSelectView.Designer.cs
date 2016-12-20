@@ -40,7 +40,7 @@ namespace FSCruiser.WinForms
             // 
             // _BS_CuttingUnits
             // 
-            this._BS_CuttingUnits.DataSource = typeof(FSCruiser.Core.Models.CuttingUnitVM);
+            this._BS_CuttingUnits.DataSource = typeof(FSCruiser.Core.Models.CuttingUnit);
             this._BS_CuttingUnits.CurrentChanged += new System.EventHandler(this._BS_CuttingUnits_CurrentChanged);
             // 
             // _strataLB

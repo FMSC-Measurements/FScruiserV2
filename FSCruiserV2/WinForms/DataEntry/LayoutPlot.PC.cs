@@ -34,7 +34,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public PlotStratum Stratum { get; set; }
 
-        public IList<TreeVM> Trees
+        public IList<Tree> Trees
         {
             get
             {
@@ -135,7 +135,7 @@ namespace FSCruiser.WinForms.DataEntry
                 }
                 else if (stratum.Counts.Count() > 0)
                 {
-                    foreach (CountTreeVM count in stratum.Counts)
+                    foreach (var count in stratum.Counts)
                     {
                         MakeTallyRow(_tallyListPanel, count);
                     }
@@ -147,7 +147,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             else
             {
-                foreach (CountTreeVM count in stratum.Counts)
+                foreach (var count in stratum.Counts)
                 {
                     MakeTallyRow(_tallyListPanel, count);
                 }
@@ -173,6 +173,7 @@ namespace FSCruiser.WinForms.DataEntry
         #region splitter
 
         static event SplitterMovedEventHandler SplitterMoved;
+
         bool suppressSplitterEvents;
 
         void WireSplitter(PlotStratum stratum)
@@ -198,8 +199,6 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        
-
         void LayoutPlot_SplitterMoved(object sender, int newPosition)
         {
             if (sender == this) { return; }
@@ -221,7 +220,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_logsColumn != null && e.ColumnIndex == _logsColumn.Index)
             {
-                TreeVM curTree = this.Trees[e.RowIndex] as TreeVM;
+                var curTree = this.Trees[e.RowIndex] as Tree;
                 if (curTree != null)
                 {
                     this.DataEntryController.ShowLogs(curTree);
@@ -240,7 +239,7 @@ namespace FSCruiser.WinForms.DataEntry
             if (cell == null) { return; }
             if (cell.FormattedValue == e.FormattedValue) { return; }//are there any changes
 
-            TreeVM curTree = null;
+            Tree curTree = null;
             object cellValue = null;
             try
             {
@@ -267,7 +266,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             else if (_sgColumn != null && cell.ColumnIndex == _sgColumn.Index)
             {
-                var sg = cellValue as SampleGroupModel;
+                var sg = cellValue as SampleGroup;
                 if (curTree.HandleSampleGroupChanging(sg, this))
                 {
                     curTree.SampleGroup = sg;
@@ -290,7 +289,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             DataGridViewComboBoxCell cell = _dataGrid[e.ColumnIndex, e.RowIndex] as DataGridViewComboBoxCell;
             if (cell == null) { return; }
-            TreeVM curTree = this.Trees[e.RowIndex] as TreeVM;
+            var curTree = this.Trees[e.RowIndex] as Tree;
             if (curTree == null) { return; }
 
             if (_sgColumn != null && e.ColumnIndex == _sgColumn.Index)
@@ -304,26 +303,26 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void HandleCurrentTreeChanged(TreeVM tree)
+        public void HandleCurrentTreeChanged(Tree tree)
         {/*Do nothing*/ }
 
-        public void UpdateSampleGroupColumn(TreeVM tree)
+        public void UpdateSampleGroupColumn(Tree tree)
         {
             this.UpdateSampleGroupColumn(tree, this._dataGrid.CurrentCell as DataGridViewComboBoxCell);
         }
 
-        public void UpdateSpeciesColumn(TreeVM tree)
+        public void UpdateSpeciesColumn(Tree tree)
         {
             this.UpdateSpeciesColumn(tree, this._dataGrid.CurrentCell as DataGridViewComboBoxCell);
         }
 
-        protected void UpdateSampleGroupColumn(TreeVM tree, DataGridViewComboBoxCell cell)
+        protected void UpdateSampleGroupColumn(Tree tree, DataGridViewComboBoxCell cell)
         {
             if (cell == null) { return; }
             cell.DataSource = tree.ReadValidSampleGroups();
         }
 
-        protected void UpdateSpeciesColumn(TreeVM tree, DataGridViewComboBoxCell cell)
+        protected void UpdateSpeciesColumn(Tree tree, DataGridViewComboBoxCell cell)
         {
             if (cell == null) { return; }
             cell.DataSource = tree.ReadValidTDVs();
@@ -371,7 +370,7 @@ namespace FSCruiser.WinForms.DataEntry
         //    return tree.TrySave();
         //}
 
-        protected bool ProcessSpeciesChanged(TreeVM tree, TreeDefaultValueDO tdv)
+        protected bool ProcessSpeciesChanged(Tree tree, TreeDefaultValueDO tdv)
         {
             if (tree == null) { return true; }
             if (tree.TreeDefaultValue == tdv) { return true; }
@@ -454,7 +453,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public Dictionary<char, CountTreeVM> HotKeyLookup
+        public Dictionary<char, CountTree> HotKeyLookup
         {
             get
             {
@@ -484,7 +483,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void MakeSGList(IEnumerable<SampleGroupModel> sampleGroups, Panel container)
+        public void MakeSGList(IEnumerable<SampleGroup> sampleGroups, Panel container)
         {
             foreach (var sg in sampleGroups.Reverse())
             {
@@ -512,7 +511,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.ViewLogicController.AddTree(sp);
         }
 
-        public Control MakeTallyRow(Control container, CountTreeVM count)
+        public Control MakeTallyRow(Control container, CountTree count)
         {
             var row = new PlotTallyRow(count);
             row.SuspendLayout();
@@ -545,13 +544,13 @@ namespace FSCruiser.WinForms.DataEntry
         private void tallyRow_InfoButtonClicked(object sender, EventArgs e)
         {
             PlotTallyRow row = (PlotTallyRow)sender;
-            CountTreeVM count = row.Count;
+            var count = row.Count;
             this.ViewLogicController.SavePlotTrees();
             this.ViewLogicController.ViewController.ShowTallySettings(count);
             //row.DiscriptionLabel.Text = count.Tally.Description;
         }
 
-        public void OnTally(CountTreeVM count)
+        public void OnTally(CountTree count)
         {
             this.ViewLogicController.OnTally(count);
         }
@@ -679,7 +678,7 @@ namespace FSCruiser.WinForms.DataEntry
             { }
         }
 
-        public TreeVM UserAddTree()
+        public Tree UserAddTree()
         {
             return this.ViewLogicController.UserAddTree();
         }
@@ -714,7 +713,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot);
         }
 
-        public void RefreshTreeView(PlotVM currentPlot)
+        public void RefreshTreeView(Plot currentPlot)
         {
             if (currentPlot != null)
             {

@@ -44,12 +44,12 @@ namespace FSCruiser.WinForms.DataEntry
             return tallyButton;
         }
 
-        public override void MakeSGList(IEnumerable<SampleGroupModel> sampleGroups, Panel container)
+        public override void MakeSGList(IEnumerable<SampleGroup> sampleGroups, Panel container)
         {
             var list = sampleGroups.ToList();
             if (list.Count == 1)
             {
-                SampleGroupModel sg = list[0];
+                SampleGroup sg = list[0];
 
                 if (sg.TreeDefaultValues.IsPopulated == false)
                 {
@@ -63,7 +63,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             else
             {
-                foreach (SampleGroupModel sg in list)
+                foreach (SampleGroup sg in list)
                 {
                     Button sgButton = new Button();
                     Panel spContainer = new Panel();

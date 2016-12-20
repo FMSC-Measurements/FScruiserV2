@@ -13,13 +13,13 @@ namespace FSCruiser.Core.Models
     {
         object syncLock = new object();
         List<TallyAction> _list = new List<TallyAction>();
-        protected CuttingUnitVM _unit;
+        protected CuttingUnit _unit;
 
         public int MaxSize { get; protected set; }
 
         public int Count { get { return _list.Count; } }
 
-        public TallyHistoryCollection(CuttingUnitVM unit, int maxSize)
+        public TallyHistoryCollection(CuttingUnit unit, int maxSize)
         {
             this.MaxSize = maxSize;
             this._unit = unit;

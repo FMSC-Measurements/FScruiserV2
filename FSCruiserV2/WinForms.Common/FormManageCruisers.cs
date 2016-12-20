@@ -49,13 +49,13 @@ namespace FSCruiser.WinForms
                 this._cruiserListContainer.Controls.Clear();
             }
 
-            foreach (CruiserVM c in this.Controller.Settings.Cruisers)
+            foreach (Cruiser c in this.Controller.Settings.Cruisers)
             {
                 MakeCruiserListItem(c, this._cruiserListContainer);
             }
         }
 
-        private void MakeCruiserListItem(CruiserVM cruiser, Control parent)
+        private void MakeCruiserListItem(Cruiser cruiser, Control parent)
         {
             Panel panel = new Panel();
             panel.SuspendLayout();
@@ -116,7 +116,7 @@ namespace FSCruiser.WinForms
         private void _removeItemBTN_Click(object sender, EventArgs e)
         {
             Panel p = ((Panel)((Button)sender).Parent);
-            CruiserVM cruiser = (CruiserVM)p.Tag;
+            Cruiser cruiser = (Cruiser)p.Tag;
             this.Controller.Settings.RemoveCruiser(cruiser);
             this.UpdateCruiserList();
         }

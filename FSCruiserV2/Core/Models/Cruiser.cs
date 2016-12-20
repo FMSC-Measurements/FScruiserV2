@@ -4,14 +4,14 @@ using System.Xml.Serialization;
 namespace FSCruiser.Core.Models
 {
     [Serializable]
-    public class CruiserVM
+    public class Cruiser
     {
         [XmlAttribute]
         public string Initials { get; set; }
 
-        public CruiserVM() { }
+        public Cruiser() { }
 
-        public CruiserVM(string initials)
+        public Cruiser(string initials)
         {
             this.Initials = initials;
         }

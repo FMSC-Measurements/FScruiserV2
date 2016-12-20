@@ -82,7 +82,7 @@ namespace FSCruiserV2.Test
         private void _plotInfo_BTN_Click(object sender, EventArgs e)
         {
             var stratum = new PlotStratum();
-            var plot = new PlotVM() { Stratum = stratum };
+            var plot = new Plot() { Stratum = stratum };
 
             using (var view = new FormPlotInfo())
             {

@@ -29,7 +29,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.InitializeComponent();
         }
 
-        public FormLogs(IApplicationController controller, StratumModel stratum)
+        public FormLogs(IApplicationController controller, Stratum stratum)
             : base()
         {
             this.Controller = controller;
@@ -69,7 +69,7 @@ namespace FSCruiser.WinForms.DataEntry
         private TreeDO _currentTree;
         private BindingList<LogDO> _logs;
 
-        public DialogResult ShowDialog(TreeVM tree)
+        public DialogResult ShowDialog(Tree tree)
         {
             this._currentTree = tree;
 

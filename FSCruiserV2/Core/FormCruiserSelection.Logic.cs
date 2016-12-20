@@ -6,12 +6,12 @@ namespace FSCruiser.Core
 {
     public class FormCruiserSelectionLogic
     {
-        private CruiserVM[] _cruisers;
+        private Cruiser[] _cruisers;
         private IApplicationController _controller;
 
         public ICruiserSelectionView View { get; protected set; }
 
-        public TreeVM Tree { get; set; }
+        public Tree Tree { get; set; }
 
         public FormCruiserSelectionLogic(IApplicationController controller, ICruiserSelectionView view)
         {
@@ -43,11 +43,9 @@ namespace FSCruiser.Core
             }
         }
 
-        public void HandleCruiserSelected(CruiserVM cruiser)
+        public void HandleCruiserSelected(Cruiser cruiser)
         {
             this.Tree.Initials = cruiser.Initials;
-            //this.Tree.Save();//don't save here, let it be saved by FormDataEntryLogic
-
             this.View.Close();
         }
     }

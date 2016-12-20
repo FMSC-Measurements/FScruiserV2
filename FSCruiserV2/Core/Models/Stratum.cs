@@ -7,9 +7,9 @@ using CruiseDAL.Schema;
 
 namespace FSCruiser.Core.Models
 {
-    public class StratumModel : StratumDO, ITreeFieldProvider, ILogFieldProvider
+    public class Stratum : StratumDO, ITreeFieldProvider, ILogFieldProvider
     {
-        Dictionary<char, CountTreeVM> _hotKeyLookup;
+        Dictionary<char, CountTree> _hotKeyLookup;
 
         public bool Is3P
         {
@@ -22,9 +22,9 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public List<SampleGroupModel> SampleGroups { get; set; }
+        public List<SampleGroup> SampleGroups { get; set; }
 
-        public IEnumerable<CountTreeVM> Counts
+        public IEnumerable<CountTree> Counts
         {
             get
             {
@@ -44,13 +44,13 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public Dictionary<char, CountTreeVM> HotKeyLookup
+        public Dictionary<char, CountTree> HotKeyLookup
         {
             get
             {
                 if (_hotKeyLookup == null)
                 {
-                    _hotKeyLookup = new Dictionary<char, CountTreeVM>();
+                    _hotKeyLookup = new Dictionary<char, CountTree>();
                 }
                 return _hotKeyLookup;
             }
@@ -58,7 +58,7 @@ namespace FSCruiser.Core.Models
 
         public Control TallyContainer { get; set; }
 
-        public CountTreeVM GetCountByHotKey(char hotKey)
+        public CountTree GetCountByHotKey(char hotKey)
         {
             if (Counts == null) { return null; }
             foreach (var cnt in Counts)
@@ -76,8 +76,8 @@ namespace FSCruiser.Core.Models
 
         public void PopulateHotKeyLookup()
         {
-            _hotKeyLookup = new Dictionary<char, CountTreeVM>();
-            foreach (CountTreeVM count in Counts)
+            _hotKeyLookup = new Dictionary<char, CountTree>();
+            foreach (CountTree count in Counts)
             {
                 if (count.Tally != null
                     && !string.IsNullOrEmpty(count.Tally.Hotkey))
@@ -112,7 +112,7 @@ namespace FSCruiser.Core.Models
 
         public void SaveSampleGroups()
         {
-            foreach (SampleGroupModel sg in SampleGroups)
+            foreach (SampleGroup sg in SampleGroups)
             {
                 sg.SerializeSamplerState();
                 sg.Save();
@@ -140,9 +140,9 @@ namespace FSCruiser.Core.Models
             return success;
         }
 
-        IEnumerable<SampleGroupModel> ReadSampleGroups()
+        IEnumerable<SampleGroup> ReadSampleGroups()
         {
-            foreach (var sg in DAL.From<SampleGroupModel>()
+            foreach (var sg in DAL.From<SampleGroup>()
                         .Where("Stratum_CN = ?")
                         .Read(Stratum_CN))
             {

@@ -8,7 +8,7 @@ namespace FSCruiser.Core.ViewInterfaces
         bool UserCanAddTrees { get; set; }
 
         //String[] VisableFields { get; }
-        IList<TreeVM> Trees { get; }
+        IList<Tree> Trees { get; }
 
         bool ErrorColumnVisable { get; set; }
 
@@ -26,7 +26,7 @@ namespace FSCruiser.Core.ViewInterfaces
 
         void MoveHomeField();
 
-        TreeVM UserAddTree();
+        Tree UserAddTree();
 
         //void UpdateSpeciesColumn(TreeVM tree);
         //void UpdateSampleGroupColumn(TreeVM tree);

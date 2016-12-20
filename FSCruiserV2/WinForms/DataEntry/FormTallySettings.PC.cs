@@ -14,7 +14,7 @@ namespace FSCruiser.WinForms.DataEntry
             InitializeComponent();
         }
 
-        private CountTreeVM _count;
+        private CountTree _count;
 
         IApplicationController Controller { get; set; }
 
@@ -88,7 +88,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.Controller = controller;
         }
 
-        public DialogResult ShowDialog(CountTreeVM count)
+        public DialogResult ShowDialog(CountTree count)
         {
             var method = count.SampleGroup.Stratum.Method;
             bool isPlot = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.PLOT_METHODS, method) >= 0;

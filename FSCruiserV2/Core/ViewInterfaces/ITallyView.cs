@@ -5,7 +5,7 @@ using FSCruiser.Core.Models;
 
 namespace FSCruiser.Core.ViewInterfaces
 {
-    public delegate Control MakeCountTallyRowHadler(Control container, CountTreeVM count);
+    public delegate Control MakeCountTallyRowHadler(Control container, CountTree count);
 
     public interface ITallyView : IDataEntryPage
     {
@@ -13,17 +13,17 @@ namespace FSCruiser.Core.ViewInterfaces
 
         bool HotKeyEnabled { get; }
 
-        Dictionary<char, CountTreeVM> HotKeyLookup { get; }
+        Dictionary<char, CountTree> HotKeyLookup { get; }
 
         void HandleStratumLoaded(Control container);
 
-        void MakeSGList(IEnumerable<SampleGroupModel> sampleGroups, Panel container);
+        void MakeSGList(IEnumerable<SampleGroup> sampleGroups, Panel container);
 
-        Control MakeTallyRow(Control container, CountTreeVM count);
+        Control MakeTallyRow(Control container, CountTree count);
 
         Control MakeTallyRow(Control container, SubPop subPop);
 
-        void OnTally(CountTreeVM count);
+        void OnTally(CountTree count);
 
         void SaveCounts();
 

@@ -37,7 +37,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public int HomeColumnIndex { get; set; }
 
-        public IList<TreeVM> Trees
+        public IList<Tree> Trees
         {
             get
             {
@@ -58,7 +58,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             _BS_trees = new BindingSource();
             ((System.ComponentModel.ISupportInitialize)_BS_trees).BeginInit();
-            _BS_trees.DataSource = typeof(TreeVM);
+            _BS_trees.DataSource = typeof(Tree);
             DataSource = _BS_trees;
             ((System.ComponentModel.ISupportInitialize)_BS_trees).EndInit();
 
@@ -136,7 +136,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_logsColumn != null && e.RowIndex > -1 && e.ColumnIndex == _logsColumn.Index)
             {
-                TreeVM curTree = this.Trees[e.RowIndex] as TreeVM;
+                var curTree = this.Trees[e.RowIndex] as Tree;
                 if (curTree != null)
                 {
                     this.DataEntryController.ShowLogs(curTree);
@@ -156,7 +156,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             DataGridViewComboBoxCell cell = base[e.ColumnIndex, e.RowIndex] as DataGridViewComboBoxCell;
             if (cell == null) { return; }
-            TreeVM curTree = this._BS_trees[e.RowIndex] as TreeVM;
+            var curTree = this._BS_trees[e.RowIndex] as Tree;
             if (curTree == null) { return; }
 
             if (_sgColumn != null && e.ColumnIndex == _sgColumn.Index)
@@ -212,10 +212,10 @@ namespace FSCruiser.WinForms.DataEntry
             if (cell == null) { return; }
             if (cell.FormattedValue == e.FormattedValue) { return; }//are there any changes?
 
-            TreeVM curTree = null;
+            Tree curTree = null;
             try
             {
-                curTree = this._BS_trees[e.RowIndex] as TreeVM;
+                curTree = this._BS_trees[e.RowIndex] as Tree;
                 if (curTree == null) { return; }
             }
             catch (ArgumentOutOfRangeException) { return; }//ignore posible out of bound exceptions
@@ -235,7 +235,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             else if (_sgColumn != null && e.ColumnIndex == _sgColumn.Index)
             {
-                var sg = cellValue as SampleGroupModel;
+                var sg = cellValue as SampleGroup;
                 if (curTree.HandleSampleGroupChanging(sg, this))
                 {
                     curTree.SampleGroup = sg;
@@ -254,7 +254,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             else if (_stratumColumn != null && e.ColumnIndex == _stratumColumn.Index)
             {
-                StratumModel newSt = cellValue as StratumModel;
+                var newSt = cellValue as Stratum;
                 if (curTree.HandleStratumChanging(newSt, this))
                 {
                     curTree.Stratum = newSt;
@@ -268,23 +268,23 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void UpdateSampleGroupColumn(TreeVM tree)
+        public void UpdateSampleGroupColumn(Tree tree)
         {
             this.UpdateSampleGroupColumn(tree, this.CurrentCell as DataGridViewComboBoxCell);
         }
 
-        public void UpdateSpeciesColumn(TreeVM tree)
+        public void UpdateSpeciesColumn(Tree tree)
         {
             this.UpdateSpeciesColumn(tree, this.CurrentCell as DataGridViewComboBoxCell);
         }
 
-        protected void UpdateSampleGroupColumn(TreeVM tree, DataGridViewComboBoxCell cell)
+        protected void UpdateSampleGroupColumn(Tree tree, DataGridViewComboBoxCell cell)
         {
             if (cell == null) { return; }
             cell.DataSource = tree.ReadValidSampleGroups();
         }
 
-        protected void UpdateSpeciesColumn(TreeVM tree, DataGridViewComboBoxCell cell)
+        protected void UpdateSpeciesColumn(Tree tree, DataGridViewComboBoxCell cell)
         {
             if (cell == null) { return; }
             cell.DataSource = tree.ReadValidTDVs();
@@ -383,7 +383,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void DeleteSelectedTree()
         {
-            TreeVM curTree = this._BS_trees.Current as TreeVM;
+            var curTree = this._BS_trees.Current as Tree;
             if (curTree == null)
             {
                 MessageBox.Show("No Tree Selected");
@@ -422,7 +422,7 @@ namespace FSCruiser.WinForms.DataEntry
             { }
         }
 
-        public TreeVM UserAddTree()
+        public Tree UserAddTree()
         {
             if (_viewLoading) { return null; }
             EndEdit();

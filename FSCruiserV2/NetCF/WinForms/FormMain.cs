@@ -53,11 +53,11 @@ namespace FSCruiser.WinForms
 
         IApplicationController Controller { get; set; }
 
-        CuttingUnitVM SelectedUnit
+        CuttingUnit SelectedUnit
         {
             get
             {
-                CuttingUnitVM unitVM = _BS_cuttingUnits.Current as CuttingUnitVM;
+                CuttingUnit unitVM = _BS_cuttingUnits.Current as CuttingUnit;
                 if (unitVM != null && unitVM.Code != null)
                 {
                     return unitVM;
@@ -100,15 +100,15 @@ namespace FSCruiser.WinForms
         {
             if (this.Controller.CuttingUnits != null)
             {
-                var units = new CuttingUnitVM[Controller.CuttingUnits.Count + 1];
+                var units = new CuttingUnit[Controller.CuttingUnits.Count + 1];
                 Controller.CuttingUnits.CopyTo(units, 1);
-                units[0] = new CuttingUnitVM();
+                units[0] = new CuttingUnit();
                 this._BS_cuttingUnits.DataSource = units;
                 this._cuttingUnitCB.Enabled = true;
             }
             else
             {
-                this._BS_cuttingUnits.DataSource = new CuttingUnitVM[0];
+                this._BS_cuttingUnits.DataSource = new CuttingUnit[0];
                 this._cuttingUnitCB.Enabled = false;
             }
         }
@@ -154,7 +154,7 @@ namespace FSCruiser.WinForms
             LoadCuttingUnitInfo(SelectedUnit);
         }
 
-        private void LoadCuttingUnitInfo(CuttingUnitVM unit)
+        private void LoadCuttingUnitInfo(CuttingUnit unit)
         {
             _strataView.SuspendLayout();
             _strataView.Controls.Clear();

@@ -8,19 +8,19 @@ namespace FSCruiser.Core.Models
         //ITreeContaningModel Parent { get; set; }
         //IList<ITreeContaningModel> Children { get; }
 
-        IList<TreeVM> Trees { get; }
+        IList<Tree> Trees { get; }
 
         //TreeVM UserAddTree(TreeVM templateTree, StratumVM knownStratum, IViewController viewController)
 
-        TreeVM CreateNewTreeEntry(CountTreeVM count);
+        Tree CreateNewTreeEntry(CountTree count);
 
-        TreeVM CreateNewTreeEntry(StratumModel stratum, SampleGroupModel sg, TreeDefaultValueDO tdv, bool isMeasure);
+        Tree CreateNewTreeEntry(Stratum stratum, SampleGroup sg, TreeDefaultValueDO tdv, bool isMeasure);
 
         long GetNextTreeNumber();
 
         bool IsTreeNumberAvalible(long treeNumber);
 
-        void DeleteTree(TreeVM tree);
+        void DeleteTree(Tree tree);
 
         bool ValidateTrees();
 

@@ -98,7 +98,7 @@ namespace FSCruiser.WinForms
 
         public void HandleDataEntryClick(Object sender, EventArgs e)
         {
-            CuttingUnitVM unit = this.CuttingUnitSelectView.SelectedUnit;
+            var unit = this.CuttingUnitSelectView.SelectedUnit;
             if (unit != null)
             {
                 Controller.CurrentUnit = unit;

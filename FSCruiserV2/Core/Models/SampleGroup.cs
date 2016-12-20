@@ -11,18 +11,18 @@ using FMSC.Sampling;
 
 namespace FSCruiser.Core.Models
 {
-    public class SampleGroupModel : SampleGroupDO
+    public class SampleGroup : SampleGroupDO
     {
-        public SampleGroupModel()
+        public SampleGroup()
             : base()
         { }
 
         [IgnoreField]
-        public new StratumModel Stratum
+        public new Stratum Stratum
         {
             get
             {
-                return (StratumModel)base.Stratum;
+                return (Stratum)base.Stratum;
             }
             set
             {
@@ -45,32 +45,32 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public IEnumerable<CountTreeVM> Counts { get; set; }
+        public IEnumerable<CountTree> Counts { get; set; }
 
         public override StratumDO GetStratum()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<StratumModel>(this.Stratum_CN);
+            return DAL.ReadSingleRow<Stratum>(this.Stratum_CN);
         }
 
         public void LoadCounts(CuttingUnitDO unit)
         {
-            var counts = new List<CountTreeVM>();
-            var tallySettings = DAL.From<TallySettingsDO>()
+            var counts = new List<CountTree>();
+            var tallySettings = DAL.From<TallySettings>()
                 .Where("SampleGroup_CN = ?")
                 .GroupBy("CountTree.SampleGroup_CN", "CountTree.TreeDefaultValue_CN", "CountTree.Tally_CN")
                 .Read(SampleGroup_CN);
 
-            foreach (TallySettingsDO ts in tallySettings)
+            foreach (TallySettings ts in tallySettings)
             {
-                CountTreeVM count = DAL.From<CountTreeVM>()
+                CountTree count = DAL.From<CountTree>()
                     .Where("CuttingUnit_CN = ? AND SampleGroup_CN = ? AND Tally_CN = ?")
                     .Read(unit.CuttingUnit_CN
                     , ts.SampleGroup_CN
                     , ts.Tally_CN).FirstOrDefault();
                 if (count == null)
                 {
-                    count = new CountTreeVM(DAL);
+                    count = new CountTree(DAL);
                     count.CuttingUnit = unit;
                     count.SampleGroup_CN = ts.SampleGroup_CN;
                     count.TreeDefaultValue_CN = ts.TreeDefaultValue_CN;
@@ -90,7 +90,7 @@ namespace FSCruiser.Core.Models
         public void SaveCounts()
         {
             if (Counts == null) { return; } // if this is a h_pct stratum then counts won't be populated
-            foreach (CountTreeVM count in Counts)
+            foreach (CountTree count in Counts)
             {
                 count.Save();
             }

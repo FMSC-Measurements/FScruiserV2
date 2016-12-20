@@ -16,11 +16,6 @@ namespace FSCruiser.Core
 
     public class ApplicationController : IApplicationController
     {
-        //private int _talliesSinceLastSave = 0;
-
-        //private List<CruiserVM> _cruisers;
-        //private bool _allowBackup;
-
         FileLoadWorker FileLoadWorker { get; set; }
 
         public ApplicationSettings Settings
@@ -30,7 +25,6 @@ namespace FSCruiser.Core
 
         public IExceptionHandler ExceptionHandler { get; set; }
 
-        //public List<CruiserVM> Cruisers { get { return _cruisers; } }
         public CruiseDAL.DAL _cDal
         {
             get
@@ -40,7 +34,7 @@ namespace FSCruiser.Core
             }
         }
 
-        public IList<CuttingUnitVM> CuttingUnits
+        public IList<CuttingUnit> CuttingUnits
         {
             get
             {
@@ -49,9 +43,9 @@ namespace FSCruiser.Core
             }
         }
 
-        CuttingUnitVM _currentUnit;
+        CuttingUnit _currentUnit;
 
-        public CuttingUnitVM CurrentUnit
+        public CuttingUnit CurrentUnit
         {
             get { return _currentUnit; }
             set
@@ -61,9 +55,6 @@ namespace FSCruiser.Core
                 OnCurrentUnitChanged();
             }
         }
-
-        //public long UnitTreeNumIndex = 0;
-        //public BackUpMethod BackUpMethod { get; set; }
 
         public IViewController ViewController { get; protected set; }
 
@@ -192,7 +183,7 @@ namespace FSCruiser.Core
         {
         }
 
-        #region tally setup
+        #region add population
 
         public TreeDefaultValueDO CreateNewTreeDefaultValue(String pProd)
         {
@@ -238,7 +229,7 @@ namespace FSCruiser.Core
             }
         }
 
-        #endregion tally setup
+        #endregion add population
 
         #region backup
 
@@ -250,7 +241,8 @@ namespace FSCruiser.Core
             //prefix (optional): "BACK_"
             //core: one or more characters that extends until the time or postfix is found
             //time (optional): time stamp
-            //postfix: file extention and optional component indicator
+            //compID(optional): component number or master file indicator
+            //ext: file extention and optional component indicator
 
             System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(
                 @"(?<prefix>BACK_)*"

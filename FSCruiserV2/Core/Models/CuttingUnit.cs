@@ -7,7 +7,7 @@ using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
-    public class CuttingUnitVM : CuttingUnitDO, ITreeFieldProvider
+    public class CuttingUnit : CuttingUnitDO, ITreeFieldProvider
     {
         protected const int TREE_SAVE_INTERVAL = 10;
         private int _treesAddedSinceLastSave = 0;
@@ -16,10 +16,10 @@ namespace FSCruiser.Core.Models
         public IList<PlotStratum> PlotStrata { get; set; }
 
         [IgnoreField]
-        public IList<StratumModel> TreeStrata { get; set; }
+        public IList<Stratum> TreeStrata { get; set; }
 
         [IgnoreField]
-        public IEnumerable<SampleGroupModel> TreeSampleGroups
+        public IEnumerable<SampleGroup> TreeSampleGroups
         {
             get
             {
@@ -34,10 +34,10 @@ namespace FSCruiser.Core.Models
         }
 
         [IgnoreField]
-        public StratumModel DefaultStratum { get; set; }
+        public Stratum DefaultStratum { get; set; }
 
         [IgnoreField]
-        public IList<TreeVM> NonPlotTrees { get; set; }
+        public IList<Tree> NonPlotTrees { get; set; }
 
         [IgnoreField]
         public TallyHistoryCollection TallyHistoryBuffer { get; set; }
@@ -57,7 +57,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public CuttingUnitVM()
+        public CuttingUnit()
             : base()
         {
         }
@@ -78,7 +78,7 @@ namespace FSCruiser.Core.Models
 
         public bool IsTreeNumberAvalible(long treeNumber)
         {
-            foreach (TreeVM tree in this.NonPlotTrees)
+            foreach (Tree tree in this.NonPlotTrees)
             {
                 if (tree.TreeNumber == treeNumber)
                 {
@@ -91,11 +91,11 @@ namespace FSCruiser.Core.Models
 
         #endregion treeNumbering
 
-        public TreeVM UserAddTree(IViewController viewController)
+        public Tree UserAddTree(IViewController viewController)
         {
-            TreeVM templateTree = null;
-            StratumModel stratum = null;
-            SampleGroupModel samplegroup = null;
+            Tree templateTree = null;
+            Stratum stratum = null;
+            SampleGroup samplegroup = null;
             TreeDefaultValueDO tdv = null;
             if (NonPlotTrees.Count > 0)
             {
@@ -133,18 +133,18 @@ namespace FSCruiser.Core.Models
             return newTree;
         }
 
-        public TreeVM CreateNewTreeEntry(CountTreeVM count)
+        public Tree CreateNewTreeEntry(CountTree count)
         {
             return CreateNewTreeEntry(count, true);
         }
 
-        public TreeVM CreateNewTreeEntry(CountTreeVM count, bool isMeasure)
+        public Tree CreateNewTreeEntry(CountTree count, bool isMeasure)
         {
             return CreateNewTreeEntry(count.SampleGroup.Stratum, count.SampleGroup, count.TreeDefaultValue, isMeasure);
         }
 
-        public TreeVM CreateNewTreeEntry(StratumModel stratum
-            , SampleGroupModel sg
+        public Tree CreateNewTreeEntry(Stratum stratum
+            , SampleGroup sg
             , TreeDefaultValueDO tdv
             , bool isMeasure)
         {
@@ -153,12 +153,12 @@ namespace FSCruiser.Core.Models
             return tree;
         }
 
-        internal TreeVM CreateNewTreeEntryInternal(StratumModel stratum
-            , SampleGroupModel sg
+        internal Tree CreateNewTreeEntryInternal(Stratum stratum
+            , SampleGroup sg
             , TreeDefaultValueDO tdv
             , bool isMeasure)
         {
-            TreeVM newTree = new TreeVM(this.DAL);
+            Tree newTree = new Tree(this.DAL);
             newTree.TreeCount = 0;
             newTree.CountOrMeasure = (isMeasure) ? "M" : "C";
             newTree.CuttingUnit = this;
@@ -190,7 +190,7 @@ namespace FSCruiser.Core.Models
             return newTree;
         }
 
-        public void AddNonPlotTree(TreeVM tree)
+        public void AddNonPlotTree(Tree tree)
         {
             lock (((System.Collections.ICollection)this.NonPlotTrees).SyncRoot)
             {
@@ -203,7 +203,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public void DeleteTree(TreeVM tree)
+        public void DeleteTree(Tree tree)
         {
             tree.Delete();
             this.NonPlotTrees.Remove(tree);
@@ -233,7 +233,7 @@ namespace FSCruiser.Core.Models
             this.PlotStrata = this.ReadPlotStrata().ToList();
 
             this.DefaultStratum = null;
-            foreach (StratumModel stratum in this.TreeStrata)
+            foreach (Stratum stratum in this.TreeStrata)
             {
                 if (stratum.Method == CruiseDAL.Schema.CruiseMethods.H_PCT)
                 {
@@ -278,12 +278,12 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public IEnumerable<StratumModel> ReadTreeBasedStrata()
+        public IEnumerable<Stratum> ReadTreeBasedStrata()
         {
             Debug.Assert(DAL != null);
 
             foreach (var st in
-                DAL.From<StratumModel>()
+                DAL.From<Stratum>()
                 .Join("CuttingUnitStratum", "USING (Stratum_CN)")
                 .Where("CuttingUnitStratum.CuttingUnit_CN = ?" +
                         "AND Method IN ( '100', 'STR', '3P', 'S3P')")
@@ -328,11 +328,11 @@ namespace FSCruiser.Core.Models
 
         public void SaveCounts()
         {
-            foreach (StratumModel stratum in TreeStrata)
+            foreach (Stratum stratum in TreeStrata)
             {
                 stratum.SaveCounts();
             }
-            foreach (StratumModel stratum in PlotStrata)
+            foreach (Stratum stratum in PlotStrata)
             {
                 stratum.SaveCounts();
             }
@@ -341,11 +341,11 @@ namespace FSCruiser.Core.Models
         public bool TrySaveCounts()
         {
             bool success = true;
-            foreach (StratumModel stratum in TreeStrata)
+            foreach (Stratum stratum in TreeStrata)
             {
                 success = stratum.TrySaveCounts() && success;
             }
-            foreach (StratumModel stratum in PlotStrata)
+            foreach (Stratum stratum in PlotStrata)
             {
                 success = stratum.TrySaveCounts() && success;
             }

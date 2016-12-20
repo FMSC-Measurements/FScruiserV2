@@ -8,12 +8,12 @@ namespace FSCruiser.Core.Models
     public class TallyAction
     {
         [XmlIgnore]
-        public TreeVM TreeRecord { get; set; }
+        public Tree TreeRecord { get; set; }
 
         //[XmlIgnore]
         //public SampleSelecter Sampler { get { return Count.Tag as SampleSelecter; } }
         [XmlIgnore]
-        public CountTreeVM Count { get; set; }
+        public CountTree Count { get; set; }
 
         [XmlIgnore]
         public TreeEstimateDO TreeEstimate { get; set; }
@@ -65,13 +65,13 @@ namespace FSCruiser.Core.Models
             Time = DateTime.Now.ToString("hh:mm");
         }
 
-        public TallyAction(CountTreeVM count)
+        public TallyAction(CountTree count)
             : this()
         {
             Count = count;
         }
 
-        public TallyAction(TreeVM treeRecord, CountTreeVM count)
+        public TallyAction(Tree treeRecord, CountTree count)
         {
             TreeRecord = treeRecord;
         }
@@ -80,11 +80,11 @@ namespace FSCruiser.Core.Models
         {
             if (this._countCN != 0L)
             {
-                this.Count = dal.ReadSingleRow<CountTreeVM>(this._countCN);
+                this.Count = dal.ReadSingleRow<CountTree>(this._countCN);
             }
             if (this._treeCN != 0L)
             {
-                this.TreeRecord = dal.ReadSingleRow<TreeVM>(this._treeCN);
+                this.TreeRecord = dal.ReadSingleRow<Tree>(this._treeCN);
             }
             if (this._treeEstCN != 0L)
             {

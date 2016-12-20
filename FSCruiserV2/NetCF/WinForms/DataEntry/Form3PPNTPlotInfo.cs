@@ -28,7 +28,7 @@ namespace FSCruiser.WinForms.DataEntry
         Plot3PPNT _plot;
         PlotStratum _stratum;
 
-        public DialogResult ShowDialog(PlotVM plot, PlotStratum stratum, bool allowEdit)
+        public DialogResult ShowDialog(Plot plot, PlotStratum stratum, bool allowEdit)
         {
             _plot = plot as Plot3PPNT;
             _BS_plot.DataSource = _plot;

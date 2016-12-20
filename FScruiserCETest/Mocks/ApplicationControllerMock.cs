@@ -19,13 +19,13 @@ namespace FSCruiserV2.Test.Mocks
             set;
         }
 
-        public CuttingUnitVM CurrentUnit
+        public CuttingUnit CurrentUnit
         {
             get;
             set;
         }
 
-        public IList<CuttingUnitVM> CuttingUnits
+        public IList<CuttingUnit> CuttingUnits
         {
             get;
             set;

@@ -15,7 +15,7 @@ namespace FSCruiser.Core.Models
 
         long? SampleGroup_CN { get; }
 
-        SampleGroupModel SampleGroup { get; }
+        SampleGroup SampleGroup { get; }
 
         long? FixCNTTallyClass_CN { get; set; }
 
@@ -38,9 +38,9 @@ namespace FSCruiser.Core.Models
         [Field(Name = "SampleGroup_CN")]
         public long? SampleGroup_CN { get; set; }
 
-        SampleGroupModel _sampleGroup;
+        SampleGroup _sampleGroup;
 
-        public SampleGroupModel SampleGroup { get; set; }
+        public SampleGroup SampleGroup { get; set; }
 
         [Field(Name = "TreeDefaultValue_CN")]
         public long? TreeDefaultValue_CN { get; set; }

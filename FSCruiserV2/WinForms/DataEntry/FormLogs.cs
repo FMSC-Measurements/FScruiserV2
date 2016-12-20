@@ -15,7 +15,7 @@ namespace FSCruiser.WinForms.DataEntry
         BindingList<LogDO> _logs;
         DataGridViewTextBoxColumn _logNumColumn;
 
-        public FormLogs(IApplicationController controller, StratumModel stratum)
+        public FormLogs(IApplicationController controller, Stratum stratum)
         {
             this.Controller = controller;
             InitializeComponent();
@@ -29,7 +29,7 @@ namespace FSCruiser.WinForms.DataEntry
             _logNumColumn = _dataGrid.Columns[CruiseDAL.Schema.LOG.LOGNUMBER] as DataGridViewTextBoxColumn;
         }
 
-        public DialogResult ShowDialog(TreeVM tree)
+        public DialogResult ShowDialog(Tree tree)
         {
             if (tree == null) { throw new ArgumentNullException("tree"); }
 

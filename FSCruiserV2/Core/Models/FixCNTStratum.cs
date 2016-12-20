@@ -27,7 +27,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public override PlotVM MakePlot(CuttingUnitVM cuttingUnit)
+        public override Plot MakePlot(CuttingUnit cuttingUnit)
         {
             return new FixCNTPlot(this.DAL)
             {
@@ -47,7 +47,7 @@ namespace FSCruiser.Core.Models
 
             foreach (var tallyPop in tallyPopulations)
             {
-                tallyPop.SampleGroup = DAL.From<SampleGroupModel>()
+                tallyPop.SampleGroup = DAL.From<SampleGroup>()
                     .Where("SampleGroup_CN = ?")
                     .Read(tallyPop.SampleGroup_CN).FirstOrDefault();
 
@@ -60,7 +60,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        protected override IEnumerable<PlotVM> ReadPlots(long cuttingUnit_CN)
+        protected override IEnumerable<Plot> ReadPlots(long cuttingUnit_CN)
         {
             foreach (var plot in this.DAL.From<FixCNTPlot>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
                 .OrderBy("PlotNumber")

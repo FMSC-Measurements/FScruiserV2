@@ -21,7 +21,7 @@ namespace FSCruiser.Core.Models
         void Tally(IFixCNTTallyBucket tallyBucket);
     }
 
-    public class FixCNTPlot : PlotVM, IFixCNTTallyCountProvider
+    public class FixCNTPlot : Plot, IFixCNTTallyCountProvider
     {
         public FixCNTPlot()
         { }
@@ -75,7 +75,7 @@ namespace FSCruiser.Core.Models
             base.PopulateTrees();
         }
 
-        public override TreeVM CreateNewTreeEntry(SampleGroupModel sg, TreeDefaultValueDO tdv, bool isMeasure)
+        public override Tree CreateNewTreeEntry(SampleGroup sg, TreeDefaultValueDO tdv, bool isMeasure)
         {
             return base.CreateNewTreeEntry(sg, tdv, false);
         }

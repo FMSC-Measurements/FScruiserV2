@@ -20,7 +20,7 @@ namespace FSCruiser.Core.DataEntry
 
         public IDataEntryView View { get; set; }
 
-        public CuttingUnitVM Unit { get; set; }
+        public CuttingUnit Unit { get; set; }
 
         public DAL Database { get { return this.Unit.DAL; } }
 
@@ -42,7 +42,7 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public FormDataEntryLogic(CuttingUnitVM unit
+        public FormDataEntryLogic(CuttingUnit unit
             , IApplicationController controller
             , IDataEntryView view)
         {
@@ -64,7 +64,7 @@ namespace FSCruiser.Core.DataEntry
             return this.ViewController.AskYesNo("Would you like to enter tree data now?", "Sample", MessageBoxIcon.Question, false);
         }
 
-        public void ShowLogs(TreeVM tree)
+        public void ShowLogs(Tree tree)
         {
             if (tree.TrySave())
             {
@@ -77,7 +77,7 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public bool ShowLimitingDistanceDialog(StratumModel stratum, PlotVM plot)
+        public bool ShowLimitingDistanceDialog(Stratum stratum, Plot plot)
         {
             string logMessage = String.Empty;
             bool isVariableRadius = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS, stratum.Method) > -1;
@@ -91,7 +91,7 @@ namespace FSCruiser.Core.DataEntry
             return false;
         }
 
-        public void OnTally(CountTreeVM count)
+        public void OnTally(CountTree count)
         {
             TallyAction action = new TallyAction(count);
             SampleGroupDO sg = count.SampleGroup;
@@ -123,7 +123,7 @@ namespace FSCruiser.Core.DataEntry
                 }
                 if (kpi == -1)  //user enterted sure to measure
                 {
-                    TreeVM tree;
+                    Tree tree;
                     tree = Unit.CreateNewTreeEntry(count);
                     tree.STM = "Y";
                     tree.TrySave();
@@ -161,9 +161,9 @@ namespace FSCruiser.Core.DataEntry
             Unit.TallyHistoryBuffer.Add(action);
         }
 
-        private void OnSample(TallyAction action, CountTreeVM count, int kpi, bool isInsurance)
+        private void OnSample(TallyAction action, CountTree count, int kpi, bool isInsurance)
         {
-            TreeVM tree = Unit.CreateNewTreeEntry(count, !isInsurance);
+            Tree tree = Unit.CreateNewTreeEntry(count, !isInsurance);
             tree.KPI = kpi;
             tree.CountOrMeasure = (isInsurance) ? "I" : "M";
             action.TreeRecord = tree;
@@ -189,9 +189,9 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        private void OnSample(TallyAction action, CountTreeVM count, bool isInsurance)
+        private void OnSample(TallyAction action, CountTree count, bool isInsurance)
         {
-            TreeVM tree = Unit.CreateNewTreeEntry(count);
+            Tree tree = Unit.CreateNewTreeEntry(count);
             tree.CountOrMeasure = (isInsurance) ? "I" : "M";
 
             action.TreeRecord = tree;
@@ -248,7 +248,7 @@ namespace FSCruiser.Core.DataEntry
 
                         if (tallyView.HotKeyLookup != null && tallyView.HotKeyLookup.ContainsKey(key))//maybe a tally hotkey
                         {
-                            CountTreeVM count = tallyView.HotKeyLookup[key];
+                            CountTree count = tallyView.HotKeyLookup[key];
                             tallyView.OnTally(count);
                             return true;
                         }
@@ -276,7 +276,7 @@ namespace FSCruiser.Core.DataEntry
             return Array.IndexOf(Constants.HOTKEY_KEYS, c) != -1;
         }
 
-        public void HandleKPIChanging(TreeVM tree, float newKPI, bool doSample, out bool cancel)
+        public void HandleKPIChanging(Tree tree, float newKPI, bool doSample, out bool cancel)
         {
             if (tree == null)
             {
@@ -296,7 +296,7 @@ namespace FSCruiser.Core.DataEntry
             }
             else if (doSample)
             {
-                CountTreeVM count = tree.FindCountRecord();
+                CountTree count = tree.FindCountRecord();
                 if (count != null && count.SampleGroup.Sampler is ThreePSelecter)
                 {
                     ThreePItem item = (ThreePItem)count.SampleGroup.Sampler.NextItem();
@@ -315,7 +315,7 @@ namespace FSCruiser.Core.DataEntry
             cancel = false;
         }
 
-        public bool HandleSpeciesChanged(TreeVM tree, TreeDefaultValueDO tdv)
+        public bool HandleSpeciesChanged(Tree tree, TreeDefaultValueDO tdv)
         {
             if (tree == null) { return true; }
             //if (tree.TreeDefaultValue == tdv) { return true; }
@@ -323,7 +323,7 @@ namespace FSCruiser.Core.DataEntry
             return tree.TrySave();
         }
 
-        public void HandleStratumChanging(TreeVM tree, StratumDO st, out bool cancel)
+        public void HandleStratumChanging(Tree tree, StratumDO st, out bool cancel)
         {
             if (tree == null || st == null) { cancel = true; return; }
             if (tree.Stratum != null && tree.Stratum.Stratum_CN == st.Stratum_CN) { cancel = true; return; }

@@ -6,7 +6,7 @@ namespace FSCruiser.Core.ViewInterfaces
 {
     public interface IDataEntryView : IView
     {
-        CuttingUnitVM Unit { get; }
+        CuttingUnit Unit { get; }
 
         FormDataEntryLogic LogicController { get; }
 

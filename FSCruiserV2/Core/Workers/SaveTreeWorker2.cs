@@ -18,7 +18,7 @@ namespace FSCruiser.Core.Workers
             SaveAllTrees(trees);
         }
 
-        protected void SaveAllTrees(IEnumerable<TreeVM> trees)
+        protected void SaveAllTrees(IEnumerable<Tree> trees)
         {
             foreach (var tree in trees)
             {

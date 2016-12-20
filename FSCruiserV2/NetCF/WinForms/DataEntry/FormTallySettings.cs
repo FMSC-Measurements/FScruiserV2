@@ -92,7 +92,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public DialogResult ShowDialog(CountTreeVM count)
+        public DialogResult ShowDialog(CountTree count)
         {
             var method = count.SampleGroup.Stratum.Method;
             bool isPlot = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.PLOT_METHODS, method) >= 0;

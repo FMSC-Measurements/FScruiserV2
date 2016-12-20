@@ -11,6 +11,6 @@ namespace FSCruiser.WinForms
 
         event EventHandler SettingsButtonClicked;
 
-        CountTreeVM Count { get; set; }
+        CountTree Count { get; set; }
     }
 }

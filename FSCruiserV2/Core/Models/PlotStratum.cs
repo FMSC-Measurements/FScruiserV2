@@ -9,7 +9,7 @@ using FMSC.Sampling;
 
 namespace FSCruiser.Core.Models
 {
-    public class PlotStratum : StratumModel
+    public class PlotStratum : Stratum
     {
         [IgnoreField]
         public bool Is3PPNT
@@ -36,9 +36,9 @@ namespace FSCruiser.Core.Models
         }
 
         [IgnoreField]
-        public IList<PlotVM> Plots { get; protected set; }
+        public IList<Plot> Plots { get; protected set; }
 
-        public virtual PlotVM MakePlot(CuttingUnitVM cuttingUnit)
+        public virtual Plot MakePlot(CuttingUnit cuttingUnit)
         {
             if (this.Is3PPNT)
             {
@@ -51,7 +51,7 @@ namespace FSCruiser.Core.Models
             }
             else
             {
-                return new PlotVM(this.DAL)
+                return new Plot(this.DAL)
                 {
                     CuttingUnit = cuttingUnit,
                     Stratum = this,
@@ -60,9 +60,9 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        protected virtual IEnumerable<PlotVM> ReadPlots(long cuttingUnit_CN)
+        protected virtual IEnumerable<Plot> ReadPlots(long cuttingUnit_CN)
         {
-            foreach (var plot in DAL.From<PlotVM>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
+            foreach (var plot in DAL.From<Plot>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
                 .OrderBy("PlotNumber")
                 .Read(this.Stratum_CN, cuttingUnit_CN))
             {
@@ -107,7 +107,7 @@ namespace FSCruiser.Core.Models
         public bool IsPlotNumberAvailable(long plotNumber)
         {
             System.Diagnostics.Debug.Assert(this.Plots != null);
-            foreach (PlotVM pi in Plots)
+            foreach (Plot pi in Plots)
             {
                 if (pi.PlotNumber == plotNumber)
                 {

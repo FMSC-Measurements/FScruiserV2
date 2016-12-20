@@ -64,7 +64,6 @@
     <Compile Include="Core\ApplicationController.cs" />
     <Compile Include="Core\ApplicationSettings.cs" />
     <Compile Include="Core\Constants.cs" />
-    <Compile Include="Core\CountTreeExtensions.cs" />
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LimitingDistanceCalculator.cs" />
     <Compile Include="Core\ExceptionHandler.cs" />
@@ -72,6 +71,8 @@
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="Core\IExceptionHandler.cs" />
     <Compile Include="Core\LoadCuttingUnitWorker.cs" />
+    <Compile Include="Core\Models\CountTree.cs" />
+    <Compile Include="Core\Models\CuttingUnit.cs" />
     <Compile Include="Core\Models\DataModelExtensions.cs" />
     <Compile Include="Core\Models\FixCNTPlot.cs" />
     <Compile Include="Core\Models\FixCNTStratum.cs" />
@@ -89,7 +90,10 @@
     <Compile Include="Core\Models\RecentProject.cs" />
     <Compile Include="Core\Models\RegionLogInfo.cs" />
     <Compile Include="Core\Models\Sale.cs" />
+    <Compile Include="Core\Models\SampleGroup.cs" />
+    <Compile Include="Core\Models\Stratum.cs" />
     <Compile Include="Core\Models\TallyHistoryCollection.cs" />
+    <Compile Include="Core\Models\Tree.cs" />
     <Compile Include="Core\SaveTreesWorker.cs" />
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
@@ -247,20 +251,15 @@
     <Compile Include="NetCF\WinForms\DataEntry\LayoutTreeBased.Designer.cs">
       <DependentUpon>LayoutTreeBased.cs</DependentUpon>
     </Compile>
-    <Compile Include="Core\Models\CountTreeVM.cs" />
-    <Compile Include="Core\Models\CruiserVM.cs" />
-    <Compile Include="Core\Models\CuttingUnitInfo.cs" />
+    <Compile Include="Core\Models\Cruiser.cs" />
     <Compile Include="NetCF\DataGridAdjuster.cs" />
     <Compile Include="Core\IApplicationController.cs" />
     <Compile Include="Core\ViewInterfaces\ITreeView.cs" />
     <Compile Include="Core\IViewController.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
-    <Compile Include="Core\Models\SampleGroupVM.cs" />
-    <Compile Include="Core\Models\StratumModel.cs" />
     <Compile Include="Core\Models\SubPopInfo.cs" />
     <Compile Include="Core\Models\TallyAction.cs" />
     <Compile Include="Core\Models\TallySettingsDO.cs" />
-    <Compile Include="Core\Models\TreeVM.cs" />
     <Compile Include="NetCF\WinForms\ViewController.cs" />
     <Compile Include="WinForms.Common\FormManageCruisers.cs">
       <SubType>Form</SubType>

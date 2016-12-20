@@ -47,7 +47,7 @@ namespace FSCruiser.WinForms
             FSCruiser.WinForms.Win32.MessageBeep(-1);
         }
 
-        public override void ShowCruiserSelection(TreeVM tree)
+        public override void ShowCruiserSelection(Tree tree)
         {
             if (this.ApplicationController.Settings.EnableCruiserPopup)
             {

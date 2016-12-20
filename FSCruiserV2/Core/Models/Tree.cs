@@ -31,26 +31,26 @@ namespace FSCruiser.Core.Models
         }
     }
 
-    public class TreeVM : TreeDO
+    public class Tree : TreeDO
     {
         int cachedLogCount = -1;
 
-        public TreeVM(DAL dal)
+        public Tree(DAL dal)
             : base((DatastoreRedux)dal)
         {
         }
 
-        public TreeVM()
+        public Tree()
             : base()
         {
         }
 
         [IgnoreField]
-        public new CuttingUnitVM CuttingUnit
+        public new CuttingUnit CuttingUnit
         {
             get
             {
-                return (CuttingUnitVM)base.CuttingUnit;
+                return (CuttingUnit)base.CuttingUnit;
             }
             set
             {
@@ -59,11 +59,11 @@ namespace FSCruiser.Core.Models
         }
 
         [IgnoreField]
-        public new SampleGroupModel SampleGroup
+        public new SampleGroup SampleGroup
         {
             get
             {
-                return (SampleGroupModel)base.SampleGroup;
+                return (SampleGroup)base.SampleGroup;
             }
             set
             {
@@ -73,11 +73,11 @@ namespace FSCruiser.Core.Models
         }
 
         [IgnoreField]
-        public new StratumModel Stratum
+        public new Stratum Stratum
         {
             get
             {
-                return (StratumModel)base.Stratum;
+                return (Stratum)base.Stratum;
             }
             set
             {
@@ -187,7 +187,7 @@ namespace FSCruiser.Core.Models
         public override CuttingUnitDO GetCuttingUnit()
         {
             if (DAL == null) { return null; }
-            return DAL.From<CuttingUnitVM>().Where("CuttingUnit_CN = ?")
+            return DAL.From<CuttingUnit>().Where("CuttingUnit_CN = ?")
                 .Read(this.CuttingUnit_CN).FirstOrDefault();
         }
 
@@ -200,7 +200,7 @@ namespace FSCruiser.Core.Models
         public override StratumDO GetStratum()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<StratumModel>(this.Stratum_CN);
+            return DAL.ReadSingleRow<Stratum>(this.Stratum_CN);
         }
 
         public override SampleGroupDO GetSampleGroup()
@@ -209,7 +209,7 @@ namespace FSCruiser.Core.Models
             base.BeginInit();
             try
             {
-                return DAL.ReadSingleRow<SampleGroupModel>(this.SampleGroup_CN);
+                return DAL.ReadSingleRow<SampleGroup>(this.SampleGroup_CN);
             }
             finally { base.EndInit(); }
         }

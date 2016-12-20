@@ -12,7 +12,7 @@ namespace FSCruiser.Core.DataEntry
     public class LayoutPlotLogic
     {
         private bool _disableCheckPlot = false;
-        private PlotVM _prevPlot;
+        private Plot _prevPlot;
         private System.Windows.Forms.BindingSource _BS_Plots;
         public System.Windows.Forms.BindingSource _BS_Trees;
 
@@ -36,11 +36,11 @@ namespace FSCruiser.Core.DataEntry
 
         public PlotStratum Stratum { get; set; }
 
-        public PlotVM CurrentPlot
+        public Plot CurrentPlot
         {
             get
             {
-                return _BS_Plots.Current as PlotVM;
+                return _BS_Plots.Current as Plot;
             }
             set
             {
@@ -49,11 +49,11 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public TreeVM CurrentTree
+        public Tree CurrentTree
         {
             get
             {
-                return this._BS_Trees.Current as TreeVM;
+                return this._BS_Trees.Current as Tree;
             }
         }
 
@@ -71,10 +71,10 @@ namespace FSCruiser.Core.DataEntry
             ((System.ComponentModel.ISupportInitialize)(this._BS_Plots)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._BS_Trees)).BeginInit();
 
-            this._BS_Plots.DataSource = typeof(PlotVM);
+            this._BS_Plots.DataSource = typeof(Plot);
             this._BS_Plots.CurrentChanged += new System.EventHandler(this._BS_Plots_CurrentChanged);
 
-            this._BS_Trees.DataSource = typeof(TreeVM);
+            this._BS_Trees.DataSource = typeof(Tree);
             this._BS_Trees.CurrentChanged += new System.EventHandler(this._BS_Trees_CurrentChanged);
 
             ((System.ComponentModel.ISupportInitialize)(this._BS_Plots)).EndInit();
@@ -88,7 +88,7 @@ namespace FSCruiser.Core.DataEntry
             return this.CheckPlot(this.CurrentPlot);
         }
 
-        public bool CheckPlot(PlotVM pInfo)
+        public bool CheckPlot(Plot pInfo)
         {
             if (pInfo != null)
             {
@@ -141,7 +141,7 @@ namespace FSCruiser.Core.DataEntry
             return true;
         }
 
-        public bool SavePlotTrees(PlotVM plot)
+        public bool SavePlotTrees(Plot plot)
         {
             bool goOn = true;
             this.EndEdit();
@@ -176,7 +176,7 @@ namespace FSCruiser.Core.DataEntry
             }
             else
             {
-                this._BS_Trees.DataSource = new TreeVM[0];
+                this._BS_Trees.DataSource = new Tree[0];
             }
             this.View.RefreshTreeView(this.CurrentPlot);
         }
@@ -189,7 +189,7 @@ namespace FSCruiser.Core.DataEntry
                 return;
             }
 
-            PlotVM plotInfo = this.AddPlot();
+            Plot plotInfo = this.AddPlot();
             if (plotInfo != null)
             {
                 this._disableCheckPlot = true;
@@ -210,9 +210,9 @@ namespace FSCruiser.Core.DataEntry
         /// </summary>
         /// <param name="stratum">stratum to create plot in</param>
         /// <returns>reference to newly created plot</returns>
-        protected PlotVM AddPlot()
+        protected Plot AddPlot()
         {
-            PlotVM newPlot = Stratum.MakePlot(this.DataEntryController.Unit);
+            Plot newPlot = Stratum.MakePlot(this.DataEntryController.Unit);
 
             if (this.ViewController.ShowPlotInfo(newPlot, Stratum, true) == DialogResult.OK)
             {
@@ -256,7 +256,7 @@ namespace FSCruiser.Core.DataEntry
                 return;
             }
 
-            TreeVM curTree = this._BS_Trees.Current as TreeVM;
+            Tree curTree = this._BS_Trees.Current as Tree;
             if (curTree != null)
             {
                 if (!this.Controller.ViewController.AskCancel("Delete Tree #" + curTree.TreeNumber.ToString(),
@@ -291,7 +291,7 @@ namespace FSCruiser.Core.DataEntry
         //    cancel = false;
         //}
 
-        public void OnTally(CountTreeVM count)
+        public void OnTally(CountTree count)
         {
             if (!this.EnsureCurrentPlotWorkable()) { return; }
 
@@ -299,120 +299,141 @@ namespace FSCruiser.Core.DataEntry
             this.SelectLastTree();
         }
 
-        protected void OnTally(CountTreeVM count, PlotVM plot)
+        protected void OnTally(CountTree count, Plot plot)
         {
             System.Diagnostics.Debug.Assert(plot != null);
-            TreeVM tree = null;
+            Tree tree = null;
             if (Stratum.Method == CruiseMethods.FIX
                 || Stratum.Method == CruiseMethods.PNT)
             {
                 tree = plot.CreateNewTreeEntry(count, true);
+                tree.TreeCount = 1;
                 this.Controller.ViewController.ShowCruiserSelection(tree);
-
-                tree.TrySave();
-                CurrentPlot.AddTree(tree);
-
-                SelectLastTree();
-                return;
-            }
-
-            SampleGroupDO sg = count.SampleGroup;
-            //if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
-            //{
-            //    TreeVM newTree;
-            //    newTree = Controller.CreateNewTreeEntry(count, plot, true);
-            //    count.TreeCount += sg.SamplingFrequency;
-            //    this.Controller.TrySaveTree(newTree);
-            //    Controller.OnTally();
-            //    return;
-            //}
-
-            SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Sampler;
-            if (count.SampleGroup.Stratum.Is3P)
-            {
-                int kpi = 0;
-                int? value = ViewController.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
-                if (value == null)
-                {
-                    return;
-                }
-                else
-                {
-                    kpi = value.Value;
-                }
-
-                //if kpi == -1 then tree is sure to measure
-                if (kpi != -1)
-                {
-                    ThreePItem item = (ThreePItem)((ThreePSelecter)sampler).NextItem();
-
-                    if (item != null && kpi > item.KPI)
-                    {
-                        //because the three p sample selector doesn't select insurance trees for us
-                        //we need to select them our selves
-                        if (sampler.IsSelectingITrees)
-                        {
-                            item.IsInsuranceItem = sampler.InsuranceCounter.Next();
-                        }
-                        if (item.IsInsuranceItem)
-                        {
-                            this.ViewController.SignalInsuranceTree();
-                            tree = plot.CreateNewTreeEntry(count, true);
-                            tree.CountOrMeasure = "I";
-                        }
-                        else
-                        {
-                            this.ViewController.SignalMeasureTree(true);
-                            tree = plot.CreateNewTreeEntry(count, true);
-                            //tree.CountOrMeasure = "M";
-                        }
-                    }
-                    else
-                    {
-                        tree = plot.CreateNewTreeEntry(count, false);
-                        //tree.CountOrMeasure = "C";
-                    }
-                    tree.KPI = kpi;
-                }
-                else
-                {
-                    tree = plot.CreateNewTreeEntry(count, true);
-                    tree.STM = "Y";
-                }
             }
             else
             {
-                //count.TreeCount++; tree count doesn't get incremented for plots
+                var sg = count.SampleGroup;
+                if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
+                {
+                    var newTree = plot.CreateNewTreeEntry(count, true);
+                    tree.TreeCount = 1;
+                    this.Controller.ViewController.ShowCruiserSelection(tree);
 
-                boolItem item = (sampler != null) ? (boolItem)sampler.NextItem() : (boolItem)null;
-                if (item != null && !item.IsInsuranceItem)
-                {
-                    this.ViewController.SignalMeasureTree(true);
-                    tree = plot.CreateNewTreeEntry(count, true);
-                    //tree.CountOrMeasure = "M";
+                    newTree.TreeCount = sg.SamplingFrequency;
                 }
-                else if (item != null && item.IsInsuranceItem)
+                else
                 {
-                    this.ViewController.SignalInsuranceTree();
-                    tree = plot.CreateNewTreeEntry(count, true);
-                    tree.CountOrMeasure = "I";
+                    if (sg.Stratum.Is3P)
+                    {
+                        tree = TallyThreeP(plot, count);
+                    }
+                    else
+                    {
+                        tree = TallyStandard(plot, count);
+                    }
+                }
+            }
+            if (tree != null)
+            {
+                tree.TrySave();
+                plot.AddTree(tree);
+                SelectLastTree();
+            }
+        }
+
+        protected Tree TallyThreeP(Plot plot, CountTree count)
+        {
+            Tree tree;
+            var sg = count.SampleGroup;
+            var sampler = sg.Sampler;
+
+            int kpi = 0;
+            int? value = ViewController.AskKPI((int)sg.MinKPI, (int)sg.MaxKPI);
+            if (value == null)
+            {
+                return null; //invalid tally jump out
+            }
+            else
+            {
+                kpi = value.Value;
+            }
+
+            //if kpi == -1 then tree is sure to measure
+            if (kpi != -1)
+            {
+                ThreePItem item = (ThreePItem)((ThreePSelecter)sampler).NextItem();
+
+                if (item != null && kpi > item.KPI)
+                {
+                    //because the three p sample selector doesn't select insurance trees for us
+                    //we need to select them our selves
+                    if (sampler.IsSelectingITrees)
+                    {
+                        item.IsInsuranceItem = sampler.InsuranceCounter.Next();
+                    }
+                    if (item.IsInsuranceItem)
+                    {
+                        this.ViewController.SignalInsuranceTree();
+                        tree = plot.CreateNewTreeEntry(count, true);
+                        tree.CountOrMeasure = "I";
+                    }
+                    else
+                    {
+                        this.ViewController.SignalMeasureTree(true);
+                        tree = plot.CreateNewTreeEntry(count, true);
+                        //tree.CountOrMeasure = "M";
+                    }
                 }
                 else
                 {
                     tree = plot.CreateNewTreeEntry(count, false);
+                    //tree.CountOrMeasure = "C";
                 }
+                tree.KPI = kpi;
+            }
+            else
+            {
+                tree = plot.CreateNewTreeEntry(count, true);
+                tree.STM = "Y";
             }
 
             tree.TreeCount = 1;
-            tree.TrySave();
 
-            plot.AddTree(tree);
+            return tree;
+        }
+
+        protected Tree TallyStandard(Plot plot, CountTree count)
+        {
+            var sampler = count.SampleGroup.Sampler;
+            Tree tree;
+
+            boolItem item = (sampler != null) ? (boolItem)sampler.NextItem() : (boolItem)null;
+            if (item != null && !item.IsInsuranceItem)
+            {
+                this.ViewController.SignalMeasureTree(true);
+                tree = plot.CreateNewTreeEntry(count, true);
+                //tree.CountOrMeasure = "M";
+            }
+            else if (item != null && item.IsInsuranceItem)
+            {
+                this.ViewController.SignalInsuranceTree();
+                tree = plot.CreateNewTreeEntry(count, true);
+                tree.CountOrMeasure = "I";
+            }
+            else
+            {
+                tree = plot.CreateNewTreeEntry(count, false);
+            }
+
+            tree.TreeCount = 1;
+
+            return tree;
         }
 
         //TODO rename method
         public void AddTree(SubPop subPop)
         {
-            TreeVM tree = CurrentPlot.CreateNewTreeEntry(subPop);
+            Tree tree = CurrentPlot.CreateNewTreeEntry(subPop);
 
             this.Controller.ViewController.ShowCruiserSelection(tree);
 
@@ -422,15 +443,15 @@ namespace FSCruiser.Core.DataEntry
             SelectLastTree();
         }
 
-        public TreeVM UserAddTree()
+        public Tree UserAddTree()
         {
             if (!this.EnsureCurrentPlotWorkable()) { return null; }
             if (!this.UserCanAddTrees) { return null; }
             EndEdit();
-            TreeVM prevTree = null;
+            Tree prevTree = null;
             if (_BS_Trees.Count > 0)
             {
-                prevTree = (TreeVM)_BS_Trees[_BS_Trees.Count - 1];
+                prevTree = (Tree)_BS_Trees[_BS_Trees.Count - 1];
             }
 
             var newTree = this.CurrentPlot.UserAddTree(prevTree, this.DataEntryController.ViewController);
@@ -487,7 +508,7 @@ namespace FSCruiser.Core.DataEntry
 
         public void Save()
         {
-            foreach (PlotVM p in Stratum.Plots)
+            foreach (Plot p in Stratum.Plots)
             {
                 p.Save();
 
@@ -531,7 +552,7 @@ namespace FSCruiser.Core.DataEntry
 
         private void _BS_Trees_CurrentChanged(object sender, EventArgs e)
         {
-            TreeVM tree = this.CurrentTree;
+            Tree tree = this.CurrentTree;
 
             this.View.HandleCurrentTreeChanged(tree);
         }

@@ -5,7 +5,7 @@ using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
-    public class Plot3PPNT : PlotVM
+    public class Plot3PPNT : Plot
     {
         uint _treeCount;
 
@@ -56,7 +56,7 @@ namespace FSCruiser.Core.Models
         {
             for (long i = 0; i < this.TreeCount; i++)
             {
-                TreeVM t = this.CreateNewTreeEntry((SampleGroupModel)null, (TreeDefaultValueDO)null, false);
+                Tree t = this.CreateNewTreeEntry((SampleGroup)null, (TreeDefaultValueDO)null, false);
                 t.TreeCount = 1;
                 t.CountOrMeasure = "M";
                 t.TreeNumber = i + 1;

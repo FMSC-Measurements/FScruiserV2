@@ -7,7 +7,7 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class TallyRow : UserControl, ITallyButton
     {
-        CountTreeVM _count;
+        CountTree _count;
 
         private TallyRowButton _settingsBTN;
         private TallyRowButton _tallyBTN;
@@ -17,7 +17,7 @@ namespace FSCruiser.WinForms.DataEntry
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        public TallyRow(CountTreeVM count)
+        public TallyRow(CountTree count)
         {
             InitializeComponent();
 
@@ -31,7 +31,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public event EventHandler TallyButtonClicked;
 
-        public CountTreeVM Count
+        public CountTree Count
         {
             get { return _count; }
             set

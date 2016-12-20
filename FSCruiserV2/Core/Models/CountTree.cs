@@ -5,22 +5,22 @@ using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
-    public class CountTreeVM : CountTreeDO
+    public class CountTree : CountTreeDO
     {
-        public CountTreeVM()
+        public CountTree()
             : base()
         { }
 
-        public CountTreeVM(DAL ds)
+        public CountTree(DAL ds)
             : base(ds)
         { }
 
         [IgnoreField]
-        public new SampleGroupModel SampleGroup
+        public new SampleGroup SampleGroup
         {
             get
             {
-                return (SampleGroupModel)base.SampleGroup;
+                return (SampleGroup)base.SampleGroup;
             }
             set
             {
@@ -31,7 +31,7 @@ namespace FSCruiser.Core.Models
         public override SampleGroupDO GetSampleGroup()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<SampleGroupModel>(this.SampleGroup_CN);
+            return DAL.ReadSingleRow<SampleGroup>(this.SampleGroup_CN);
         }
 
         public long GetCountsFromTrees()

@@ -15,8 +15,8 @@ namespace FSCruiser.Core.ViewInterfaces
 
         void Close();
 
-        void UpdateCruiserList(IList<CruiserVM> cruisers);
+        void UpdateCruiserList(IList<Cruiser> cruisers);
 
-        DialogResult ShowDialog(TreeVM tree);
+        DialogResult ShowDialog(Tree tree);
     }
 }

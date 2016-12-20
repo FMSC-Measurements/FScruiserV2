@@ -8,11 +8,11 @@ namespace FSCruiser.Core
 {
     class SaveTreesWorker
     {
-        TreeVM[] _trees;
+        Tree[] _trees;
         Thread _saveTreesWorkerThread;
         DAL _datastore;
 
-        public SaveTreesWorker(DAL datastore, ICollection<TreeVM> trees)
+        public SaveTreesWorker(DAL datastore, ICollection<Tree> trees)
         {
             Debug.Assert(datastore != null);
             Debug.Assert(trees != null);
@@ -21,7 +21,7 @@ namespace FSCruiser.Core
             lock (((System.Collections.ICollection)trees).SyncRoot)
             {
                 //create a local copy of tree collection
-                TreeVM[] a = new TreeVM[trees.Count];
+                Tree[] a = new Tree[trees.Count];
                 trees.CopyTo(a, 0);
                 _trees = a;
             }
@@ -69,7 +69,7 @@ namespace FSCruiser.Core
         {
             bool success = true;
 
-            foreach (TreeVM t in _trees)
+            foreach (Tree t in _trees)
             {
                 success = t.TrySave() && success;
             }
@@ -87,7 +87,7 @@ namespace FSCruiser.Core
                 _datastore.BeginTransaction();
                 try
                 {
-                    foreach (TreeVM tree in _trees)
+                    foreach (Tree tree in _trees)
                     {
                         tree.Save();
                     }

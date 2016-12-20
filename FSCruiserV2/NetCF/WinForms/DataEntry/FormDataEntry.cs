@@ -11,7 +11,7 @@ namespace FSCruiser.WinForms.DataEntry
     public partial class FormDataEntry : FMSC.Controls.CustomForm, IDataEntryView
     {
         public FormDataEntry(IApplicationController controller
-            , CuttingUnitVM unit)
+            , CuttingUnit unit)
         {
             InitializeComponent();
 

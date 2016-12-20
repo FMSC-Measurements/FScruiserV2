@@ -19,7 +19,7 @@ namespace FSCruiser.Core.Workers
 
         public DAL DataStore { get; set; }
 
-        public IList<CuttingUnitVM> CuttingUnits { get; set; }
+        public IList<CuttingUnit> CuttingUnits { get; set; }
 
         protected override void WorkerMain()
         {
@@ -28,7 +28,7 @@ namespace FSCruiser.Core.Workers
             this.UnitsOfWorkCompleated = 1;
             this.NotifyProgressChanged(null);
 
-            this.CuttingUnits = DataStore.From<CuttingUnitVM>().Read().ToList();
+            this.CuttingUnits = DataStore.From<CuttingUnit>().Read().ToList();
             UnitsOfWorkCompleated = 2;
         }
 

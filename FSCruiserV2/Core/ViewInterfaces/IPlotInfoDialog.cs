@@ -13,6 +13,6 @@ namespace FSCruiser.Core.ViewInterfaces
 
         //PlotVM Plot { get; }
 
-        DialogResult ShowDialog(PlotVM plot, PlotStratum stratum, bool isNewPlot);
+        DialogResult ShowDialog(Plot plot, PlotStratum stratum, bool isNewPlot);
     }
 }

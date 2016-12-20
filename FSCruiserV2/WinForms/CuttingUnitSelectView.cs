@@ -11,11 +11,11 @@ namespace FSCruiser.WinForms
     {
         public IApplicationController Controller { get; set; }
 
-        public CuttingUnitVM SelectedUnit
+        public CuttingUnit SelectedUnit
         {
             get
             {
-                CuttingUnitVM unitVM = _BS_CuttingUnits.Current as CuttingUnitVM;
+                var unitVM = _BS_CuttingUnits.Current as CuttingUnit;
                 if (unitVM != null && unitVM.Code != null)
                 {
                     return unitVM;
@@ -39,14 +39,14 @@ namespace FSCruiser.WinForms
         {
             if (this.Controller.CuttingUnits != null)
             {
-                var units = new CuttingUnitVM[Controller.CuttingUnits.Count + 1];
+                var units = new CuttingUnit[Controller.CuttingUnits.Count + 1];
                 Controller.CuttingUnits.CopyTo(units, 1);
-                units[0] = new CuttingUnitVM();
+                units[0] = new CuttingUnit();
                 this._BS_CuttingUnits.DataSource = units;
             }
             else
             {
-                this._BS_CuttingUnits.DataSource = new CuttingUnitVM[0];
+                this._BS_CuttingUnits.DataSource = new CuttingUnit[0];
             }
             //this._cuttingUnitCB.Update();
         }

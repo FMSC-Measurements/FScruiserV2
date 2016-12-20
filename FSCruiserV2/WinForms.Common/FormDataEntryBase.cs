@@ -47,7 +47,7 @@ namespace FSCruiser.WinForms.DataEntry
         public IApplicationController Controller { get; protected set; }
 
         protected void InitializeCommon(IApplicationController controller
-            , CuttingUnitVM unit)
+            , CuttingUnit unit)
         {
             KeyPreview = true;
 
@@ -269,7 +269,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public FormDataEntryLogic LogicController { get; protected set; }
 
-        public CuttingUnitVM Unit
+        public CuttingUnit Unit
         {
             get
             {

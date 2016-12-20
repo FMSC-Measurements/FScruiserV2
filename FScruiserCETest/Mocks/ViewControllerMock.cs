@@ -116,7 +116,7 @@ namespace FSCruiserV2.Test.Mocks
             throw new NotImplementedException();
         }
 
-        public void ShowCruiserSelection(TreeVM tree)
+        public void ShowCruiserSelection(Tree tree)
         {
             throw new NotImplementedException();
         }
@@ -136,12 +136,12 @@ namespace FSCruiserV2.Test.Mocks
             throw new NotImplementedException();
         }
 
-        public System.Windows.Forms.DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, TreeVM optTree, out string logMessage)
+        public System.Windows.Forms.DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, Tree optTree, out string logMessage)
         {
             throw new NotImplementedException();
         }
 
-        public void ShowLogsView(CruiseDAL.DataObjects.StratumDO stratum, TreeVM tree)
+        public void ShowLogsView(CruiseDAL.DataObjects.StratumDO stratum, Tree tree)
         {
             throw new NotImplementedException();
         }
@@ -161,12 +161,12 @@ namespace FSCruiserV2.Test.Mocks
             throw new NotImplementedException();
         }
 
-        public System.Windows.Forms.DialogResult ShowPlotInfo(PlotVM plotInfo, bool allowEdit)
+        public System.Windows.Forms.DialogResult ShowPlotInfo(Plot plotInfo, bool allowEdit)
         {
             throw new NotImplementedException();
         }
 
-        public void ShowTallySettings(CountTreeVM count)
+        public void ShowTallySettings(CountTree count)
         {
             throw new NotImplementedException();
         }
@@ -191,17 +191,17 @@ namespace FSCruiserV2.Test.Mocks
             throw new NotImplementedException();
         }
 
-        public void ShowLogsView(StratumModel stratum, TreeVM tree)
+        public void ShowLogsView(Stratum stratum, Tree tree)
         {
             throw new NotImplementedException();
         }
 
-        public void ShowDataEntry(CuttingUnitVM unit)
+        public void ShowDataEntry(CuttingUnit unit)
         {
             throw new NotImplementedException();
         }
 
-        public System.Windows.Forms.DialogResult ShowPlotInfo(PlotVM plotInfo, PlotStratum stratum, bool allowEdit)
+        public System.Windows.Forms.DialogResult ShowPlotInfo(Plot plotInfo, PlotStratum stratum, bool allowEdit)
         {
             throw new NotImplementedException();
         }

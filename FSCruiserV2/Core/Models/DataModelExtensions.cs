@@ -77,9 +77,9 @@ namespace FSCruiser.Core.Models
 
     public static class TreeExtensions
     {
-        public static CountTreeVM FindCountRecord(this TreeDO tree)
+        public static CountTree FindCountRecord(this TreeDO tree)
         {
-            return tree.DAL.From<CountTreeVM>()
+            return tree.DAL.From<CountTree>()
                 .Where("SampleGroup_CN = ? AND CuttingUnit_CN = ? AND (TreeDefaultValue_CN = ? OR ifnull(TreeDefaultValue_CN, 0) = 0)")
                 .Read(tree.SampleGroup_CN
                 , tree.CuttingUnit_CN
@@ -101,19 +101,19 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public static object ReadValidSampleGroups(this TreeVM tree)
+        public static object ReadValidSampleGroups(this Tree tree)
         {
             if (tree == null || tree.Stratum == null)
             {
                 return Constants.EMPTY_SG_LIST;
             }
 
-            return tree.DAL.From<SampleGroupModel>()
+            return tree.DAL.From<SampleGroup>()
                 .Where("Stratum_CN = ?")
                 .Read(tree.Stratum_CN).ToList();
         }
 
-        public static ICollection<TreeDefaultValueDO> ReadValidTDVs(this TreeVM tree)
+        public static ICollection<TreeDefaultValueDO> ReadValidTDVs(this Tree tree)
         {
             if (tree == null || tree.Stratum == null)
             { return Constants.EMPTY_SPECIES_LIST; }
@@ -123,7 +123,7 @@ namespace FSCruiser.Core.Models
                 //if stratum has only one sampleGroup, make it this tree's SG
                 if (tree.DAL.GetRowCount("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN) == 1)
                 {
-                    tree.SampleGroup = tree.DAL.From<SampleGroupModel>()
+                    tree.SampleGroup = tree.DAL.From<SampleGroup>()
                         .Where("Stratum_CN = ?")
                         .Read(tree.Stratum_CN)
                         .FirstOrDefault();

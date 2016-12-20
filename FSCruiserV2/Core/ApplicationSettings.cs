@@ -52,7 +52,7 @@ namespace FSCruiser.Core
         #endregion static properties
 
         string _backupDir;
-        List<CruiserVM> _cruisers;
+        List<Cruiser> _cruisers;
 
         public List<RecentProject> RecentProjects { get; set; }
 
@@ -88,13 +88,13 @@ namespace FSCruiser.Core
         public bool EnableCruiserPopup { get; set; }
 
         [XmlElement]
-        public List<CruiserVM> Cruisers
+        public List<Cruiser> Cruisers
         {
             get
             {
                 if (_cruisers == null)
                 {
-                    _cruisers = new List<CruiserVM>();
+                    _cruisers = new List<Cruiser>();
                 }
                 return _cruisers;
             }
@@ -216,12 +216,12 @@ namespace FSCruiser.Core
         {
             if (this.Cruisers == null)
             {
-                this.Cruisers = new List<CruiserVM>();
+                this.Cruisers = new List<Cruiser>();
             }
-            this.Cruisers.Add(new CruiserVM(initials));
+            this.Cruisers.Add(new Cruiser(initials));
         }
 
-        public void RemoveCruiser(CruiserVM cruiser)
+        public void RemoveCruiser(Cruiser cruiser)
         {
             this.Cruisers.Remove(cruiser);
         }

@@ -9,13 +9,13 @@ namespace FSCruiser.Core.Models
     /// </summary>
     /// TODO this class probably doen't need to inharet from DataObject
     [EntitySource(SourceName = "CountTree")]
-    public class TallySettingsDO : DataObject_Base
+    public class TallySettings : DataObject_Base
     {
-        public TallySettingsDO()
+        public TallySettings()
             : base()
         { }
 
-        public TallySettingsDO(DatastoreRedux db)
+        public TallySettings(DatastoreRedux db)
             : base(db)
         { }
 

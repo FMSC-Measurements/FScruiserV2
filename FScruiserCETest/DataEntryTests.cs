@@ -22,23 +22,23 @@ namespace FSCruiserV2.Test
 
         public DataEntryTests()
         {
-            var cu = new CuttingUnitVM();
+            var cu = new CuttingUnit();
 
             _de = new FormDataEntryLogic(cu, _controller, _view);
         }
 
         public void TestTreeTally()
         {
-            var st = new StratumModel();
+            var st = new Stratum();
             st.Method = CruiseDAL.Schema.CruiseMethods.STR;
 
-            var sg = new SampleGroupModel();
+            var sg = new SampleGroup();
             sg.Stratum = st;
             sg.SamplingFrequency = 5;
             sg.InsuranceFrequency = 0;
             sg.SampleSelectorType = CruiseDAL.Enums.SampleSelectorType.Block.ToString();
 
-            CountTreeVM count = new CountTreeVM();
+            CountTree count = new CountTree();
             count.SampleGroup = sg;
 
             int numSamples = 10000;

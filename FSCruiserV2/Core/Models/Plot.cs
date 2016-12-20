@@ -9,28 +9,28 @@ using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
-    public class PlotVM : PlotDO
+    public class Plot : PlotDO
     {
-        private IList<TreeVM> _trees;
+        private IList<Tree> _trees;
 
-        public PlotVM()
+        public Plot()
             : base()
         { }
 
-        public PlotVM(DAL dal)
+        public Plot(DAL dal)
             : base(dal)
         { }
 
-        public PlotVM(PlotDO obj)
+        public Plot(PlotDO obj)
             : base(obj)
         { }
 
         [IgnoreField]
-        public new StratumModel Stratum
+        public new Stratum Stratum
         {
             get
             {
-                return (StratumModel)base.Stratum;
+                return (Stratum)base.Stratum;
             }
             set
             {
@@ -39,11 +39,11 @@ namespace FSCruiser.Core.Models
         }
 
         [IgnoreField]
-        public new CuttingUnitVM CuttingUnit
+        public new CuttingUnit CuttingUnit
         {
             get
             {
-                return (CuttingUnitVM)base.CuttingUnit;
+                return (CuttingUnit)base.CuttingUnit;
             }
             set
             {
@@ -52,7 +52,7 @@ namespace FSCruiser.Core.Models
         }
 
         [IgnoreField]
-        public IList<TreeVM> Trees
+        public IList<Tree> Trees
         {
             get
             {
@@ -89,13 +89,13 @@ namespace FSCruiser.Core.Models
         public override StratumDO GetStratum()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<StratumModel>(this.Stratum_CN);
+            return DAL.ReadSingleRow<Stratum>(this.Stratum_CN);
         }
 
         public override CuttingUnitDO GetCuttingUnit()
         {
             if (DAL == null) { return null; }
-            return DAL.ReadSingleRow<CuttingUnitVM>(this.CuttingUnit_CN);
+            return DAL.ReadSingleRow<CuttingUnit>(this.CuttingUnit_CN);
         }
 
         public override void Delete()
@@ -107,7 +107,7 @@ namespace FSCruiser.Core.Models
                 this.DAL.BeginTransaction();
                 try
                 {
-                    foreach (TreeVM tree in this.Trees)
+                    foreach (Tree tree in this.Trees)
                     {
                         tree.Delete();
 
@@ -128,20 +128,20 @@ namespace FSCruiser.Core.Models
         {
             if (this._trees == null)
             {
-                List<TreeVM> tList = base.DAL.From<TreeVM>()
+                List<Tree> tList = base.DAL.From<Tree>()
                     .Where("Stratum_CN = ? AND CuttingUnit_CN = ? AND Plot_CN = ?")
                     .OrderBy("TreeNumber")
                     .Read(base.Stratum.Stratum_CN
                     , base.CuttingUnit.CuttingUnit_CN
                     , base.Plot_CN).ToList();
-                this._trees = new BindingList<TreeVM>(tList);
+                this._trees = new BindingList<Tree>(tList);
                 //this._trees = tList;
             }
         }
 
         public bool IsTreeNumberAvalible(long treeNumber)
         {
-            foreach (TreeVM tree in this.Trees)
+            foreach (Tree tree in this.Trees)
             {
                 if (tree.TreeNumber == treeNumber)
                 {
@@ -151,10 +151,10 @@ namespace FSCruiser.Core.Models
             return true;
         }
 
-        public TreeVM UserAddTree(TreeVM templateTree, IViewController viewController)
+        public Tree UserAddTree(Tree templateTree, IViewController viewController)
         {
-            TreeVM newTree;
-            SampleGroupModel assumedSG = null;
+            Tree newTree;
+            SampleGroup assumedSG = null;
             TreeDefaultValueDO assumedTDV = null;
 
             if (templateTree != null)
@@ -166,7 +166,7 @@ namespace FSCruiser.Core.Models
             //extrapolate sample group
             if (assumedSG == null)//if we have a stratum but no sample group, pick the first one
             {
-                List<SampleGroupModel> samplegroups = this.DAL.From<SampleGroupModel>()
+                List<SampleGroup> samplegroups = this.DAL.From<SampleGroup>()
                     .Where("Stratum_CN = ?")
                     .Read(this.Stratum.Stratum_CN).ToList();
                 if (samplegroups.Count == 1)
@@ -193,18 +193,18 @@ namespace FSCruiser.Core.Models
             return newTree;
         }
 
-        public TreeVM CreateNewTreeEntry(SubPop subPop)
+        public Tree CreateNewTreeEntry(SubPop subPop)
         {
             var tree = CreateNewTreeEntry(subPop.SG, subPop.TDV, true);
             return tree;
         }
 
-        public TreeVM CreateNewTreeEntry(CountTreeVM count, bool isMeasure)
+        public Tree CreateNewTreeEntry(CountTree count, bool isMeasure)
         {
             return this.CreateNewTreeEntry(count.SampleGroup, count.TreeDefaultValue, isMeasure);
         }
 
-        public virtual TreeVM CreateNewTreeEntry(SampleGroupModel sg, TreeDefaultValueDO tdv, bool isMeasure)
+        public virtual Tree CreateNewTreeEntry(SampleGroup sg, TreeDefaultValueDO tdv, bool isMeasure)
         {
             Debug.Assert(this.CuttingUnit != null);
             var newTree = this.CuttingUnit.CreateNewTreeEntryInternal(this.Stratum, sg, tdv, isMeasure);
@@ -216,7 +216,7 @@ namespace FSCruiser.Core.Models
             return newTree;
         }
 
-        public void AddTree(TreeVM tree)
+        public void AddTree(Tree tree)
         {
             lock (((System.Collections.ICollection)Trees).SyncRoot)
             {
@@ -224,7 +224,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public void DeleteTree(TreeVM tree)
+        public void DeleteTree(Tree tree)
         {
             tree.Delete();
             //TreeDO.RecursiveDeleteTree(tree);

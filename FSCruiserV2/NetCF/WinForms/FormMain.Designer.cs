@@ -162,7 +162,7 @@ namespace FSCruiser.WinForms
             // 
             // _BS_cuttingUnits
             // 
-            this._BS_cuttingUnits.DataSource = typeof(FSCruiser.Core.Models.CuttingUnitVM);
+            this._BS_cuttingUnits.DataSource = typeof(FSCruiser.Core.Models.CuttingUnit);
             this._BS_cuttingUnits.CurrentChanged += new System.EventHandler(this._BS_cuttingUnits_CurrentChanged);
             // 
             // panel4

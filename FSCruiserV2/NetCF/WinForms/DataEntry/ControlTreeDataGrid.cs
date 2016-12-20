@@ -41,7 +41,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public FormDataEntryLogic DataEntryController { get; set; }
 
-        public IList<TreeVM> Trees
+        public IList<Tree> Trees
         {
             get
             {
@@ -63,7 +63,7 @@ namespace FSCruiser.WinForms.DataEntry
             //initialize _BS_trees
             this._BS_trees = new System.Windows.Forms.BindingSource();
             ((System.ComponentModel.ISupportInitialize)(this._BS_trees)).BeginInit();
-            this._BS_trees.DataSource = typeof(TreeVM);
+            this._BS_trees.DataSource = typeof(Tree);
             this._BS_trees.CurrentChanged += new EventHandler(_BS_trees_CurrentChanged);
             this.DataSource = this._BS_trees;
             ((System.ComponentModel.ISupportInitialize)(this._BS_trees)).EndInit();
@@ -91,7 +91,7 @@ namespace FSCruiser.WinForms.DataEntry
         protected override void OnCellValidating(EditableDataGridCellValidatingEventArgs e)
         {
             base.OnCellValidating(e);
-            TreeVM tree = (TreeVM)this._BS_trees[e.RowIndex];
+            Tree tree = (Tree)this._BS_trees[e.RowIndex];
             if (e.Column == _sgColumn)
             {
                 var newSG = e.Value as SampleGroupDO;
@@ -143,7 +143,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             base.OnCellValueChanged(e);
 
-            TreeVM tree = (TreeVM)this._BS_trees[e.RowIndex];
+            Tree tree = (Tree)this._BS_trees[e.RowIndex];
             if (e.Column == _sgColumn)
             {
                 tree.HandleSampleGroupChanged();
@@ -170,12 +170,12 @@ namespace FSCruiser.WinForms.DataEntry
 
         void LogsClicked(ButtonCellClickEventArgs e)
         {
-            TreeVM tree = this._BS_trees[e.RowNumber] as TreeVM;
+            Tree tree = this._BS_trees[e.RowNumber] as Tree;
             if (tree == null) { return; }
             this.DataEntryController.ShowLogs(tree);
         }
 
-        public TreeVM UserAddTree()
+        public Tree UserAddTree()
         {
             if (_viewLoading
                 || this.UserCanAddTrees == false) { return null; }
@@ -192,7 +192,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void _BS_trees_CurrentChanged(object sender, EventArgs e)
         {
-            TreeVM tree = _BS_trees.Current as TreeVM;
+            Tree tree = _BS_trees.Current as Tree;
 
             //_changingTree = true;
             UpdateSpeciesColumn(tree);
@@ -201,7 +201,7 @@ namespace FSCruiser.WinForms.DataEntry
             //_changingTree = false;
         }
 
-        public void UpdateSpeciesColumn(TreeVM tree)
+        public void UpdateSpeciesColumn(Tree tree)
         {
             if (_speciesColumn != null)
             {
@@ -209,7 +209,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void UpdateSampleGroupColumn(TreeVM tree)
+        public void UpdateSampleGroupColumn(Tree tree)
         {
             if (_sgColumn != null)
             {
@@ -334,7 +334,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void DeleteSelectedTree()
         {
-            TreeVM curTree = this._BS_trees.Current as TreeVM;
+            Tree curTree = this._BS_trees.Current as Tree;
             if (curTree == null)
             {
                 MessageBox.Show("No Tree Selected");

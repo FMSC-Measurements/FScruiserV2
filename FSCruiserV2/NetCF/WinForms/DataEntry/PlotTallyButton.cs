@@ -9,7 +9,7 @@ namespace FSCruiser.WinForms.DataEntry
 {
     class PlotTallyButton : UserControl, ITallyButton
     {
-        CountTreeVM _count;
+        CountTree _count;
         TallyRowButton _settingsBTN;
         TallyRowButton _tallyBTN;
 
@@ -18,7 +18,7 @@ namespace FSCruiser.WinForms.DataEntry
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        public PlotTallyButton(CountTreeVM count)
+        public PlotTallyButton(CountTree count)
         {
             InitializeComponent();
 
@@ -32,7 +32,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public event EventHandler TallyButtonClicked;
 
-        public CountTreeVM Count
+        public CountTree Count
         {
             get { return _count; }
             set

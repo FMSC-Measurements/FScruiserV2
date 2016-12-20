@@ -84,7 +84,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        PlotVM Plot { get; set; }
+        Plot Plot { get; set; }
 
         public FormPlotInfo()
             : base()
@@ -99,7 +99,7 @@ namespace FSCruiser.WinForms.DataEntry
 #endif
         }
 
-        public virtual DialogResult ShowDialog(PlotVM plot, PlotStratum stratum, bool isNewPlot)
+        public virtual DialogResult ShowDialog(Plot plot, PlotStratum stratum, bool isNewPlot)
         {
             if (plot == null) { throw new ArgumentNullException("plot"); }
             if (stratum == null) { throw new ArgumentNullException("stratum"); }
@@ -278,7 +278,7 @@ namespace FSCruiser.WinForms.DataEntry
             //
             // _BS_Plot
             //
-            this._BS_Plot.DataSource = typeof(FSCruiser.Core.Models.PlotVM);
+            this._BS_Plot.DataSource = typeof(FSCruiser.Core.Models.Plot);
             //
             // mainMenu1
             //

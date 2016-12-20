@@ -11,11 +11,11 @@ namespace FSCruiser.Core
     public class LoadCuttingUnitWorker
     {
         Thread _loadCuttingUnitDataThread;
-        CuttingUnitVM _unit;
+        CuttingUnit _unit;
 
         public event EventHandler DoneLoading;
 
-        public LoadCuttingUnitWorker(CuttingUnitVM unit)
+        public LoadCuttingUnitWorker(CuttingUnit unit)
         {
             Debug.Assert(unit != null);
 
@@ -59,14 +59,14 @@ namespace FSCruiser.Core
         public void InitializeNonPlotTrees()
         {
             //create a list of just trees in tree based strata
-            List<TreeVM> nonPlotTrees = _unit.DAL.From<TreeVM>()
+            List<Tree> nonPlotTrees = _unit.DAL.From<Tree>()
                 .Join("Stratum", "USING (Stratum_CN)")
                 .Where("Tree.CuttingUnit_CN = ? AND " +
                         "Stratum.Method IN ('100','STR','3P','S3P')")
                 .OrderBy("TreeNumber")
                 .Read(_unit.CuttingUnit_CN).ToList();
 
-            _unit.NonPlotTrees = new BindingList<TreeVM>(nonPlotTrees);
+            _unit.NonPlotTrees = new BindingList<Tree>(nonPlotTrees);
             _unit.ValidateTreesAsync();
         }
     }

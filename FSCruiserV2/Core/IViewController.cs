@@ -54,7 +54,7 @@ namespace FSCruiser.Core
 
         void ShowBackupUtil();
 
-        void ShowCruiserSelection(TreeVM tree);
+        void ShowCruiserSelection(Tree tree);
 
         DialogResult ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit);
 
@@ -62,17 +62,17 @@ namespace FSCruiser.Core
 
         DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);
 
-        void ShowLogsView(StratumModel stratum, TreeVM tree);
+        void ShowLogsView(Stratum stratum, Tree tree);
 
         void ShowManageCruisers();
 
         DialogResult ShowOpenCruiseFileDialog(out string fileName);
 
-        void ShowDataEntry(CuttingUnitVM unit);
+        void ShowDataEntry(CuttingUnit unit);
 
-        DialogResult ShowPlotInfo(PlotVM plotInfo, PlotStratum stratum, bool allowEdit);
+        DialogResult ShowPlotInfo(Plot plotInfo, PlotStratum stratum, bool allowEdit);
 
-        void ShowTallySettings(CountTreeVM count);
+        void ShowTallySettings(CountTree count);
 
         void ShowMessage(String message, String caption, MessageBoxIcon icon);
 

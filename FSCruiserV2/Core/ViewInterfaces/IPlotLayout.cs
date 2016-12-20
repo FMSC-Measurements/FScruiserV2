@@ -23,13 +23,13 @@ namespace FSCruiser.Core.ViewInterfaces
 
         void ShowLimitingDistanceDialog();
 
-        void RefreshTreeView(PlotVM currentPlot);
+        void RefreshTreeView(Plot currentPlot);
 
         void BindTreeData(BindingSource treeBS);
 
         void BindPlotData(BindingSource plotBS);
 
-        void HandleCurrentTreeChanged(TreeVM tree);
+        void HandleCurrentTreeChanged(Tree tree);
 
         void ViewEndEdit();
     }

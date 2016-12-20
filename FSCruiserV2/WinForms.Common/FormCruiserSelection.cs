@@ -33,7 +33,7 @@ namespace FSCruiser.WinForms
             set { _sampleGroupLBL.Text = value; }
         }
 
-        public DialogResult ShowDialog(TreeVM tree)
+        public DialogResult ShowDialog(Tree tree)
         {
             _logicController.Tree = tree;
 
@@ -53,7 +53,7 @@ namespace FSCruiser.WinForms
             _logicController.HandleKeyDown(key);
         }
 
-        public void UpdateCruiserList(IList<CruiserVM> cruisers)
+        public void UpdateCruiserList(IList<Cruiser> cruisers)
         {
             this._crusierSelectPanel.Controls.Clear();
 
@@ -82,7 +82,7 @@ namespace FSCruiser.WinForms
         void button_Click(object sender, EventArgs e)
         {
             Button b = (Button)sender;
-            CruiserVM cruiser = (CruiserVM)b.Tag;
+            Cruiser cruiser = (Cruiser)b.Tag;
             _logicController.HandleCruiserSelected(cruiser);
         }
     }

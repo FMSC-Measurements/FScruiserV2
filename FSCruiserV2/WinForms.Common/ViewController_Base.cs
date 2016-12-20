@@ -107,7 +107,7 @@ namespace FSCruiser.WinForms.Common
 
         public abstract void BeginShowSplash();
 
-        public FormLogs GetLogsView(StratumModel stratum)
+        public FormLogs GetLogsView(Stratum stratum)
         {
             if (_logViews.ContainsKey(stratum))
             {
@@ -170,7 +170,7 @@ namespace FSCruiser.WinForms.Common
 
         public abstract void ShowBackupUtil();
 
-        public virtual void ShowCruiserSelection(TreeVM tree)
+        public virtual void ShowCruiserSelection(Tree tree)
         { }
 
         public abstract System.Windows.Forms.DialogResult ShowEditSampleGroup(CruiseDAL.DataObjects.SampleGroupDO sg, bool allowEdit);
@@ -179,7 +179,7 @@ namespace FSCruiser.WinForms.Common
 
         public abstract System.Windows.Forms.DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);
 
-        public void ShowLogsView(StratumModel stratum, TreeVM tree)
+        public void ShowLogsView(Stratum stratum, Tree tree)
         {
             if (stratum == null)
             {
@@ -192,7 +192,7 @@ namespace FSCruiser.WinForms.Common
 
         public abstract System.Windows.Forms.DialogResult ShowOpenCruiseFileDialog(out string fileName);
 
-        public void ShowDataEntry(CuttingUnitVM unit)
+        public void ShowDataEntry(CuttingUnit unit)
         {
             lock (_dataEntrySyncLock)
             {
@@ -225,7 +225,7 @@ namespace FSCruiser.WinForms.Common
         //    return this.NumPadDialog.UserEnteredValue;
         //}
 
-        public DialogResult ShowPlotInfo(PlotVM plot, PlotStratum stratum, bool isNewPlot)
+        public DialogResult ShowPlotInfo(Plot plot, PlotStratum stratum, bool isNewPlot)
         {
             System.Diagnostics.Debug.Assert(plot != null);
             System.Diagnostics.Debug.Assert(stratum != null);
@@ -254,7 +254,7 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-        public void ShowTallySettings(CountTreeVM count)
+        public void ShowTallySettings(CountTree count)
         {
             try
             {

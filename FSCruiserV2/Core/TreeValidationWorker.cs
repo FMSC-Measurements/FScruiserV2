@@ -9,14 +9,14 @@ namespace FSCruiser.Core
     public class TreeValidationWorker
     {
         private Thread _validateTreesWorkerThread;
-        readonly TreeVM[] _treesLocal;
+        readonly Tree[] _treesLocal;
 
-        public TreeValidationWorker(ICollection<TreeVM> trees)
+        public TreeValidationWorker(ICollection<Tree> trees)
         {
             Debug.Assert(trees != null);
             lock (((System.Collections.ICollection)trees).SyncRoot)
             {
-                TreeVM[] copy = new TreeVM[trees.Count];
+                Tree[] copy = new Tree[trees.Count];
                 trees.CopyTo(copy, 0);
                 this._treesLocal = copy;
             }
@@ -40,7 +40,7 @@ namespace FSCruiser.Core
         {
             bool valid = true;
 
-            foreach (TreeVM tree in _treesLocal)
+            foreach (Tree tree in _treesLocal)
             {
                 try
                 {

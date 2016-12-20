@@ -15,7 +15,7 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         public FormDataEntry(IApplicationController controller
-            , CuttingUnitVM unit)
+            , CuttingUnit unit)
         {
             InitializeComponent();
             InitializeCommon(controller, unit);
