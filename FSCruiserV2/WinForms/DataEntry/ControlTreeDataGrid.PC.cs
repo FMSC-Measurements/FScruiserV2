@@ -413,10 +413,24 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void MoveHomeField()
         {
-            if (this.CurrentCellAddress.Y == -1) { return; }
+            var row = CurrentRow;
+            if (row == null) { return; }
             try
             {
-                this.CurrentCell = this[0, this.CurrentCellAddress.Y];
+                var cells = row.Cells.OfType<DataGridViewCell>()
+                    .Where(c => !c.ReadOnly && c.Visible && !(c is DataGridViewButtonCell));
+                foreach (var cell in cells)
+                {
+                    var cellValue = cell.Value;
+                    var cellType = cell.ValueType;
+                    if (cellValue == null
+                        || (cellValue is String && string.IsNullOrEmpty(cellValue as string)) //is empty string
+                        || (cellType.IsValueType && cellValue.Equals(Activator.CreateInstance(cellType)))) //is the default value of a value type
+                    {
+                        CurrentCell = cell;
+                        break;
+                    }
+                }
             }
             catch
             { }
