@@ -260,6 +260,13 @@ namespace FSCruiser.WinForms.DataEntry
                 }
             }
 
+            var treeView = FocusedLayout as ITreeView;
+            if (treeView != null)
+            {
+                treeView.MoveLastTree();
+                treeView.MoveFirstEmptyCell();
+            }
+
             _previousLayout = this.FocusedLayout;
         }
 
