@@ -313,6 +313,8 @@ namespace FSCruiser.WinForms.Common
 
         public abstract void SignalInsuranceTree();
 
+        public abstract void SignalTally();
+
         public void ShowWait()
         {
             System.Threading.Interlocked.Increment(ref this._showWait);

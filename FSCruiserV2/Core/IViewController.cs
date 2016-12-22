@@ -88,6 +88,8 @@ namespace FSCruiser.Core
 
         void SignalInsuranceTree();
 
+        void SignalTally();
+
         void ShowWait();
 
         void HideWait();

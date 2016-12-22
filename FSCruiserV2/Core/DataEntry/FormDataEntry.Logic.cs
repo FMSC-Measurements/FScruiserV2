@@ -93,128 +93,118 @@ namespace FSCruiser.Core.DataEntry
 
         public void OnTally(CountTree count)
         {
-            TallyAction action = new TallyAction(count);
+            TallyAction action = null;
             SampleGroupDO sg = count.SampleGroup;
 
             //if doing a manual tally create a tree and jump out
-            //if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
-            //{
-            //    TreeVM newTree;
-            //    newTree = Controller.CreateNewTreeEntry(count, null, true); //create measure tree
-            //    count.TreeCount += sg.SamplingFrequency;                    //increment tree count on tally
-            //    this.Controller.TrySaveTree(newTree);
-            //    Controller.AddTallyAction(action);
-            //    Controller.OnTally();
-            //    return;
-            //}
-
-            SampleSelecter sampler = (SampleSelecter)count.SampleGroup.Sampler;
-            if (count.SampleGroup.Stratum.Is3P)//threeP sampling
+            if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
             {
-                int kpi = 0;
-                int? value = ViewController.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
-                if (value == null)
-                {
-                    return;
-                }
-                else
-                {
-                    kpi = value.Value;
-                }
-                if (kpi == -1)  //user enterted sure to measure
-                {
-                    Tree tree;
-                    tree = Unit.CreateNewTreeEntry(count);
-                    tree.STM = "Y";
-                    tree.TrySave();
-                    Unit.AddNonPlotTree(tree);
-                    action.TreeRecord = tree;
-                }
-                else
-                {
-                    action.TreeEstimate = count.LogTreeEstimate(kpi);
-                    action.KPI = kpi;
-                    count.SumKPI += kpi;
-
-                    ThreePItem item = (ThreePItem)((ThreePSelecter)sampler).NextItem();
-                    if (item != null && kpi > item.KPI)
-                    {
-                        if (sampler.IsSelectingITrees)
-                        {
-                            item.IsInsuranceItem = sampler.InsuranceCounter.Next();
-                        }
-                        this.OnSample(action, count, kpi, item.IsInsuranceItem);
-                    }
-                }
+                action = new TallyAction(count);
+                var newTree = Unit.CreateNewTreeEntry(count, true); //create measure tree
+                newTree.TreeCount = sg.SamplingFrequency;     //increment tree count on tally
+                action.TreeRecord = newTree;
+            }
+            else if (count.SampleGroup.Stratum.Is3P)//threeP sampling
+            {
+                action = TallyThreeP(count);
             }
             else//non 3P sampling (STR)
             {
-                boolItem item = (boolItem)sampler.NextItem();
-                //If we recieve nothing from from the sampler, we don't have a sample
-                if (item != null)//&& (item.IsSelected || item.IsInsuranceItem))
+                action = TallyStandard(count);
+            }
+
+            if (action != null)
+            {
+                ViewController.SignalTally();
+                var tree = action.TreeRecord;
+                if (tree != null)
                 {
-                    this.OnSample(action, count, (item != null && item.IsInsuranceItem));
+                    if (tree.CountOrMeasure == "M")
+                    {
+                        this.ViewController.SignalMeasureTree(false);
+                    }
+                    else if (tree.CountOrMeasure == "I")
+                    {
+                        this.ViewController.SignalInsuranceTree();
+                    }
+
+                    this.ViewController.ShowCruiserSelection(tree);
+                    tree.TrySave();
+                    Unit.AddNonPlotTree(tree);
+
+                    if (tree.CountOrMeasure == "M" && View.AskEnterMeasureTreeData())
+                    {
+                        this.View.GotoTreePage();
+                        //this.View.TreeViewMoveLast();
+                    }
+                }
+                Unit.TallyHistoryBuffer.Add(action);
+            }
+        }
+
+        protected TallyAction TallyThreeP(CountTree count)
+        {
+            TallyAction action = new TallyAction(count);
+            var sampler = count.SampleGroup.Sampler;
+
+            int kpi = 0;
+            int? value = ViewController.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
+            if (value == null)
+            {
+                return null;
+            }
+            else
+            {
+                kpi = value.Value;
+            }
+
+            Tree tree = null;
+            if (kpi == -1)  //user enterted sure to measure
+            {
+                tree = Unit.CreateNewTreeEntry(count);
+                tree.STM = "Y";
+            }
+            else
+            {
+                action.TreeEstimate = count.LogTreeEstimate(kpi);
+                action.KPI = kpi;
+                count.SumKPI += kpi;
+
+                ThreePItem item = (ThreePItem)((ThreePSelecter)sampler).NextItem();
+                if (item != null && kpi > item.KPI)
+                {
+                    if (sampler.IsSelectingITrees)
+                    {
+                        item.IsInsuranceItem = sampler.InsuranceCounter.Next();
+                    }
+                    tree = Unit.CreateNewTreeEntry(count);
+                    tree.KPI = kpi;
+                    tree.CountOrMeasure = (item.IsInsuranceItem) ? "I" : "M";
                 }
             }
 
+            action.TreeRecord = tree;
             count.TreeCount++;
-            Unit.TallyHistoryBuffer.Add(action);
+
+            return action;
         }
 
-        private void OnSample(TallyAction action, CountTree count, int kpi, bool isInsurance)
+        protected TallyAction TallyStandard(CountTree count)
         {
-            Tree tree = Unit.CreateNewTreeEntry(count, !isInsurance);
-            tree.KPI = kpi;
-            tree.CountOrMeasure = (isInsurance) ? "I" : "M";
-            action.TreeRecord = tree;
+            TallyAction action = new TallyAction(count);
 
-            if (!isInsurance)
+            boolItem item = (boolItem)count.SampleGroup.Sampler.NextItem();
+            //If we recieve nothing from from the sampler, we don't have a sample
+            if (item != null)//&& (item.IsSelected || item.IsInsuranceItem))
             {
-                this.ViewController.SignalMeasureTree(true);
-            }
-            else
-            {
-                this.ViewController.SignalInsuranceTree();
+                Tree tree = Unit.CreateNewTreeEntry(count);
+                tree.CountOrMeasure = (item.IsInsuranceItem) ? "I" : "M";
+                action.TreeRecord = tree;
             }
 
-            this.ViewController.ShowCruiserSelection(tree);
+            count.TreeCount++;
 
-            tree.TrySave();
-            Unit.AddNonPlotTree(tree);
-
-            if (!isInsurance && View.AskEnterMeasureTreeData())
-            {
-                this.View.GotoTreePage();
-                this.View.TreeViewMoveLast();
-            }
-        }
-
-        private void OnSample(TallyAction action, CountTree count, bool isInsurance)
-        {
-            Tree tree = Unit.CreateNewTreeEntry(count);
-            tree.CountOrMeasure = (isInsurance) ? "I" : "M";
-
-            action.TreeRecord = tree;
-
-            if (!isInsurance)
-            {
-                this.ViewController.SignalMeasureTree(true);
-            }
-            else
-            {
-                this.ViewController.SignalInsuranceTree();
-            }
-
-            this.ViewController.ShowCruiserSelection(tree);
-
-            tree.TrySave();
-            Unit.AddNonPlotTree(tree);
-
-            if (!isInsurance && View.AskEnterMeasureTreeData())
-            {
-                this.View.GotoTreePage();
-                this.View.TreeViewMoveLast();
-            }
+            return action;
         }
 
         public void AddStratumHotKey(string hk, int pageIndex)

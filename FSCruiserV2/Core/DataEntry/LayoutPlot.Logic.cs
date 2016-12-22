@@ -296,45 +296,37 @@ namespace FSCruiser.Core.DataEntry
             if (!this.EnsureCurrentPlotWorkable()) { return; }
 
             this.OnTally(count, this.CurrentPlot);
-            this.SelectLastTree();
         }
 
         protected void OnTally(CountTree count, Plot plot)
         {
-            System.Diagnostics.Debug.Assert(plot != null);
+            if (plot == null) { throw new ArgumentNullException("plot"); }
             Tree tree = null;
-            if (Stratum.Method == CruiseMethods.FIX
-                || Stratum.Method == CruiseMethods.PNT)
+
+            var sg = count.SampleGroup;
+            if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
+            {
+                tree = plot.CreateNewTreeEntry(count, true);
+                tree.TreeCount = sg.SamplingFrequency;
+            }
+            else if (Stratum.Method == CruiseMethods.FIX
+            || Stratum.Method == CruiseMethods.PNT)
             {
                 tree = plot.CreateNewTreeEntry(count, true);
                 tree.TreeCount = 1;
-                this.Controller.ViewController.ShowCruiserSelection(tree);
+            }
+            else if (sg.Stratum.Is3P)
+            {
+                tree = TallyThreeP(plot, count);
             }
             else
             {
-                var sg = count.SampleGroup;
-                if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
-                {
-                    var newTree = plot.CreateNewTreeEntry(count, true);
-                    tree.TreeCount = 1;
-                    this.Controller.ViewController.ShowCruiserSelection(tree);
-
-                    newTree.TreeCount = sg.SamplingFrequency;
-                }
-                else
-                {
-                    if (sg.Stratum.Is3P)
-                    {
-                        tree = TallyThreeP(plot, count);
-                    }
-                    else
-                    {
-                        tree = TallyStandard(plot, count);
-                    }
-                }
+                tree = TallyStandard(plot, count);
             }
+
             if (tree != null)
             {
+                this.Controller.ViewController.ShowCruiserSelection(tree);
                 tree.TrySave();
                 plot.AddTree(tree);
                 SelectLastTree();
@@ -351,7 +343,7 @@ namespace FSCruiser.Core.DataEntry
             int? value = ViewController.AskKPI((int)sg.MinKPI, (int)sg.MaxKPI);
             if (value == null)
             {
-                return null; //invalid tally jump out
+                return null; //user didn't enter valid value
             }
             else
             {

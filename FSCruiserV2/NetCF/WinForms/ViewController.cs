@@ -193,6 +193,11 @@ namespace FSCruiser.WinForms
             MessageBox.Show("Insurance Tree");
         }
 
+        public override void SignalTally()
+        {
+            //System.Media.SoundPlayer
+        }
+
         #region IDisposable Members
 
         protected override void Dispose(bool disposing)
