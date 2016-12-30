@@ -83,7 +83,7 @@ namespace FSCruiser.WinForms
 
         public static DataGridTableStyle InitializeTreeColumns(this ITreeFieldProvider provider, EditableDataGrid grid)
         {
-            DataGridTableStyle tblStyle = new System.Windows.Forms.DataGridTableStyle() { MappingName = "TreeVM" };
+            DataGridTableStyle tblStyle = new System.Windows.Forms.DataGridTableStyle() { MappingName = "Tree" };
 
             int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
             int charWidth = MeasureTextWidth(grid, "0");
