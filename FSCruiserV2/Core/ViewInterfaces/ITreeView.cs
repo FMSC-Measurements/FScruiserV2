@@ -22,14 +22,11 @@ namespace FSCruiser.Core.ViewInterfaces
 
         void EndEdit();
 
-        void MoveLastTree();
-
         void MoveHomeField();
 
-        Tree UserAddTree();
+        void MoveLastTree();
 
-        //void UpdateSpeciesColumn(TreeVM tree);
-        //void UpdateSampleGroupColumn(TreeVM tree);
+        Tree UserAddTree();
     }
 
     public static class ITreeViewExtentions

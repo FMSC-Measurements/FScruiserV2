@@ -264,7 +264,7 @@ namespace FSCruiser.WinForms.DataEntry
             if (treeView != null)
             {
                 treeView.MoveLastTree();
-                treeView.MoveFirstEmptyCell();
+                treeView.MoveHomeField();
             }
 
             _previousLayout = this.FocusedLayout;
