@@ -4,6 +4,7 @@ using CruiseDAL.DataObjects;
 using FSCruiser.Core.Models;
 using FSCruiser.WinForms.Common;
 using FSCruiser.WinForms.DataEntry;
+using OpenNETCF.Media;
 
 namespace FSCruiser.WinForms
 {
@@ -22,25 +23,31 @@ namespace FSCruiser.WinForms
         #endregion static members
 
         FormCruiserSelection _cruiserSelectionView;
-
-        //private Dictionary<StratumDO, FormLogs> _logViews = new Dictionary<StratumDO, FormLogs>();
+        SoundPlayer _tallySoundPlayer;
 
         public ViewController()
         {
-            //this.PlatformType = //TODO implement ability to identify platform type
+            var filePath = System.IO.Path.Combine(GetExecutionDirectory(),"Sounds\\tally.wav");
+            using (var stream = new System.IO.FileStream(filePath, System.IO.FileMode.Open))
+            {
+                _tallySoundPlayer = new SoundPlayer(stream);
+            }
         }
 
-        //public FormLogs GetLogsView(StratumDO stratum)
-        //{
-        //    if (_logViews.ContainsKey(stratum))
-        //    {
-        //        return _logViews[stratum];
-        //    }
-        //    FormLogs logView = new FormLogs(this.ApplicationController, stratum.Stratum_CN.Value);
-        //    _logViews.Add(stratum, logView);
+        static string GetExecutionDirectory()
+        {
+            string name = System.Reflection.Assembly
+                .GetCallingAssembly()
+                .GetName().CodeBase;
 
-        //    return logView;
-        //}
+            //clean up path, in FF name is a URI
+            if (name.StartsWith(@"file:///"))
+            {
+                name = name.Replace("file:///", string.Empty);
+            }
+            string dir = System.IO.Path.GetDirectoryName(name);
+            return dir;
+        }
 
         public override void SignalInvalidAction()
         {
@@ -69,15 +76,6 @@ namespace FSCruiser.WinForms
                 return result;
             }
         }
-
-        //public override void ShowLogsView(StratumDO stratum, TreeVM tree)
-        //{
-        //    if (stratum == null)
-        //    {
-        //        MessageBox.Show("Invalid Action. Stratum not set.");
-        //    }
-        //    this.GetLogsView(stratum).ShowDialog(tree);
-        //}
 
         public override void ShowManageCruisers()
         {
@@ -195,7 +193,10 @@ namespace FSCruiser.WinForms
 
         public override void SignalTally()
         {
-            //System.Media.SoundPlayer
+            if (_tallySoundPlayer != null)
+            {
+                _tallySoundPlayer.Play();
+            }
         }
 
         #region IDisposable Members
@@ -203,10 +204,18 @@ namespace FSCruiser.WinForms
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if (disposing && _cruiserSelectionView != null)
+            if (disposing)
             {
-                this._cruiserSelectionView.Dispose();
-                this._cruiserSelectionView = null;
+                if (_cruiserSelectionView != null)
+                {
+                    this._cruiserSelectionView.Dispose();
+                    this._cruiserSelectionView = null;
+                }
+                if (_tallySoundPlayer != null)
+                {
+                    _tallySoundPlayer.Dispose();
+                    _tallySoundPlayer = null;
+                }
             }
         }
 

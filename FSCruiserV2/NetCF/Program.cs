@@ -27,7 +27,6 @@ namespace FSCruiser.WinForms
                 {
                     //not already running
 
-                    //PreJit();
                     using (ViewController viewController = new ViewController())
                     using (ApplicationController appController = new ApplicationController(viewController))
                     {
