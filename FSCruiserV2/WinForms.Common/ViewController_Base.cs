@@ -315,6 +315,8 @@ namespace FSCruiser.WinForms.Common
 
         public abstract void SignalTally();
 
+        public abstract void SignalPageChanged();
+
         public void ShowWait()
         {
             System.Threading.Interlocked.Increment(ref this._showWait);

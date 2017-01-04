@@ -5,6 +5,7 @@ using FSCruiser.Core.Models;
 using FSCruiser.WinForms.Common;
 using FSCruiser.WinForms.DataEntry;
 using OpenNETCF.Media;
+using System.IO;
 
 namespace FSCruiser.WinForms
 {
@@ -24,13 +25,19 @@ namespace FSCruiser.WinForms
 
         FormCruiserSelection _cruiserSelectionView;
         SoundPlayer _tallySoundPlayer;
+        SoundPlayer _pageChangedSoundPlayer;
 
         public ViewController()
         {
-            var filePath = System.IO.Path.Combine(GetExecutionDirectory(),"Sounds\\tally.wav");
-            using (var stream = new System.IO.FileStream(filePath, System.IO.FileMode.Open))
+            try
             {
-                _tallySoundPlayer = new SoundPlayer(stream);
+                var soundsDir = System.IO.Path.Combine(GetExecutionDirectory(), "Sounds");
+
+                _tallySoundPlayer = new SoundPlayer(new FileStream(soundsDir + "\\tally.wav", System.IO.FileMode.Open));
+                _pageChangedSoundPlayer = new SoundPlayer(new FileStream(soundsDir + "\\pageChange.wav", FileMode.Open));
+            }
+            catch 
+            {
             }
         }
 
@@ -196,6 +203,14 @@ namespace FSCruiser.WinForms
             if (_tallySoundPlayer != null)
             {
                 _tallySoundPlayer.Play();
+            }
+        }
+
+        public override void SignalPageChanged()
+        {
+            if (_pageChangedSoundPlayer != null)
+            {
+                _pageChangedSoundPlayer.Play();
             }
         }
 

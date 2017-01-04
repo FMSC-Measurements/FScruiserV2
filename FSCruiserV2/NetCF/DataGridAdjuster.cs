@@ -25,7 +25,7 @@ namespace FSCruiser.WinForms
         {
             // Default grid-level parameters
             grid.RowHeadersVisible = false;
-            grid.HomeColumnIndex = 0;
+            //grid.HomeColumnIndex = 0;
             //preferredRowHeight = 20;
             grid.Font = new Font("Courier New", 12.0F, FontStyle.Regular);
             grid.ForeColor = Color.Black;

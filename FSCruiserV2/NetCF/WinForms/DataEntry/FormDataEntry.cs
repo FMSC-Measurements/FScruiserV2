@@ -36,9 +36,11 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void OnFocusedLayoutChanged(object sender, EventArgs e)
         {
+            Controller.ViewController.SignalPageChanged();
             OnFocusedLayoutChangedInternal(sender, e);
             var view = FocusedLayout as ITreeView;
             _addTreeMI.Enabled = view != null && view.UserCanAddTrees;
+
         }
 
         protected override void OnKeyUp(KeyEventArgs e)

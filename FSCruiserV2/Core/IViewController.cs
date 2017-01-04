@@ -90,6 +90,8 @@ namespace FSCruiser.Core
 
         void SignalTally();
 
+        void SignalPageChanged();
+
         void ShowWait();
 
         void HideWait();

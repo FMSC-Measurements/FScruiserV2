@@ -409,13 +409,9 @@ namespace FSCruiser.Core.DataEntry
                 }
 
                 //save all the plot views, this will save all trees and plots in them
-                for (int i = 0; i < this.View.Layouts.Count; i++)
+                foreach (var view in View.Layouts.OfType<IPlotLayout>())
                 {
-                    IPlotLayout view = this.View.Layouts[i] as IPlotLayout;
-                    if (view != null)
-                    {
-                        view.ViewLogicController.Save();
-                    }
+                    view.ViewLogicController.Save();
                 }
 
                 if (!Unit.TrySaveCounts())
@@ -447,10 +443,9 @@ namespace FSCruiser.Core.DataEntry
         {
             bool validationPass = true;
             invalidViewIndex = -1;
-            for (int i = 0; i < this.View.Layouts.Count; i++)
+            foreach(var view in View.Layouts.OfType<ITreeView>())
             {
-                ITreeView view = this.View.Layouts[i] as ITreeView;
-                if (view != null && view.Trees != null)
+                if (view.Trees != null)
                 {
                     view.EndEdit();
                     var worker = new TreeValidationWorker(view.Trees);
@@ -458,7 +453,7 @@ namespace FSCruiser.Core.DataEntry
                     {
                         if (invalidViewIndex != -1)
                         {
-                            invalidViewIndex = i;
+                            invalidViewIndex = View.Layouts.IndexOf(view);
                         }
                         validationPass = false;
                     }

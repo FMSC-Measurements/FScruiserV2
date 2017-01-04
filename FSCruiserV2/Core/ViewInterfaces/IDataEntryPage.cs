@@ -9,5 +9,7 @@ namespace FSCruiser.Core.ViewInterfaces
         void HandleLoad();
 
         bool PreviewKeypress(KeyEventArgs ea);
+
+        void NotifyEnter();
     }
 }

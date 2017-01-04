@@ -749,6 +749,9 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
+        public void NotifyEnter()
+        { /*do nothing */}
+
         #endregion IDataEntryPage
 
         #region ITreeView

@@ -260,14 +260,12 @@ namespace FSCruiser.WinForms.DataEntry
                 }
             }
 
-            var treeView = FocusedLayout as ITreeView;
-            if (treeView != null)
+            var currentLayout = FocusedLayout;
+            if (currentLayout != null)
             {
-                treeView.MoveLastTree();
-                treeView.MoveHomeField();
+                currentLayout.NotifyEnter();
             }
-
-            _previousLayout = this.FocusedLayout;
+            _previousLayout = currentLayout;
         }
 
         #endregion Event Handlers
@@ -288,21 +286,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                if (PageContainer == null)
-                {
-                    if (_layouts.Count > 0)
-                    {
-                        return _layouts[0];
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return _layouts[PageContainer.SelectedIndex];
-                }
+                return _layouts[PageContainer.SelectedIndex];
             }
         }
 
@@ -377,7 +361,7 @@ namespace FSCruiser.WinForms.DataEntry
         public void GoToTallyPage()
         {
             if (this.PageContainer == null) { return; }
-            int pageIndex = this.PageContainer.TabPages.IndexOf(_tallyPage);
+            int pageIndex = PageContainer.TabPages.IndexOf(_tallyPage);
             this.GoToPageIndex(pageIndex);
         }
 
@@ -385,11 +369,9 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (PageContainer == null) { return; }
             if (i < 0 || i > PageContainer.TabPages.Count - 1)
-            {
-                i = 0;
-            }
+            { return; }
+
             PageContainer.SelectedIndex = i;
-            PageContainer.Focus();
         }
 
         public void TreeViewMoveLast()

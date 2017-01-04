@@ -390,6 +390,9 @@ namespace FSCruiser.WinForms
             return false;
         }
 
+        public void NotifyEnter()
+        { /*do nothing */}
+
         #endregion IDataEntryPage Members
     }
 }

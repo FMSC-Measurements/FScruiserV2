@@ -36,9 +36,6 @@ namespace FSCruiser.WinForms.DataEntry
             get { return _userCanAddTrees; }
             set { _userCanAddTrees = value; }
         }
-
-        public bool ViewLoading { get { return _viewLoading; } }
-
         public FormDataEntryLogic DataEntryController { get; set; }
 
         public IList<Tree> Trees
@@ -240,6 +237,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region ITreeView Members
 
+
+
         public bool ErrorColumnVisable
         {
             get
@@ -258,7 +257,6 @@ namespace FSCruiser.WinForms.DataEntry
                 }
             }
         }
-
         public bool LogColumnVisable
         {
             get
@@ -297,6 +295,36 @@ namespace FSCruiser.WinForms.DataEntry
             _viewLoading = false;
         }
 
+
+
+        public void DeleteSelectedTree()
+        {
+            Tree curTree = this._BS_trees.Current as Tree;
+            if (curTree == null)
+            {
+                MessageBox.Show("No Tree Selected");
+            }
+            else
+            {
+                if (DialogResult.Yes == MessageBox.Show("Delete Tree #" + curTree.TreeNumber.ToString() + "?",
+                    "Delete Tree?",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2))
+                {
+                    DataEntryController.Unit.DeleteTree(curTree);
+                    //curTree.Delete();
+                    //Controller.DeleteTree(curTree);
+                }
+            }
+        }
+
+        #endregion ITreeView Members
+
+        #region IDataEntryPage
+
+        public bool ViewLoading { get { return _viewLoading; } }
+
         public bool PreviewKeypress(KeyEventArgs ea)
         {
             if (ea.KeyCode == Keys.Escape)//esc
@@ -332,28 +360,13 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void DeleteSelectedTree()
+        public void NotifyEnter()
         {
-            Tree curTree = this._BS_trees.Current as Tree;
-            if (curTree == null)
-            {
-                MessageBox.Show("No Tree Selected");
-            }
-            else
-            {
-                if (DialogResult.Yes == MessageBox.Show("Delete Tree #" + curTree.TreeNumber.ToString() + "?",
-                    "Delete Tree?",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button2))
-                {
-                    DataEntryController.Unit.DeleteTree(curTree);
-                    //curTree.Delete();
-                    //Controller.DeleteTree(curTree);
-                }
-            }
+            
+            MoveLastTree();
+            MoveHomeField();
+            Edit();
         }
-
-        #endregion ITreeView Members
+        #endregion
     }
 }
