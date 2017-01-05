@@ -657,6 +657,11 @@ namespace FSCruiser.WinForms.DataEntry
             this.ViewLogicController.EndEdit();
         }
 
+        public void NotifyEnter()
+        {
+
+        }
+
         public void ViewEndEdit()
         {
             this._dataGrid.EndEdit();

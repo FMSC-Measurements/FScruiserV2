@@ -449,6 +449,11 @@ namespace FSCruiser.WinForms.DataEntry
             return newTree;
         }
 
+        public void NotifyEnter()
+        {
+
+        }
+
         #endregion ITreeView Members
 
         private void logToolStripMenuItem_Click(object sender, EventArgs e)
