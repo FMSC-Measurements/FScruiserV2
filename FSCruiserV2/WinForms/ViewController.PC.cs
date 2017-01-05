@@ -98,6 +98,16 @@ namespace FSCruiser.WinForms
             System.Media.SystemSounds.Beep.Play();
         }
 
+        public override void SignalPageChanged()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void SignalTally()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion IViewController Members
     }
 }
