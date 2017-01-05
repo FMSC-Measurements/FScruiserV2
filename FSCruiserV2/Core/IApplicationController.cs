@@ -13,7 +13,7 @@ namespace FSCruiser.Core
 
         ApplicationSettings Settings { get; }
 
-        CruiseDAL.DAL _cDal { get; }
+        CruiseDAL.DAL DataStore { get; }
 
         #endregion Properties
 

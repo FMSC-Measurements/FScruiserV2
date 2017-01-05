@@ -88,7 +88,7 @@ namespace FSCruiser.WinForms
             if (this.SampleGroup == null)
             {
                 this._populationSelectPanel.Enabled = true;
-                this._strataCB.DataSource = this.Controller._cDal.From<StType>().Read().ToList();
+                this._strataCB.DataSource = this.Controller.DataStore.From<StType>().Read().ToList();
             }
             else
             {
@@ -193,7 +193,7 @@ namespace FSCruiser.WinForms
             Cursor.Current = Cursors.WaitCursor;
             if (newStratum != null)
             {
-                List<SGType> list = this.Controller._cDal.From<SGType>()
+                List<SGType> list = this.Controller.DataStore.From<SGType>()
                     .Where("Stratum_CN = ?")
                     .Read(newStratum.Stratum_CN).ToList();
                 foreach (SGType sg in list)
@@ -229,7 +229,7 @@ namespace FSCruiser.WinForms
 
             if (sg != null)
             {
-                List<TreeDefaultValueDO> treeDefaults = this.Controller._cDal.From<TreeDefaultValueDO>()
+                List<TreeDefaultValueDO> treeDefaults = this.Controller.DataStore.From<TreeDefaultValueDO>()
                     .Where("PrimaryProduct = ?")
                     .Read(sg.PrimaryProduct).ToList();
                 foreach (TreeDefaultValueDO tdv in treeDefaults)

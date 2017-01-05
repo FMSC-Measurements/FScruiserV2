@@ -82,7 +82,7 @@ namespace FSCruiser.WinForms
 
         private void _makeBackupBTN_Click(object sender, EventArgs e)
         {
-            if (_controller._cDal != null)
+            if (_controller.DataStore != null)
             {
                 PushSettings();
                 _controller.PerformBackup(true);

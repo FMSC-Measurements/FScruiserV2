@@ -25,7 +25,7 @@ namespace FSCruiser.Core
 
         public IExceptionHandler ExceptionHandler { get; set; }
 
-        public CruiseDAL.DAL _cDal
+        public CruiseDAL.DAL DataStore
         {
             get
             {
@@ -146,10 +146,10 @@ namespace FSCruiser.Core
             ViewController.HandleFileStateChanged();
             if (this.FileLoadWorker.IsDone)
             {
-                var filePath = _cDal.Path;
-                var fileName = System.IO.Path.GetFileName(this._cDal.Path);
+                var filePath = DataStore.Path;
+                var fileName = System.IO.Path.GetFileName(this.DataStore.Path);
 
-                ViewController.EnableLogGrading = _cDal.ExecuteScalar<bool>("SELECT LogGradingEnabled FROM Sale Limit 1;");
+                ViewController.EnableLogGrading = DataStore.ExecuteScalar<bool>("SELECT LogGradingEnabled FROM Sale Limit 1;");
 
                 Settings.AddRecentProject(new RecentProject(fileName, filePath));
                 ApplicationSettings.Save();
@@ -163,7 +163,7 @@ namespace FSCruiser.Core
         public TreeDefaultValueDO CreateNewTreeDefaultValue(String pProd)
         {
             TreeDefaultValueDO newTDV = new TreeDefaultValueDO();
-            newTDV.DAL = this._cDal;
+            newTDV.DAL = this.DataStore;
             newTDV.PrimaryProduct = pProd;
             newTDV.LiveDead = "L";
 
@@ -189,10 +189,10 @@ namespace FSCruiser.Core
         public SampleGroupDO CreateNewSampleGroup(StratumDO stratum)
         {
             SampleGroupDO newSG = new SampleGroupDO();
-            newSG.DAL = this._cDal;
+            newSG.DAL = this.DataStore;
             newSG.Stratum = stratum;
-            newSG.UOM = this._cDal.ExecuteScalar("Select DefaultUOM FROM Sale;") as String;
-            //newSG.UOM = this._cDal.ReadSingleRow<SaleDO>("Sale", false, null).DefaultUOM;
+            newSG.UOM = this.DataStore.ExecuteScalar("Select DefaultUOM FROM Sale;") as String;
+            //newSG.UOM = this.DataStore.ReadSingleRow<SaleDO>("Sale", false, null).DefaultUOM;
 
             if (this.ViewController.ShowEditSampleGroup(newSG, true) == DialogResult.OK)
             {
@@ -210,7 +210,7 @@ namespace FSCruiser.Core
 
         private string GetBackupFileName(string backupDir, bool addTimeStamp)
         {
-            string originalFileName = System.IO.Path.GetFileName(this._cDal.Path);
+            string originalFileName = System.IO.Path.GetFileName(this.DataStore.Path);
 
             //regex disected
             //prefix (optional): "BACK_"
@@ -254,7 +254,7 @@ namespace FSCruiser.Core
             string backupDir;
             if (Settings.BackUpToCurrentDir || String.IsNullOrEmpty(Settings.BackupDir))
             {
-                backupDir = System.IO.Path.GetDirectoryName(this._cDal.Path);
+                backupDir = System.IO.Path.GetDirectoryName(this.DataStore.Path);
             }
             else
             {
@@ -280,7 +280,7 @@ namespace FSCruiser.Core
                 }
 
                 this.ViewController.ShowWait();
-                this._cDal.CopyTo(path, true);
+                this.DataStore.CopyTo(path, true);
             }
             catch (Exception e)
             {
@@ -297,20 +297,20 @@ namespace FSCruiser.Core
 
         public void LogTreeCountEdit(CountTreeDO countTree, long oldValue, long newValue)
         {
-            this._cDal.LogMessage(String.Format("Tree Count Edit: CT_CN={0}; PrevVal={1}; NewVal={2}", countTree.CountTree_CN, oldValue, newValue), "I");
+            this.DataStore.LogMessage(String.Format("Tree Count Edit: CT_CN={0}; PrevVal={1}; NewVal={2}", countTree.CountTree_CN, oldValue, newValue), "I");
         }
 
         public void LogSumKPIEdit(CountTreeDO countTree, long oldValue, long newValue)
         {
-            this._cDal.LogMessage(String.Format("SumKPI Edit: CT_CN={0}; PrevVal={1}; NewVal={2}", countTree.CountTree_CN, oldValue, newValue), "I");
+            this.DataStore.LogMessage(String.Format("SumKPI Edit: CT_CN={0}; PrevVal={1}; NewVal={2}", countTree.CountTree_CN, oldValue, newValue), "I");
         }
 
         private void OnApplicationClosing(object sender, CancelEventArgs e)
         {
             ApplicationSettings.Save();
-            if (this._cDal != null)
+            if (this.DataStore != null)
             {
-                this._cDal.Dispose();
+                this.DataStore.Dispose();
             }
         }
 

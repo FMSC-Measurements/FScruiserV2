@@ -91,7 +91,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             if (_speciesColumn != null)
             {
-                _speciesColumn.DataSource = AppController._cDal.From<TreeDefaultValueDO>().Read().ToList();
+                _speciesColumn.DataSource = AppController.DataStore.From<TreeDefaultValueDO>().Read().ToList();
             }
             if (_sgColumn != null)
             {

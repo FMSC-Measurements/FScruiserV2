@@ -81,15 +81,15 @@ namespace FSCruiser.WinForms
             }
             else
             {
-                var fileLoaded = Controller._cDal != null && Controller._cDal.Exists;
+                var fileLoaded = Controller.DataStore != null && Controller.DataStore.Exists;
                 this._dataEntryMI.Enabled = fileLoaded;
                 _cuttingUnitCB.Enabled = fileLoaded;
 
-                _fileNameTB.Text = (fileLoaded) ? 
-                    Controller._cDal.Path : String.Empty;
+                _fileNameTB.Text = (fileLoaded) ?
+                    Controller.DataStore.Path : String.Empty;
 
                 Text = (fileLoaded) ?
-                    ("FScruiser - " + System.IO.Path.GetFileName(Controller._cDal.Path))
+                    ("FScruiser - " + System.IO.Path.GetFileName(Controller.DataStore.Path))
                     : FSCruiser.Core.Constants.APP_TITLE;
 
                 UpdateCuttingUnits();
@@ -103,10 +103,10 @@ namespace FSCruiser.WinForms
 
         public IEnumerable<CuttingUnit> ReadCuttingUnits()
         {
-            if (Controller._cDal != null)
+            if (Controller.DataStore != null)
             {
                 yield return new CuttingUnit();
-                foreach (var unit in Controller._cDal.From<CuttingUnit>().Read())
+                foreach (var unit in Controller.DataStore.From<CuttingUnit>().Read())
                 {
                     yield return unit;
                 }

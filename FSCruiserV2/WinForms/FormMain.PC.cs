@@ -71,9 +71,9 @@ namespace FSCruiser.WinForms
             }
             else
             {
-                if (Controller._cDal != null && Controller._cDal.Exists)
+                if (Controller.DataStore != null && Controller.DataStore.Exists)
                 {
-                    var fileName = System.IO.Path.GetFileName(Controller._cDal.Path);
+                    var fileName = System.IO.Path.GetFileName(Controller.DataStore.Path);
                     this._dataEntryButton.Enabled = true;
                     Text = "FScruiser - " + fileName;
                 }

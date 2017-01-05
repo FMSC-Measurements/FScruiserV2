@@ -94,7 +94,7 @@ namespace FSCruiser.WinForms
 
         public override TreeDefaultValueDO ShowAddPopulation()
         {
-            if (this.ApplicationController._cDal == null)
+            if (this.ApplicationController.DataStore == null)
             {
                 MessageBox.Show("No File Selected");
                 return null;
@@ -110,7 +110,7 @@ namespace FSCruiser.WinForms
 
         public override TreeDefaultValueDO ShowAddPopulation(SampleGroupDO sg)
         {
-            if (this.ApplicationController._cDal == null)
+            if (this.ApplicationController.DataStore == null)
             {
                 MessageBox.Show("No File Selected");
                 return null;
@@ -159,7 +159,7 @@ namespace FSCruiser.WinForms
 
         public override DialogResult ShowEditTreeDefault(TreeDefaultValueDO tdv)
         {
-            using (FormEditTreeDefault view = new FormEditTreeDefault(ApplicationController._cDal))
+            using (FormEditTreeDefault view = new FormEditTreeDefault(ApplicationController.DataStore))
             {
                 return view.ShowDialog(tdv);
             }

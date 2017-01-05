@@ -87,7 +87,7 @@ namespace FSCruiser.WinForms.DataEntry
                 foreach (LogDO log in this._logs)
                 {
                     //log.Tree = this._currentTree;
-                    this.Controller._cDal.Save(log
+                    this.Controller.DataStore.Save(log
                         , FMSC.ORM.Core.SQL.OnConflictOption.Fail
                         , false);
                 }
@@ -100,7 +100,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         private LogDO AddLogRec()
         {
-            LogDO newLog = new LogDO(this.Controller._cDal);
+            LogDO newLog = new LogDO(this.Controller.DataStore);
             newLog.Tree_CN = _currentTree.Tree_CN;
             newLog.LogNumber = (GetHighestLogNum() + 1).ToString();
 

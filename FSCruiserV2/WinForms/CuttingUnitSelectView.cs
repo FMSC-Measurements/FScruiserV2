@@ -38,10 +38,10 @@ namespace FSCruiser.WinForms
 
         public IEnumerable<CuttingUnit> ReadCuttingUnits()
         {
-            if (Controller._cDal != null)
+            if (Controller.DataStore != null)
             {
                 yield return new CuttingUnit();
-                foreach (var unit in Controller._cDal.From<CuttingUnit>().Read())
+                foreach (var unit in Controller.DataStore.From<CuttingUnit>().Read())
                 {
                     yield return unit;
                 }

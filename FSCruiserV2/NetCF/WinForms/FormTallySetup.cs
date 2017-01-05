@@ -56,13 +56,13 @@ namespace FSCruiser.WinForms
             {
                 this._species_LBL.Visible = false;
                 this._speciesSelect_CB.Visible = false;
-                TallyDO t = this.Controller._cDal.From<TallyDO>()
+                TallyDO t = this.Controller.DataStore.From<TallyDO>()
                     .Join("CountTree", "USING (Tally_CN)")
                     .Where("SampleGroup_CN = ?")
                     .Read(sg.SampleGroup_CN).FirstOrDefault();
                 if (t == null)
                 {
-                    t = new TallyDO(this.Controller._cDal);
+                    t = new TallyDO(this.Controller.DataStore);
                     t.Description = sg.Code;
                 }
                 this.Tally = t;
@@ -76,13 +76,13 @@ namespace FSCruiser.WinForms
 
                 foreach (TreeDefaultValueDO tdv in sg.TreeDefaultValues)
                 {
-                    TallyDO t = this.Controller._cDal.From<TallyDO>()
+                    TallyDO t = this.Controller.DataStore.From<TallyDO>()
                         .Join("CountTree", "USING (Tally_CN)")
                         .Where("SampleGroup_CN = ? and TreeDefaultValue_CN = ?")
                         .Read(sg.SampleGroup_CN, tdv.TreeDefaultValue_CN).FirstOrDefault();
                     if (t == null)
                     {
-                        t = new TallyDO(this.Controller._cDal);
+                        t = new TallyDO(this.Controller.DataStore);
                         t.Description = tdv.Species;
                     }
                     tdv.Tag = t;
@@ -110,12 +110,12 @@ namespace FSCruiser.WinForms
                 try
                 {
                     Cursor.Current = Cursors.WaitCursor;
-                    this.Controller._cDal.BeginTransaction();
+                    this.Controller.DataStore.BeginTransaction();
                     if ((this.SampleGroup.TallyMethod & CruiseDAL.Enums.TallyMode.BySampleGroup) == CruiseDAL.Enums.TallyMode.BySampleGroup)
                     {
                         if (this.Tally.IsPersisted == false)
                         {
-                            TallyDO t = this.Controller._cDal.From<TallyDO>()
+                            TallyDO t = this.Controller.DataStore.From<TallyDO>()
                                 .Where("Description = ? and Hotkey = ?")
                                 .Read(this.Tally.Description
                                 , this.Tally.Hotkey).FirstOrDefault();
@@ -131,11 +131,11 @@ namespace FSCruiser.WinForms
                         From SampleGroup
                         INNER JOIN CuttingUnitStratum
                         ON SampleGroup.Stratum_CN = CuttingUnitStratum.Stratum_CN
-                        WHERE SampleGroup.SampleGroup_CN = {1};", this.Controller._cDal.User, this.SampleGroup.SampleGroup_CN);
-                        this.Controller._cDal.Execute(createCountsCommand);
+                        WHERE SampleGroup.SampleGroup_CN = {1};", this.Controller.DataStore.User, this.SampleGroup.SampleGroup_CN);
+                        this.Controller.DataStore.Execute(createCountsCommand);
                         string setTallyRefCommand = String.Format("UPDATE CountTree SET Tally_CN = {0} WHERE SampleGroup_CN = {1} AND ifnull(TreeDefaultValue_CN, 0) = 0",
                             this.Tally.Tally_CN, this.SampleGroup.SampleGroup_CN);
-                        this.Controller._cDal.Execute(setTallyRefCommand);
+                        this.Controller.DataStore.Execute(setTallyRefCommand);
                     }
                     else if ((this.SampleGroup.TallyMethod & CruiseDAL.Enums.TallyMode.BySpecies) == CruiseDAL.Enums.TallyMode.BySpecies)
                     {
@@ -146,8 +146,8 @@ namespace FSCruiser.WinForms
                         ON SampleGroup.Stratum_CN = CuttingUnitStratum.Stratum_CN
                         INNER JOIN SampleGroupTreeDefaultValue
                         ON SampleGroupTreeDefaultValue.SampleGroup_CN = SampleGroup.SampleGroup_CN
-                        WHERE SampleGroup.SampleGroup_CN = {1};", this.Controller._cDal.User, this.SampleGroup.SampleGroup_CN);
-                        this.Controller._cDal.Execute(creatCountsBySpeciesCommand);
+                        WHERE SampleGroup.SampleGroup_CN = {1};", this.Controller.DataStore.User, this.SampleGroup.SampleGroup_CN);
+                        this.Controller.DataStore.Execute(creatCountsBySpeciesCommand);
 
                         foreach (TreeDefaultValueDO tdv in this.SampleGroup.TreeDefaultValues)
                         {
@@ -160,7 +160,7 @@ namespace FSCruiser.WinForms
 
                             if (tally.IsPersisted == false)
                             {
-                                TallyDO t = this.Controller._cDal.From<TallyDO>()
+                                TallyDO t = this.Controller.DataStore.From<TallyDO>()
                                     .Where("Description = ? and Hotkey = ?")
                                     .Read(tally.Description, tally.Hotkey).FirstOrDefault();
                                 if (t != null) { tally = t; }
@@ -172,14 +172,14 @@ namespace FSCruiser.WinForms
 
                             string setTallyRefCommand = String.Format("UPDATE CountTree SET Tally_CN = {0} WHERE SampleGroup_CN = {1} AND TreeDefaultValue_CN = {2}",
                                 tally.Tally_CN, this.SampleGroup.SampleGroup_CN, tdv.TreeDefaultValue_CN);
-                            this.Controller._cDal.Execute(setTallyRefCommand);
+                            this.Controller.DataStore.Execute(setTallyRefCommand);
                         }
                     }
-                    this.Controller._cDal.CommitTransaction();
+                    this.Controller.DataStore.CommitTransaction();
                 }
                 catch (Exception ex)
                 {
-                    this.Controller._cDal.RollbackTransaction();
+                    this.Controller.DataStore.RollbackTransaction();
                     this.Controller.HandleNonCriticalException(ex, "Some thing went wrong while saving");
                 }
                 finally
