@@ -17,8 +17,6 @@ namespace FSCruiser.Core
 
         IList<CuttingUnit> CuttingUnits { get; }
 
-        CuttingUnit CurrentUnit { get; set; }
-
         #endregion Properties
 
         #region Methods

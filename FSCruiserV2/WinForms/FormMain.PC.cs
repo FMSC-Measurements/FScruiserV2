@@ -101,7 +101,6 @@ namespace FSCruiser.WinForms
             var unit = this.CuttingUnitSelectView.SelectedUnit;
             if (unit != null)
             {
-                Controller.CurrentUnit = unit;
                 Controller.ViewController.ShowDataEntry(this.CuttingUnitSelectView.SelectedUnit);
             }
         }

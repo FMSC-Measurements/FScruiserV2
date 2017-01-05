@@ -43,18 +43,6 @@ namespace FSCruiser.Core
             }
         }
 
-        CuttingUnit _currentUnit;
-
-        public CuttingUnit CurrentUnit
-        {
-            get { return _currentUnit; }
-            set
-            {
-                if (_currentUnit == value) { return; }
-                _currentUnit = value;
-                OnCurrentUnitChanged();
-            }
-        }
 
         public IViewController ViewController { get; protected set; }
 
@@ -178,10 +166,6 @@ namespace FSCruiser.Core
         }
 
         #endregion File
-
-        private void OnCurrentUnitChanged()
-        {
-        }
 
         #region add population
 
