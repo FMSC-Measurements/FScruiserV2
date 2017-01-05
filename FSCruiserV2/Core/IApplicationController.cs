@@ -15,8 +15,6 @@ namespace FSCruiser.Core
 
         CruiseDAL.DAL _cDal { get; }
 
-        IList<CuttingUnit> CuttingUnits { get; }
-
         #endregion Properties
 
         #region Methods

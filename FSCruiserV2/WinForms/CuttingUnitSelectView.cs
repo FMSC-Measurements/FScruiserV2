@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using System.Collections.Generic;
 
 namespace FSCruiser.WinForms
 {
@@ -35,42 +36,26 @@ namespace FSCruiser.WinForms
             this.Controller = controller;
         }
 
-        public void OnCuttingUnitsChanged()
+        public IEnumerable<CuttingUnit> ReadCuttingUnits()
         {
-            if (this.Controller.CuttingUnits != null)
+            if (Controller._cDal != null)
             {
-                var units = new CuttingUnit[Controller.CuttingUnits.Count + 1];
-                Controller.CuttingUnits.CopyTo(units, 1);
-                units[0] = new CuttingUnit();
-                this._BS_CuttingUnits.DataSource = units;
+                yield return new CuttingUnit();
+                foreach (var unit in Controller._cDal.From<CuttingUnit>().Read())
+                {
+                    yield return unit;
+                }
             }
             else
             {
-                this._BS_CuttingUnits.DataSource = new CuttingUnit[0];
+                yield break;
             }
-            //this._cuttingUnitCB.Update();
         }
 
-        //private void _cuttingUnitCB_SelectedValueChanged(object sender, EventArgs e)
-        //{
-        //    var unit = SelectedUnit;
-        //    if (unit != null)
-        //    {
-        //        var strata = unit.DAL.From<StratumDO>()
-        //           .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
-        //           .Where("CUST.CuttingUnit_CN = ?")
-        //           .Query(unit.CuttingUnit_CN);
-
-        //        var strataDescriptions = (from StratumDO st in strata
-        //                                  select st.GetDescriptionShort()).ToArray()
-
-        //        this._strataLB.DataSource = strataDescriptions;
-        //    }
-        //    else
-        //    {
-        //        this._strataLB.DataSource = null;
-        //    }
-        //}
+        public void HandleFileStateChanged()
+        {
+            this._BS_CuttingUnits.DataSource = ReadCuttingUnits().ToArray();
+        }
 
         private void _BS_CuttingUnits_CurrentChanged(object sender, EventArgs e)
         {

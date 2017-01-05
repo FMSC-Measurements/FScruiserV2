@@ -27,9 +27,6 @@ namespace FSCruiser.Core.Workers
             DataStore.LogMessage(string.Format("Opened By FSCruiser ({0})", Constants.FSCRUISER_VERSION), "I");
             this.UnitsOfWorkCompleated = 1;
             this.NotifyProgressChanged(null);
-
-            this.CuttingUnits = DataStore.From<CuttingUnit>().Read().ToList();
-            UnitsOfWorkCompleated = 2;
         }
 
         protected override void OnExceptionThrown(WorkerExceptionThrownEventArgs e)
@@ -39,7 +36,6 @@ namespace FSCruiser.Core.Workers
                 this.DataStore.Dispose();
             }
             this.DataStore = null;
-            this.CuttingUnits = null;
 
             base.OnExceptionThrown(e);
         }
@@ -63,7 +59,6 @@ namespace FSCruiser.Core.Workers
                     DataStore.Dispose();
                     DataStore = null;
                 }
-                CuttingUnits = null;
             }
         }
 

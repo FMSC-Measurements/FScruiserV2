@@ -34,15 +34,6 @@ namespace FSCruiser.Core
             }
         }
 
-        public IList<CuttingUnit> CuttingUnits
-        {
-            get
-            {
-                if (FileLoadWorker == null) { return null; }
-                else { return FileLoadWorker.CuttingUnits; }
-            }
-        }
-
 
         public IViewController ViewController { get; protected set; }
 

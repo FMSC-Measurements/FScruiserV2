@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using System.Collections.Generic;
 
 namespace FSCruiser.WinForms
 {
@@ -79,37 +81,39 @@ namespace FSCruiser.WinForms
             }
             else
             {
-                if (Controller._cDal != null && Controller._cDal.Exists)
-                {
-                    var fileName = System.IO.Path.GetFileName(Controller._cDal.Path);
-                    this._dataEntryMI.Enabled = true;
-                    Text = "FScruiser - " + fileName;
-                    this._fileNameTB.Text = Controller._cDal.Path;
-                }
-                else
-                {
-                    this._dataEntryMI.Enabled = false;
-                    Text = FSCruiser.Core.Constants.APP_TITLE;
-                    this._fileNameTB.Text = string.Empty;
-                }
+                var fileLoaded = Controller._cDal != null && Controller._cDal.Exists;
+                this._dataEntryMI.Enabled = fileLoaded;
+                _cuttingUnitCB.Enabled = fileLoaded;
+
+                _fileNameTB.Text = (fileLoaded) ? 
+                    Controller._cDal.Path : String.Empty;
+
+                Text = (fileLoaded) ?
+                    ("FScruiser - " + System.IO.Path.GetFileName(Controller._cDal.Path))
+                    : FSCruiser.Core.Constants.APP_TITLE;
+
                 UpdateCuttingUnits();
             }
         }
 
         void UpdateCuttingUnits()
         {
-            if (this.Controller.CuttingUnits != null)
+            _BS_cuttingUnits.DataSource = ReadCuttingUnits().ToArray();
+        }
+
+        public IEnumerable<CuttingUnit> ReadCuttingUnits()
+        {
+            if (Controller._cDal != null)
             {
-                var units = new CuttingUnit[Controller.CuttingUnits.Count + 1];
-                Controller.CuttingUnits.CopyTo(units, 1);
-                units[0] = new CuttingUnit();
-                this._BS_cuttingUnits.DataSource = units;
-                this._cuttingUnitCB.Enabled = true;
+                yield return new CuttingUnit();
+                foreach (var unit in Controller._cDal.From<CuttingUnit>().Read())
+                {
+                    yield return unit;
+                }
             }
             else
             {
-                this._BS_cuttingUnits.DataSource = new CuttingUnit[0];
-                this._cuttingUnitCB.Enabled = false;
+                yield break;
             }
         }
 

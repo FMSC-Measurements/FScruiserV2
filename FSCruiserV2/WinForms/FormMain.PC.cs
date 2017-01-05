@@ -82,7 +82,7 @@ namespace FSCruiser.WinForms
                     this._dataEntryButton.Enabled = false;
                     Text = FSCruiser.Core.Constants.APP_TITLE;
                 }
-                this.CuttingUnitSelectView.OnCuttingUnitsChanged();
+                CuttingUnitSelectView.HandleFileStateChanged();
             }
         }
 
