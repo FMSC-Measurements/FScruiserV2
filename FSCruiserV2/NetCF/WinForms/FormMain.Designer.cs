@@ -54,6 +54,7 @@ namespace FSCruiser.WinForms
             this._fileNameTB = new System.Windows.Forms.TextBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this._cuttingUnitCB = new System.Windows.Forms.ComboBox();
+            this._settingsMenuItem = new System.Windows.Forms.MenuItem();
             label1 = new System.Windows.Forms.Label();
             splitter1 = new System.Windows.Forms.Splitter();
             ((System.ComponentModel.ISupportInitialize)(this._BS_cuttingUnits)).BeginInit();
@@ -101,6 +102,7 @@ namespace FSCruiser.WinForms
             this._menu_MI.MenuItems.Add(this._about_MI);
             this._menu_MI.MenuItems.Add(this._manageCruisersMI);
             this._menu_MI.MenuItems.Add(this._recentFiles_MI);
+            this._menu_MI.MenuItems.Add(this._settingsMenuItem);
             this._menu_MI.Text = "Menu";
             this._menu_MI.Popup += new System.EventHandler(this._menu_MI_Popup);
             // 
@@ -220,6 +222,11 @@ namespace FSCruiser.WinForms
             this._cuttingUnitCB.Size = new System.Drawing.Size(165, 23);
             this._cuttingUnitCB.TabIndex = 3;
             // 
+            // menuItem1
+            // 
+            this._settingsMenuItem.Text = "Settings";
+            this._settingsMenuItem.Click += new System.EventHandler(this.settingsMenuItem_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -264,6 +271,7 @@ namespace FSCruiser.WinForms
         private System.Windows.Forms.MenuItem _dataEntryMI;
         private System.Windows.Forms.Panel _strataView;
         private System.Windows.Forms.MenuItem _recentFiles_MI;
+        private System.Windows.Forms.MenuItem _settingsMenuItem;
 
     }
 }

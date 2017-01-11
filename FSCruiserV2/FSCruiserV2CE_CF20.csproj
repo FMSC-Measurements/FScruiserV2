@@ -108,6 +108,10 @@
     <Compile Include="Core\Workers\Worker.cs" />
     <Compile Include="Core\Workers\WorkerExceptionThrownEventArgs.cs" />
     <Compile Include="Core\Workers\WorkerProgressChangedEventArgs.cs" />
+    <Compile Include="NetCF\KeysConverter.cs" />
+    <Compile Include="NetCF\WinForms\Controls\HotKeySelectControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="NetCF\WinForms\DataEntry\ControlTreeDataGrid.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -155,6 +159,12 @@
       <DependentUpon>FormDataEntry.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\TreeValidationWorker.cs" />
+    <Compile Include="NetCF\WinForms\FormSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NetCF\WinForms\FormSettings.Designer.cs">
+      <DependentUpon>FormSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="PlatformHelper.WinForms.cs" />
     <Compile Include="WinForms.Common\FixCNTForm.cs">
       <SubType>Form</SubType>
@@ -355,6 +365,9 @@
     <EmbeddedResource Include="NetCF\WinForms\FormBackupUtility.resx">
       <DependentUpon>FormBackupUtility.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NetCF\WinForms\FormSettings.resx">
+      <DependentUpon>FormSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FixCNTForm.resx">
       <DependentUpon>FixCNTForm.cs</DependentUpon>

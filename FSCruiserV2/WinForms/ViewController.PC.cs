@@ -100,12 +100,12 @@ namespace FSCruiser.WinForms
 
         public override void SignalPageChanged()
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void SignalTally()
         {
-            throw new NotImplementedException();
+            
         }
 
         #endregion IViewController Members

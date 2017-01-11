@@ -6,6 +6,7 @@ using CruiseDAL.DataObjects;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
 using System.Collections.Generic;
+using FSCruiser.NetCF.WinForms;
 
 namespace FSCruiser.WinForms
 {
@@ -235,6 +236,14 @@ namespace FSCruiser.WinForms
             if (tsmi == null) return;
 
             this.Controller.OpenFile(tsmi.FilePath);
+        }
+
+        private void settingsMenuItem_Click(object sender, EventArgs e)
+        {
+            using (FormSettings view = new FormSettings())
+            {
+                view.ShowDialog();
+            }
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using FSCruiser.Core.Models;
+using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace FSCruiser.Core
 {
@@ -10,7 +12,7 @@ namespace FSCruiser.Core
     public class ApplicationSettings
     {
         #region static properties
-
+        static KeysConverter _keyConverter = new KeysConverter();
         static ApplicationSettings _instance;
 
         public static ApplicationSettings Instance
@@ -59,6 +61,13 @@ namespace FSCruiser.Core
         public ApplicationSettings()
         {
             RecentProjects = new List<RecentProject>();
+
+            EnablePageChangeSound = true;
+            EnableTallySound = true;
+
+            UntallyKey = Keys.None;
+            JumpTreeTallyKey = Keys.Escape;
+
         }
 
         [XmlAttribute]
@@ -103,6 +112,40 @@ namespace FSCruiser.Core
 
         [XmlElement]
         public float DataGridFontSize { get; set; }
+
+        [XmlAttribute]
+        public bool EnableTallySound { get; set; }
+
+        [XmlAttribute]
+        public bool EnablePageChangeSound { get; set; }
+
+
+
+        public string UntallyKeyStr
+        {
+            get { return UntallyKey.ToString(); }
+            set
+            {
+                UntallyKey = ParseKey(value, Keys.None);
+            }
+        }
+
+        public string JumpTreeTallyKeyStr
+        {
+            get { return JumpTreeTallyKey.ToString(); }
+            set
+            {
+                JumpTreeTallyKey = ParseKey(value, Keys.Escape);
+            }
+        }
+
+        [XmlIgnore]
+        public Keys UntallyKey { get; set; }
+
+
+        [XmlIgnore]
+        public Keys JumpTreeTallyKey { get; set; }
+
 
         public static void Initialize()
         {
@@ -150,6 +193,18 @@ namespace FSCruiser.Core
             using (StreamReader reader = new StreamReader(path))
             {
                 return (ApplicationSettings)serializer.Deserialize(reader);
+            }
+        }
+
+        static Keys ParseKey(String value, Keys defVal)
+        {
+            try
+            {
+                return (Keys)_keyConverter.ConvertFromString(value);
+            }
+            catch
+            {
+                return defVal;
             }
         }
 

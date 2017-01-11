@@ -6,6 +6,7 @@ using FSCruiser.WinForms.Common;
 using FSCruiser.WinForms.DataEntry;
 using OpenNETCF.Media;
 using System.IO;
+using FSCruiser.Core;
 
 namespace FSCruiser.WinForms
 {
@@ -200,7 +201,9 @@ namespace FSCruiser.WinForms
 
         public override void SignalTally()
         {
-            if (_tallySoundPlayer != null)
+            var settings = ApplicationSettings.Instance;
+            if (settings.EnableTallySound 
+                && _tallySoundPlayer != null)
             {
                 _tallySoundPlayer.Play();
             }
@@ -208,7 +211,9 @@ namespace FSCruiser.WinForms
 
         public override void SignalPageChanged()
         {
-            if (_pageChangedSoundPlayer != null)
+            var settings = ApplicationSettings.Instance;
+            if (settings.EnablePageChangeSound 
+                && _pageChangedSoundPlayer != null)
             {
                 _pageChangedSoundPlayer.Play();
             }
