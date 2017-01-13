@@ -456,6 +456,15 @@ namespace FSCruiser.Core.DataEntry
             return newTree;
         }
 
+        public bool ResequenceTreeNumbers()
+        {
+            if (!EnsureCurrentPlotWorkable()
+                || EnsureCurrentPlotNotEmpty())
+            { return false; }
+
+            CurrentPlot.ResequenceTreeNumbers();
+        }
+
         public void SelectFirstPlot()
         {
             this._BS_Plots.MoveFirst();

@@ -372,9 +372,16 @@ namespace FSCruiser.WinForms
 
         public bool PreviewKeypress(KeyEventArgs key)
         {
-            if (key.KeyCode == Keys.Escape)//esc
+            if(key.KeyData == Keys.None) {return false;}
+
+            if (key.KeyData == ApplicationSettings.Instance.JumpTreeTallyKey)//esc
             {
                 this.DataEntryController.View.GotoTreePage();
+                return true;
+            }
+            else if (key.KeyData == ApplicationSettings.Instance.UntallyKey)
+            {
+                OnUntallyButtonClicked(null, null);
                 return true;
             }
             else
@@ -386,8 +393,8 @@ namespace FSCruiser.WinForms
                     DisplayTallyPanel(StrataHotKeyLookup[keyChar]);
                     return true;
                 }
+                return false;
             }
-            return false;
         }
 
         public void NotifyEnter()

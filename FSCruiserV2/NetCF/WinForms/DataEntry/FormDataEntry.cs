@@ -43,10 +43,10 @@ namespace FSCruiser.WinForms.DataEntry
 
         }
 
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
-            OnKeyUpInternal(e);
-        }
+        //protected override void OnKeyUp(KeyEventArgs e)
+        //{
+        //    OnKeyUpInternal(e);
+        //}
 
         private void _addTreeMI_Click(object sender, EventArgs e)
         {

@@ -45,6 +45,7 @@ namespace FSCruiser.WinForms
             this._about_MI = new System.Windows.Forms.MenuItem();
             this._manageCruisersMI = new System.Windows.Forms.MenuItem();
             this._recentFiles_MI = new System.Windows.Forms.MenuItem();
+            this._settingsMenuItem = new System.Windows.Forms.MenuItem();
             this._dataEntryMI = new System.Windows.Forms.MenuItem();
             this.OpenButton = new System.Windows.Forms.Button();
             this._BS_cuttingUnits = new System.Windows.Forms.BindingSource(this.components);
@@ -54,7 +55,6 @@ namespace FSCruiser.WinForms
             this._fileNameTB = new System.Windows.Forms.TextBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this._cuttingUnitCB = new System.Windows.Forms.ComboBox();
-            this._settingsMenuItem = new System.Windows.Forms.MenuItem();
             label1 = new System.Windows.Forms.Label();
             splitter1 = new System.Windows.Forms.Splitter();
             ((System.ComponentModel.ISupportInitialize)(this._BS_cuttingUnits)).BeginInit();
@@ -147,6 +147,11 @@ namespace FSCruiser.WinForms
             // 
             this._recentFiles_MI.Text = "Recent Files";
             // 
+            // _settingsMenuItem
+            // 
+            this._settingsMenuItem.Text = "Settings";
+            this._settingsMenuItem.Click += new System.EventHandler(this.settingsMenuItem_Click);
+            // 
             // _dataEntryMI
             // 
             this._dataEntryMI.Text = "Data Entry";
@@ -221,11 +226,6 @@ namespace FSCruiser.WinForms
             this._cuttingUnitCB.Name = "_cuttingUnitCB";
             this._cuttingUnitCB.Size = new System.Drawing.Size(165, 23);
             this._cuttingUnitCB.TabIndex = 3;
-            // 
-            // menuItem1
-            // 
-            this._settingsMenuItem.Text = "Settings";
-            this._settingsMenuItem.Click += new System.EventHandler(this.settingsMenuItem_Click);
             // 
             // FormMain
             // 

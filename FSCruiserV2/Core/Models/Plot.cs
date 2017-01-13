@@ -139,6 +139,19 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public void ResequenceTreeNumbers()
+        {
+            if (Trees != null)
+            {
+                int curTreeNumber = 1;
+                foreach (var tree in Trees)
+                {
+                    tree.TreeNumber = curTreeNumber;
+                    curTreeNumber++;
+                }
+            }
+        }
+
         public bool IsTreeNumberAvalible(long treeNumber)
         {
             foreach (Tree tree in this.Trees)

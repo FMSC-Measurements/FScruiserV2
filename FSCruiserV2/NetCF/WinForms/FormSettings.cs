@@ -26,6 +26,8 @@ namespace FSCruiser.NetCF.WinForms
 
             _jumpTreeTallyHotKeySelect.KeyInfo = settings.JumpTreeTallyKeyStr;
 
+            _resequencePlotTreesHotKeySelectControl.KeyInfo = settings.ResequencePlotTreesKeyStr;
+
 
             Refresh();
         }
@@ -61,8 +63,8 @@ namespace FSCruiser.NetCF.WinForms
                 var settings = ApplicationSettings.Instance;
 
                 settings.UntallyKeyStr = _untallyHotKeySelect.KeyInfo;
-
                 settings.JumpTreeTallyKeyStr = _jumpTreeTallyHotKeySelect.KeyInfo;
+                settings.ResequencePlotTreesKeyStr = _resequencePlotTreesHotKeySelectControl.KeyInfo;
 
                 settings.EnablePageChangeSound = _enablePageChangeSound.Checked;
                 settings.EnableTallySound = _enableTallySound.Checked;

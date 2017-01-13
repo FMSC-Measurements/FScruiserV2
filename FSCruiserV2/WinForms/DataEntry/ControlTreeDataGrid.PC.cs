@@ -346,15 +346,22 @@ namespace FSCruiser.WinForms.DataEntry
 
         public bool PreviewKeypress(KeyEventArgs ea)
         {
-            switch (ea.KeyCode)
+            if (ea.KeyData != Keys.None) { return false; }
+
+            var settings = ApplicationSettings.Instance;
+
+            if (ea.KeyData == settings.JumpTreeTallyKey)
             {
-                case Keys.Escape: //esc
-                    {
-                        this.DataEntryController.View.GoToTallyPage();
-                        return true;
-                    }
-                default:
-                    { return false; }
+                this.DataEntryController.View.GoToTallyPage();
+                return true;
+            }
+            else if (ea.KeyData == settings.AddTreeKey)
+            {
+                return UserAddTree() != null;
+            }
+            else
+            {
+                return false;
             }
         }
 

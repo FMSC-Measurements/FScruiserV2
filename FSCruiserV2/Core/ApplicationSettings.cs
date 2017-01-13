@@ -65,11 +65,21 @@ namespace FSCruiser.Core
             EnablePageChangeSound = true;
             EnableTallySound = true;
 
+            
+#if NetCF
+            AddPlotKey = Keys.None;
+#else
+            AddPlotKey = Keys.F3;
+#endif
+
+            AddPlotKey = Keys.Add;
+            ResequencePlotTreesKey = Keys.None;
             UntallyKey = Keys.None;
             JumpTreeTallyKey = Keys.Escape;
 
         }
 
+        #region backup settings
         [XmlAttribute]
         public bool BackUpToCurrentDir { get; set; }
 
@@ -92,6 +102,7 @@ namespace FSCruiser.Core
 
         [XmlAttribute]
         public BackUpMethod BackUpMethod { get; set; }
+        #endregion 
 
         [XmlAttribute]
         public bool EnableCruiserPopup { get; set; }
@@ -113,38 +124,81 @@ namespace FSCruiser.Core
         [XmlElement]
         public float DataGridFontSize { get; set; }
 
+
+        #region sound settings
         [XmlAttribute]
         public bool EnableTallySound { get; set; }
 
         [XmlAttribute]
         public bool EnablePageChangeSound { get; set; }
+        #endregion
 
-
-
-        public string UntallyKeyStr
+        #region hotkey settings
+        [XmlAttribute]
+        public string AddPlotKeyStr
         {
-            get { return UntallyKey.ToString(); }
+            get { return _keyConverter.ConvertToString(AddPlotKey); }
             set
             {
-                UntallyKey = ParseKey(value, Keys.None);
+                AddPlotKey = ParseKey(value, Keys.None);
             }
         }
 
+        [XmlAttribute]
+        public string AddTreeKeyStr
+        {
+            get { return _keyConverter.ConvertToString(AddTreeKey); }
+            set
+            {
+                AddTreeKey = ParseKey(value, Keys.None);
+            }
+        }
+
+        [XmlAttribute]
         public string JumpTreeTallyKeyStr
         {
-            get { return JumpTreeTallyKey.ToString(); }
+            get { return _keyConverter.ConvertToString(JumpTreeTallyKey); }
             set
             {
                 JumpTreeTallyKey = ParseKey(value, Keys.Escape);
             }
         }
 
+        [XmlAttribute]
+        public string ResequencePlotTreesKeyStr
+        {
+            get { return _keyConverter.ConvertToString(ResequencePlotTreesKey); }
+            set
+            {
+                ResequencePlotTreesKey = ParseKey(value, Keys.None);
+            }
+        }
+
+        [XmlAttribute]
+        public string UntallyKeyStr
+        {
+            get { return _keyConverter.ConvertToString(UntallyKey); }
+            set
+            {
+                UntallyKey = ParseKey(value, Keys.None);
+            }
+        }
+
+        [XmlIgnore]
+        public Keys AddPlotKey { get; set; }
+
+        [XmlIgnore]
+        public Keys AddTreeKey { get; set; }
+
+        [XmlIgnore]
+        public Keys ResequencePlotTreesKey { get; set; }
+
         [XmlIgnore]
         public Keys UntallyKey { get; set; }
 
-
         [XmlIgnore]
         public Keys JumpTreeTallyKey { get; set; }
+        #endregion
 
 
         public static void Initialize()

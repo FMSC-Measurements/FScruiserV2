@@ -196,22 +196,24 @@ namespace FSCruiser.WinForms.DataEntry
             base.OnKeyDown(e);
             if (e.Handled) { return; }
 
-            // HACK when the escape key is pressed on some controls
-            // the device will make a invalid key press sound if OnKeyDown is not handled
-            // we handle the key press in OnKeyUp
-            if (e.KeyCode == Keys.Escape)
-            {
-                e.Handled = true;
-            }
-        }
-
-        protected void OnKeyUpInternal(KeyEventArgs e)
-        {
-            base.OnKeyUp(e);
-            if (e.Handled) { return; }
-
             e.Handled = this.LogicController.HandleKeyPress(e);
+
+            //// HACK when the escape key is pressed on some controls
+            //// the device will make a invalid key press sound if OnKeyDown is not handled
+            //// we handle the key press in OnKeyUp
+            //if (e.KeyCode == Keys.Escape)
+            //{
+            //    e.Handled = true;
+            //}
         }
+
+        //protected void OnKeyUpInternal(KeyEventArgs e)
+        //{
+        //    base.OnKeyUp(e);
+        //    if (e.Handled) { return; }
+
+        //    e.Handled = this.LogicController.HandleKeyPress(e);
+        //}
 
         #endregion Overrides
 

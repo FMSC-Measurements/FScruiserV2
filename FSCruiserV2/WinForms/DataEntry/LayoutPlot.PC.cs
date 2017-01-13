@@ -464,23 +464,24 @@ namespace FSCruiser.WinForms.DataEntry
         public bool PreviewKeypress(KeyEventArgs ea)
         {
             if (_viewLoading) { return false; }
-            switch (ea.KeyCode)
+            if (ea.KeyData == Keys.None) { return false; }
+
+            var settings = ApplicationSettings.Instance;
+
+            if (ea.KeyData == settings.AddPlotKey)
             {
-                case Keys.Add:
-                    {
-                        this._addPlotButton_Click(null, null);
-                        return true;
-                    }
-                case Keys.Escape:
-                    {
-                        //#warning not implemented
-                        return false;
-                        //IsGridExpanded = !IsGridExpanded;
-                        //return true;
-                    }
-                default:
-                    return false;
+                this._addPlotButton_Click(null, null);
+                return true;
             }
+            else if (ea.KeyData == settings.AddTreeKey)
+            {
+                return ViewLogicController.UserAddTree() != null;
+            }
+            else if (ea.KeyData == settings.ResequencePlotTreesKey)
+            {
+                return ViewLogicController.ResequenceTreeNumbers();
+            }
+            else { return false; }
         }
 
         public void MakeSGList(IEnumerable<SampleGroup> sampleGroups, Panel container)

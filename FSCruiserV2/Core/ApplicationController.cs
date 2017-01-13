@@ -285,7 +285,6 @@ namespace FSCruiser.Core
             catch (Exception e)
             {
                 this.HandleException(e, "Could not perform back up.\r\nMake sure you have permission to write to the directory selected", false, true);
-                //this.HandleNonCriticalException(e, "oops. Something went wrong creating a backup.\r\n Try exiting FSCruiser and manualy creating a copy of the file");
             }
             finally
             {
