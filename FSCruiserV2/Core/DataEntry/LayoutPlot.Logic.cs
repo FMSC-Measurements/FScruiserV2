@@ -93,9 +93,11 @@ namespace FSCruiser.Core.DataEntry
             if (pInfo != null)
             {
                 this.EndEdit();
-                if (!pInfo.ValidateTrees())
+                string error;
+                if (!pInfo.ValidatePlot(out error))
                 {
-                    return this.View.AskContinueOnCurrnetPlotTreeError();
+                    return ViewController.AskYesNo(error
+                        , "Continue?", MessageBoxIcon.Question, true);
                 }
             }
             return true;
@@ -463,6 +465,7 @@ namespace FSCruiser.Core.DataEntry
             { return false; }
 
             CurrentPlot.ResequenceTreeNumbers();
+            return true;
         }
 
         public void SelectFirstPlot()

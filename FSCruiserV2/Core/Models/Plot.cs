@@ -266,6 +266,22 @@ namespace FSCruiser.Core.Models
             worker.TrySaveAllAsync();
         }
 
+        public bool ValidatePlot(out string message)
+        {
+            message = string.Empty;
+            if (!IsNull && (Trees != null && Trees.Count == 0))
+            {
+                message = "Plot contains no trees";
+                return false;
+            }
+            if (!ValidateTrees())
+            {
+                message = "Error(s) found on tree records in current plot";
+                return false;
+            }
+            return true;
+        }
+
         public bool ValidateTrees()
         {
             if (Trees == null) { return true; }

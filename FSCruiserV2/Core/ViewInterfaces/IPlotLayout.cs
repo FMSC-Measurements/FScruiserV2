@@ -14,9 +14,6 @@ namespace FSCruiser.Core.ViewInterfaces
 
         #endregion properties
 
-        /// <returns>true if user choses to continue</returns>
-        bool AskContinueOnCurrnetPlotTreeError();
-
         void ShowNoPlotSelectedMessage();
 
         void ShowNullPlotMessage();
