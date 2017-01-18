@@ -65,9 +65,9 @@ namespace FSCruiser.Core.Models
         [TestMethod]
         public void MakeSampleSelecterTest_100PCT()
         {
-            var st = new StratumModel() { Method = "100PCT" };
+            var st = new Stratum() { Method = "100PCT" };
 
-            var sg = new SampleGroupModel()
+            var sg = new SampleGroup()
             {
                 Stratum = st,
                 SampleSelectorState = "something",
@@ -83,11 +83,11 @@ namespace FSCruiser.Core.Models
         [TestMethod]
         public void MakeSampleSelecterTest_STR()
         {
-            var st = new StratumModel() { Method = "STR" };
+            var st = new Stratum() { Method = "STR" };
 
             //test: if sampling freq is 0
             //then Sampler is null
-            var sg = new SampleGroupModel()
+            var sg = new SampleGroup()
             {
                 Stratum = st,
                 SamplingFrequency = 0,
@@ -101,7 +101,7 @@ namespace FSCruiser.Core.Models
             //AND SampleSelectorType is not defined
             //THEN Sampler is not null
             //AND is of type Blocked
-            sg = new SampleGroupModel()
+            sg = new SampleGroup()
             {
                 Stratum = st,
                 SamplingFrequency = 1,
@@ -119,7 +119,7 @@ namespace FSCruiser.Core.Models
             //AND SampleSelectorType is Systematic
             //THEN Sampler is not null
             //AND is of type Systematic
-            sg = new SampleGroupModel()
+            sg = new SampleGroup()
             {
                 Stratum = st,
                 SamplingFrequency = 1,
@@ -145,11 +145,11 @@ namespace FSCruiser.Core.Models
 
         void MakeSampleSelecterTest_FCM_PCM_helper(string method)
         {
-            var st = new StratumModel() { Method = method };
+            var st = new Stratum() { Method = method };
 
             //test: if sampling freq is 0
             //then Sampler is null
-            var sg = new SampleGroupModel()
+            var sg = new SampleGroup()
             {
                 Stratum = st,
                 SamplingFrequency = 0
@@ -162,7 +162,7 @@ namespace FSCruiser.Core.Models
             //AND SampleSelectorType is not defined
             //THEN Sampler is not null
             //AND is of type Systematic
-            sg = new SampleGroupModel()
+            sg = new SampleGroup()
             {
                 Stratum = st,
                 SamplingFrequency = 1,
@@ -181,12 +181,12 @@ namespace FSCruiser.Core.Models
         [TestMethod]
         public void MakeSampleSelecterTest_3P()
         {
-            var st = new StratumModel()
+            var st = new Stratum()
             {
                 Method = "3P"
             };
 
-            var sg = new SampleGroupModel()
+            var sg = new SampleGroup()
             {
                 Stratum = st,
                 SampleSelectorState = null,
@@ -202,12 +202,12 @@ namespace FSCruiser.Core.Models
         [TestMethod]
         public void MakeSampleSelecterTest_F3P()
         {
-            var st = new StratumModel()
+            var st = new Stratum()
             {
                 Method = "F3P"
             };
 
-            var sg = new SampleGroupModel()
+            var sg = new SampleGroup()
             {
                 Stratum = st,
                 SampleSelectorState = null,
@@ -223,12 +223,12 @@ namespace FSCruiser.Core.Models
         [TestMethod]
         public void MakeSampleSelecterTest_P3P()
         {
-            var st = new StratumModel()
+            var st = new Stratum()
             {
                 Method = "P3P"
             };
 
-            var sg = new SampleGroupModel()
+            var sg = new SampleGroup()
             {
                 Stratum = st,
                 SampleSelectorState = null,

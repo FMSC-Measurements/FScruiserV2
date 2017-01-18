@@ -119,6 +119,7 @@ namespace FScruiser.Core.Workers.Test
             worker.Starting += ((x, y) => callCount = 1);
 
             worker.Start();
+            worker.Wait();
 
             Assert.AreEqual(1, callCount);
         }
