@@ -632,11 +632,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region IPlotLayout
 
-        public bool AskContinueOnCurrnetPlotTreeError()
-        {
-            return this.AppController.ViewController.AskYesNo("Error(s) found on tree records in current plot, Would you like to continue?", "Continue?", MessageBoxIcon.Question, true);
-        }
-
         public void BindPlotData(BindingSource plotBS)
         {
             this._plotSelectCB.DataSource = plotBS;
@@ -732,21 +727,29 @@ namespace FSCruiser.WinForms.DataEntry
         public bool PreviewKeypress(KeyEventArgs ea)
         {
             if (_viewLoading) { return false; }
-            switch (ea.KeyCode)
+            if (ea.KeyData == Keys.None) { return false; }
+
+            var settings = ApplicationSettings.Instance;
+
+            if(ea.KeyData == settings.AddPlotKey)
             {
-                case Keys.Add:
-                    {
-                        this._addPlotButton_Click(null, null);
-                        return true;
-                    }
-                case Keys.Escape:
-                    {
-                        IsGridExpanded = !IsGridExpanded;
-                        return true;
-                    }
-                default:
-                    return false;
+                this._addPlotButton_Click(null, null);
+                return true;
             }
+            else if(ea.KeyData == settings.AddTreeKey)
+            {
+                return ViewLogicController.UserAddTree() != null;
+            }
+            else if (ea.KeyData == settings.ResequencePlotTreesKey)
+            {
+                return ViewLogicController.ResequenceTreeNumbers();
+            }
+            else if (ea.KeyData == Keys.Escape)
+            {
+                IsGridExpanded = !IsGridExpanded;
+                return true;
+            }
+            else { return false; }
         }
 
         public void NotifyEnter()

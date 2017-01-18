@@ -21,18 +21,18 @@ namespace FSCruiser.WinForms.DataEntry
             InitializeCommon(controller, unit);
         }
 
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.F3)
-            {
-                this.LogicController.HandleAddTreeClick();
-                e.Handled = true;
-            }
-            else
-            {
-                OnKeyUpInternal(e);
-            }
-        }
+        //protected override void OnKeyUp(KeyEventArgs e)
+        //{
+        //    if (e.KeyData == Keys.F3)
+        //    {
+        //        this.LogicController.HandleAddTreeClick();
+        //        e.Handled = true;
+        //    }
+        //    else
+        //    {
+        //        OnKeyUpInternal(e);
+        //    }
+        //}
 
         protected void OnFocusedLayoutChanged(object sender, EventArgs e)
         {
