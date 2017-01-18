@@ -457,7 +457,7 @@
       <Project>{66B57265-EED3-49D7-B3B7-68CDE1061085}</Project>
       <Name>FMSC.Controls_CF20</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FMSC.Sampling\FMSC.Sampling\FMSC.Sampling_CF20.csproj">
+    <ProjectReference Include="..\FMSC.Sampling\src\FMSC.Sampling\FMSC.Sampling_CF20.csproj">
       <Project>{932C2341-A331-4B7C-8BC9-9D3491F1821B}</Project>
       <Name>FMSC.Sampling_CF20</Name>
     </ProjectReference>

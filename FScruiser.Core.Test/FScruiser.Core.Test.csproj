@@ -72,7 +72,7 @@
       <Project>{83CCFC7F-D667-4550-B335-B48C2F67A207}</Project>
       <Name>FMSC.Controls.VS08</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FMSC.Sampling\FMSC.Sampling\FMSC.Sampling_FF35.csproj">
+    <ProjectReference Include="..\FMSC.Sampling\src\FMSC.Sampling\FMSC.Sampling_FF35.csproj">
       <Project>{4097B6D6-D317-4169-9219-43E1AC4DC1F7}</Project>
       <Name>FMSC.Sampling_FF35</Name>
     </ProjectReference>
