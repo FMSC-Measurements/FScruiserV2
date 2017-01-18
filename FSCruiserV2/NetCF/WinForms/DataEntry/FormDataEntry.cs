@@ -5,6 +5,7 @@ using FSCruiser.Core;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.Common;
+using FSCruiser.NetCF.WinForms;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -80,5 +81,14 @@ namespace FSCruiser.WinForms.DataEntry
         {
             this.LogicController.HandleShowHideErrorCol();
         }
+
+        private void _settingsMI_Click(object sender, EventArgs e)
+        {
+            using (var view = new FormSettings())
+            {
+                view.ShowDialog();
+            }
+        }
+
     }
 }

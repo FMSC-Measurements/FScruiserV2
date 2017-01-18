@@ -33,10 +33,11 @@
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this._deleteRowButton = new System.Windows.Forms.MenuItem();
-            this._showHideErrorColMI = new System.Windows.Forms.MenuItem();
             this._limitingDistanceMI = new System.Windows.Forms.MenuItem();
             this._editCruisersMI = new System.Windows.Forms.MenuItem();
+            this._showHideErrorColMI = new System.Windows.Forms.MenuItem();
             this._showHideLogColMI = new System.Windows.Forms.MenuItem();
+            this._settingsMI = new System.Windows.Forms.MenuItem();
             this._addTreeMI = new System.Windows.Forms.MenuItem();
             this._pageContainer = new System.Windows.Forms.TabControl();
             ((System.ComponentModel.ISupportInitialize)(this._BS_TDV)).BeginInit();
@@ -58,6 +59,7 @@
             this.menuItem1.MenuItems.Add(this._editCruisersMI);
             this.menuItem1.MenuItems.Add(this._showHideErrorColMI);
             this.menuItem1.MenuItems.Add(this._showHideLogColMI);
+            this.menuItem1.MenuItems.Add(this._settingsMI);
             this.menuItem1.Text = "Menu";
             this.menuItem1.Popup += new System.EventHandler(this.menuItem1_Popup);
             // 
@@ -65,11 +67,6 @@
             // 
             this._deleteRowButton.Text = "&Delete Tree";
             this._deleteRowButton.Click += new System.EventHandler(this._deleteTreeBTN_Click);
-            // 
-            // _showHideErrorColMI
-            // 
-            this._showHideErrorColMI.Text = "&Show/Hide Error Message Col.";
-            this._showHideErrorColMI.Click += new System.EventHandler(this.showHideErrorMessages_Click);
             // 
             // _limitingDistanceMI
             // 
@@ -81,10 +78,20 @@
             this._editCruisersMI.Text = "&Edit Cruisers";
             this._editCruisersMI.Click += new System.EventHandler(this._editCruisersMI_Click);
             // 
+            // _showHideErrorColMI
+            // 
+            this._showHideErrorColMI.Text = "&Show/Hide Error Message Col.";
+            this._showHideErrorColMI.Click += new System.EventHandler(this.showHideErrorMessages_Click);
+            // 
             // _showHideLogColMI
             // 
             this._showHideLogColMI.Text = "S&how/Hide Log Column";
             this._showHideLogColMI.Click += new System.EventHandler(this._showHideLogColMI_Click);
+            // 
+            // _settingsMI
+            // 
+            this._settingsMI.Text = "Settings";
+            this._settingsMI.Click += new System.EventHandler(this._settingsMI_Click);
             // 
             // _addTreeMI
             // 
@@ -98,16 +105,16 @@
             this._pageContainer.Location = new System.Drawing.Point(0, 0);
             this._pageContainer.Name = "_pageContainer";
             this._pageContainer.SelectedIndex = 0;
-            this._pageContainer.Size = new System.Drawing.Size(752, 432);
+            this._pageContainer.Size = new System.Drawing.Size(240, 268);
             this._pageContainer.TabIndex = 0;
             // 
             // FormDataEntry
             // 
-            this.Controls.Add(_pageContainer);
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(240, 268);
+            this.Controls.Add(this._pageContainer);
             this.Menu = this.mainMenu1;
             this.MinimizeBox = false;
             this.Name = "FormDataEntry";
@@ -129,6 +136,7 @@
         private System.Windows.Forms.MenuItem _showHideLogColMI;
         private System.Windows.Forms.MenuItem _addTreeMI;
         private System.Windows.Forms.TabControl _pageContainer;
+        private System.Windows.Forms.MenuItem _settingsMI;
         
     }
 }
