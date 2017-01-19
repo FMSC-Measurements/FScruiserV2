@@ -218,7 +218,7 @@ namespace FSCruiser.WinForms
         {
             _recentFiles_MI.MenuItems.Clear();
 
-            foreach (RecentProject rp in Controller.Settings.RecentProjects)
+            foreach (RecentProject rp in ApplicationSettings.Instance.RecentProjects)
             {
                 var mi = new RecentFilesMenuItem()
                 {

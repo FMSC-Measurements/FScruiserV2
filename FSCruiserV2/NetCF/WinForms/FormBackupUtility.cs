@@ -36,12 +36,14 @@ namespace FSCruiser.WinForms
         {
             base.OnLoad(e);
 
-            this._RB_useCDOption.Checked = _controller.Settings.BackUpToCurrentDir;
-            this._RB_useAlternate.Checked = !_controller.Settings.BackUpToCurrentDir;
+            var settings = ApplicationSettings.Instance;
 
-            this._backupOnLeaveUnitCB.Checked = (_controller.Settings.BackUpMethod == BackUpMethod.LeaveUnit);
+            this._RB_useCDOption.Checked = settings.BackUpToCurrentDir;
+            this._RB_useAlternate.Checked = !settings.BackUpToCurrentDir;
 
-            _backupFileLBL.Text = _controller.Settings.BackupDir;
+            this._backupOnLeaveUnitCB.Checked = (settings.BackUpMethod == BackUpMethod.LeaveUnit);
+
+            _backupFileLBL.Text = settings.BackupDir;
 
             OnRadioButtonsChanged();
         }
@@ -54,9 +56,11 @@ namespace FSCruiser.WinForms
 
         void PushSettings()
         {
-            this._controller.Settings.BackUpToCurrentDir = _RB_useCDOption.Checked;
-            this._controller.Settings.BackupDir = _backupFileLBL.Text;
-            this._controller.Settings.BackUpMethod = (_backupOnLeaveUnitCB.Checked) ? BackUpMethod.LeaveUnit : BackUpMethod.None;
+            var settings = ApplicationSettings.Instance;
+
+            settings.BackUpToCurrentDir = _RB_useCDOption.Checked;
+            settings.BackupDir = _backupFileLBL.Text;
+            settings.BackUpMethod = (_backupOnLeaveUnitCB.Checked) ? BackUpMethod.LeaveUnit : BackUpMethod.None;
         }
 
         protected override void OnClosing(CancelEventArgs e)

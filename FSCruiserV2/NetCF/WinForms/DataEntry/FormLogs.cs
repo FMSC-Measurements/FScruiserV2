@@ -5,6 +5,7 @@ using CruiseDAL.DataObjects;
 using FMSC.Controls;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -120,7 +121,8 @@ namespace FSCruiser.WinForms.DataEntry
             }
             catch (Exception)
             {
-                e.Cancel = !this.Controller.ViewController.AskYesNo("Opps, logs weren't saved. Would you like to abort?", "", MessageBoxIcon.None);
+                e.Cancel = !DialogService.AskYesNo("Opps, logs weren't saved. Would you like to abort?"
+                    , String.Empty);
             }
         }
 

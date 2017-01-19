@@ -53,7 +53,7 @@ namespace FSCruiser.WinForms.DataEntry
             DataGridAdjuster.InitializeGrid(this);
             DataGridTableStyle tableStyle = DataEntryController.Unit.InitializeTreeColumns(this);
 
-            controller.Settings.CruisersChanged += new EventHandler(Settings_CruisersChanged);
+            ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
 
             this.AllowUserToAddRows = false;//don't allow down arrow to add tree
             this.SIP = sip;
@@ -83,7 +83,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             if (_initialsColoumn != null)
             {
-                _initialsColoumn.DataSource = this.Controller.Settings.Cruisers.ToArray();
+                _initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
             }
         }
 
@@ -96,7 +96,7 @@ namespace FSCruiser.WinForms.DataEntry
             if (e.Column == _sgColumn)
             {
                 var newSG = e.Value as SampleGroupDO;
-                e.Cancel = !tree.HandleSampleGroupChanging(newSG, this);
+                e.Cancel = !tree.HandleSampleGroupChanging(newSG);
 
                 //this.DataEntryController.HandleSampleGroupChanging(curTree, e.Value as SampleGroupDO, out cancel);
             }
@@ -108,7 +108,7 @@ namespace FSCruiser.WinForms.DataEntry
             else if (e.Column == _stratumColumn)
             {
                 var newSt = e.Value as StratumDO;
-                e.Cancel = !tree.HandleStratumChanging(newSt, this);
+                e.Cancel = !tree.HandleStratumChanging(newSt);
 
                 //this.DataEntryController.HandleStratumChanging(tree, e.Value as StratumDO, out cancel);
                 //this.HandleStratumChanging(currTree, e.Value as StratumDO, out cancel);
@@ -181,7 +181,7 @@ namespace FSCruiser.WinForms.DataEntry
             if (_viewLoading
                 || this.UserCanAddTrees == false) { return null; }
 
-            var newTree = DataEntryController.Unit.UserAddTree(DataEntryController.ViewController);
+            var newTree = DataEntryController.Unit.UserAddTree();
 
             if (newTree != null)
             {
@@ -238,7 +238,7 @@ namespace FSCruiser.WinForms.DataEntry
                 }
                 try
                 {
-                    Controller.Settings.CruisersChanged -= Settings_CruisersChanged;
+                    ApplicationSettings.Instance.CruisersChanged -= Settings_CruisersChanged;
                 }
                 catch (NullReferenceException) { }
             }
@@ -373,7 +373,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this._initialsColoumn != null)
             {
-                this._initialsColoumn.DataSource = this.Controller.Settings.Cruisers.ToArray();
+                this._initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
             }
         }
 

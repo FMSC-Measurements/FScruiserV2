@@ -77,7 +77,6 @@
     <Compile Include="Core\Models\RecentProject.cs" />
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
-    <Compile Include="Core\ViewInterfaces\IView.cs" />
     <Compile Include="Core\Workers\CancelWorkerException.cs" />
     <Compile Include="Core\Workers\FileLoadWorker.cs" />
     <Compile Include="Core\Workers\IWorker.cs" />
@@ -241,7 +240,6 @@
       <DependentUpon>LayoutTreeBased.cs</DependentUpon>
     </Compile>
     <Compile Include="NetCF\DataGridAdjuster.cs" />
-    <Compile Include="Core\IApplicationController.cs" />
     <Compile Include="Core\ViewInterfaces\ITreeView.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="NetCF\WinForms\ViewController.cs" />
@@ -433,6 +431,10 @@
     <ProjectReference Include="..\FMSC.Util\FMSC.Utility\FMSC.Utility_CF20.csproj">
       <Project>{2B5BA2D4-7D46-4BF3-A775-2A0F849BE92B}</Project>
       <Name>FMSC.Utility_CF20</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FScruiser.Core\FScruiser.Core_CF20.csproj">
+      <Project>{C78E1A49-9F49-45E6-86A4-13C2F22E8450}</Project>
+      <Name>FScruiser.Core_CF20</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />

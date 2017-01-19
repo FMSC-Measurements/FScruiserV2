@@ -144,8 +144,12 @@ namespace FSCruiser.WinForms.DataEntry
             _blockTBClick = true;
 
             int? initialValue = (_plot.AverageHeight <= 0) ? (int?)null : (int?)_plot.AverageHeight;
-            _viewController.NumPadDialog.ShowDialog(0, 999, initialValue, true);
-            _plot.AverageHeight = (uint)_viewController.NumPadDialog.UserEnteredValue.GetValueOrDefault();
+
+            using (var numPad = new FormNumPad())
+            {
+                numPad.ShowDialog(0, 999, initialValue, true);
+                _plot.AverageHeight = (uint)numPad.UserEnteredValue.GetValueOrDefault();
+            }
 
             //this.AverageHgt = (int)(Controller.ShowNumericValueInput(0, 999, (this.AverageHgt <= 0) ? (int?)null : (int?)this.AverageHgt, true) ?? -1);
             _plot.KPI = _plot.CalculateKPI();
@@ -158,8 +162,13 @@ namespace FSCruiser.WinForms.DataEntry
             _blockTBClick = true;
 
             int? initialValue = (_plot.TreeCount <= 0) ? (int?)null : (int?)_plot.TreeCount;
-            _viewController.NumPadDialog.ShowDialog(0, 999, initialValue, true);
-            _plot.TreeCount = (uint)_viewController.NumPadDialog.UserEnteredValue.GetValueOrDefault();
+
+            using (var numpad = new FormNumPad())
+            {
+                numpad.ShowDialog(0, 999, initialValue, true);
+                _plot.TreeCount = (uint)numpad.UserEnteredValue.GetValueOrDefault();
+            }
+
             //this.TreeCount = (int)(Controller.ShowNumericValueInput(0, 999, (this.TreeCount <= 0) ? (int?)null : (int?)this.TreeCount, true) ?? -1);
             _plot.KPI = _plot.CalculateKPI();
             _blockTBClick = false;

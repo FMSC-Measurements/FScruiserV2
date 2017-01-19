@@ -9,6 +9,7 @@ using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using Microsoft.WindowsCE.Forms;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -304,7 +305,7 @@ namespace FSCruiser.WinForms.DataEntry
             Stratum = stratum;
             this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController, dataEntryController.ViewController);
 
-            dataEntryController.Controller.Settings.CruisersChanged += new EventHandler(Settings_CruisersChanged);
+            ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
 
             InitializeComponent();
             InitializePlotNavIcons();
@@ -506,7 +507,7 @@ namespace FSCruiser.WinForms.DataEntry
             if (e.Column == _sgColumn)
             {
                 var newSG = e.Value as SampleGroupDO;
-                tree.HandleSampleGroupChanging(newSG, this);
+                tree.HandleSampleGroupChanging(newSG);
 
                 //this.HandleSampleGroupChanging(tree, e.Value as SampleGroupDO, out cancel);
             }
@@ -523,7 +524,7 @@ namespace FSCruiser.WinForms.DataEntry
                     if (tree.TreeNumber != newTreeNum
                     && !this.ViewLogicController.CurrentPlot.IsTreeNumberAvalible(newTreeNum))
                     {
-                        this.ShowMessage("Tree Number already exists");
+                        DialogService.ShowMessage("Tree Number already exists");
                         e.Cancel = true;
                     }
                 }

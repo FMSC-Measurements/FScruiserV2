@@ -74,14 +74,14 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public override DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage)
+        public override bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage)
         {
             using (FormLimitingDistance view = new FormLimitingDistance(baf, isVariableRadius))
             {
                 var result = view.ShowDialog();
                 logMessage = view.Report;
 
-                return result;
+                return result == DialogResult.OK;
             }
         }
 
@@ -150,23 +150,23 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public override DialogResult ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit)
+        public override bool ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit)
         {
             using (FormEditSampleGroup view = new FormEditSampleGroup())
             {
-                return view.ShowDialog(sg, allowEdit);
+                return view.ShowDialog(sg, allowEdit) == DialogResult.OK;
             }
         }
 
-        public override DialogResult ShowEditTreeDefault(TreeDefaultValueDO tdv)
+        public override bool ShowEditTreeDefault(TreeDefaultValueDO tdv)
         {
             using (FormEditTreeDefault view = new FormEditTreeDefault(ApplicationController.DataStore))
             {
-                return view.ShowDialog(tdv);
+                return view.ShowDialog(tdv) == DialogResult.OK;
             }
         }
 
-        public override DialogResult ShowOpenCruiseFileDialog(out string fileName)
+        public override bool ShowOpenCruiseFileDialog(out string fileName)
         {
             using (FMSC.Controls.OpenFileDialogRedux fileDialog = new FMSC.Controls.OpenFileDialogRedux())
             {
@@ -180,7 +180,7 @@ namespace FSCruiser.WinForms
                 {
                     fileName = null;
                 }
-                return result;
+                return result == DialogResult.OK;
             }
         }
 
