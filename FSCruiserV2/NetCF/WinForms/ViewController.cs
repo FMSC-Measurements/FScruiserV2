@@ -64,7 +64,7 @@ namespace FSCruiser.WinForms
 
         public override void ShowCruiserSelection(Tree tree)
         {
-            if (this.ApplicationController.Settings.EnableCruiserPopup)
+            if (ApplicationSettings.Instance.EnableCruiserPopup)
             {
                 if (_cruiserSelectionView == null)
                 {

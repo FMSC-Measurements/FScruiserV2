@@ -2,7 +2,7 @@
 
 namespace FSCruiser.Core.ViewInterfaces
 {
-    public interface IDataEntryPage : IView
+    public interface IDataEntryPage 
     {
         bool ViewLoading { get; }
 

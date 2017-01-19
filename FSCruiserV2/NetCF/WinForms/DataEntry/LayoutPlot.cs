@@ -27,9 +27,17 @@ namespace FSCruiser.WinForms.DataEntry
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+                try
+                {
+                    ApplicationSettings.Instance.CruisersChanged -= Settings_CruisersChanged;
+                }
+                catch (NullReferenceException) { }
             }
             base.Dispose(disposing);
         }
@@ -296,6 +304,8 @@ namespace FSCruiser.WinForms.DataEntry
             Stratum = stratum;
             this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController, dataEntryController.ViewController);
 
+            dataEntryController.Controller.Settings.CruisersChanged += new EventHandler(Settings_CruisersChanged);
+
             InitializeComponent();
             InitializePlotNavIcons();
 
@@ -342,8 +352,10 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _logsColumn.Click += this.LogsClicked;
             }
-
-            HandleCruisersChanged();
+            if (this._initialsColoumn != null)
+            {
+                this._initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
+            }
 
             this.Dock = DockStyle.Fill;
             this.Parent = parent;
@@ -352,6 +364,8 @@ namespace FSCruiser.WinForms.DataEntry
 
             this.ViewLogicController.UpdateCurrentPlot();
         }
+
+        
 
         void InitializeTallyPanel()
         {
@@ -837,11 +851,11 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void HandleCruisersChanged()
+        void Settings_CruisersChanged(object sender, EventArgs e)
         {
             if (this._initialsColoumn != null)
             {
-                this._initialsColoumn.DataSource = this.AppController.Settings.Cruisers.ToArray();
+                this._initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
             }
         }
 

@@ -25,7 +25,7 @@ namespace FSCruiser.WinForms
             //}
         }
 
-        public override DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage)
+        public override bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage)
         {
             throw new NotImplementedException();
         }
@@ -35,12 +35,12 @@ namespace FSCruiser.WinForms
             throw new NotImplementedException();
         }
 
-        public override DialogResult ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit)
+        public override bool ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit)
         {
             throw new NotImplementedException();
         }
 
-        public override DialogResult ShowEditTreeDefault(TreeDefaultValueDO tdv)
+        public override bool ShowEditTreeDefault(TreeDefaultValueDO tdv)
         {
             throw new NotImplementedException();
         }
@@ -60,7 +60,7 @@ namespace FSCruiser.WinForms
             throw new NotImplementedException();
         }
 
-        public override System.Windows.Forms.DialogResult ShowOpenCruiseFileDialog(out string fileName)
+        public override bool ShowOpenCruiseFileDialog(out string fileName)
         {
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
@@ -74,7 +74,7 @@ namespace FSCruiser.WinForms
                 {
                     fileName = null;
                 }
-                return result;
+                return result == DialogResult.OK;
             }
         }
 

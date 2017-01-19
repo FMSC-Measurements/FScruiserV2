@@ -3,17 +3,16 @@ using FSCruiser.Core.Models;
 
 namespace FSCruiser.Core.ViewInterfaces
 {
-    public interface ITreeView : IDataEntryPage
+    public interface ITreeView
     {
         bool UserCanAddTrees { get; set; }
 
+        //String[] VisableFields { get; }
         IList<Tree> Trees { get; }
 
         bool ErrorColumnVisable { get; set; }
 
         bool LogColumnVisable { get; set; }
-
-        void HandleEnableLogGradingChanged();
 
         void DeleteSelectedTree();
 

@@ -11,7 +11,7 @@ namespace FSCruiser.Core
 
         IViewController ViewController { get; }
 
-        ApplicationSettings Settings { get; }
+        //ApplicationSettings Settings { get; }
 
         CruiseDAL.DAL DataStore { get; }
 

@@ -67,38 +67,14 @@
   <ItemGroup>
     <Compile Include="Core\ApplicationController.cs" />
     <Compile Include="Core\ApplicationSettings.cs" />
-    <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LimitingDistanceCalculator.cs" />
     <Compile Include="Core\ExceptionHandler.cs" />
-    <Compile Include="Core\Exceptions.cs" />
     <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="Core\IExceptionHandler.cs" />
     <Compile Include="Core\LoadCuttingUnitWorker.cs" />
-    <Compile Include="Core\Models\CountTree.cs" />
-    <Compile Include="Core\Models\CuttingUnit.cs" />
     <Compile Include="Core\Models\DataModelExtensions.cs" />
-    <Compile Include="Core\Models\FixCNTPlot.cs" />
-    <Compile Include="Core\Models\FixCNTStratum.cs" />
-    <Compile Include="Core\Models\FixCNTTallyBucket.cs" />
-    <Compile Include="Core\Models\FixCNTTallyClass.cs" />
-    <Compile Include="Core\Models\FixCNTTallyPopulation.cs" />
-    <Compile Include="Core\Models\Interfaces\ILogFieldProvider.cs" />
-    <Compile Include="Core\Models\Interfaces\ITreeContaningModel.cs" />
-    <Compile Include="Core\Models\Interfaces\ITreeFieldProvider.cs" />
-    <Compile Include="Core\Models\LogHeightClass.cs" />
-    <Compile Include="Core\Models\LogRule.cs" />
-    <Compile Include="Core\Models\Plot.cs" />
-    <Compile Include="Core\Models\Plot3PPNT.cs" />
-    <Compile Include="Core\Models\PlotStratum.cs" />
     <Compile Include="Core\Models\RecentProject.cs" />
-    <Compile Include="Core\Models\RegionLogInfo.cs" />
-    <Compile Include="Core\Models\Sale.cs" />
-    <Compile Include="Core\Models\SampleGroup.cs" />
-    <Compile Include="Core\Models\Stratum.cs" />
-    <Compile Include="Core\Models\TallyHistoryCollection.cs" />
-    <Compile Include="Core\Models\Tree.cs" />
-    <Compile Include="Core\SaveTreesWorker.cs" />
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
     <Compile Include="Core\ViewInterfaces\IView.cs" />
@@ -158,7 +134,6 @@
     <Compile Include="NetCF\WinForms\DataEntry\FormDataEntry.Designer.cs">
       <DependentUpon>FormDataEntry.cs</DependentUpon>
     </Compile>
-    <Compile Include="Core\TreeValidationWorker.cs" />
     <Compile Include="NetCF\WinForms\FormSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -265,15 +240,10 @@
     <Compile Include="NetCF\WinForms\DataEntry\LayoutTreeBased.Designer.cs">
       <DependentUpon>LayoutTreeBased.cs</DependentUpon>
     </Compile>
-    <Compile Include="Core\Models\Cruiser.cs" />
     <Compile Include="NetCF\DataGridAdjuster.cs" />
     <Compile Include="Core\IApplicationController.cs" />
     <Compile Include="Core\ViewInterfaces\ITreeView.cs" />
-    <Compile Include="Core\IViewController.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
-    <Compile Include="Core\Models\SubPopInfo.cs" />
-    <Compile Include="Core\Models\TallyAction.cs" />
-    <Compile Include="Core\Models\TallySettingsDO.cs" />
     <Compile Include="NetCF\WinForms\ViewController.cs" />
     <Compile Include="WinForms.Common\FormManageCruisers.cs">
       <SubType>Form</SubType>
@@ -434,7 +404,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\FSCruiser.Core.cd" />
-    <None Include="Core\Models\FMSC.Core.Models.cd" />
     <None Include="Properties\DataSources\FSCruiser.Core.DataEntry.LimitingDistanceCalculator.datasource" />
     <None Include="Properties\DataSources\FSCruiser.Core.Models.Plot3PPNT.datasource" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />

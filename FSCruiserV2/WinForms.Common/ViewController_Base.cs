@@ -119,28 +119,6 @@ namespace FSCruiser.WinForms.Common
             return logView;
         }
 
-        //public void HandleCuttingUnitDataLoaded()
-        //{
-        //    lock (_dataEntrySyncLock)
-        //    {
-        //        if (_dataEntryView != null)
-        //        {
-        //            _dataEntryView.HandleCuttingUnitDataLoaded();
-        //        }
-        //    }
-        //}
-
-        public void HandleCruisersChanged()
-        {
-            lock (_dataEntrySyncLock)
-            {
-                if (_dataEntryView != null)
-                {
-                    _dataEntryView.HandleCruisersChanged();
-                }
-            }
-        }
-
         public void HandleFileStateChanged()
         {
             if (this.MainView != null)
@@ -173,11 +151,11 @@ namespace FSCruiser.WinForms.Common
         public virtual void ShowCruiserSelection(Tree tree)
         { }
 
-        public abstract System.Windows.Forms.DialogResult ShowEditSampleGroup(CruiseDAL.DataObjects.SampleGroupDO sg, bool allowEdit);
+        public abstract bool ShowEditSampleGroup(CruiseDAL.DataObjects.SampleGroupDO sg, bool allowEdit);
 
-        public abstract System.Windows.Forms.DialogResult ShowEditTreeDefault(CruiseDAL.DataObjects.TreeDefaultValueDO tdv);
+        public abstract bool ShowEditTreeDefault(CruiseDAL.DataObjects.TreeDefaultValueDO tdv);
 
-        public abstract System.Windows.Forms.DialogResult ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);
+        public abstract bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);
 
         public void ShowLogsView(Stratum stratum, Tree tree)
         {
@@ -190,7 +168,7 @@ namespace FSCruiser.WinForms.Common
 
         public abstract void ShowManageCruisers();
 
-        public abstract System.Windows.Forms.DialogResult ShowOpenCruiseFileDialog(out string fileName);
+        public abstract bool ShowOpenCruiseFileDialog(out string fileName);
 
         public void ShowDataEntry(CuttingUnit unit)
         {
@@ -225,7 +203,7 @@ namespace FSCruiser.WinForms.Common
         //    return this.NumPadDialog.UserEnteredValue;
         //}
 
-        public DialogResult ShowPlotInfo(Plot plot, PlotStratum stratum, bool isNewPlot)
+        public bool ShowPlotInfo(Plot plot, PlotStratum stratum, bool isNewPlot)
         {
             System.Diagnostics.Debug.Assert(plot != null);
             System.Diagnostics.Debug.Assert(stratum != null);
@@ -238,7 +216,7 @@ namespace FSCruiser.WinForms.Common
                     view.Owner = this._dataEntryView;
                     view.StartPosition = FormStartPosition.CenterParent;
 #endif
-                    return view.ShowDialog(plot, stratum, isNewPlot);
+                    return view.ShowDialog(plot, stratum, isNewPlot) == DialogResult.OK;
                 }
             }
             else
@@ -249,7 +227,7 @@ namespace FSCruiser.WinForms.Common
                     view.Owner = this._dataEntryView;
                     view.StartPosition = FormStartPosition.CenterParent;
 #endif
-                    return view.ShowDialog(plot, stratum, isNewPlot);
+                    return view.ShowDialog(plot, stratum, isNewPlot) == DialogResult.OK;
                 }
             }
         }

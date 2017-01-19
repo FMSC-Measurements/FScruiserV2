@@ -11,10 +11,13 @@ namespace FSCruiser.Core
 
         public ICruiserSelectionView View { get; protected set; }
 
+        public ApplicationSettings Settings { get; set; }
+
         public Tree Tree { get; set; }
 
         public FormCruiserSelectionLogic(IApplicationController controller, ICruiserSelectionView view)
         {
+            Settings = ApplicationSettings.Instance;
             this._controller = controller;
             this.View = view;
         }
@@ -27,7 +30,7 @@ namespace FSCruiser.Core
             this.View.StratumText = "Stratum: " + Tree.Stratum.GetDescriptionShort();
             this.View.SampleGroupText = "Sg: " + Tree.SampleGroup.GetDescriptionShort();
 
-            _cruisers = _controller.Settings.Cruisers.ToArray();
+            _cruisers = Settings.Cruisers.ToArray();
             this.View.UpdateCruiserList(_cruisers);
         }
 

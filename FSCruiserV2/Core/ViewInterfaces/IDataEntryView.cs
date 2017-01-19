@@ -4,7 +4,7 @@ using FSCruiser.Core.Models;
 
 namespace FSCruiser.Core.ViewInterfaces
 {
-    public interface IDataEntryView : IView
+    public interface IDataEntryView
     {
         CuttingUnit Unit { get; }
 
@@ -20,7 +20,7 @@ namespace FSCruiser.Core.ViewInterfaces
 
         void HandleEnableLogGradingChanged();
 
-        void HandleCruisersChanged();
+        //void HandleCruisersChanged();
 
         void GotoTreePage();
 

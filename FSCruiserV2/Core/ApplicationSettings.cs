@@ -9,7 +9,7 @@ using System.ComponentModel;
 namespace FSCruiser.Core
 {
     [Serializable]
-    public class ApplicationSettings
+    public class ApplicationSettings 
     {
         #region static properties
         static KeysConverter _keyConverter = new KeysConverter();
@@ -57,6 +57,8 @@ namespace FSCruiser.Core
         List<Cruiser> _cruisers;
 
         public List<RecentProject> RecentProjects { get; set; }
+
+        
 
         public ApplicationSettings()
         {
@@ -321,6 +323,8 @@ namespace FSCruiser.Core
 
         //}
 
+        public event EventHandler CruisersChanged;
+
         public void AddCruiser(string initials)
         {
             if (this.Cruisers == null)
@@ -333,6 +337,13 @@ namespace FSCruiser.Core
         public void RemoveCruiser(Cruiser cruiser)
         {
             this.Cruisers.Remove(cruiser);
+        }
+
+        public void NotifyCruisersChanged()
+        {
+            var cruisersChanged = CruisersChanged;
+            if(cruisersChanged != null)
+            { cruisersChanged(this, null); }
         }
 
         #endregion Cruisers

@@ -7,6 +7,7 @@ using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -54,6 +55,8 @@ namespace FSCruiser.WinForms.DataEntry
             this.Dock = DockStyle.Fill;
             InitializeComponent();
 
+            ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
+
             WireSplitter(stratum);
 
             this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this._addPlotButton_Click);
@@ -66,6 +69,8 @@ namespace FSCruiser.WinForms.DataEntry
             //Controller.PopulateTallies(this.StratumInfo, this._mode, Controller.CurrentUnit, this._tallyListPanel, this);
             this.Parent = parent;
         }
+
+        
 
         void InitializeDataGrid(PlotStratum stratum)
         {
@@ -99,7 +104,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_initialsColoumn != null)
             {
-                _initialsColoumn.DataSource = this.AppController.Settings.Cruisers.ToArray();
+                _initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
             }
             if (_logsColumn != null)
             {
@@ -267,7 +272,7 @@ namespace FSCruiser.WinForms.DataEntry
             else if (_sgColumn != null && cell.ColumnIndex == _sgColumn.Index)
             {
                 var sg = cellValue as SampleGroup;
-                if (curTree.HandleSampleGroupChanging(sg, this))
+                if (curTree.HandleSampleGroupChanging(sg))
                 {
                     curTree.SampleGroup = sg;
                     curTree.HandleSampleGroupChanged();
@@ -640,11 +645,11 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void HandleCruisersChanged()
+        void Settings_CruisersChanged(object sender, EventArgs e)
         {
             if (this._initialsColoumn != null)
             {
-                this._initialsColoumn.DataSource = this.AppController.Settings.Cruisers.ToArray();
+                this._initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
             }
         }
 
@@ -695,17 +700,17 @@ namespace FSCruiser.WinForms.DataEntry
 
         public bool AskContinueOnCurrnetPlotTreeError()
         {
-            return this.AskYesNo("Error(s) found on tree records in current plot, Would you like to continue?", "Continue?", MessageBoxIcon.Question, true);
+            return DialogService.AskYesNo("Error(s) found on tree records in current plot, Would you like to continue?", "Continue?", true);
         }
 
         public void ShowNoPlotSelectedMessage()
         {
-            this.ShowMessage("No Plot Selected");
+            DialogService.ShowMessage("No Plot Selected");
         }
 
         public void ShowNullPlotMessage()
         {
-            this.ShowMessage("Can't perform action on null plot");
+            DialogService.ShowMessage("Can't perform action on null plot");
         }
 
         public void ShowLimitingDistanceDialog()
@@ -767,6 +772,30 @@ namespace FSCruiser.WinForms.DataEntry
         #region ITreeView Members
 
         #endregion ITreeView Members
+
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+                try
+                {
+                    ApplicationSettings.Instance.CruisersChanged -= Settings_CruisersChanged;
+                }
+                catch(NullReferenceException) { }
+            }
+            LayoutPlot.SplitterMoved -= LayoutPlot_SplitterMoved;
+
+            base.Dispose(disposing);
+        }
     }
 
     //protected override void OnKeyUp(KeyEventArgs e)

@@ -5,7 +5,7 @@ using CruiseDAL;
 using CruiseDAL.DataObjects;
 using FMSC.ORM.Core;
 using FMSC.ORM.EntityModel.Attributes;
-using FSCruiser.Core.ViewInterfaces;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.Core.Models
 {
@@ -272,7 +272,7 @@ namespace FSCruiser.Core.Models
 
         #endregion validation
 
-        public bool HandleSampleGroupChanging(SampleGroupDO newSG, IView view)
+        public bool HandleSampleGroupChanging(SampleGroupDO newSG)
         {
             if (newSG == null) { return false; }
             if (SampleGroup != null
@@ -280,9 +280,8 @@ namespace FSCruiser.Core.Models
 
             if (SampleGroup != null)
             {
-                if (!view.AskYesNo("You are changing the Sample Group of a tree, are you sure you want to do this?"
+                if (!DialogService.AskYesNo("You are changing the Sample Group of a tree, are you sure you want to do this?"
                     , "!"
-                    , System.Windows.Forms.MessageBoxIcon.Asterisk
                     , true))
                 {
                     return false;
@@ -317,7 +316,7 @@ namespace FSCruiser.Core.Models
             return TrySave();
         }
 
-        public bool HandleStratumChanging(StratumDO newStratum, IView view)
+        public bool HandleStratumChanging(StratumDO newStratum)
         {
             if (newStratum == null) { return false; }
             if (Stratum != null
@@ -326,9 +325,9 @@ namespace FSCruiser.Core.Models
 
             if (Stratum != null)
             {
-                if (!view.AskYesNo("You are changing the stratum of a tree" +
+                if (!DialogService.AskYesNo("You are changing the stratum of a tree" +
                     ", are you sure you want to do this?"
-                    , "!", System.Windows.Forms.MessageBoxIcon.Asterisk))
+                    , "!"))
                 {
                     return false;//do not change stratum
                 }

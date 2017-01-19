@@ -10,6 +10,7 @@ using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.DataEntry;
+using FScruiser.Core.Services;
 
 #if NetCF
 
@@ -299,7 +300,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         public bool AskEnterMeasureTreeData()
         {
-            return this.AskYesNo("Would you like to enter tree data now?", "Sample", MessageBoxIcon.Question, false);
+            return DialogService.AskYesNo("Would you like to enter tree data now?"
+                , "Sample", false);
         }
 
         public void HandleCuttingUnitDataLoaded()
@@ -337,18 +339,6 @@ namespace FSCruiser.WinForms.DataEntry
                 if (tv != null)
                 {
                     tv.HandleEnableLogGradingChanged();
-                }
-            }
-        }
-
-        public void HandleCruisersChanged()
-        {
-            foreach (IDataEntryPage c in this._layouts)
-            {
-                ITreeView tv = c as ITreeView;
-                if (tv != null)
-                {
-                    tv.HandleCruisersChanged();
                 }
             }
         }

@@ -6,6 +6,7 @@ using FMSC.Sampling;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.DataEntry;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.Core.DataEntry
 {
@@ -96,8 +97,8 @@ namespace FSCruiser.Core.DataEntry
                 string error;
                 if (!pInfo.ValidatePlot(out error))
                 {
-                    return ViewController.AskYesNo(error
-                        , "Continue?", MessageBoxIcon.Question, true);
+                    return DialogService.AskYesNo(error
+                        , "Continue?", true);
                 }
             }
             return true;
@@ -153,7 +154,8 @@ namespace FSCruiser.Core.DataEntry
             }
             catch (FMSC.ORM.SQLException)
             {
-                if (!this.Controller.ViewController.AskYesNo("Can not save all trees in the plot, Would you like to continue?", "Continue?", MessageBoxIcon.Asterisk, true))
+                if (!DialogService.AskYesNo("Can not save all trees in the plot, Would you like to continue?"
+                    , "Continue?", true))
                 {
                     goOn = false;
                 }
@@ -216,7 +218,7 @@ namespace FSCruiser.Core.DataEntry
         {
             Plot newPlot = Stratum.MakePlot(this.DataEntryController.Unit);
 
-            if (this.ViewController.ShowPlotInfo(newPlot, Stratum, true) == DialogResult.OK)
+            if (this.ViewController.ShowPlotInfo(newPlot, Stratum, true))
             {
                 newPlot.Save();
                 this.Stratum.Plots.Add(newPlot);
@@ -242,7 +244,8 @@ namespace FSCruiser.Core.DataEntry
                 return;
             }
 
-            if (this.Controller.ViewController.AskYesNo("Are you sure you want to delete this plot?", "", MessageBoxIcon.Question, true))
+            if (DialogService.AskYesNo("Are you sure you want to delete this plot?"
+                , String.Empty,  true))
             {
                 this._disableCheckPlot = true;
                 CurrentPlot.Delete();
@@ -261,8 +264,8 @@ namespace FSCruiser.Core.DataEntry
             Tree curTree = this._BS_Trees.Current as Tree;
             if (curTree != null)
             {
-                if (!this.Controller.ViewController.AskCancel("Delete Tree #" + curTree.TreeNumber.ToString(),
-                    "Delete Tree", MessageBoxIcon.Question, true))
+                if (!DialogService.AskCancel("Delete Tree #" + curTree.TreeNumber.ToString(),
+                    "Delete Tree", true))
                 {
                     //this._BS_Trees.Remove(curTree);
                     //Controller.DeleteTree(curTree);
@@ -502,7 +505,7 @@ namespace FSCruiser.Core.DataEntry
                 return;
             }
 
-            if (Controller.ViewController.ShowPlotInfo(CurrentPlot, Stratum, false) == DialogResult.OK)
+            if (Controller.ViewController.ShowPlotInfo(CurrentPlot, Stratum, false))
             {
                 CurrentPlot.Save();
                 _BS_Plots.ResetCurrentItem();
@@ -522,9 +525,8 @@ namespace FSCruiser.Core.DataEntry
                 }
                 catch (FMSC.ORM.SQLException e)
                 {
-                    this.ViewController.ShowMessage(e.Message
-                        , "Stratum " + this.Stratum.Code + "Plot " + p.PlotNumber.ToString()
-                        , MessageBoxIcon.None);
+                    DialogService.ShowMessage(e.Message
+                        , "Stratum " + this.Stratum.Code + "Plot " + p.PlotNumber.ToString());
                 }
             }
         }

@@ -53,6 +53,8 @@ namespace FSCruiser.WinForms.DataEntry
             DataGridAdjuster.InitializeGrid(this);
             DataGridTableStyle tableStyle = DataEntryController.Unit.InitializeTreeColumns(this);
 
+            controller.Settings.CruisersChanged += new EventHandler(Settings_CruisersChanged);
+
             this.AllowUserToAddRows = false;//don't allow down arrow to add tree
             this.SIP = sip;
             //this.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Bold);
@@ -84,6 +86,8 @@ namespace FSCruiser.WinForms.DataEntry
                 _initialsColoumn.DataSource = this.Controller.Settings.Cruisers.ToArray();
             }
         }
+
+        
 
         protected override void OnCellValidating(EditableDataGridCellValidatingEventArgs e)
         {
@@ -232,6 +236,11 @@ namespace FSCruiser.WinForms.DataEntry
                     this._BS_trees.Dispose();
                     this._BS_trees = null;
                 }
+                try
+                {
+                    Controller.Settings.CruisersChanged -= Settings_CruisersChanged;
+                }
+                catch (NullReferenceException) { }
             }
         }
 
@@ -360,7 +369,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void HandleCruisersChanged()
+        void Settings_CruisersChanged(object sender, EventArgs e)
         {
             if (this._initialsColoumn != null)
             {

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.Core.Models
 {
@@ -91,7 +92,7 @@ namespace FSCruiser.Core.Models
 
         #endregion treeNumbering
 
-        public Tree UserAddTree(IViewController viewController)
+        public Tree UserAddTree()
         {
             Tree templateTree = null;
             Stratum stratum = null;
@@ -125,7 +126,7 @@ namespace FSCruiser.Core.Models
                 , samplegroup, tdv, true);
             newTree.TreeCount = 0; //user added trees need a tree count of zero because users seem to be adding counts through tally settings
 
-            viewController.ShowCruiserSelection(newTree);
+            DialogService.AskCruiser(newTree);
 
             newTree.TrySave();
             this.AddNonPlotTree(newTree);

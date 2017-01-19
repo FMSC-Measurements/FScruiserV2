@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
 
@@ -55,8 +54,6 @@ namespace FSCruiser.Core.Models
                 return _hotKeyLookup;
             }
         }
-
-        public Control TallyContainer { get; set; }
 
         public CountTree GetCountByHotKey(char hotKey)
         {

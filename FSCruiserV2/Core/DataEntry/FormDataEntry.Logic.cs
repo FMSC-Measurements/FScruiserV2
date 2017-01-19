@@ -9,6 +9,7 @@ using FMSC.Sampling;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.DataEntry;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.Core.DataEntry
 {
@@ -61,7 +62,7 @@ namespace FSCruiser.Core.DataEntry
 
         protected bool AskEnterMeasureTreeData()
         {
-            return this.ViewController.AskYesNo("Would you like to enter tree data now?", "Sample", MessageBoxIcon.Question, false);
+            return DialogService.AskYesNo("Would you like to enter tree data now?", "Sample", false);
         }
 
         public void ShowLogs(Tree tree)
@@ -72,8 +73,8 @@ namespace FSCruiser.Core.DataEntry
             }
             else
             {
-                ViewController.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
-                    , null, MessageBoxIcon.Hand);
+                DialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
+                    , null);
             }
         }
 
@@ -82,8 +83,8 @@ namespace FSCruiser.Core.DataEntry
             string logMessage = String.Empty;
             bool isVariableRadius = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS, stratum.Method) > -1;
             float bafOrFixedPlotSize = (isVariableRadius) ? stratum.BasalAreaFactor : stratum.FixedPlotSize;
-            DialogResult dResult = ViewController.ShowLimitingDistanceDialog(bafOrFixedPlotSize, isVariableRadius, out logMessage);
-            if (dResult == DialogResult.OK)
+
+            if (ViewController.ShowLimitingDistanceDialog(bafOrFixedPlotSize, isVariableRadius, out logMessage))
             {
                 plot.Remarks += logMessage;
                 return true;
@@ -319,7 +320,7 @@ namespace FSCruiser.Core.DataEntry
             if (tree.Stratum != null && tree.Stratum.Stratum_CN == st.Stratum_CN) { cancel = true; return; }
             if (tree.Stratum != null)
             {
-                if (!this.ViewController.AskYesNo("You are changing the stratum of a tree, are you sure you want to do this?", "!", MessageBoxIcon.Asterisk))
+                if (!DialogService.AskYesNo("You are changing the stratum of a tree, are you sure you want to do this?", "!"))
                 {
                     cancel = true;//do not change stratum
                 }
@@ -401,7 +402,7 @@ namespace FSCruiser.Core.DataEntry
                 //if a tree view has invalid trees lets ask the user if they want to continue
                 int viewIndex;
                 if (!this.ValidateTreeViews(out viewIndex)
-                    && this.ViewController.AskYesNo("Error(s) found on tree records. Would you like to continue", "Continue?", MessageBoxIcon.Question, true) == false)
+                    && DialogService.AskYesNo("Error(s) found on tree records. Would you like to continue", "Continue?", true) == false)
                 {
                     e.Cancel = true;
                     this.View.GoToPageIndex(viewIndex);
@@ -417,13 +418,13 @@ namespace FSCruiser.Core.DataEntry
                 if (!Unit.TrySaveCounts())
                 {
                     e.Cancel = true;
-                    ViewController.ShowMessage("Something went wrong while saving the tally count for this unit", null, MessageBoxIcon.Asterisk);
+                    DialogService.ShowMessage("Something went wrong while saving the tally count for this unit", null);
                 }
 
                 if (!Unit.SaveFieldData())
                 {
                     e.Cancel = true;
-                    ViewController.ShowMessage("Something went wrong saving the data for this unit, check trees for errors and try again", null, MessageBoxIcon.Asterisk);
+                    DialogService.ShowMessage("Something went wrong saving the data for this unit, check trees for errors and try again", null);
                 }
             }
             finally

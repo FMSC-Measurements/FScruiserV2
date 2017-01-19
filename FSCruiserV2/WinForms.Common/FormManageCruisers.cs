@@ -8,9 +8,11 @@ namespace FSCruiser.WinForms
     public partial class FormManageCruisers : Form
     {
         public IApplicationController Controller { get; private set; }
+        public ApplicationSettings Settings { get; set; }
 
         public FormManageCruisers(IApplicationController controller)
         {
+            Settings = ApplicationSettings.Instance;
             InitializeComponent();
             this.Controller = controller;
 
@@ -28,14 +30,14 @@ namespace FSCruiser.WinForms
         protected override void OnLoad(EventArgs e)
         {
             this.UpdateCruiserList();
-            this._enableCruiserPopupCB.Checked = this.Controller.Settings.EnableCruiserPopup;
+            this._enableCruiserPopupCB.Checked = Settings.EnableCruiserPopup;
             base.OnLoad(e);
         }
 
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-            this.Controller.ViewController.HandleCruisersChanged();
+            Settings.NotifyCruisersChanged();
         }
 
         private void UpdateCruiserList()
@@ -49,7 +51,7 @@ namespace FSCruiser.WinForms
                 this._cruiserListContainer.Controls.Clear();
             }
 
-            foreach (Cruiser c in this.Controller.Settings.Cruisers)
+            foreach (Cruiser c in Settings.Cruisers)
             {
                 MakeCruiserListItem(c, this._cruiserListContainer);
             }
@@ -107,7 +109,7 @@ namespace FSCruiser.WinForms
         {
             if (!String.IsNullOrEmpty(this._initialsTB.Text))
             {
-                this.Controller.Settings.AddCruiser(this._initialsTB.Text);
+                Settings.AddCruiser(this._initialsTB.Text);
                 this.UpdateCruiserList();
                 this._initialsTB.Text = String.Empty;
             }
@@ -117,13 +119,13 @@ namespace FSCruiser.WinForms
         {
             Panel p = ((Panel)((Button)sender).Parent);
             Cruiser cruiser = (Cruiser)p.Tag;
-            this.Controller.Settings.RemoveCruiser(cruiser);
+            Settings.RemoveCruiser(cruiser);
             this.UpdateCruiserList();
         }
 
         private void _enableCruiserPopupCB_CheckStateChanged(object sender, EventArgs e)
         {
-            this.Controller.Settings.EnableCruiserPopup = this._enableCruiserPopupCB.Checked;
+            Settings.EnableCruiserPopup = this._enableCruiserPopupCB.Checked;
         }
 
         private void _initialsTB_KeyDown(object sender, KeyEventArgs e)

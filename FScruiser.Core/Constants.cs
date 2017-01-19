@@ -24,8 +24,8 @@ namespace FSCruiser.Core
 
         public static readonly decimal DEFAULT_VOL_FACTOR = new Decimal(333, 0, 0, false, 3);
 
-        internal static readonly TreeDefaultValueDO[] EMPTY_SPECIES_LIST = new TreeDefaultValueDO[] { };
-        internal static readonly SampleGroupDO[] EMPTY_SG_LIST = new SampleGroupDO[] { };
+        public static readonly TreeDefaultValueDO[] EMPTY_SPECIES_LIST = new TreeDefaultValueDO[] { };
+        public static readonly SampleGroupDO[] EMPTY_SG_LIST = new SampleGroupDO[] { };
 
         public static readonly TreeFieldSetupDO[] DEFAULT_TREE_FIELDS = new TreeFieldSetupDO[]{
             new TreeFieldSetupDO(){

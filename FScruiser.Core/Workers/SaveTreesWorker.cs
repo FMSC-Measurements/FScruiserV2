@@ -6,7 +6,7 @@ using FSCruiser.Core.Models;
 
 namespace FSCruiser.Core
 {
-    class SaveTreesWorker
+    public class SaveTreesWorker
     {
         Tree[] _trees;
         Thread _saveTreesWorkerThread;

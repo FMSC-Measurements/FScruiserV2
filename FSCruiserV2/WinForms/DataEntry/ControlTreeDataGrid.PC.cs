@@ -54,6 +54,8 @@ namespace FSCruiser.WinForms.DataEntry
             Controller = controller;
             DataEntryController = dataEntryController;
 
+            ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
+
             CellClick += new DataGridViewCellEventHandler(ControlTreeDataGrid_CellClick);
 
             _BS_trees = new BindingSource();
@@ -97,7 +99,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_initialsColoumn != null)
             {
-                _initialsColoumn.DataSource = Controller.Settings.Cruisers.ToArray();
+                _initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
             }
             if (_logsColumn != null)
             {
@@ -120,6 +122,8 @@ namespace FSCruiser.WinForms.DataEntry
             logToolStripMenuItem.Click += logToolStripMenuItem_Click;
             _contexMenu.ResumeLayout(false);
         }
+
+        
 
         void ControlTreeDataGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -236,7 +240,7 @@ namespace FSCruiser.WinForms.DataEntry
             else if (_sgColumn != null && e.ColumnIndex == _sgColumn.Index)
             {
                 var sg = cellValue as SampleGroup;
-                if (curTree.HandleSampleGroupChanging(sg, this))
+                if (curTree.HandleSampleGroupChanging(sg))
                 {
                     curTree.SampleGroup = sg;
                     curTree.HandleSampleGroupChanged();
@@ -255,7 +259,7 @@ namespace FSCruiser.WinForms.DataEntry
             else if (_stratumColumn != null && e.ColumnIndex == _stratumColumn.Index)
             {
                 var newSt = cellValue as Stratum;
-                if (curTree.HandleStratumChanging(newSt, this))
+                if (curTree.HandleStratumChanging(newSt))
                 {
                     curTree.Stratum = newSt;
                     curTree.HandleStratumChanged();
@@ -380,11 +384,11 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void HandleCruisersChanged()
+        void Settings_CruisersChanged(object sender, EventArgs e)
         {
             if (this._initialsColoumn != null)
             {
-                this._initialsColoumn.DataSource = this.Controller.Settings.Cruisers.ToArray();
+                this._initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
             }
         }
 
@@ -447,7 +451,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_viewLoading) { return null; }
             EndEdit();
-            var newTree = DataEntryController.Unit.UserAddTree(DataEntryController.ViewController);
+            var newTree = DataEntryController.Unit.UserAddTree();
             if (newTree != null)
             {
                 this.MoveLastTree();
@@ -480,6 +484,12 @@ namespace FSCruiser.WinForms.DataEntry
                     _BS_trees.Dispose();
                     _BS_trees = null;
                 }
+
+                try
+                {
+                    ApplicationSettings.Instance.CruisersChanged -= Settings_CruisersChanged;
+                }
+                catch { }
             }
             base.Dispose(disposing);
         }

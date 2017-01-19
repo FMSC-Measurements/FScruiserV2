@@ -9,6 +9,7 @@ using CruiseDAL;
 using CruiseDAL.DataObjects;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.Workers;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.Core
 {
@@ -61,7 +62,7 @@ namespace FSCruiser.Core
             {
                 Logger.Log.E(optMessage, ex);
             }
-            ViewController.ShowMessage(optMessage, "Non-Critical Error", MessageBoxIcon.Asterisk);
+            DialogService.ShowMessage(optMessage, "Non-Critical Error");
             //MessageBox.Show(optMessage, "Non-Critical Error");
         }
 
@@ -74,9 +75,8 @@ namespace FSCruiser.Core
             }
 
             Logger.Log.E(ex);
-            ViewController.ShowMessage(optMessage ?? ex.Message,
-                (isCritical) ? "Error" : "Non-Critical Error",
-                MessageBoxIcon.Asterisk);
+            DialogService.ShowMessage(optMessage ?? ex.Message,
+                (isCritical) ? "Error" : "Non-Critical Error");
         }
 
         #endregion exception handleing
@@ -86,7 +86,7 @@ namespace FSCruiser.Core
         public void OpenFile()
         {
             string filePath;
-            if (this.ViewController.ShowOpenCruiseFileDialog(out filePath) == DialogResult.OK)
+            if (this.ViewController.ShowOpenCruiseFileDialog(out filePath))
             {
                 OpenFile(filePath);
             }
@@ -151,7 +151,7 @@ namespace FSCruiser.Core
 
                 ViewController.EnableLogGrading = DataStore.ExecuteScalar<bool>("SELECT LogGradingEnabled FROM Sale Limit 1;");
 
-                Settings.AddRecentProject(new RecentProject(fileName, filePath));
+                ApplicationSettings.Instance.AddRecentProject(new RecentProject(fileName, filePath));
                 ApplicationSettings.Save();
             }
         }
@@ -167,7 +167,7 @@ namespace FSCruiser.Core
             newTDV.PrimaryProduct = pProd;
             newTDV.LiveDead = "L";
 
-            if (this.ViewController.ShowEditTreeDefault(newTDV) == DialogResult.OK)
+            if (this.ViewController.ShowEditTreeDefault(newTDV))
             {
                 try
                 {
@@ -194,7 +194,7 @@ namespace FSCruiser.Core
             newSG.UOM = this.DataStore.ExecuteScalar("Select DefaultUOM FROM Sale;") as String;
             //newSG.UOM = this.DataStore.ReadSingleRow<SaleDO>("Sale", false, null).DefaultUOM;
 
-            if (this.ViewController.ShowEditSampleGroup(newSG, true) == DialogResult.OK)
+            if (this.ViewController.ShowEditSampleGroup(newSG, true))
             {
                 return newSG;
             }
@@ -252,13 +252,15 @@ namespace FSCruiser.Core
         public void PerformBackup(bool useTS)
         {
             string backupDir;
-            if (Settings.BackUpToCurrentDir || String.IsNullOrEmpty(Settings.BackupDir))
+
+            if (ApplicationSettings.Instance.BackUpToCurrentDir
+                || String.IsNullOrEmpty(ApplicationSettings.Instance.BackupDir))
             {
                 backupDir = System.IO.Path.GetDirectoryName(this.DataStore.Path);
             }
             else
             {
-                backupDir = Settings.BackupDir;
+                backupDir = ApplicationSettings.Instance.BackupDir;
             }
 
             this.PerformBackup(this.GetBackupFileName(backupDir, useTS));
@@ -315,7 +317,7 @@ namespace FSCruiser.Core
 
         public void OnLeavingCurrentUnit(System.ComponentModel.CancelEventArgs e)
         {
-            if (!e.Cancel && this.Settings.BackUpMethod == BackUpMethod.LeaveUnit)
+            if (!e.Cancel && ApplicationSettings.Instance.BackUpMethod == BackUpMethod.LeaveUnit)
             {
                 this.PerformBackup(false);
             }
