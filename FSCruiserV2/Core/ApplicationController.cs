@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Reflection;
-using System.Windows.Forms;
-using System.Xml.Serialization;
 using CruiseDAL;
 using CruiseDAL.DataObjects;
 using FSCruiser.Core.Models;
@@ -17,7 +13,7 @@ namespace FSCruiser.Core
 
     public class ApplicationController : IApplicationController
     {
-        FileLoadWorker FileLoadWorker { get; set; }
+        FileLoadWorker _fileLoadWorker;
 
         public ApplicationSettings Settings
         {
@@ -26,14 +22,7 @@ namespace FSCruiser.Core
 
         public IExceptionHandler ExceptionHandler { get; set; }
 
-        public CruiseDAL.DAL DataStore
-        {
-            get
-            {
-                if (FileLoadWorker == null) { return null; }
-                else { return FileLoadWorker.DataStore; }
-            }
-        }
+        public DAL DataStore { get; protected set; }
 
 
         public IViewController ViewController { get; protected set; }
@@ -94,9 +83,9 @@ namespace FSCruiser.Core
 
         public void OpenFile(string path)
         {
-            if (this.FileLoadWorker != null)
+            if (this._fileLoadWorker != null)
             {
-                FileLoadWorker.Dispose();
+                _fileLoadWorker.Dispose();
             }
 
             var worker = new FileLoadWorker(path, this);
@@ -105,7 +94,7 @@ namespace FSCruiser.Core
             worker.Starting += this.HandleFileLoadStart;
             worker.Start();
 
-            this.FileLoadWorker = worker;
+            this._fileLoadWorker = worker;
         }
 
         void HandleFileLoadError(object sender, WorkerExceptionThrownEventArgs e)
@@ -144,12 +133,17 @@ namespace FSCruiser.Core
 
             ViewController.HideWait();
             ViewController.HandleFileStateChanged();
-            if (this.FileLoadWorker.IsDone)
+            if (this._fileLoadWorker.IsDone)
             {
-                var filePath = DataStore.Path;
-                var fileName = System.IO.Path.GetFileName(this.DataStore.Path);
+                var dataStore = _fileLoadWorker.DataStore;
+                DataStore = dataStore;
+                _fileLoadWorker.Dispose();
+                _fileLoadWorker = null;
 
                 ViewController.EnableLogGrading = DataStore.ExecuteScalar<bool>("SELECT LogGradingEnabled FROM Sale Limit 1;");
+
+                var filePath = dataStore.Path;
+                var fileName = System.IO.Path.GetFileName(dataStore.Path);
 
                 ApplicationSettings.Instance.AddRecentProject(new RecentProject(fileName, filePath));
                 ApplicationSettings.Save();
@@ -336,10 +330,10 @@ namespace FSCruiser.Core
             if (disposing)
             {
                 // free managed resources
-                if (FileLoadWorker != null)
+                if (_fileLoadWorker != null)
                 {
-                    FileLoadWorker.Dispose();
-                    FileLoadWorker = null;
+                    _fileLoadWorker.Dispose();
+                    _fileLoadWorker = null;
                 }
                 if (this.ViewController != null)
                 {
