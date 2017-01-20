@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
 using FMSC.Sampling;
 using FSCruiser.Core.Models;

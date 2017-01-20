@@ -10,15 +10,20 @@ namespace FSCruiser.WinForms
         {
             if (e is UserFacingException)
             {
-                //WindowPresenter.Instance.ShowMessage(e.Message, null);
-                //return true;
                 MessageBox.Show(e.Message);
                 return true;
             }
-            else if (e is FMSC.ORM.UniqueConstraintException)
+            else if (e is FMSC.ORM.ConstraintException)
             {
-                //WindowPresenter.Instance.ShowMessage("Record Already Exists", null);
-                MessageBox.Show("Record Already Exists");
+                var ex = (FMSC.ORM.ConstraintException)e;
+                if (e is FMSC.ORM.UniqueConstraintException)
+                {
+                    MessageBox.Show("Record Already Exists");
+                }
+                else
+                {
+                    MessageBox.Show("Value Check Failed:" + ex.FieldName);
+                }
                 return true;
             }
             else
