@@ -19,9 +19,9 @@ namespace FSCruiser.Core
 
         #region Methods
 
-        SampleGroupDO CreateNewSampleGroup(StratumDO stratum);
+        //SampleGroupDO CreateNewSampleGroup(StratumDO stratum);
 
-        TreeDefaultValueDO CreateNewTreeDefaultValue(String pProd);
+        //TreeDefaultValueDO CreateNewTreeDefaultValue(String pProd);
 
         void OpenFile();
 

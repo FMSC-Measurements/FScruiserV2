@@ -7,6 +7,7 @@ using CruiseDAL.DataObjects;
 using FSCruiser.Core;
 using SGType = CruiseDAL.DataObjects.SampleGroupDO;
 using StType = CruiseDAL.DataObjects.StratumDO;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms
 {
@@ -33,7 +34,7 @@ namespace FSCruiser.WinForms
                 if (sampleGroupChangeing || _sampleGroup == value) { return; }
                 if (object.ReferenceEquals(value, _newSGPlaceHolder))
                 {
-                    SGType newSG = this.Controller.CreateNewSampleGroup(Stratum);
+                    SGType newSG = CreateNewSampleGroup(Stratum);
                     if (newSG == null)
                     {
                         return;
@@ -78,6 +79,55 @@ namespace FSCruiser.WinForms
             else
             {
                 this._ce_menuPanel.Visible = false;
+            }
+        }
+
+        TreeDefaultValueDO CreateNewTreeDefaultValue(String pProd)
+        {
+            TreeDefaultValueDO newTDV = new TreeDefaultValueDO();
+            newTDV.DAL = Controller.DataStore;
+            newTDV.PrimaryProduct = pProd;
+            newTDV.LiveDead = "L";
+
+            if (Controller.ViewController.ShowEditTreeDefault(newTDV))
+            {
+                try
+                {
+                    newTDV.Save();
+                    return newTDV;
+                }
+                catch (FMSC.ORM.UniqueConstraintException e)
+                {
+                    DialogService.ShowMessage("Unique Constraint Violation on " + e.FieldName);
+                    return null;
+                }
+                catch (FMSC.ORM.ConstraintException e)
+                {
+                    DialogService.ShowMessage("Constraint Violation on " + e.FieldName);
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        SampleGroupDO CreateNewSampleGroup(StratumDO stratum)
+        {
+            SampleGroupDO newSG = new SampleGroupDO();
+            newSG.DAL = Controller.DataStore;
+            newSG.Stratum = stratum;
+            newSG.UOM = Controller.DataStore.ExecuteScalar("Select DefaultUOM FROM Sale;") as String;
+            //newSG.UOM = this.DataStore.ReadSingleRow<SaleDO>("Sale", false, null).DefaultUOM;
+
+            if (Controller.ViewController.ShowEditSampleGroup(newSG, true))
+            {
+                return newSG;
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -254,7 +304,7 @@ namespace FSCruiser.WinForms
 
         private void _addTDV_BTN_Click(object sender, EventArgs e)
         {
-            if (this.Controller.CreateNewTreeDefaultValue(this.SampleGroup.PrimaryProduct) != null)
+            if (CreateNewTreeDefaultValue(this.SampleGroup.PrimaryProduct) != null)
             {
                 this.BuildTDVList(this.SampleGroup);
             }

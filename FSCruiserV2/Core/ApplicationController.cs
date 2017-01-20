@@ -152,54 +152,6 @@ namespace FSCruiser.Core
 
         #endregion File
 
-        #region add population
-
-        public TreeDefaultValueDO CreateNewTreeDefaultValue(String pProd)
-        {
-            TreeDefaultValueDO newTDV = new TreeDefaultValueDO();
-            newTDV.DAL = this.DataStore;
-            newTDV.PrimaryProduct = pProd;
-            newTDV.LiveDead = "L";
-
-            if (this.ViewController.ShowEditTreeDefault(newTDV))
-            {
-                try
-                {
-                    newTDV.Save();
-                    return newTDV;
-                }
-                catch (Exception e)
-                {
-                    ExceptionHandler.HandelEx(new UserFacingException("oops Tree Default save error", e));
-                    return null;
-                }
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public SampleGroupDO CreateNewSampleGroup(StratumDO stratum)
-        {
-            SampleGroupDO newSG = new SampleGroupDO();
-            newSG.DAL = this.DataStore;
-            newSG.Stratum = stratum;
-            newSG.UOM = this.DataStore.ExecuteScalar("Select DefaultUOM FROM Sale;") as String;
-            //newSG.UOM = this.DataStore.ReadSingleRow<SaleDO>("Sale", false, null).DefaultUOM;
-
-            if (this.ViewController.ShowEditSampleGroup(newSG, true))
-            {
-                return newSG;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        #endregion add population
-
         #region backup
 
         private string GetBackupFileName(string backupDir, bool addTimeStamp)
