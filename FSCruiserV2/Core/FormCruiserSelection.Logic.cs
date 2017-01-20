@@ -1,47 +1,62 @@
 ﻿using System;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
+using FScruiser.Core.ViewModels;
+using System.Collections.Generic;
 
 namespace FSCruiser.Core
 {
-    public class FormCruiserSelectionLogic
+    public class FormCruiserSelectionLogic : ViewModelBase
     {
-        private Cruiser[] _cruisers;
-        private IApplicationController _controller;
-
         public ICruiserSelectionView View { get; protected set; }
 
-        public ApplicationSettings Settings { get; set; }
+        ApplicationSettings Settings { get; set; }
 
-        public Tree Tree { get; set; }
+        List<KeyValuePair<string, Cruiser>> _cruisers;
 
-        public FormCruiserSelectionLogic(IApplicationController controller, ICruiserSelectionView view)
+        public IEnumerable<KeyValuePair<string, Cruiser>> Cruisers
         {
-            Settings = ApplicationSettings.Instance;
-            this._controller = controller;
-            this.View = view;
+            get { return _cruisers; }
         }
 
-        public void HandleLoad()
+        Tree _tree;
+        public Tree Tree 
         {
-            if (Tree == null) { throw new InvalidOperationException("Set Tree before calling HandleLoad"); }
-
-            this.View.TreeNumberText = "Tree #:" + Tree.TreeNumber;
-            this.View.StratumText = "Stratum: " + Tree.Stratum.GetDescriptionShort();
-            this.View.SampleGroupText = "Sg: " + Tree.SampleGroup.GetDescriptionShort();
-
-            _cruisers = Settings.Cruisers.ToArray();
-            this.View.UpdateCruiserList(_cruisers);
+            get { return _tree; }
+            set { SetValue(ref _tree, value, "Tree"); }
         }
 
-        public void HandleKeyDown(char key)
+        public FormCruiserSelectionLogic(ApplicationSettings settings, ICruiserSelectionView view)
         {
-            if (char.IsNumber(key))
+            View = view;
+            Settings = settings;
+            Settings.CruisersChanged += new EventHandler(Settings_CruisersChanged);
+        }
+
+        void Settings_CruisersChanged(object sender, EventArgs e)
+        {
+            _cruisers = new List<KeyValuePair<string, Cruiser>>();
+            int i = 1;
+            foreach (var c in Settings.Cruisers)
             {
-                int value = Convert.ToInt32(key.ToString());
-                if (value <= this._cruisers.Length && value > 0)
+                var key = (i < 10) ? i.ToString() : null;
+                _cruisers.Add(new KeyValuePair<string,Cruiser>(key, c);
+            }
+
+            NotifyPropertyChanged("Cruisers");
+        }
+
+
+
+        public void HandleKeyDown(string key)
+        {
+            int value = Convert.ToInt32(key.ToString());
+            foreach (var c in Cruisers)
+            {
+                if (c.Key == key)
                 {
-                    this.HandleCruiserSelected(this._cruisers[value - 1]);
+                    this.HandleCruiserSelected(c.Value);
+                    break;
                 }
             }
         }

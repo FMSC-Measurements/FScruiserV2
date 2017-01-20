@@ -7,16 +7,8 @@ namespace FSCruiser.Core.ViewInterfaces
 {
     public interface ICruiserSelectionView
     {
-        String TreeNumberText { set; }
-
-        String StratumText { set; }
-
-        String SampleGroupText { set; }
-
         void Close();
 
-        void UpdateCruiserList(IList<Cruiser> cruisers);
-
-        DialogResult ShowDialog(Tree tree);
+        void ShowDialog(Tree tree);
     }
 }
