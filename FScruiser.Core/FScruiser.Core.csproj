@@ -48,6 +48,7 @@
     <Compile Include="Models\CountTree.cs" />
     <Compile Include="Models\Cruiser.cs" />
     <Compile Include="Models\CuttingUnit.cs" />
+    <Compile Include="Models\DataModelExtensions.cs" />
     <Compile Include="Models\FixCNTPlot.cs" />
     <Compile Include="Models\FixCNTStratum.cs" />
     <Compile Include="Models\FixCNTTallyBucket.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Models\Plot.cs" />
     <Compile Include="Models\Plot3PPNT.cs" />
     <Compile Include="Models\PlotStratum.cs" />
+    <Compile Include="Models\RecentProject.cs" />
     <Compile Include="Models\RegionLogInfo.cs" />
     <Compile Include="Models\Sale.cs" />
     <Compile Include="Models\SampleGroup.cs" />
@@ -75,6 +77,8 @@
     <Compile Include="Services\IApplicationController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModels\LimitingDistanceCalculator.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Workers\SaveTreesWorker.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\IDialogService.cs" />

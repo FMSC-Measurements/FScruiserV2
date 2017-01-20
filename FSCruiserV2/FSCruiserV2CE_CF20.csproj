@@ -68,13 +68,9 @@
     <Compile Include="Core\ApplicationController.cs" />
     <Compile Include="Core\ApplicationSettings.cs" />
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
-    <Compile Include="Core\DataEntry\LimitingDistanceCalculator.cs" />
     <Compile Include="Core\ExceptionHandler.cs" />
-    <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="Core\IExceptionHandler.cs" />
     <Compile Include="Core\LoadCuttingUnitWorker.cs" />
-    <Compile Include="Core\Models\DataModelExtensions.cs" />
-    <Compile Include="Core\Models\RecentProject.cs" />
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
     <Compile Include="Core\Workers\CancelWorkerException.cs" />

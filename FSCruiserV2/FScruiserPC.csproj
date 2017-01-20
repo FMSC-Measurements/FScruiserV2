@@ -68,7 +68,6 @@
     <Compile Include="Core\ApplicationController.cs" />
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
-    <Compile Include="Core\DataEntry\LimitingDistanceCalculator.cs" />
     <Compile Include="Core\ExceptionHandler.cs" />
     <Compile Include="Core\IExceptionHandler.cs" />
     <Compile Include="Core\ViewInterfaces\ITreeView.cs">
@@ -77,8 +76,6 @@
     <Compile Include="Core\Workers\FileLoadWorker.cs" />
     <Compile Include="Core\FormCruiserSelection.Logic.cs" />
     <Compile Include="Core\LoadCuttingUnitWorker.cs" />
-    <Compile Include="Core\Models\DataModelExtensions.cs" />
-    <Compile Include="Core\Models\RecentProject.cs" />
     <Compile Include="Core\ApplicationSettings.cs" />
     <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
     <Compile Include="Core\ViewInterfaces\IDataEntryPage.cs" />
@@ -226,7 +223,6 @@
       <DependentUpon>LayoutTreeBased.PC.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms\DataGridAjuster.PC.cs" />
-    <Compile Include="Core\FormLimitingDistanceLogic.cs" />
     <Compile Include="WinForms\ILogFieldProviderExtentions.cs" />
     <Compile Include="WinForms\ITreeFieldProviderExtentions.cs" />
     <Compile Include="WinForms\ViewController.PC.cs" />
