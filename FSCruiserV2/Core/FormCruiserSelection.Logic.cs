@@ -40,7 +40,7 @@ namespace FSCruiser.Core
             foreach (var c in Settings.Cruisers)
             {
                 var key = (i < 10) ? i.ToString() : null;
-                _cruisers.Add(new KeyValuePair<string,Cruiser>(key, c);
+                _cruisers.Add(new KeyValuePair<string,Cruiser>(key, c));
             }
 
             NotifyPropertyChanged("Cruisers");
