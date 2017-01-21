@@ -136,6 +136,7 @@
       <DependentUpon>FormSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="PlatformHelper.WinForms.cs" />
+    <Compile Include="WinForms.Common\WinFormsDialogService.cs" />
     <Compile Include="WinForms.Common\FixCNTForm.cs">
       <SubType>Form</SubType>
     </Compile>

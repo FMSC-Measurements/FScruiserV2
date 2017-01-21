@@ -6,6 +6,7 @@ using System.Linq;
 using CruiseDAL;
 using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.Core.Models
 {
@@ -190,7 +191,7 @@ namespace FSCruiser.Core.Models
 
             newTree = this.CreateNewTreeEntry(assumedSG, assumedTDV, true);
 
-            viewController.ShowCruiserSelection(newTree);
+            DialogService.AskCruiser(newTree);
 
             //if a 3P plot method set Count Measure to empty.
             if (Array.IndexOf(CruiseDAL.Schema.CruiseMethods.THREE_P_METHODS,

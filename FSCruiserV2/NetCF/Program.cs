@@ -27,6 +27,7 @@ namespace FSCruiser.WinForms
                 {
                     //not already running
 
+                    DialogService.Instance = new WinFormsDialogService();
                     using (ViewController viewController = new ViewController())
                     using (ApplicationController appController = new ApplicationController(viewController))
                     {

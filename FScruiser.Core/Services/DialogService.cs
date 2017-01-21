@@ -13,7 +13,7 @@ namespace FScruiser.Core.Services
         public static IDialogService Instance 
         {
             get { return _instance; }
-            protected set { _instance = value; }
+            set { _instance = value; }
         }
 
         public static bool AskCancel(String message, String caption, bool defaultCancel)

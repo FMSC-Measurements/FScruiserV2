@@ -143,6 +143,7 @@
       <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms.Common\ViewController_Base.cs" />
+    <Compile Include="WinForms.Common\WinFormsDialogService.cs" />
     <Compile Include="WinForms\DataEntry\ControlTreeDataGrid.PC.cs">
       <SubType>Component</SubType>
     </Compile>

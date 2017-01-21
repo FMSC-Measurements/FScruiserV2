@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using FSCruiser.Core;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms
 {
@@ -28,6 +29,7 @@ namespace FSCruiser.WinForms
 
             AppDomain.CurrentDomain.UnhandledException += FMSC.Utility.ErrorHandling.ErrorHandlers.UnhandledException;
             //PreJit();
+            DialogService.Instance = new WinFormsDialogService();
             using (ViewController viewController = new ViewController())
             using (ApplicationController appController = new ApplicationController(viewController))
             {

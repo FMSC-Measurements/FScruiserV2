@@ -7,6 +7,7 @@ using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.DataEntry;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms
 {
@@ -155,7 +156,7 @@ namespace FSCruiser.WinForms
             var tree = DataEntryController.Unit.CreateNewTreeEntry(subPop.SG.Stratum, subPop.SG, subPop.TDV, true);
             tree.TreeCount = 1;
 
-            this.Controller.ViewController.ShowCruiserSelection(tree);
+            DialogService.AskCruiser(tree);
 
             DataEntryController.Unit.AddNonPlotTree(tree);
             DataEntryForm.GotoTreePage();

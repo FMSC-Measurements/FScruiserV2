@@ -330,7 +330,7 @@ namespace FSCruiser.Core.DataEntry
 
             if (tree != null)
             {
-                this.Controller.ViewController.ShowCruiserSelection(tree);
+                DialogService.AskCruiser(tree);
                 tree.TrySave();
                 plot.AddTree(tree);
                 SelectLastTree();
@@ -431,7 +431,7 @@ namespace FSCruiser.Core.DataEntry
         {
             Tree tree = CurrentPlot.CreateNewTreeEntry(subPop);
 
-            this.Controller.ViewController.ShowCruiserSelection(tree);
+            DialogService.AskCruiser(tree);
 
             tree.TrySave();
             CurrentPlot.AddTree(tree);
