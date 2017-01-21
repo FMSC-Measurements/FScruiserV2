@@ -28,8 +28,10 @@ namespace FSCruiser.WinForms
             }
 
             AppDomain.CurrentDomain.UnhandledException += FMSC.Utility.ErrorHandling.ErrorHandlers.UnhandledException;
-            //PreJit();
+
+
             DialogService.Instance = new WinFormsDialogService();
+            using (SoundService.Instance = new WinFormsSoundService())
             using (ViewController viewController = new ViewController())
             using (ApplicationController appController = new ApplicationController(viewController))
             {
@@ -43,32 +45,5 @@ namespace FSCruiser.WinForms
             Debug.Close();
             Application.Exit();// forces any extra forms (splash screen) to close
         }
-
-        //http://stackoverflow.com/questions/548915/preloading-assemblies
-        //private static void PreJit()
-        //{
-        //    ThreadPool.QueueUserWorkItem((t) =>
-        //    {
-        //        Thread.Sleep(1000); // Or whatever reasonable amount of time
-        //        try
-        //        {
-        //            XmlSerializer c = new XmlSerializer(typeof(object));
-        //        }
-        //        catch (Exception) { }
-
-        //        try
-        //        {
-        //            FormDataEntry de = new FormDataEntry();
-        //        }
-        //        catch { }
-
-        //        try
-        //        {
-        //            LayoutTreeBased l = new LayoutTreeBased();
-        //        }
-        //        catch { }
-
-        //    });
-        //}
     }
 }

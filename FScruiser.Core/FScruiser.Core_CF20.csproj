@@ -91,7 +91,9 @@
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\IApplicationController.cs" />
     <Compile Include="Services\IDialogService.cs" />
+    <Compile Include="Services\ISoundService.cs" />
     <Compile Include="Services\IViewController.cs" />
+    <Compile Include="Services\SoundService.cs" />
     <Compile Include="ViewModels\LimitingDistanceCalculator.cs">
       <SubType>Code</SubType>
     </Compile>

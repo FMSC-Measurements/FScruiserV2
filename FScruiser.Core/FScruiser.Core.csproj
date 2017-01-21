@@ -77,6 +77,8 @@
     <Compile Include="Services\IApplicationController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Services\ISoundService.cs" />
+    <Compile Include="Services\SoundService.cs" />
     <Compile Include="ViewModels\LimitingDistanceCalculator.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Workers\SaveTreesWorker.cs" />

@@ -6,6 +6,7 @@ using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.Common;
 using FSCruiser.NetCF.WinForms;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -37,7 +38,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void OnFocusedLayoutChanged(object sender, EventArgs e)
         {
-            Controller.ViewController.SignalPageChanged();
+            SoundService.SignalPageChanged();
             OnFocusedLayoutChangedInternal(sender, e);
             var view = FocusedLayout as ITreeView;
             _addTreeMI.Enabled = view != null && view.UserCanAddTrees;

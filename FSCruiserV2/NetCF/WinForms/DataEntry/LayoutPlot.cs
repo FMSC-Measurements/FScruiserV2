@@ -704,6 +704,8 @@ namespace FSCruiser.WinForms.DataEntry
                 return;
             }
 
+            ViewLogicController.ShowLimitingDistanceDialog();
+
             //TreeVM tree = null;
             ////see if the user is in the DBH column
             //if (this._dataGrid.CurrentCollumn != null
@@ -716,8 +718,6 @@ namespace FSCruiser.WinForms.DataEntry
             //        tree = curTree;
             //    }
             //}
-
-            this.DataEntryController.ShowLimitingDistanceDialog(this.ViewLogicController.Stratum, this.ViewLogicController.CurrentPlot);
         }
 
         public void ViewEndEdit()

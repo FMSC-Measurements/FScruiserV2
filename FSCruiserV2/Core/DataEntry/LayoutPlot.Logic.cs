@@ -273,7 +273,7 @@ namespace FSCruiser.Core.DataEntry
             }
             else
             {
-                this.Controller.ViewController.SignalInvalidAction();
+                SoundService.SignalInvalidAction();
             }
         }
 
@@ -369,13 +369,13 @@ namespace FSCruiser.Core.DataEntry
                     }
                     if (item.IsInsuranceItem)
                     {
-                        this.ViewController.SignalInsuranceTree();
+                        SoundService.SignalInsuranceTree();
                         tree = plot.CreateNewTreeEntry(count, true);
                         tree.CountOrMeasure = "I";
                     }
                     else
                     {
-                        this.ViewController.SignalMeasureTree(true);
+                        SoundService.SignalMeasureTree(true);
                         tree = plot.CreateNewTreeEntry(count, true);
                         //tree.CountOrMeasure = "M";
                     }
@@ -406,13 +406,13 @@ namespace FSCruiser.Core.DataEntry
             boolItem item = (sampler != null) ? (boolItem)sampler.NextItem() : (boolItem)null;
             if (item != null && !item.IsInsuranceItem)
             {
-                this.ViewController.SignalMeasureTree(true);
+                SoundService.SignalMeasureTree(true);
                 tree = plot.CreateNewTreeEntry(count, true);
                 //tree.CountOrMeasure = "M";
             }
             else if (item != null && item.IsInsuranceItem)
             {
-                this.ViewController.SignalInsuranceTree();
+                SoundService.SignalInsuranceTree();
                 tree = plot.CreateNewTreeEntry(count, true);
                 tree.CountOrMeasure = "I";
             }
@@ -510,6 +510,23 @@ namespace FSCruiser.Core.DataEntry
                 _BS_Plots.ResetCurrentItem();
                 UpdateCurrentPlot();
             }
+        }
+
+        public bool ShowLimitingDistanceDialog()
+        {
+            var plot = CurrentPlot;
+            var stratum = plot.Stratum;
+
+            string logMessage = String.Empty;
+            bool isVariableRadius = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS, stratum.Method) > -1;
+            float bafOrFixedPlotSize = (isVariableRadius) ? stratum.BasalAreaFactor : stratum.FixedPlotSize;
+
+            if (ViewController.ShowLimitingDistanceDialog(bafOrFixedPlotSize, isVariableRadius, out logMessage))
+            {
+                plot.Remarks += logMessage;
+                return true;
+            }
+            return false;
         }
 
         public void Save()

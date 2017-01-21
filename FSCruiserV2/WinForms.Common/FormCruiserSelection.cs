@@ -12,7 +12,7 @@ namespace FSCruiser.WinForms
         private FormCruiserSelectionLogic _logicController;
         KeysConverter _keyConverter = new KeysConverter();
 
-        public FormCruiserSelection(IApplicationController controller)
+        public FormCruiserSelection()
         {
             _logicController = new FormCruiserSelectionLogic(ApplicationSettings.Instance, this);
             _logicController.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_logicController_PropertyChanged);

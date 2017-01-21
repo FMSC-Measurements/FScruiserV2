@@ -316,6 +316,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="NetCF\Win32.cs" />
+    <Compile Include="WinForms.Common\WinFormsSoundService.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FMSC_Logo.jpg" />

@@ -132,7 +132,7 @@ namespace FSCruiser.Core
             //if (worker == null) { return; }
 
             ViewController.HideWait();
-            ViewController.HandleFileStateChanged();
+            
             if (this._fileLoadWorker.IsDone)
             {
                 var dataStore = _fileLoadWorker.DataStore;
@@ -148,6 +148,7 @@ namespace FSCruiser.Core
                 ApplicationSettings.Instance.AddRecentProject(new RecentProject(fileName, filePath));
                 ApplicationSettings.Save();
             }
+            ViewController.HandleFileStateChanged();
         }
 
         #endregion File

@@ -298,11 +298,11 @@ namespace FSCruiser.WinForms.DataEntry
             get { return _layouts; }
         }
 
-        public bool AskEnterMeasureTreeData()
-        {
-            return DialogService.AskYesNo("Would you like to enter tree data now?"
-                , "Sample", false);
-        }
+        //public bool AskEnterMeasureTreeData()
+        //{
+        //    return DialogService.AskYesNo("Would you like to enter tree data now?"
+        //        , "Sample", false);
+        //}
 
         public void HandleCuttingUnitDataLoaded()
         {
@@ -364,14 +364,6 @@ namespace FSCruiser.WinForms.DataEntry
             { return; }
 
             PageContainer.SelectedIndex = i;
-        }
-
-        public void TreeViewMoveLast()
-        {
-            if (_treeView != null)
-            {
-                _treeView.MoveLastTree();
-            }
         }
 
         #endregion IDataEntryView

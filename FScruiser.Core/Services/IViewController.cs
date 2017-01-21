@@ -16,8 +16,6 @@ namespace FSCruiser.Core
 
         void HandleFileStateChanged();
 
-        void SignalInvalidAction();
-
         void ShowAbout();
 
         TreeDefaultValueDO ShowAddPopulation();
@@ -25,8 +23,6 @@ namespace FSCruiser.Core
         TreeDefaultValueDO ShowAddPopulation(SampleGroupDO sg);
 
         void ShowBackupUtil();
-
-        void ShowCruiserSelection(Tree tree);
 
         bool ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit);
 
@@ -47,14 +43,6 @@ namespace FSCruiser.Core
         void ShowTallySettings(CountTree count);
 
         int? AskKPI(int min, int max);
-
-        void SignalMeasureTree(bool showMessage);
-
-        void SignalInsuranceTree();
-
-        void SignalTally();
-
-        void SignalPageChanged();
 
         void ShowWait();
 

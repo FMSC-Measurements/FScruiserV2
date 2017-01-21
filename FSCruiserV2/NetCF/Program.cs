@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using FSCruiser.Core;
 using OpenNETCF.Threading;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms
 {
@@ -28,6 +29,7 @@ namespace FSCruiser.WinForms
                     //not already running
 
                     DialogService.Instance = new WinFormsDialogService();
+                    using (SoundService.Instance = new WinFormsSoundService())
                     using (ViewController viewController = new ViewController())
                     using (ApplicationController appController = new ApplicationController(viewController))
                     {

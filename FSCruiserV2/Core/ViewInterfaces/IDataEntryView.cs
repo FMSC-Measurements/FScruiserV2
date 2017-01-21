@@ -14,20 +14,15 @@ namespace FSCruiser.Core.ViewInterfaces
 
         List<IDataEntryPage> Layouts { get; }
 
-        bool AskEnterMeasureTreeData();//TODO remove unused method
 
         void HandleCuttingUnitDataLoaded();
 
-        void HandleEnableLogGradingChanged();
-
-        //void HandleCruisersChanged();
+        //void HandleEnableLogGradingChanged();
 
         void GotoTreePage();
 
         void GoToTallyPage();
 
         void GoToPageIndex(int i);
-
-        void TreeViewMoveLast();//TODO remove unused method
     }
 }

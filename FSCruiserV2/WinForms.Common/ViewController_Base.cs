@@ -127,8 +127,6 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-        public abstract void SignalInvalidAction();
-
         public void ShowMain()
         {
             this.MainView.Show();
@@ -147,9 +145,6 @@ namespace FSCruiser.WinForms.Common
         public abstract CruiseDAL.DataObjects.TreeDefaultValueDO ShowAddPopulation(CruiseDAL.DataObjects.SampleGroupDO sg);
 
         public abstract void ShowBackupUtil();
-
-        public virtual void ShowCruiserSelection(Tree tree)
-        { }
 
         public abstract bool ShowEditSampleGroup(CruiseDAL.DataObjects.SampleGroupDO sg, bool allowEdit);
 
@@ -286,14 +281,6 @@ namespace FSCruiser.WinForms.Common
             ThreePNumPad.ShowDialog(min, max, null, false);
             return ThreePNumPad.UserEnteredValue;
         }
-
-        public abstract void SignalMeasureTree(bool showMessage);
-
-        public abstract void SignalInsuranceTree();
-
-        public abstract void SignalTally();
-
-        public abstract void SignalPageChanged();
 
         public void ShowWait()
         {

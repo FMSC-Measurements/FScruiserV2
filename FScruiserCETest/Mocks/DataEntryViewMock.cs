@@ -40,10 +40,6 @@ namespace FSCruiserV2.Test.Mocks
             throw new NotImplementedException();
         }
 
-        public void HandleEnableLogGradingChanged()
-        {
-            throw new NotImplementedException();
-        }
 
         public void HandleCruisersChanged()
         {

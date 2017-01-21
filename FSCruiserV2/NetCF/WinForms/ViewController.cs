@@ -24,54 +24,8 @@ namespace FSCruiser.WinForms
 
         #endregion static members
 
-        FormCruiserSelection _cruiserSelectionView;
-        SoundPlayer _tallySoundPlayer;
-        SoundPlayer _pageChangedSoundPlayer;
-
         public ViewController()
         {
-            try
-            {
-                var soundsDir = System.IO.Path.Combine(GetExecutionDirectory(), "Sounds");
-
-                _tallySoundPlayer = new SoundPlayer(new FileStream(soundsDir + "\\tally.wav", System.IO.FileMode.Open));
-                _pageChangedSoundPlayer = new SoundPlayer(new FileStream(soundsDir + "\\pageChange.wav", FileMode.Open));
-            }
-            catch 
-            {
-            }
-        }
-
-        static string GetExecutionDirectory()
-        {
-            string name = System.Reflection.Assembly
-                .GetCallingAssembly()
-                .GetName().CodeBase;
-
-            //clean up path, in FF name is a URI
-            if (name.StartsWith(@"file:///"))
-            {
-                name = name.Replace("file:///", string.Empty);
-            }
-            string dir = System.IO.Path.GetDirectoryName(name);
-            return dir;
-        }
-
-        public override void SignalInvalidAction()
-        {
-            FSCruiser.WinForms.Win32.MessageBeep(-1);
-        }
-
-        public override void ShowCruiserSelection(Tree tree)
-        {
-            if (ApplicationSettings.Instance.EnableCruiserPopup)
-            {
-                if (_cruiserSelectionView == null)
-                {
-                    _cruiserSelectionView = new FormCruiserSelection(ApplicationController);
-                }
-                _cruiserSelectionView.ShowDialog(tree);
-            }
         }
 
         public override bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage)
@@ -184,61 +138,18 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public override void SignalMeasureTree(bool showMessage)
-        {
-            Win32.MessageBeep(Win32.MB_ICONQUESTION);
-            if (showMessage)
-            {
-                MessageBox.Show("Measure Tree");
-            }
-        }
 
-        public override void SignalInsuranceTree()
-        {
-            Win32.MessageBeep(Win32.MB_ICONASTERISK);
-            MessageBox.Show("Insurance Tree");
-        }
 
-        public override void SignalTally()
-        {
-            var settings = ApplicationSettings.Instance;
-            if (settings.EnableTallySound 
-                && _tallySoundPlayer != null)
-            {
-                _tallySoundPlayer.Play();
-            }
-        }
+        //#region IDisposable Members
 
-        public override void SignalPageChanged()
-        {
-            var settings = ApplicationSettings.Instance;
-            if (settings.EnablePageChangeSound 
-                && _pageChangedSoundPlayer != null)
-            {
-                _pageChangedSoundPlayer.Play();
-            }
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    base.Dispose(disposing);
+        //    if (disposing)
+        //    {
+        //    }
+        //}
 
-        #region IDisposable Members
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (disposing)
-            {
-                if (_cruiserSelectionView != null)
-                {
-                    this._cruiserSelectionView.Dispose();
-                    this._cruiserSelectionView = null;
-                }
-                if (_tallySoundPlayer != null)
-                {
-                    _tallySoundPlayer.Dispose();
-                    _tallySoundPlayer = null;
-                }
-            }
-        }
-
-        #endregion IDisposable Members
+        //#endregion IDisposable Members
     }
 }
