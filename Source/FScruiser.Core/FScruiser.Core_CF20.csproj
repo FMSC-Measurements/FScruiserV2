@@ -102,15 +102,15 @@
     <Compile Include="Workers\TreeValidationWorker.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CruiseDAL\CruiseDAL\CruiseDAL_CF20.csproj">
+    <ProjectReference Include="..\..\CruiseDAL\CruiseDAL\CruiseDAL_CF20.csproj">
       <Project>{DC8A4894-F4A8-4554-B475-2EBAD49AF148}</Project>
       <Name>CruiseDAL_CF20</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CruiseDAL\FMSC.ORM\FMSC.ORM.NetCF20.csproj">
+    <ProjectReference Include="..\..\CruiseDAL\FMSC.ORM\FMSC.ORM.NetCF20.csproj">
       <Project>{D346BFEA-85A0-4A5D-BD89-D07E073B065E}</Project>
       <Name>FMSC.ORM.NetCF20</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FMSC.Sampling\src\FMSC.Sampling\FMSC.Sampling_CF20.csproj">
+    <ProjectReference Include="..\..\FMSC.Sampling\src\FMSC.Sampling\FMSC.Sampling_CF20.csproj">
       <Project>{932C2341-A331-4B7C-8BC9-9D3491F1821B}</Project>
       <Name>FMSC.Sampling_CF20</Name>
     </ProjectReference>

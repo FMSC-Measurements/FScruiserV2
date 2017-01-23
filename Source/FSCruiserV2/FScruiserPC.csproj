@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,8 +10,17 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FSCruiser</RootNamespace>
     <AssemblyName>FScruiserPC</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ApplicationIcon>fscruiser.ico</ApplicationIcon>
+    <StartupObject>FSCruiser.WinForms.Program</StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,42 +33,69 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <ApplicationIcon>fscruiser.ico</ApplicationIcon>
-    <StartupObject>FSCruiser.WinForms.Program</StartupObject>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\PC\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\PC\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FMSC.Core, Version=1.0.0.26522, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\FMSC.Core\Net35\FMSC.Core.dll</HintPath>
+    <Reference Include="FMSC.Core">
+      <HintPath>..\..\FMSC.Core\Net45\FMSC.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -318,6 +354,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
     <None Include="Core\FSCruiser.Core.cd" />
     <None Include="Core\ViewInterfaces\FSCruiser.Core.ViewInterfaces.cd" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />
@@ -340,25 +377,25 @@
     <Compile Include="WinForms\Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CruiseDAL\CruiseDAL\CruiseDAL_FF35.csproj">
-      <Project>{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}</Project>
-      <Name>CruiseDAL_FF35</Name>
+    <ProjectReference Include="..\..\CruiseDAL\CruiseDAL\CruiseDAL_FF35.VS15.csproj">
+      <Project>{baf1842e-f8c5-47a5-94c6-adaba8a4b3af}</Project>
+      <Name>CruiseDAL_FF35.VS15</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CruiseDAL\FMSC.ORM\FMSC.ORM.Net35.csproj">
-      <Project>{0452719F-1CAA-4959-B00C-AB8B1C438571}</Project>
-      <Name>FMSC.ORM.Net35</Name>
+    <ProjectReference Include="..\..\CruiseDAL\FMSC.ORM\FMSC.ORM.VS15.csproj">
+      <Project>{22432d40-9892-40a6-aa0c-cc8c2fa4bb91}</Project>
+      <Name>FMSC.ORM.VS15</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FMSC.Controls\FMSC.Controls\FMSC.Controls.VS08.csproj">
+    <ProjectReference Include="..\..\FMSC.Controls\FMSC.Controls\FMSC.Controls.VS08.csproj">
       <Project>{83CCFC7F-D667-4550-B335-B48C2F67A207}</Project>
       <Name>FMSC.Controls.VS08</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FMSC.Sampling\src\FMSC.Sampling\FMSC.Sampling_FF35.csproj">
-      <Project>{4097B6D6-D317-4169-9219-43E1AC4DC1F7}</Project>
-      <Name>FMSC.Sampling_FF35</Name>
+    <ProjectReference Include="..\..\FMSC.Sampling\src\FMSC.Sampling\FMSC.Sampling.VS15.csproj">
+      <Project>{4097b6d6-d317-4169-9219-43e1ac4dc1f7}</Project>
+      <Name>FMSC.Sampling.VS15</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FMSC.Util\FMSC.Utility\FMSC.Utility.csproj">
-      <Project>{F882E97D-A121-41F6-916F-8FA956F84BCC}</Project>
-      <Name>FMSC.Utility</Name>
+    <ProjectReference Include="..\..\FMSC.Util\FMSC.Utility\FMSC.Utility.VS15.csproj">
+      <Project>{f882e97d-a121-41f6-916f-8fa956f84bcc}</Project>
+      <Name>FMSC.Utility.VS15</Name>
     </ProjectReference>
     <ProjectReference Include="..\FScruiser.Core\FScruiser.Core.csproj">
       <Project>{7D65EE5A-23F0-4F08-9DC6-7DF0E23D3926}</Project>
@@ -380,6 +417,11 @@
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5</ProductName>
       <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
       <Visible>False</Visible>
