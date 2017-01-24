@@ -138,9 +138,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CruiseDAL\CruiseDAL\CruiseDAL_FF35.VS15.csproj">
+    <ProjectReference Include="..\..\CruiseDAL\CruiseDAL\CruiseDAL.VS15.csproj">
       <Project>{baf1842e-f8c5-47a5-94c6-adaba8a4b3af}</Project>
-      <Name>CruiseDAL_FF35.VS15</Name>
+      <Name>CruiseDAL.VS15</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CruiseDAL\FMSC.ORM\FMSC.ORM.VS15.csproj">
       <Project>{22432d40-9892-40a6-aa0c-cc8c2fa4bb91}</Project>
