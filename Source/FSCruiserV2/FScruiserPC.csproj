@@ -94,6 +94,10 @@
     <Reference Include="FMSC.Core">
       <HintPath>..\..\FMSC.Core\Net45\FMSC.Core.dll</HintPath>
     </Reference>
+    <Reference Include="NBug, Version=1.2.0.0, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
+      <HintPath>..\packages\NBug.1.2.2\lib\net40-client\NBug.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -357,6 +361,7 @@
     <None Include="app.config" />
     <None Include="Core\FSCruiser.Core.cd" />
     <None Include="Core\ViewInterfaces\FSCruiser.Core.ViewInterfaces.cd" />
+    <None Include="packages.config" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.TreeDO.datasource" />
     <None Include="Properties\DataSources\FSCruiser.Core.Models.Plot3PPNT.datasource" />
@@ -392,10 +397,6 @@
     <ProjectReference Include="..\..\FMSC.Sampling\src\FMSC.Sampling\FMSC.Sampling.VS15.csproj">
       <Project>{4097b6d6-d317-4169-9219-43e1ac4dc1f7}</Project>
       <Name>FMSC.Sampling.VS15</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\FMSC.Util\FMSC.Utility\FMSC.Utility.VS15.csproj">
-      <Project>{f882e97d-a121-41f6-916f-8fa956f84bcc}</Project>
-      <Name>FMSC.Utility.VS15</Name>
     </ProjectReference>
     <ProjectReference Include="..\FScruiser.Core\FScruiser.Core.csproj">
       <Project>{7D65EE5A-23F0-4F08-9DC6-7DF0E23D3926}</Project>

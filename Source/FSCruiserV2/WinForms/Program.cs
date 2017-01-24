@@ -6,7 +6,7 @@ using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
         /// The main entry point for the application.
@@ -27,8 +27,24 @@ namespace FSCruiser.WinForms
                 dalPath = args[1];
             }
 
-            AppDomain.CurrentDomain.UnhandledException += FMSC.Utility.ErrorHandling.ErrorHandlers.UnhandledException;
+            NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
+            NBug.Settings.StoragePath = NBug.Enums.StoragePath.WindowsTemp;
+            NBug.Settings.Destinations.Add(new NBug.Core.Submission.Tracker.Redmine()
+            {
+                ApiKey = "6cf4343091c7509dbf27d6afd84a267189b9d3b9",
+                CustomSubject = "CrashReport",
+                Url = "http://fmsc-projects.herokuapp.com/projects/fscruiser/",
+                ProjectId = "fscruiser",
+                TrackerId = "5",
+                PriorityId = "1",
+                StatusId = "1"
+            });
 
+            NBug.Settings.ReleaseMode = true;//only create error reports if debugger not attached
+            NBug.Settings.StopReportingAfter = 60;
+
+            AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
+            Application.ThreadException += NBug.Handler.ThreadException;
 
             DialogService.Instance = new WinFormsDialogService();
             using (SoundService.Instance = new WinFormsSoundService())

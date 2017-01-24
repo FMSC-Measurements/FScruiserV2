@@ -122,9 +122,9 @@ namespace FSCruiser.WinForms
             ToolStripMenuItem[] items =
                 ApplicationSettings.Instance.RecentProjects.Select(
                 r => new ToolStripMenuItem(r.ProjectName, null, recentFileSelected)
-                    {
-                        ToolTipText = r.FilePath
-                    }
+                {
+                    ToolTipText = r.FilePath
+                }
                 ).ToArray();
 
             recentToolStripMenuItem.DropDownItems.AddRange(items);

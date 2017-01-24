@@ -24,7 +24,6 @@ namespace FSCruiser.Core
 
         public DAL DataStore { get; protected set; }
 
-
         public IViewController ViewController { get; protected set; }
 
         public ApplicationController(IViewController viewController)
@@ -59,8 +58,10 @@ namespace FSCruiser.Core
         {
             if (createErrorReport)
             {
+#if NetCF
                 FMSC.Utility.ErrorHandling.ErrorReport report = new FMSC.Utility.ErrorHandling.ErrorReport(ex, Assembly.GetCallingAssembly());
                 report.MakeErrorReport();
+#endif
             }
 
             Logger.Log.E(ex);
@@ -83,6 +84,8 @@ namespace FSCruiser.Core
 
         public void OpenFile(string path)
         {
+            throw new InvalidOperationException();
+
             if (this._fileLoadWorker != null)
             {
                 _fileLoadWorker.Dispose();
@@ -132,7 +135,7 @@ namespace FSCruiser.Core
             //if (worker == null) { return; }
 
             ViewController.HideWait();
-            
+
             if (this._fileLoadWorker.IsDone)
             {
                 var dataStore = _fileLoadWorker.DataStore;
