@@ -386,9 +386,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\CruiseDAL\SQLite\Mobile_CF20\SQLite.Interop.094.dll">
+    <Content Include="..\..\CruiseDAL\SQLite\Mobile_CF20\SQLite.Interop.094.dll">
       <Link>SQLite.Interop.094.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="fscruiser.ico" />
     <Content Include="Sounds\pageChange.wav">
