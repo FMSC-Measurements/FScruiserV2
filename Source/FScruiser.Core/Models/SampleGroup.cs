@@ -214,10 +214,13 @@ namespace FSCruiser.Core.Models
             {
                 case "STR":
                     {
-                        if (SampleSelectorType != null
-                            && SampleSelectorType.Equals("SystematicSelecter", StringComparison.InvariantCultureIgnoreCase))
+                        if (String.Equals(SampleSelectorType, CruiseMethods.SYSTEMATIC_SAMPLER_TYPE))
                         {
                             return MakeSystematicSampleSelector();
+                        }
+                        else if (String.Equals(SampleSelectorType, CruiseMethods.CLICKER_SAMPLER_TYPE))
+                        {
+                            return new ClickerSelecter();
                         }
                         else
                         {

@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="Models\ClickerSelecter.cs" />
     <Compile Include="Models\CountTree.cs" />
     <Compile Include="Models\Cruiser.cs" />
     <Compile Include="Models\CuttingUnit.cs" />
