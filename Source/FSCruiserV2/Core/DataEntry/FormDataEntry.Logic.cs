@@ -93,7 +93,7 @@ namespace FSCruiser.Core.DataEntry
             SampleGroupDO sg = count.SampleGroup;
 
             //if doing a manual tally create a tree and jump out
-            if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
+            if (sg.SampleSelectorType == CruiseDAL.Schema.CruiseMethods.CLICKER_SAMPLER_TYPE)
             {
                 action = new TallyAction(count);
                 var newTree = Unit.CreateNewTreeEntry(count, true); //create measure tree
@@ -444,7 +444,7 @@ namespace FSCruiser.Core.DataEntry
         {
             bool validationPass = true;
             invalidViewIndex = -1;
-            foreach(var view in View.Layouts.OfType<ITreeView>())
+            foreach (var view in View.Layouts.OfType<ITreeView>())
             {
                 if (view.Trees != null)
                 {
