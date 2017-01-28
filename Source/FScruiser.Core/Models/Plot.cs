@@ -162,6 +162,21 @@ namespace FSCruiser.Core.Models
                     return false;
                 }
             }
+
+            return true;
+        }
+
+        public bool CrossStrataIsTreeNumberAvalible(long treeNumber)
+        {
+            foreach (var st in CuttingUnit.PlotStrata.Where(x => x != this.Stratum))
+            {
+                var plot = st.Plots.Where(x => x.PlotNumber == this.PlotNumber).FirstOrDefault();
+                if (plot.Trees.Any(x => x.TreeNumber == treeNumber))
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
 
@@ -224,7 +239,7 @@ namespace FSCruiser.Core.Models
             var newTree = this.CuttingUnit.CreateNewTreeEntryInternal(this.Stratum, sg, tdv, isMeasure);
 
             newTree.Plot = this;
-            newTree.TreeNumber = this.HighestTreeNum + 1;
+            newTree.TreeNumber = CuttingUnit.GetNextPlotTreeNumber(this.PlotNumber);
             newTree.TreeCount = 1;
 
             return newTree;

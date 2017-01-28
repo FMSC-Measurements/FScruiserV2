@@ -77,6 +77,23 @@ namespace FSCruiser.Core.Models
             //return ++UnitTreeNumIndex;
         }
 
+        public long GetNextPlotTreeNumber(long plotNumber)
+        {
+            var topTreeNum = 0L;
+
+            foreach (var st in PlotStrata)
+            {
+                var plot = st.Plots.Where(x => x.PlotNumber == plotNumber).FirstOrDefault();
+                if (plot != null 
+                    && plot.Trees != null 
+                    && plot.Trees.Count > 0)
+                {
+                    topTreeNum = Math.Max(topTreeNum, plot.Trees.Max(x => x.TreeNumber));
+                }
+            }
+            return topTreeNum + 1;
+        }
+
         public bool IsTreeNumberAvalible(long treeNumber)
         {
             foreach (Tree tree in this.NonPlotTrees)

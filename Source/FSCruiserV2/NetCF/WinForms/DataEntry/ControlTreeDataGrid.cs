@@ -336,7 +336,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public bool PreviewKeypress(KeyEventArgs ea)
         {
-            if (ea.KeyData != Keys.None) { return false; }
+            if (ea.KeyData == Keys.None) { return false; }
 
             var settings = ApplicationSettings.Instance; 
 

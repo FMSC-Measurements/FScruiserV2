@@ -84,8 +84,6 @@ namespace FSCruiser.Core
 
         public void OpenFile(string path)
         {
-            throw new InvalidOperationException();
-
             if (this._fileLoadWorker != null)
             {
                 _fileLoadWorker.Dispose();
