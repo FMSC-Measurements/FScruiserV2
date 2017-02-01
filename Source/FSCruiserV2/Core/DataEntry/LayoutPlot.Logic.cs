@@ -88,13 +88,19 @@ namespace FSCruiser.Core.DataEntry
             return this.CheckPlot(this.CurrentPlot);
         }
 
-        public bool CheckPlot(Plot pInfo)
+        public bool CheckPlot(Plot plot)
         {
-            if (pInfo != null)
+            if (plot != null)
             {
                 this.EndEdit();
+                if (!plot.IsNull && (plot.Trees != null && plot.Trees.Count == 0))
+                {
+                    plot.IsNull |= DialogService.AskYesNo("Plot Contains No Trees, Mark it as Empty Plot?",
+                        "Mark Plot Empty?");
+                }
+
                 string error;
-                if (!pInfo.ValidatePlot(out error))
+                if (!plot.ValidatePlot(out error))
                 {
                     return DialogService.AskYesNo(error
                         , "Continue?", true);
@@ -244,7 +250,7 @@ namespace FSCruiser.Core.DataEntry
             }
 
             if (DialogService.AskYesNo("Are you sure you want to delete this plot?"
-                , String.Empty,  true))
+                , String.Empty, true))
             {
                 this._disableCheckPlot = true;
                 CurrentPlot.Delete();
@@ -308,12 +314,13 @@ namespace FSCruiser.Core.DataEntry
             Tree tree = null;
 
             var sg = count.SampleGroup;
-            if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
-            {
-                tree = plot.CreateNewTreeEntry(count, true);
-                tree.TreeCount = sg.SamplingFrequency;
-            }
-            else if (Stratum.Method == CruiseMethods.FIX
+            //if ((sg.TallyMethod & CruiseDAL.Enums.TallyMode.Manual) == CruiseDAL.Enums.TallyMode.Manual)
+            //{
+            //    tree = plot.CreateNewTreeEntry(count, true);
+            //    tree.TreeCount = sg.SamplingFrequency;
+            //}
+            //else
+            if (Stratum.Method == CruiseMethods.FIX
             || Stratum.Method == CruiseMethods.PNT)
             {
                 tree = plot.CreateNewTreeEntry(count, true);
