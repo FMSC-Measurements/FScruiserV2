@@ -141,5 +141,13 @@ namespace FSCruiser.WinForms
                 this.Controller.OpenFile(tsmi.ToolTipText);
             }
         }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var view = new FormSettings())
+            {
+                view.ShowDialog(this);
+            }
+        }
     }
 }

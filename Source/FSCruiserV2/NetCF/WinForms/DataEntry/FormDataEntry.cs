@@ -5,7 +5,7 @@ using FSCruiser.Core;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.Common;
-using FSCruiser.NetCF.WinForms;
+using FSCruiser.WinForms;
 using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry

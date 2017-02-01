@@ -6,7 +6,7 @@ using CruiseDAL.DataObjects;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
 using System.Collections.Generic;
-using FSCruiser.NetCF.WinForms;
+using FSCruiser.WinForms;
 
 namespace FSCruiser.WinForms
 {

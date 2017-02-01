@@ -205,6 +205,8 @@ namespace FSCruiser.Core.DataEntry
 
         protected bool AskEnterMeasureTreeData()
         {
+            if (!ApplicationSettings.Instance.EnableAskEnterTreeData) { return false; }
+
             return DialogService.AskYesNo("Would you like to enter tree data now?", "Sample", false);
         }
 

@@ -9,9 +9,10 @@ using System.ComponentModel;
 namespace FSCruiser.Core
 {
     [Serializable]
-    public class ApplicationSettings 
+    public class ApplicationSettings
     {
         #region static properties
+
         static KeysConverter _keyConverter = new KeysConverter();
         static ApplicationSettings _instance;
 
@@ -58,8 +59,6 @@ namespace FSCruiser.Core
 
         public List<RecentProject> RecentProjects { get; set; }
 
-        
-
         public ApplicationSettings()
         {
             RecentProjects = new List<RecentProject>();
@@ -67,7 +66,6 @@ namespace FSCruiser.Core
             EnablePageChangeSound = true;
             EnableTallySound = true;
 
-            
 #if NetCF
             AddPlotKey = Keys.None;
 #else
@@ -78,10 +76,10 @@ namespace FSCruiser.Core
             ResequencePlotTreesKey = Keys.None;
             UntallyKey = Keys.None;
             JumpTreeTallyKey = Keys.Escape;
-
         }
 
         #region backup settings
+
         [XmlAttribute]
         public bool BackUpToCurrentDir { get; set; }
 
@@ -104,10 +102,16 @@ namespace FSCruiser.Core
 
         [XmlAttribute]
         public BackUpMethod BackUpMethod { get; set; }
-        #endregion 
+
+        #endregion backup settings
+
+
 
         [XmlAttribute]
         public bool EnableCruiserPopup { get; set; }
+
+        [XmlAttribute]
+        public bool EnableAskEnterTreeData { get; set; }
 
         [XmlElement]
         public List<Cruiser> Cruisers
@@ -126,16 +130,18 @@ namespace FSCruiser.Core
         [XmlElement]
         public float DataGridFontSize { get; set; }
 
-
         #region sound settings
+
         [XmlAttribute]
         public bool EnableTallySound { get; set; }
 
         [XmlAttribute]
         public bool EnablePageChangeSound { get; set; }
-        #endregion
+
+        #endregion sound settings
 
         #region hotkey settings
+
         [XmlAttribute]
         public string AddPlotKeyStr
         {
@@ -200,8 +206,8 @@ namespace FSCruiser.Core
 
         [XmlIgnore]
         public Keys JumpTreeTallyKey { get; set; }
-        #endregion
 
+        #endregion hotkey settings
 
         public static void Initialize()
         {
@@ -342,7 +348,7 @@ namespace FSCruiser.Core
         public void NotifyCruisersChanged()
         {
             var cruisersChanged = CruisersChanged;
-            if(cruisersChanged != null)
+            if (cruisersChanged != null)
             { cruisersChanged(this, null); }
         }
 

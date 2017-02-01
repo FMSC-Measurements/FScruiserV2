@@ -7,7 +7,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 
-namespace FSCruiser.NetCF.WinForms.Controls
+namespace FSCruiser.WinForms.Controls
 {
     public partial class HotKeySelectControl : TextBox
     {
