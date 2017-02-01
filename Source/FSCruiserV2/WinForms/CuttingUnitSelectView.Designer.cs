@@ -48,12 +48,10 @@ namespace FSCruiser.WinForms
             this._strataLB.DisplayMember = "Code";
             this._strataLB.Dock = System.Windows.Forms.DockStyle.Top;
             this._strataLB.FormattingEnabled = true;
-            this._strataLB.ItemHeight = 16;
-            this._strataLB.Location = new System.Drawing.Point(0, 64);
-            this._strataLB.Margin = new System.Windows.Forms.Padding(4);
+            this._strataLB.Location = new System.Drawing.Point(0, 55);
             this._strataLB.Name = "_strataLB";
             this._strataLB.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this._strataLB.Size = new System.Drawing.Size(333, 116);
+            this._strataLB.Size = new System.Drawing.Size(250, 95);
             this._strataLB.TabIndex = 7;
             // 
             // label2
@@ -62,10 +60,9 @@ namespace FSCruiser.WinForms
             this.label2.BackColor = System.Drawing.SystemColors.Control;
             this.label2.Dock = System.Windows.Forms.DockStyle.Top;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(0, 44);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(0, 38);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 20);
+            this.label2.Size = new System.Drawing.Size(52, 17);
             this.label2.TabIndex = 6;
             this.label2.Text = "Strata";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -78,10 +75,9 @@ namespace FSCruiser.WinForms
             this._cuttingUnitCB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this._cuttingUnitCB.FormatString = "[Code]";
             this._cuttingUnitCB.FormattingEnabled = true;
-            this._cuttingUnitCB.Location = new System.Drawing.Point(0, 20);
-            this._cuttingUnitCB.Margin = new System.Windows.Forms.Padding(4);
+            this._cuttingUnitCB.Location = new System.Drawing.Point(0, 17);
             this._cuttingUnitCB.Name = "_cuttingUnitCB";
-            this._cuttingUnitCB.Size = new System.Drawing.Size(333, 24);
+            this._cuttingUnitCB.Size = new System.Drawing.Size(250, 21);
             this._cuttingUnitCB.TabIndex = 4;
             // 
             // label1
@@ -91,24 +87,22 @@ namespace FSCruiser.WinForms
             this.label1.Dock = System.Windows.Forms.DockStyle.Top;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(168, 20);
+            this.label1.Size = new System.Drawing.Size(143, 17);
             this.label1.TabIndex = 5;
             this.label1.Text = "Select Cutting Unit";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CuttingUnitSelectView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this._strataLB);
             this.Controls.Add(this.label2);
             this.Controls.Add(this._cuttingUnitCB);
             this.Controls.Add(this.label1);
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "CuttingUnitSelectView";
-            this.Size = new System.Drawing.Size(333, 471);
+            this.Size = new System.Drawing.Size(250, 383);
             ((System.ComponentModel.ISupportInitialize)(this._BS_CuttingUnits)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

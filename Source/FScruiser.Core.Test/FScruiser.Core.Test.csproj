@@ -60,32 +60,6 @@
     <Content Include="AuthoringTests.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CruiseDAL\CruiseDAL\CruiseDAL_FF35.csproj">
-      <Project>{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}</Project>
-      <Name>CruiseDAL_FF35</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CruiseDAL\FMSC.ORM\FMSC.ORM.Net35.csproj">
-      <Project>{0452719F-1CAA-4959-B00C-AB8B1C438571}</Project>
-      <Name>FMSC.ORM.Net35</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\FMSC.Controls\FMSC.Controls\FMSC.Controls.VS08.csproj">
-      <Project>{83CCFC7F-D667-4550-B335-B48C2F67A207}</Project>
-      <Name>FMSC.Controls.VS08</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\FMSC.Sampling\src\FMSC.Sampling\FMSC.Sampling_FF35.csproj">
-      <Project>{4097B6D6-D317-4169-9219-43E1AC4DC1F7}</Project>
-      <Name>FMSC.Sampling_FF35</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\FMSC.Util\FMSC.Utility\FMSC.Utility.csproj">
-      <Project>{F882E97D-A121-41F6-916F-8FA956F84BCC}</Project>
-      <Name>FMSC.Utility</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FSCruiserV2\FScruiserPC.csproj">
-      <Project>{9568C413-05B2-4672-AD7B-E4101537AB26}</Project>
-      <Name>FScruiserPC</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Shadow Include="Test References\FScruiserPC.accessor" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
