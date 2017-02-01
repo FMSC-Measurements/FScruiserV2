@@ -70,8 +70,6 @@ namespace FSCruiser.WinForms.DataEntry
             this.Parent = parent;
         }
 
-        
-
         void InitializeDataGrid(PlotStratum stratum)
         {
             this._dataGrid.CellClick += new DataGridViewCellEventHandler(_dataGrid_CellClick);
@@ -262,11 +260,18 @@ namespace FSCruiser.WinForms.DataEntry
             if (_treeNumberColumn != null && e.ColumnIndex == _treeNumberColumn.Index)
             {
                 var newTreeNum = (long)cellValue;
-                if (curTree.TreeNumber != newTreeNum
-                    && !this.ViewLogicController.CurrentPlot.IsTreeNumberAvalible(newTreeNum))
+                if (curTree.TreeNumber != newTreeNum)
                 {
-                    MessageBox.Show("Tree Number already exists");
-                    e.Cancel = true;
+                    if (!this.ViewLogicController.CurrentPlot.IsTreeNumberAvalible(newTreeNum))
+                    {
+                        MessageBox.Show("Tree Number already exists");
+                        e.Cancel = true;
+                    }
+                    else if (!ViewLogicController.CurrentPlot.CrossStrataIsTreeNumberAvalible(newTreeNum))
+                    {
+                        MessageBox.Show("Tree Number already exist, in a different stratum");
+                        e.Cancel = true;
+                    }
                 }
             }
             else if (_sgColumn != null && cell.ColumnIndex == _sgColumn.Index)
@@ -665,7 +670,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void NotifyEnter()
         {
-
         }
 
         public void ViewEndEdit()
@@ -773,8 +777,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         #endregion ITreeView Members
 
-
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -790,7 +793,7 @@ namespace FSCruiser.WinForms.DataEntry
                 {
                     ApplicationSettings.Instance.CruisersChanged -= Settings_CruisersChanged;
                 }
-                catch(NullReferenceException) { }
+                catch (NullReferenceException) { }
             }
             LayoutPlot.SplitterMoved -= LayoutPlot_SplitterMoved;
 
