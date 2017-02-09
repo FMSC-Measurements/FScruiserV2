@@ -108,16 +108,15 @@ namespace FSCruiser.Core.Models
                 this.DAL.BeginTransaction();
                 try
                 {
-                    foreach (Tree tree in this.Trees)
-                    {
-                        tree.Delete();
-
-                        //TreeDO.RecursiveDeleteTree(tree);
-                    }
-                    base.Delete();
+                    DAL.Execute("DELETE FROM LogStock;");
+                    DAL.Execute("DELETE FROM TreeCalculatedValues;");
+                    DAL.Execute("DELETE FROM Log WHERE Tree_CN in (SELECT Tree_CN FROM Tree WHERE Plot_CN = ?);", Plot_CN);
+                    DAL.Execute("DELETE FROM Tree WHERE Plot_CN = ?;", Plot_CN);
+                    DAL.Execute("DELETE FROM Plot WHERE Plot_CN = ?;", Plot_CN);
                     this.DAL.CommitTransaction();
+                    OnDeleted();
                 }
-                catch (Exception)
+                catch
                 {
                     this.DAL.RollbackTransaction();
                     throw;
@@ -256,8 +255,6 @@ namespace FSCruiser.Core.Models
         public void DeleteTree(Tree tree)
         {
             tree.Delete();
-            //TreeDO.RecursiveDeleteTree(tree);
-            //this.CuttingUnit.TreeList.Remove(tree);
             this.Trees.Remove(tree);
         }
 
@@ -285,7 +282,7 @@ namespace FSCruiser.Core.Models
         public bool ValidatePlot(out string message)
         {
             message = string.Empty;
- 
+
             if (!ValidateTrees())
             {
                 message = "Error(s) found on tree records in current plot";

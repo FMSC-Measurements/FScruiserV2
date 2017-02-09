@@ -234,6 +234,26 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public override void Delete()
+        {
+            DAL.BeginTransaction();
+            try
+            {
+                DAL.Execute("DELETE FROM Log WHERE Tree_CN = " + this.Tree_CN + ";");
+                DAL.Execute("DELETE FROM LogStock WHERE Tree_CN = " + this.Tree_CN + ";");
+                DAL.Execute("DELETE FROM Stem WHERE Tree_CN = " + this.Tree_CN + ";");
+                DAL.Execute("DELETE FROM TreeCalculatedValues WHERE Tree_CN = " + this.Tree_CN + ";");
+                DAL.Execute("DELETE FROM Tree WHERE Tree_CN = " + this.Tree_CN + ";");
+                DAL.CommitTransaction();
+                IsDeleted = true;
+            }
+            catch
+            {
+                DAL.RollbackTransaction();
+                throw;
+            }
+        }
+
         #endregion overridden methods
 
         #region validation
