@@ -2,8 +2,8 @@
 ; #defines require the ISPP add-on: http://sourceforge.net/projects/ispp/
 #define APP "FSCruiserV2"
 
-#define APP_VERSION "2016.09.09"
-#define SETUPVERSION "20160909"
+#define APP_VERSION "2017.02.09"
+#define SETUPVERSION "20170209"
 #define SPECIALTAG "Production"
 #define BASEURL "http://www.fs.fed.us/fmsc/measure"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
@@ -47,7 +47,7 @@ Source: "wce500\armv4i\*.CAB"; DestDir: "{localappdata}\{#APP}\FDR_Install\\wce5
 
 ;FScruiser mobile files
 Source: {#FSCRUISER_INI}; DestDir: "{localappdata}\{#APP}\FDR_Install"; Flags: ignoreversion; 
-Source: "..\FSCruiserV2CECF20_CAB\Release\FSCruiserV2.CAB"; DestDir: "{localappdata}\{#APP}\FDR_Install"; Flags: ignoreversion; 
+Source: "..\Source\FSCruiserV2CECF20_CAB\Release\FSCruiserV2.CAB"; DestDir: "{localappdata}\{#APP}\FDR_Install"; Flags: ignoreversion; 
 
 ;Documentation
 Source: "..\Documentation\FScruiserV2UserGuide.docx"; DestName:"FScruiserV2UserGuide.docx"; DestDir: "{userappdata}\{#APP}"; Flags: ignoreversion;
