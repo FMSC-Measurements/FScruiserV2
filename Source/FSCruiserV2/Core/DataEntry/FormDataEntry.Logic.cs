@@ -282,7 +282,7 @@ namespace FSCruiser.Core.DataEntry
                 cancel = true;
                 return;
             }
-            if (tree.KPI != 0.0F)
+            if (!tree.KPI.EqualsEx(0.0F))
             {
                 string message = string.Format("Tree RecID:{0} KPI changed from {1} to {2}", tree.Tree_CN, tree.KPI, newKPI);
                 this.Database.LogMessage(message, "I");

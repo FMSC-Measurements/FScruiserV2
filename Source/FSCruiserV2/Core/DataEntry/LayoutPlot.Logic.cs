@@ -217,7 +217,6 @@ namespace FSCruiser.Core.DataEntry
         /// <summary>
         /// Creates a new plot using the plot info view and adds it to the given stratum's plot collection
         /// </summary>
-        /// <param name="stratum">stratum to create plot in</param>
         /// <returns>reference to newly created plot</returns>
         protected Plot AddPlot()
         {
