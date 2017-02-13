@@ -307,9 +307,9 @@ namespace FSCruiser.Core.Models
         {
             SampleSelecter selecter = null;
             int iFrequency = (int)this.InsuranceFrequency;
-            int KZ = (int)this.KZ;
+            int kz = (int)this.KZ;
             int maxKPI = 100000;
-            selecter = new FMSC.Sampling.ThreePSelecter(KZ, maxKPI, iFrequency);
+            selecter = new FMSC.Sampling.ThreePSelecter(kz, maxKPI, iFrequency);
             return selecter;
         }
 
