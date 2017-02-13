@@ -94,6 +94,20 @@ namespace FSCruiser.WinForms.DataEntry
             this._BS_Plot.DataSource = this;
 
 #if NetCF
+            if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
+            {
+                this.WindowState = FormWindowState.Maximized;
+                this.Menu = null;
+                this.mainMenu1.Dispose();
+                this.mainMenu1 = null;
+
+                _ceControlPanel.Visible = true;
+            }
+            else
+            {
+                _ceControlPanel.Visible = false;
+            }
+
             Microsoft.WindowsCE.Forms.InputModeEditor.SetInputMode(_plotNumTB, Microsoft.WindowsCE.Forms.InputMode.Numeric);
             Microsoft.WindowsCE.Forms.InputModeEditor.SetInputMode(_aspect, Microsoft.WindowsCE.Forms.InputMode.Numeric);
             Microsoft.WindowsCE.Forms.InputModeEditor.SetInputMode(_slope, Microsoft.WindowsCE.Forms.InputMode.Numeric);
@@ -251,7 +265,6 @@ namespace FSCruiser.WinForms.DataEntry
         Panel morePlotDataPnl;
         Panel commands;
 
-
         /// <summary>
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
@@ -319,7 +332,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(238, 502);
+            this.panel1.Size = new System.Drawing.Size(238, 332);
             //
             // plotDataPnl
             //
@@ -332,7 +345,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.plotDataPnl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.plotDataPnl.Location = new System.Drawing.Point(0, 0);
             this.plotDataPnl.Name = "plotDataPnl";
-            this.plotDataPnl.Size = new System.Drawing.Size(238, 470);
+            this.plotDataPnl.Size = new System.Drawing.Size(238, 300);
             //
             // _plotStatsTB
             //
@@ -451,7 +464,7 @@ namespace FSCruiser.WinForms.DataEntry
             //
             this.commands.Controls.Add(this._resequenceTreeNumsBtn);
             this.commands.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.commands.Location = new System.Drawing.Point(0, 470);
+            this.commands.Location = new System.Drawing.Point(0, 300);
             this.commands.Name = "commands";
             this.commands.Size = new System.Drawing.Size(238, 32);
             //
@@ -471,7 +484,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._ceControlPanel.Controls.Add(this._getGPSBTN);
             this._ceControlPanel.Controls.Add(this.button1);
             this._ceControlPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._ceControlPanel.Location = new System.Drawing.Point(0, 502);
+            this._ceControlPanel.Location = new System.Drawing.Point(0, 332);
             this._ceControlPanel.Name = "_ceControlPanel";
             this._ceControlPanel.Size = new System.Drawing.Size(238, 22);
             this._ceControlPanel.Visible = false;
@@ -510,7 +523,7 @@ namespace FSCruiser.WinForms.DataEntry
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(238, 524);
+            this.ClientSize = new System.Drawing.Size(238, 354);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this._ceControlPanel);
             this.Menu = this.mainMenu1;

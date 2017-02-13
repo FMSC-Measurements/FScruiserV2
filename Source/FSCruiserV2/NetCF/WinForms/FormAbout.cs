@@ -17,9 +17,6 @@ namespace FSCruiser.WinForms
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
             {
                 this.WindowState = FormWindowState.Maximized;
-                this.Menu = null;
-                this.mainMenu1.Dispose();
-                this.mainMenu1 = null;
             }
 
             this.TopMost = true;

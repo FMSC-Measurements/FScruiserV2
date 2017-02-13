@@ -35,7 +35,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this._exeLBL = new System.Windows.Forms.Label();
-            this.mainMenu1 = new System.Windows.Forms.MainMenu();
             this._exeDOB_LBL = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -105,7 +104,6 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
-            this.Menu = this.mainMenu1;
             this.MinimizeBox = false;
             this.Name = "FormAbout";
             this.Text = "About FScruiser";
@@ -122,7 +120,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label _exeLBL;
-        private System.Windows.Forms.MainMenu mainMenu1;
         private System.Windows.Forms.Label _exeDOB_LBL;
     }
 }
