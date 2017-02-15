@@ -47,6 +47,7 @@ namespace FSCruiser.WinForms
             Application.ThreadException += NBug.Handler.ThreadException;
 
             DialogService.Instance = new WinFormsDialogService();
+            using (var appMutex = new System.Threading.Mutex(true, "FScruiser"))
             using (SoundService.Instance = new WinFormsSoundService())
             using (ViewController viewController = new ViewController())
             using (ApplicationController appController = new ApplicationController(viewController))

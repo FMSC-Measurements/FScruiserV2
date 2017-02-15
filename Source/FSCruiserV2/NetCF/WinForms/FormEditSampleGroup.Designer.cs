@@ -170,7 +170,7 @@
             this._ceDialogPanel.Controls.Add(this._cancel_BTN);
             this._ceDialogPanel.Controls.Add(this._ok_BTN);
             this._ceDialogPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._ceDialogPanel.Location = new System.Drawing.Point(0, 424);
+            this._ceDialogPanel.Location = new System.Drawing.Point(0, 414);
             this._ceDialogPanel.Name = "_ceDialogPanel";
             this._ceDialogPanel.Size = new System.Drawing.Size(240, 25);
             // 
@@ -203,7 +203,7 @@
             this._mainContentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this._mainContentPanel.Location = new System.Drawing.Point(0, 0);
             this._mainContentPanel.Name = "_mainContentPanel";
-            this._mainContentPanel.Size = new System.Drawing.Size(240, 424);
+            this._mainContentPanel.Size = new System.Drawing.Size(240, 414);
             // 
             // panel3
             // 
@@ -375,7 +375,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(240, 449);
+            this.ClientSize = new System.Drawing.Size(240, 439);
             this.Controls.Add(this._mainContentPanel);
             this.Controls.Add(this._ceDialogPanel);
             this.Menu = this.mainMenu1;

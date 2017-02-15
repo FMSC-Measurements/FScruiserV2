@@ -113,9 +113,9 @@ namespace FSCruiser.WinForms
             this._enablePageChangeSound = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this._cancel_button = new System.Windows.Forms.Button();
             this.panel9 = new System.Windows.Forms.Panel();
             this._ok_button = new System.Windows.Forms.Button();
+            this._cancel_button = new System.Windows.Forms.Button();
             this.panel3.SuspendLayout();
             this.panel8.SuspendLayout();
             this.panel7.SuspendLayout();
@@ -337,30 +337,19 @@ namespace FSCruiser.WinForms
             // 
             this.panel1.AutoScroll = true;
             this.panel1.BackColor = System.Drawing.SystemColors.Info;
-            this.panel1.Controls.Add(this.panel9);
             this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(266, 368);
-            // 
-            // _cancel_button
-            // 
-            this._cancel_button.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this._cancel_button.Dock = System.Windows.Forms.DockStyle.Right;
-            this._cancel_button.Location = new System.Drawing.Point(156, 0);
-            this._cancel_button.Name = "_cancel_button";
-            this._cancel_button.Size = new System.Drawing.Size(110, 27);
-            this._cancel_button.TabIndex = 2;
-            this._cancel_button.Text = "Cancel";
+            this.panel1.Size = new System.Drawing.Size(266, 275);
             // 
             // panel9
             // 
             this.panel9.Controls.Add(this._ok_button);
             this.panel9.Controls.Add(this._cancel_button);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel9.Location = new System.Drawing.Point(0, 341);
+            this.panel9.Location = new System.Drawing.Point(0, 248);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(266, 27);
             // 
@@ -374,12 +363,23 @@ namespace FSCruiser.WinForms
             this._ok_button.TabIndex = 3;
             this._ok_button.Text = "OK";
             // 
+            // _cancel_button
+            // 
+            this._cancel_button.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this._cancel_button.Dock = System.Windows.Forms.DockStyle.Right;
+            this._cancel_button.Location = new System.Drawing.Point(156, 0);
+            this._cancel_button.Name = "_cancel_button";
+            this._cancel_button.Size = new System.Drawing.Size(110, 27);
+            this._cancel_button.TabIndex = 2;
+            this._cancel_button.Text = "Cancel";
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(266, 368);
+            this.ClientSize = new System.Drawing.Size(266, 275);
+            this.Controls.Add(this.panel9);
             this.Controls.Add(this.panel1);
             this.Name = "FormSettings";
             this.Text = "Settings";

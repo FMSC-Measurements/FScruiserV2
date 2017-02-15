@@ -2,8 +2,8 @@
 ; #defines require the ISPP add-on: http://sourceforge.net/projects/ispp/
 #define APP "FSCruiserV2"
 
-#define APP_VERSION "2017.02.13"
-#define SETUPVERSION "20170213"
+#define APP_VERSION "2017.02.15"
+#define SETUPVERSION "20170215"
 #define SPECIALTAG "Production"
 #define BASEURL "http://www.fs.fed.us/fmsc/measure"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
@@ -21,11 +21,13 @@ AppPublisherURL ={#BASEURL}
 AppSupportURL   ={#BASEURL}/support.shtml
 AppUpdatesURL   ={#BASEURL}/cruising/index.shtml
 
+LicenseFile=..\LICENSE.md
+
 ;this is not a tyical installer and doesn't install anything on the users computer
 Uninstallable   = no 
 CreateAppDir    = no
 
-ShowLanguageDialog      = no
+
 DisableProgramGroupPage = yes
 DefaultGroupName        =FMSC\{#APP}
 
