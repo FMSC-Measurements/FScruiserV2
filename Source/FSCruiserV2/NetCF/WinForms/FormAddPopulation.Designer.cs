@@ -30,8 +30,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.Label _stratumLBL;
-            System.Windows.Forms.Label label1;
+            this._stratumLBL = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
             this._cancel_MI = new System.Windows.Forms.MenuItem();
             this._populationSelectPanel = new System.Windows.Forms.Panel();
@@ -48,8 +48,6 @@
             this._BS_population = new System.Windows.Forms.BindingSource(this.components);
             this._editTallySetup_BTN = new System.Windows.Forms.Button();
             this._addTDV_BTN = new System.Windows.Forms.Button();
-            _stratumLBL = new System.Windows.Forms.Label();
-            label1 = new System.Windows.Forms.Label();
             this._populationSelectPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._BS_SampleGroups)).BeginInit();
             this._mainPanel.SuspendLayout();
@@ -59,17 +57,17 @@
             // 
             // _stratumLBL
             // 
-            _stratumLBL.Location = new System.Drawing.Point(3, 11);
-            _stratumLBL.Name = "_stratumLBL";
-            _stratumLBL.Size = new System.Drawing.Size(49, 20);
-            _stratumLBL.Text = "Stratum";
+            this._stratumLBL.Location = new System.Drawing.Point(3, 11);
+            this._stratumLBL.Name = "_stratumLBL";
+            this._stratumLBL.Size = new System.Drawing.Size(49, 20);
+            this._stratumLBL.Text = "Stratum";
             // 
             // label1
             // 
-            label1.Location = new System.Drawing.Point(3, 34);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(100, 20);
-            label1.Text = "Sample Group";
+            this.label1.Location = new System.Drawing.Point(3, 34);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(100, 20);
+            this.label1.Text = "Sample Group";
             // 
             // mainMenu1
             // 
@@ -84,9 +82,9 @@
             // 
             this._populationSelectPanel.Controls.Add(this._editSG_BTN);
             this._populationSelectPanel.Controls.Add(this._sampleGroupCB);
-            this._populationSelectPanel.Controls.Add(label1);
+            this._populationSelectPanel.Controls.Add(this.label1);
             this._populationSelectPanel.Controls.Add(this._strataCB);
-            this._populationSelectPanel.Controls.Add(_stratumLBL);
+            this._populationSelectPanel.Controls.Add(this._stratumLBL);
             this._populationSelectPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this._populationSelectPanel.Location = new System.Drawing.Point(0, 0);
             this._populationSelectPanel.Name = "_populationSelectPanel";
@@ -244,6 +242,8 @@
         private System.Windows.Forms.BindingSource _BS_SampleGroups;
         private System.Windows.Forms.Button _editTallySetup_BTN;
         private System.Windows.Forms.Button _addTDV_BTN;
+        private System.Windows.Forms.Label _stratumLBL;
+        private System.Windows.Forms.Label label1;
 
     }
 }
