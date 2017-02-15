@@ -1,16 +1,22 @@
 #define APP "FSCruiserV2"
 
-#define APP_VERSION "2017.02.13"
-#define SETUPVERSION "20170213"
+#define APP_VERSION "2017.02.15"
+#define SETUPVERSION "20170215"
 #define SPECIALTAG "Production"
 #define BASEURL "http://www.fs.fed.us/fmsc/measure"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
 
 
 [Setup]
+
 AppName=FSCruiser V2
+AppId=FScruiserPC
+AppMutex=FScruiser   
 AppVersion={#APP_VERSION}
 AppVerName=FSCruiser version {#SETUPVERSION} for Windows Desktop
+
+LicenseFile=..\LICENSE.md
+
 AppPublisher={#ORGANIZATION}
 AppPublisherURL={#BASEURL}
 AppSupportURL={#BASEURL}/support.shtml
@@ -20,12 +26,24 @@ DefaultDirName={pf32}\FMSC\{#APP}
 DefaultGroupName=FMSC\{#APP}
 UsePreviousAppDir=no
 
+
+;specifies the file version on the setup exe
+VersionInfoVersion={#APP_VERSION}
+
 CreateAppDir=yes
 OutputBaseFilename=FScruiserV2_PC_{#SETUPVERSION}
+
 Compression=lzma
 SolidCompression=yes
+
 PrivilegesRequired=admin
-ShowLanguageDialog=no
+
+;dont allow program to be installed on network drives
+AllowUNCPath=no
+AllowNetworkDrive=no
+
+[Tasks]
+Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:AdditionalIcons};
 
 [Files]
 Source: "..\Source\FSCruiserV2\bin\PC\Release\FScruiserPC.exe"; DestDir: "{app}"; Flags: ignoreversion;
@@ -35,7 +53,7 @@ Source: "..\Source\FSCruiserV2\bin\PC\Release\x86\*.dll"; DestDir: "{app}"; Flag
 
 
 [Icons]
-Name: {userdesktop}\FScruiserV2; Filename: {app}\FScruiserPC.exe;
+Name: {userdesktop}\FScruiserV2; Filename: {app}\FScruiserPC.exe; Tasks: desktopicon
 Name: {group}\FScruiserV2; Filename: {app}\FScruiserPC.exe;
 
 
