@@ -27,10 +27,9 @@ namespace FSCruiser.WinForms.DataEntry
     {
         private IDataEntryPage _previousLayout;
         protected List<IDataEntryPage> _layouts = new List<IDataEntryPage>();
+
         protected LayoutTreeBased _tallyLayout;
-
         protected TabPage _tallyPage;
-
         protected TabPage _treePage;
         protected ControlTreeDataGrid _treeView;
 
@@ -40,6 +39,8 @@ namespace FSCruiser.WinForms.DataEntry
 
 #endif
 
+        protected IDataEntryDataService DataService { get; set; }
+
         protected virtual TabControl PageContainer
         {
             get { return _pageContainer; }
@@ -47,31 +48,28 @@ namespace FSCruiser.WinForms.DataEntry
 
         public IApplicationController Controller { get; protected set; }
 
+        #region Inialize Controlls
+
         protected void InitializeCommon(IApplicationController controller
-            , CuttingUnit unit)
+           , CuttingUnit unit)
         {
             KeyPreview = true;
 
             Controller = controller;
-            LogicController = new FormDataEntryLogic(unit, Controller, this);
+            DataService = new IDataEntryDataService(unit.Code
+                , controller.DataStore);
+
+            LogicController = new FormDataEntryLogic(Controller
+                , DialogService.Instance
+                , SoundService.Instance
+                , DataService
+                , this);
 
             // Set the form title (Text) with current cutting unit and description.
             this.Text = this.LogicController.GetViewTitle();
 
             InitializePageContainer();
         }
-
-        #region Inialize Controlls
-
-        //protected virtual TabControl MakePageContainer()
-        //{
-        //    TabControl pc = new TabControl();
-        //    pc.SelectedIndexChanged += new EventHandler(OnFocusedLayoutChanged);
-        //    pc.SuspendLayout();
-        //    pc.Dock = DockStyle.Fill;
-
-        //    return pc;
-        //}
 
         protected void InitializePageContainer()
         {
@@ -80,7 +78,7 @@ namespace FSCruiser.WinForms.DataEntry
             PageContainer.SuspendLayout();
 
             //do we have any tree based strata in the unit
-            if (Unit.TreeStrata != null && Unit.TreeStrata.Count > 0)
+            if (DataService.TreeStrata != null && DataService.TreeStrata.Any())
             {
                 InitializeTreesTab();
 
@@ -109,14 +107,17 @@ namespace FSCruiser.WinForms.DataEntry
 
 #if NetCF
             _treeView = new ControlTreeDataGrid(this.Controller
-                , this.LogicController
-                , this.SIP)
+                , DataService
+                , this.LogicController)
             {
                 Dock = DockStyle.Fill,
-                UserCanAddTrees = true
+                UserCanAddTrees = true,
+                SIP = SIP
             };
 #else
-            _treeView = new ControlTreeDataGrid(this.Controller, this.LogicController);
+            _treeView = new ControlTreeDataGrid(this.Controller
+            , DataService
+            , this.LogicController);
 #endif
             _treeView.Dock = DockStyle.Fill;
 
@@ -141,7 +142,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void InitializePlotTabs()
         {
-            foreach (PlotStratum st in Unit.PlotStrata)
+            foreach (PlotStratum st in DataService.PlotStrata)
             {
                 if (st.Method == "3PPNT")
                 {
@@ -159,16 +160,17 @@ namespace FSCruiser.WinForms.DataEntry
                 page.Text = String.Format("{0}-{1}[{2}]", st.Code, st.Method, st.Hotkey);
                 PageContainer.TabPages.Add(page);
 
-#if NetCF
-                LayoutPlot view = new LayoutPlot(this.LogicController, page, st, this.SIP);
-#else
+
                 LayoutPlot view = new LayoutPlot(this.LogicController, page, st);
-#endif
+#if NetCF 
+                view.Sip = SIP;
+#endif 
+
                 view.UserCanAddTrees = true;
                 _layouts.Add(view);
 
                 int pageIndex = PageContainer.TabPages.IndexOf(page);
-                this.LogicController.AddStratumHotKey(st.Hotkey, pageIndex);
+                this.LogicController.RegisterStratumHotKey(st.Hotkey, pageIndex);
             }
         }
 
@@ -208,26 +210,58 @@ namespace FSCruiser.WinForms.DataEntry
             //}
         }
 
-        //protected void OnKeyUpInternal(KeyEventArgs e)
-        //{
-        //    base.OnKeyUp(e);
-        //    if (e.Handled) { return; }
-
-        //    e.Handled = this.LogicController.HandleKeyPress(e);
-        //}
-
         #endregion Overrides
 
         #region Event Handlers
 
-        private void _addTreeBTN_Clicked(object sender, EventArgs e)
+        protected void _addTreeMI_Click(object sender, EventArgs e)
         {
-            this.LogicController.HandleAddTreeClick();
+            ITreeView view = FocusedLayout as ITreeView;
+            if (view == null) { return; }
+            view.UserAddTree();
         }
 
-        private void _deleteTreeBTN_Click(object sender, EventArgs e)
+        protected void _editCruisersMI_Click(object sender, EventArgs e)
         {
-            this.LogicController.HandleDeleteRowButtonClick();
+            Controller.ViewController.ShowManageCruisers();
+        }
+
+        protected void _showHideLogColMI_Click(object sender, EventArgs e)
+        {
+            ITreeView view = FocusedLayout as ITreeView;
+            if (view == null) { return; }
+            view.ToggleLogColumn();
+        }
+
+        protected void LimitingDistance_Click(object sender, EventArgs e)
+        {
+            LayoutPlot view = FocusedLayout as LayoutPlot;
+            if (view == null) { return; }
+            view.ShowLimitingDistanceDialog();
+        }
+
+        protected void _deleteTreeBTN_Click(object sender, EventArgs e)
+        {
+            ITreeView layout = FocusedLayout as ITreeView;
+            if (layout != null)
+            {
+                layout.DeleteSelectedTree();
+            }
+        }
+
+        private void showHideErrorMessages_Click(object sender, EventArgs e)
+        {
+            ITreeView view = FocusedLayout as ITreeView;
+            if (view == null) { return; }
+            view.ToggleErrorColumn();
+        }
+
+        private void _settingsMI_Click(object sender, EventArgs e)
+        {
+            using (var view = new FormSettings())
+            {
+                view.ShowDialog();
+            }
         }
 
         protected void OnFocusedLayoutChangedInternal(object sender, EventArgs e)
@@ -281,7 +315,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get
             {
-                return LogicController.Unit;
+                return DataService.CuttingUnit;
             }
         }
 
@@ -297,12 +331,6 @@ namespace FSCruiser.WinForms.DataEntry
         {
             get { return _layouts; }
         }
-
-        //public bool AskEnterMeasureTreeData()
-        //{
-        //    return DialogService.AskYesNo("Would you like to enter tree data now?"
-        //        , "Sample", false);
-        //}
 
         public void HandleCuttingUnitDataLoaded()
         {

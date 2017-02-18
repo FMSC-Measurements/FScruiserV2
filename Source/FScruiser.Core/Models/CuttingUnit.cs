@@ -63,187 +63,187 @@ namespace FSCruiser.Core.Models
         {
         }
 
-        #region Tree stuff
+        //#region Tree stuff
 
-        #region treeNumbering
+        //#region treeNumbering
 
-        private long GetNextNonPlotTreeNumber()
-        {
-            if (this.NonPlotTrees == null || this.NonPlotTrees.Count == 0)
-            { return 1; }
-            var lastTree = this.NonPlotTrees[this.NonPlotTrees.Count - 1];
-            long lastTreeNum = lastTree.TreeNumber;
-            return lastTreeNum + 1;
-            //return ++UnitTreeNumIndex;
-        }
+        //private long GetNextNonPlotTreeNumber()
+        //{
+        //    if (this.NonPlotTrees == null || this.NonPlotTrees.Count == 0)
+        //    { return 1; }
+        //    var lastTree = this.NonPlotTrees[this.NonPlotTrees.Count - 1];
+        //    long lastTreeNum = lastTree.TreeNumber;
+        //    return lastTreeNum + 1;
+        //    //return ++UnitTreeNumIndex;
+        //}
 
-        public long GetNextPlotTreeNumber(long plotNumber)
-        {
-            var topTreeNum = 0L;
+        //public long GetNextPlotTreeNumber(long plotNumber)
+        //{
+        //    var topTreeNum = 0L;
 
-            foreach (var st in PlotStrata)
-            {
-                var plot = st.Plots.Where(x => x.PlotNumber == plotNumber).FirstOrDefault();
-                if (plot != null 
-                    && plot.Trees != null 
-                    && plot.Trees.Count > 0)
-                {
-                    topTreeNum = Math.Max(topTreeNum, plot.Trees.Max(x => x.TreeNumber));
-                }
-            }
-            return topTreeNum + 1;
-        }
+        //    foreach (var st in PlotStrata)
+        //    {
+        //        var plot = st.Plots.Where(x => x.PlotNumber == plotNumber).FirstOrDefault();
+        //        if (plot != null
+        //            && plot.Trees != null
+        //            && plot.Trees.Count > 0)
+        //        {
+        //            topTreeNum = Math.Max(topTreeNum, plot.Trees.Max(x => x.TreeNumber));
+        //        }
+        //    }
+        //    return topTreeNum + 1;
+        //}
 
-        public bool IsTreeNumberAvalible(long treeNumber)
-        {
-            foreach (Tree tree in this.NonPlotTrees)
-            {
-                if (tree.TreeNumber == treeNumber)
-                {
-                    return false;
-                }
-            }
+        //public bool IsTreeNumberAvalible(long treeNumber)
+        //{
+        //    foreach (Tree tree in this.NonPlotTrees)
+        //    {
+        //        if (tree.TreeNumber == treeNumber)
+        //        {
+        //            return false;
+        //        }
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        #endregion treeNumbering
+        //#endregion treeNumbering
 
-        public Tree UserAddTree()
-        {
-            Tree templateTree = null;
-            Stratum stratum = null;
-            SampleGroup samplegroup = null;
-            TreeDefaultValueDO tdv = null;
-            if (NonPlotTrees.Count > 0)
-            {
-                templateTree = NonPlotTrees[NonPlotTrees.Count - 1];
-                if (templateTree != null)
-                {
-                    stratum = templateTree.Stratum;
-                    samplegroup = templateTree.SampleGroup;
-                    tdv = templateTree.TreeDefaultValue;
-                }
-            }
-            else if (DefaultStratum != null)
-            {
-                stratum = this.DefaultStratum;
+        //public Tree UserAddTree()
+        //{
+        //    Tree templateTree = null;
+        //    Stratum stratum = null;
+        //    SampleGroup samplegroup = null;
+        //    TreeDefaultValueDO tdv = null;
+        //    if (NonPlotTrees.Count > 0)
+        //    {
+        //        templateTree = NonPlotTrees[NonPlotTrees.Count - 1];
+        //        if (templateTree != null)
+        //        {
+        //            stratum = templateTree.Stratum;
+        //            samplegroup = templateTree.SampleGroup;
+        //            tdv = templateTree.TreeDefaultValue;
+        //        }
+        //    }
+        //    else if (DefaultStratum != null)
+        //    {
+        //        stratum = this.DefaultStratum;
 
-                //var samplegroups = DAL.From<SampleGroupModel>()
-                //    .Where("Stratum_CN = ?")
-                //    .Read(stratum.Stratum_CN).ToList();
-                if (stratum.SampleGroups != null
-                    && stratum.SampleGroups.Count == 1)
-                {
-                    samplegroup = stratum.SampleGroups[0];
-                }
-            }
+        //        //var samplegroups = DAL.From<SampleGroupModel>()
+        //        //    .Where("Stratum_CN = ?")
+        //        //    .Read(stratum.Stratum_CN).ToList();
+        //        if (stratum.SampleGroups != null
+        //            && stratum.SampleGroups.Count == 1)
+        //        {
+        //            samplegroup = stratum.SampleGroups[0];
+        //        }
+        //    }
 
-            var newTree = this.CreateNewTreeEntry(stratum
-                , samplegroup, tdv, true);
-            newTree.TreeCount = 0; //user added trees need a tree count of zero because users seem to be adding counts through tally settings
+        //    var newTree = this.CreateNewTreeEntry(stratum
+        //        , samplegroup, tdv, true);
+        //    newTree.TreeCount = 0; //user added trees need a tree count of zero because users seem to be adding counts through tally settings
 
-            DialogService.AskCruiser(newTree);
+        //    DialogService.AskCruiser(newTree);
 
-            newTree.TrySave();
-            this.AddNonPlotTree(newTree);
+        //    newTree.TrySave();
+        //    this.AddNonPlotTree(newTree);
 
-            return newTree;
-        }
+        //    return newTree;
+        //}
 
-        public Tree CreateNewTreeEntry(CountTree count)
-        {
-            return CreateNewTreeEntry(count, true);
-        }
+        //public Tree CreateNewTreeEntry(CountTree count)
+        //{
+        //    return CreateNewTreeEntry(count, true);
+        //}
 
-        public Tree CreateNewTreeEntry(CountTree count, bool isMeasure)
-        {
-            return CreateNewTreeEntry(count.SampleGroup.Stratum, count.SampleGroup, count.TreeDefaultValue, isMeasure);
-        }
+        //public Tree CreateNewTreeEntry(CountTree count, bool isMeasure)
+        //{
+        //    return CreateNewTreeEntry(count.SampleGroup.Stratum, count.SampleGroup, count.TreeDefaultValue, isMeasure);
+        //}
 
-        public Tree CreateNewTreeEntry(Stratum stratum
-            , SampleGroup sg
-            , TreeDefaultValueDO tdv
-            , bool isMeasure)
-        {
-            var tree = CreateNewTreeEntryInternal(stratum, sg, tdv, isMeasure);
-            tree.TreeNumber = GetNextNonPlotTreeNumber();
-            return tree;
-        }
+        //public Tree CreateNewTreeEntry(Stratum stratum
+        //    , SampleGroup sg
+        //    , TreeDefaultValueDO tdv
+        //    , bool isMeasure)
+        //{
+        //    var tree = CreateNewTreeEntryInternal(stratum, sg, tdv, isMeasure);
+        //    tree.TreeNumber = GetNextNonPlotTreeNumber();
+        //    return tree;
+        //}
 
-        internal Tree CreateNewTreeEntryInternal(Stratum stratum
-            , SampleGroup sg
-            , TreeDefaultValueDO tdv
-            , bool isMeasure)
-        {
-            Tree newTree = new Tree(this.DAL);
-            newTree.TreeCount = 0;
-            newTree.CountOrMeasure = (isMeasure) ? "M" : "C";
-            newTree.CuttingUnit = this;
+        //internal Tree CreateNewTreeEntryInternal(Stratum stratum
+        //    , SampleGroup sg
+        //    , TreeDefaultValueDO tdv
+        //    , bool isMeasure)
+        //{
+        //    Tree newTree = new Tree(this.DAL);
+        //    newTree.TreeCount = 0;
+        //    newTree.CountOrMeasure = (isMeasure) ? "M" : "C";
+        //    newTree.CuttingUnit = this;
 
-            if (sg != null)
-            {
-                newTree.SampleGroup = sg;
-                if (tdv == null)
-                {
-                    if (sg.TreeDefaultValues.IsPopulated == false)
-                    {
-                        sg.TreeDefaultValues.Populate();
-                    }
-                    if (sg.TreeDefaultValues.Count == 1)
-                    {
-                        tdv = sg.TreeDefaultValues[0];
-                    }
-                }
-            }
-            if (stratum != null) { newTree.Stratum = stratum; }
-            if (tdv != null)
-            {
-                newTree.SetTreeTDV(tdv);
-            }
+        //    if (sg != null)
+        //    {
+        //        newTree.SampleGroup = sg;
+        //        if (tdv == null)
+        //        {
+        //            if (sg.TreeDefaultValues.IsPopulated == false)
+        //            {
+        //                sg.TreeDefaultValues.Populate();
+        //            }
+        //            if (sg.TreeDefaultValues.Count == 1)
+        //            {
+        //                tdv = sg.TreeDefaultValues.FirstOrDefault();//TODO should be SingleOrDefault
+        //            }
+        //        }
+        //    }
+        //    if (stratum != null) { newTree.Stratum = stratum; }
+        //    if (tdv != null)
+        //    {
+        //        newTree.SetTreeTDV(tdv);
+        //    }
 
-            newTree.Validate();
-            //newTree.Save();
+        //    newTree.Validate();
+        //    //newTree.Save();
 
-            return newTree;
-        }
+        //    return newTree;
+        //}
 
-        public void AddNonPlotTree(Tree tree)
-        {
-            lock (((System.Collections.ICollection)this.NonPlotTrees).SyncRoot)
-            {
-                this.NonPlotTrees.Add(tree);
-            }
-            _treesAddedSinceLastSave++;
-            if (_treesAddedSinceLastSave >= TREE_SAVE_INTERVAL)
-            {
-                this.TrySaveTreesAsync();
-            }
-        }
+        //public void AddNonPlotTree(Tree tree)
+        //{
+        //    lock (((System.Collections.ICollection)this.NonPlotTrees).SyncRoot)
+        //    {
+        //        this.NonPlotTrees.Add(tree);
+        //    }
+        //    _treesAddedSinceLastSave++;
+        //    if (_treesAddedSinceLastSave >= TREE_SAVE_INTERVAL)
+        //    {
+        //        this.TrySaveTreesAsync();
+        //    }
+        //}
 
-        public void DeleteTree(Tree tree)
-        {
-            tree.Delete();
-            this.NonPlotTrees.Remove(tree);
-        }
+        //public void DeleteTree(Tree tree)
+        //{
+        //    tree.Delete();
+        //    this.NonPlotTrees.Remove(tree);
+        //}
 
-        #region validate trees
+        //#region validate trees
 
-        public bool ValidateTrees()
-        {
-            var worker = new TreeValidationWorker(this.NonPlotTrees);
-            return worker.ValidateTrees();
-        }
+        //public bool ValidateTrees()
+        //{
+        //    var worker = new TreeValidationWorker(this.NonPlotTrees);
+        //    return worker.ValidateTrees();
+        //}
 
-        public void ValidateTreesAsync()
-        {
-            var worker = new TreeValidationWorker(this.NonPlotTrees);
-            worker.ValidateTreesAsync();
-        }
+        //public void ValidateTreesAsync()
+        //{
+        //    var worker = new TreeValidationWorker(this.NonPlotTrees);
+        //    worker.ValidateTreesAsync();
+        //}
 
-        #endregion validate trees
+        //#endregion validate trees
 
-        #endregion Tree stuff
+        //#endregion Tree stuff
 
         public void InitializeStrata()
         {
@@ -325,77 +325,77 @@ namespace FSCruiser.Core.Models
 
         #region save methods
 
-        public bool SaveFieldData()
-        {
-            try
-            {
-                //this.DataStore.BeginTransaction();//not doing transactions right now, need to do http://fmsc-projects.herokuapp.com/issues/526 first
+        //public bool SaveFieldData()
+        //{
+        //    try
+        //    {
+        //        //this.DataStore.BeginTransaction();//not doing transactions right now, need to do http://fmsc-projects.herokuapp.com/issues/526 first
 
-                this.TrySaveTrees();
+        //        this.TrySaveTrees();
 
-                this.TallyHistoryBuffer.Save();
-                this.SaveSampleGroups(); // save sampler states
+        //        this.TallyHistoryBuffer.Save();
+        //        this.SaveSampleGroups(); // save sampler states
 
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
+        //        return true;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return false;
+        //    }
+        //}
 
-        public void SaveCounts()
-        {
-            foreach (Stratum stratum in TreeStrata)
-            {
-                stratum.SaveCounts();
-            }
-            foreach (Stratum stratum in PlotStrata)
-            {
-                stratum.SaveCounts();
-            }
-        }
+        //public void SaveCounts()
+        //{
+        //    foreach (Stratum stratum in TreeStrata)
+        //    {
+        //        stratum.SaveCounts();
+        //    }
+        //    foreach (Stratum stratum in PlotStrata)
+        //    {
+        //        stratum.SaveCounts();
+        //    }
+        //}
 
-        public bool TrySaveCounts()
-        {
-            bool success = true;
-            foreach (Stratum stratum in TreeStrata)
-            {
-                success = stratum.TrySaveCounts() && success;
-            }
-            foreach (Stratum stratum in PlotStrata)
-            {
-                success = stratum.TrySaveCounts() && success;
-            }
-            return success;
-        }
+        //public bool TrySaveCounts()
+        //{
+        //    bool success = true;
+        //    foreach (Stratum stratum in TreeStrata)
+        //    {
+        //        success = stratum.TrySaveCounts() && success;
+        //    }
+        //    foreach (Stratum stratum in PlotStrata)
+        //    {
+        //        success = stratum.TrySaveCounts() && success;
+        //    }
+        //    return success;
+        //}
 
-        protected void SaveSampleGroups()
-        {
-            foreach (var st in TreeStrata)
-            {
-                st.SaveSampleGroups();
-            }
+        //protected void SaveSampleGroups()
+        //{
+        //    foreach (var st in TreeStrata)
+        //    {
+        //        st.SaveSampleGroups();
+        //    }
 
-            foreach (var st in PlotStrata)
-            {
-                st.SaveSampleGroups();
-            }
-        }
+        //    foreach (var st in PlotStrata)
+        //    {
+        //        st.SaveSampleGroups();
+        //    }
+        //}
 
-        public void SaveTrees()
-        {
-            var worker = new SaveTreesWorker(this.DAL, this.NonPlotTrees);
-            worker.SaveAll();
-            _treesAddedSinceLastSave = 0;
-        }
+        //public void SaveTrees()
+        //{
+        //    var worker = new SaveTreesWorker(this.DAL, this.NonPlotTrees);
+        //    worker.SaveAll();
+        //    _treesAddedSinceLastSave = 0;
+        //}
 
-        public void TrySaveTrees()
-        {
-            var worker = new SaveTreesWorker(this.DAL, this.NonPlotTrees);
-            worker.TrySaveAll();
-            _treesAddedSinceLastSave = 0;
-        }
+        //public void TrySaveTrees()
+        //{
+        //    var worker = new SaveTreesWorker(this.DAL, this.NonPlotTrees);
+        //    worker.TrySaveAll();
+        //    _treesAddedSinceLastSave = 0;
+        //}
 
         public void TrySaveTreesAsync()
         {

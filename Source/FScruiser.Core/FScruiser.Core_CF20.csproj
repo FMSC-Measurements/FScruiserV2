@@ -90,6 +90,7 @@
     <Compile Include="Models\Tree.cs" />
     <Compile Include="NetCF\EnumerableExtentions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DataEntryDataService.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\IApplicationController.cs" />
     <Compile Include="Services\IDialogService.cs" />

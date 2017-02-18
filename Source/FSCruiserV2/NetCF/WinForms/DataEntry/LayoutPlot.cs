@@ -298,12 +298,30 @@ namespace FSCruiser.WinForms.DataEntry
 
         public LayoutPlotLogic ViewLogicController { get; set; }
 
-        public PlotStratum Stratum { get; set; }
+        public PlotStratum Stratum { get { return ViewLogicController.Stratum; } }
 
-        public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, PlotStratum stratum, InputPanel sip)
+        public InputPanel Sip
         {
-            Stratum = stratum;
-            this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController, dataEntryController.ViewController);
+            get
+            {
+                return _dataGrid.SIP;
+            }
+            set
+            {
+                _dataGrid.SIP = value;
+            }
+        }
+
+        public LayoutPlot(FormDataEntryLogic dataEntryController
+            , IDataEntryDataService dataService
+            , Control parent
+            , PlotStratum stratum)
+        {
+            this.ViewLogicController = new LayoutPlotLogic(stratum
+                , this
+                , dataEntryController
+                , dataService
+                , dataEntryController.ViewController);
 
             ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
 
@@ -333,7 +351,6 @@ namespace FSCruiser.WinForms.DataEntry
             //Setup DataGrid
             DataGridAdjuster.InitializeGrid(this._dataGrid);
             _tableStyle = stratum.InitializeTreeColumns(_dataGrid);
-            this._dataGrid.SIP = sip;
             this._dataGrid.CellValidating += new EditableDataGridCellValidatingEventHandler(_dataGrid_CellValidating);
             this._dataGrid.CellValueChanged += new EditableDataGridCellValueChangedEventHandler(this._dataGrid_CellValueChanged);
             //this._dataGrid.DataSource = typeof(FSCruiserV2.Logic.TreeVM);//_BS_Trees;
@@ -812,7 +829,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public IList<Tree> Trees
+        public ICollection<Tree> Trees
         {
             get
             {

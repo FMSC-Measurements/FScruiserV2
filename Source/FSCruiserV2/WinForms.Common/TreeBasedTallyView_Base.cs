@@ -23,6 +23,8 @@ namespace FSCruiser.WinForms
 
         public IApplicationController Controller { get; protected set; }
 
+        protected IDataEntryDataService DataService { get; set; }
+
         public IDataEntryView DataEntryForm
         {
             get
@@ -153,12 +155,12 @@ namespace FSCruiser.WinForms
             Button button = (Button)sender;
             SubPop subPop = (SubPop)button.Tag;
 
-            var tree = DataEntryController.Unit.CreateNewTreeEntry(subPop.SG.Stratum, subPop.SG, subPop.TDV, true);
+            var tree = DataService.CreateNewTreeEntry(subPop.SG.Stratum, subPop.SG, subPop.TDV, true);
             tree.TreeCount = 1;
 
             DialogService.AskCruiser(tree);
 
-            DataEntryController.Unit.AddNonPlotTree(tree);
+            DataService.AddNonPlotTree(tree);
             DataEntryForm.GotoTreePage();
         }
 

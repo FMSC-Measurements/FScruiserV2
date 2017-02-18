@@ -7,7 +7,7 @@ namespace FSCruiser.Core.ViewInterfaces
     {
         bool UserCanAddTrees { get; set; }
 
-        IList<Tree> Trees { get; }
+        ICollection<Tree> Trees { get; }
 
         bool ErrorColumnVisable { get; set; }
 

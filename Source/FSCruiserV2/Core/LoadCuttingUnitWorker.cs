@@ -52,22 +52,22 @@ namespace FSCruiser.Core
 
         public void InitializeTallyBuffer()
         {
-            _unit.TallyHistoryBuffer = new TallyHistoryCollection(_unit, Constants.MAX_TALLY_HISTORY_SIZE);
-            _unit.TallyHistoryBuffer.Initialize();
+            //_unit.TallyHistoryBuffer = new TallyHistoryCollection(_unit, Constants.MAX_TALLY_HISTORY_SIZE);
+            //_unit.TallyHistoryBuffer.Initialize();
         }
 
         public void InitializeNonPlotTrees()
         {
-            //create a list of just trees in tree based strata
-            List<Tree> nonPlotTrees = _unit.DAL.From<Tree>()
-                .Join("Stratum", "USING (Stratum_CN)")
-                .Where("Tree.CuttingUnit_CN = ? AND " +
-                        "Stratum.Method IN ('100','STR','3P','S3P')")
-                .OrderBy("TreeNumber")
-                .Read(_unit.CuttingUnit_CN).ToList();
+            ////create a list of just trees in tree based strata
+            //List<Tree> nonPlotTrees = _unit.DAL.From<Tree>()
+            //    .Join("Stratum", "USING (Stratum_CN)")
+            //    .Where("Tree.CuttingUnit_CN = ? AND " +
+            //            "Stratum.Method IN ('100','STR','3P','S3P')")
+            //    .OrderBy("TreeNumber")
+            //    .Read(_unit.CuttingUnit_CN).ToList();
 
-            _unit.NonPlotTrees = new BindingList<Tree>(nonPlotTrees);
-            _unit.ValidateTreesAsync();
+            //_unit.NonPlotTrees = new BindingList<Tree>(nonPlotTrees);
+            //_unit.ValidateTreesAsync();
         }
     }
 }

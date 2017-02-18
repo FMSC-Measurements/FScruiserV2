@@ -20,6 +20,8 @@ namespace FSCruiser.Core.DataEntry
 
         public IApplicationController Controller { get { return this.DataEntryController.Controller; } }
 
+        public IDataEntryDataService DataService { get; set; }
+
         public IViewController ViewController { get; set; }
 
         public FormDataEntryLogic DataEntryController { get; protected set; }
@@ -57,13 +59,16 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public LayoutPlotLogic(PlotStratum stratum, LayoutPlot view
+        public LayoutPlotLogic(PlotStratum stratum
+            , LayoutPlot view
             , FormDataEntryLogic dataEntryController
+            , IDataEntryDataService dataService
             , IViewController viewController)
         {
             this.Stratum = stratum;
             this.View = view;
             this.DataEntryController = dataEntryController;
+            DataService = dataService;
             this.ViewController = viewController;
 
             this._BS_Plots = new BindingSource();
@@ -155,7 +160,7 @@ namespace FSCruiser.Core.DataEntry
             this.EndEdit();
             try
             {
-                plot.SaveTrees();
+                DataService.SaveTrees(plot);
             }
             catch (FMSC.ORM.SQLException)
             {
@@ -322,7 +327,7 @@ namespace FSCruiser.Core.DataEntry
             if (Stratum.Method == CruiseMethods.FIX
             || Stratum.Method == CruiseMethods.PNT)
             {
-                tree = plot.CreateNewTreeEntry(count, true);
+                DataService.CreateNewTreeEntry(plot, count, true);
                 tree.TreeCount = 1;
             }
             else if (sg.Stratum.Is3P)
@@ -376,26 +381,26 @@ namespace FSCruiser.Core.DataEntry
                     if (item.IsInsuranceItem)
                     {
                         SoundService.SignalInsuranceTree();
-                        tree = plot.CreateNewTreeEntry(count, true);
+                        tree = DataService.CreateNewTreeEntry(plot, count, true);
                         tree.CountOrMeasure = "I";
                     }
                     else
                     {
                         SoundService.SignalMeasureTree(true);
-                        tree = plot.CreateNewTreeEntry(count, true);
+                        tree = DataService.CreateNewTreeEntry(plot, count, true);
                         //tree.CountOrMeasure = "M";
                     }
                 }
                 else
                 {
-                    tree = plot.CreateNewTreeEntry(count, false);
+                    tree = DataService.CreateNewTreeEntry(plot, count, true);
                     //tree.CountOrMeasure = "C";
                 }
                 tree.KPI = kpi;
             }
             else
             {
-                tree = plot.CreateNewTreeEntry(count, true);
+                tree = DataService.CreateNewTreeEntry(plot, count, true);
                 tree.STM = "Y";
             }
 
@@ -413,18 +418,18 @@ namespace FSCruiser.Core.DataEntry
             if (item != null && !item.IsInsuranceItem)
             {
                 SoundService.SignalMeasureTree(true);
-                tree = plot.CreateNewTreeEntry(count, true);
+                tree = DataService.CreateNewTreeEntry(plot, count, true);
                 //tree.CountOrMeasure = "M";
             }
             else if (item != null && item.IsInsuranceItem)
             {
                 SoundService.SignalInsuranceTree();
-                tree = plot.CreateNewTreeEntry(count, true);
+                tree = DataService.CreateNewTreeEntry(plot, count, true);
                 tree.CountOrMeasure = "I";
             }
             else
             {
-                tree = plot.CreateNewTreeEntry(count, false);
+                tree = DataService.CreateNewTreeEntry(plot, count, false);
             }
 
             tree.TreeCount = 1;
@@ -435,7 +440,7 @@ namespace FSCruiser.Core.DataEntry
         //TODO rename method
         public void AddTree(SubPop subPop)
         {
-            Tree tree = CurrentPlot.CreateNewTreeEntry(subPop);
+            Tree tree = DataService.CreateNewTreeEntry(CurrentPlot, subPop);
 
             DialogService.AskCruiser(tree);
 
@@ -456,7 +461,7 @@ namespace FSCruiser.Core.DataEntry
                 prevTree = (Tree)_BS_Trees[_BS_Trees.Count - 1];
             }
 
-            var newTree = this.CurrentPlot.UserAddTree(prevTree, this.DataEntryController.ViewController);
+            var newTree = DataService.UserAddTree(CurrentPlot, prevTree, this.DataEntryController.ViewController);
 
             if (newTree != null)
             {
@@ -543,7 +548,7 @@ namespace FSCruiser.Core.DataEntry
 
                 try
                 {
-                    p.TrySaveTrees();
+                    DataService.TrySaveTrees(p);
                 }
                 catch (FMSC.ORM.SQLException e)
                 {

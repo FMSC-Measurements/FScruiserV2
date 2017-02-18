@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using System.Linq;
 using CruiseDAL;
 using FSCruiser.Core.Models;
 
@@ -8,11 +9,11 @@ namespace FSCruiser.Core
 {
     public class SaveTreesWorker
     {
-        Tree[] _trees;
+        IEnumerable<Tree> _treesLocal;
         Thread _saveTreesWorkerThread;
         DAL _datastore;
 
-        public SaveTreesWorker(DAL datastore, ICollection<Tree> trees)
+        public SaveTreesWorker(DAL datastore, IEnumerable<Tree> trees)
         {
             Debug.Assert(datastore != null);
             Debug.Assert(trees != null);
@@ -21,9 +22,7 @@ namespace FSCruiser.Core
             lock (((System.Collections.ICollection)trees).SyncRoot)
             {
                 //create a local copy of tree collection
-                Tree[] a = new Tree[trees.Count];
-                trees.CopyTo(a, 0);
-                _trees = a;
+                _treesLocal = trees.ToArray();
             }
         }
 
@@ -69,7 +68,7 @@ namespace FSCruiser.Core
         {
             bool success = true;
 
-            foreach (Tree t in _trees)
+            foreach (Tree t in _treesLocal)
             {
                 success = t.TrySave() && success;
             }
@@ -87,7 +86,7 @@ namespace FSCruiser.Core
                 _datastore.BeginTransaction();
                 try
                 {
-                    foreach (Tree tree in _trees)
+                    foreach (Tree tree in _treesLocal)
                     {
                         tree.Save();
                     }

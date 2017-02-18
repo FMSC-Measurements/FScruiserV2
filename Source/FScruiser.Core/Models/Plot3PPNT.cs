@@ -2,6 +2,7 @@
 
 using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.Core.Models
 {
@@ -52,11 +53,11 @@ namespace FSCruiser.Core.Models
 
         public Plot3PPNT(PlotDO plot) : base(plot) { }
 
-        public void CreateTrees()
+        public void CreateTrees(IDataEntryDataService dataService)
         {
             for (long i = 0; i < this.TreeCount; i++)
             {
-                Tree t = this.CreateNewTreeEntry((SampleGroup)null, (TreeDefaultValueDO)null, false);
+                Tree t = dataService.CreateNewTreeEntry(this, (CountTree)null, false);
                 t.TreeCount = 1;
                 t.CountOrMeasure = "M";
                 t.TreeNumber = i + 1;

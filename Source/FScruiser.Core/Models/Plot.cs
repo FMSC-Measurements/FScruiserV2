@@ -165,84 +165,105 @@ namespace FSCruiser.Core.Models
             return true;
         }
 
-        public bool CrossStrataIsTreeNumberAvalible(long treeNumber)
-        {
-            foreach (var st in CuttingUnit.PlotStrata.Where(x => x != this.Stratum))
-            {
-                var plot = st.Plots.Where(x => x.PlotNumber == this.PlotNumber).FirstOrDefault();
-                if (plot.Trees.Any(x => x.TreeNumber == treeNumber))
-                {
-                    return false;
-                }
-            }
+        //public bool CrossStrataIsTreeNumberAvalible(long treeNumber)
+        //{
+        //    foreach (var st in CuttingUnit.PlotStrata.Where(x => x != this.Stratum))
+        //    {
+        //        var plot = st.Plots.Where(x => x.PlotNumber == this.PlotNumber).FirstOrDefault();
+        //        if (plot.Trees.Any(x => x.TreeNumber == treeNumber))
+        //        {
+        //            return false;
+        //        }
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        public Tree UserAddTree(Tree templateTree, IViewController viewController)
-        {
-            Tree newTree;
-            SampleGroup assumedSG = null;
-            TreeDefaultValueDO assumedTDV = null;
+        //public Tree UserAddTree(IDataEntryDataService dataService, Tree templateTree, IViewController viewController)
+        //{
+        //    Tree newTree;
+        //    SampleGroup assumedSG = null;
+        //    TreeDefaultValueDO assumedTDV = null;
 
-            if (templateTree != null)
-            {
-                assumedSG = templateTree.SampleGroup; ;
-                assumedTDV = templateTree.TreeDefaultValue;
-            }
+        //    if (templateTree != null)
+        //    {
+        //        assumedSG = templateTree.SampleGroup; ;
+        //        assumedTDV = templateTree.TreeDefaultValue;
+        //    }
 
-            //extrapolate sample group
-            if (assumedSG == null)//if we have a stratum but no sample group, pick the first one
-            {
-                List<SampleGroup> samplegroups = this.DAL.From<SampleGroup>()
-                    .Where("Stratum_CN = ?")
-                    .Read(this.Stratum.Stratum_CN).ToList();
-                if (samplegroups.Count == 1)
-                {
-                    assumedSG = samplegroups[0];
-                }
-            }
+        //    //extrapolate sample group
+        //    if (assumedSG == null)//if we have a stratum but no sample group, pick the first one
+        //    {
+        //        List<SampleGroup> samplegroups = this.DAL.From<SampleGroup>()
+        //            .Where("Stratum_CN = ?")
+        //            .Read(this.Stratum.Stratum_CN).ToList();
+        //        if (samplegroups.Count == 1)
+        //        {
+        //            assumedSG = samplegroups[0];
+        //        }
+        //    }
 
-            newTree = this.CreateNewTreeEntry(assumedSG, assumedTDV, true);
+        //    newTree = this.CreateNewTreeEntry(dataService, assumedSG, assumedTDV, true);
 
-            DialogService.AskCruiser(newTree);
+        //    DialogService.AskCruiser(newTree);
 
-            //if a 3P plot method set Count Measure to empty.
-            if (Array.IndexOf(CruiseDAL.Schema.CruiseMethods.THREE_P_METHODS,
-                this.Stratum.Method) >= 0)
-            {
-                newTree.CountOrMeasure = string.Empty;
-            }
+        //    //if a 3P plot method set Count Measure to empty.
+        //    if (Array.IndexOf(CruiseDAL.Schema.CruiseMethods.THREE_P_METHODS,
+        //        this.Stratum.Method) >= 0)
+        //    {
+        //        newTree.CountOrMeasure = string.Empty;
+        //    }
 
-            newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied
-            newTree.TrySave();
-            this.AddTree(newTree);
+        //    newTree.TreeCount = 1; //user added trees need a tree count of one because they aren't being tallied
+        //    newTree.TrySave();
+        //    this.AddTree(newTree);
 
-            return newTree;
-        }
+        //    return newTree;
+        //}
 
-        public Tree CreateNewTreeEntry(SubPop subPop)
-        {
-            var tree = CreateNewTreeEntry(subPop.SG, subPop.TDV, true);
-            return tree;
-        }
+        //public Tree CreateNewTreeEntry(IDataEntryDataService dataService, SubPop subPop)
+        //{
+        //    var tree = CreateNewTreeEntry(dataService, subPop.SG, subPop.TDV, true);
+        //    return tree;
+        //}
 
-        public Tree CreateNewTreeEntry(CountTree count, bool isMeasure)
-        {
-            return this.CreateNewTreeEntry(count.SampleGroup, count.TreeDefaultValue, isMeasure);
-        }
+        //public Tree CreateNewTreeEntry(IDataEntryDataService dataService, CountTree count, bool isMeasure)
+        //{
+        //    return this.CreateNewTreeEntry(dataService, count.SampleGroup, count.TreeDefaultValue, isMeasure);
+        //}
 
-        public virtual Tree CreateNewTreeEntry(SampleGroup sg, TreeDefaultValueDO tdv, bool isMeasure)
-        {
-            Debug.Assert(this.CuttingUnit != null);
-            var newTree = this.CuttingUnit.CreateNewTreeEntryInternal(this.Stratum, sg, tdv, isMeasure);
+        //protected virtual Tree CreateNewTreeEntry(IDataEntryDataService dataService, SampleGroup sg, TreeDefaultValueDO tdv, bool isMeasure)
+        //{
+        //    Debug.Assert(dataService.CuttingUnit != null);
+        //    var newTree = dataService.CreateNewTreeEntryInternal(this.Stratum, sg, tdv, isMeasure);
 
-            newTree.Plot = this;
-            newTree.TreeNumber = CuttingUnit.GetNextPlotTreeNumber(this.PlotNumber);
-            newTree.TreeCount = 1;
+        //    newTree.Plot = this;
+        //    newTree.TreeNumber = dataService.GetNextPlotTreeNumber(this.PlotNumber);
+        //    newTree.TreeCount = 1;
 
-            return newTree;
-        }
+        //    return newTree;
+        //}
+
+        //public void SaveTrees()
+        //{
+        //    if (Trees == null) { return; }
+        //    var worker = new SaveTreesWorker(this.DAL, this.Trees);
+        //    worker.SaveAll();
+        //}
+
+        //public void TrySaveTrees()
+        //{
+        //    if (Trees == null) { return; }
+        //    var worker = new SaveTreesWorker(this.DAL, this.Trees);
+        //    worker.TrySaveAll();
+        //}
+
+        //public void TrySaveTreesAsync()
+        //{
+        //    if (Trees == null) { return; }
+        //    var worker = new SaveTreesWorker(this.DAL, this.Trees);
+        //    worker.TrySaveAllAsync();
+        //}
 
         public void AddTree(Tree tree)
         {
@@ -256,27 +277,6 @@ namespace FSCruiser.Core.Models
         {
             tree.Delete();
             this.Trees.Remove(tree);
-        }
-
-        public void SaveTrees()
-        {
-            if (Trees == null) { return; }
-            var worker = new SaveTreesWorker(this.DAL, this.Trees);
-            worker.SaveAll();
-        }
-
-        public void TrySaveTrees()
-        {
-            if (Trees == null) { return; }
-            var worker = new SaveTreesWorker(this.DAL, this.Trees);
-            worker.TrySaveAll();
-        }
-
-        public void TrySaveTreesAsync()
-        {
-            if (Trees == null) { return; }
-            var worker = new SaveTreesWorker(this.DAL, this.Trees);
-            worker.TrySaveAllAsync();
         }
 
         public bool ValidatePlot(out string message)

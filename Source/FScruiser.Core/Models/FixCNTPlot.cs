@@ -2,6 +2,7 @@
 
 using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.Core.Models
 {
@@ -18,7 +19,7 @@ namespace FSCruiser.Core.Models
 
         int GetTallyCount(IFixCNTTallyBucket tallyBucket);
 
-        void Tally(IFixCNTTallyBucket tallyBucket);
+        void Tally(IDataEntryDataService dataService, IFixCNTTallyBucket tallyBucket);
     }
 
     public class FixCNTPlot : Plot, IFixCNTTallyCountProvider
@@ -75,10 +76,10 @@ namespace FSCruiser.Core.Models
             base.PopulateTrees();
         }
 
-        public override Tree CreateNewTreeEntry(SampleGroup sg, TreeDefaultValueDO tdv, bool isMeasure)
-        {
-            return base.CreateNewTreeEntry(sg, tdv, false);
-        }
+        //public override Tree CreateNewTreeEntry(SampleGroup sg, TreeDefaultValueDO tdv, bool isMeasure)
+        //{
+        //    return base.CreateNewTreeEntry(sg, tdv, false);
+        //}
 
         protected void NotifyTallyCountChanged(IFixCNTTallyBucket tallyBucket)
         {
@@ -99,9 +100,9 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public void Tally(IFixCNTTallyBucket tallyBucket)
+        public void Tally(IDataEntryDataService dataService, IFixCNTTallyBucket tallyBucket)
         {
-            var tree = base.CreateNewTreeEntry(tallyBucket.TallyPopulation.SampleGroup,
+            var tree = dataService.CreateNewTreeEntry(this, tallyBucket.TallyPopulation.SampleGroup,
                 tallyBucket.TallyPopulation.TreeDefaultValue, false);
 
             tallyBucket.TallyPopulation.TallyClass.SetTreeFieldValue(tree, tallyBucket);

@@ -21,7 +21,7 @@ namespace FSCruiser.Core.DataEntry
 
         public IDataEntryView View { get; set; }
 
-        public CuttingUnit Unit { get; set; }
+        public CuttingUnit Unit { get { return _dataService.CuttingUnit; } }
 
         public DAL Database { get { return this.Unit.DAL; } }
 
@@ -30,6 +30,8 @@ namespace FSCruiser.Core.DataEntry
         LoadCuttingUnitWorker _loadUnitWorker;
 
         public bool HotKeyenabled { get; set; }
+
+        IDataEntryDataService DataService { get { return _dataService; } }
 
         public Dictionary<char, int> StratumHotKeyLookup
         {
@@ -43,16 +45,22 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public FormDataEntryLogic(CuttingUnit unit
-            , IApplicationController controller
+        IDataEntryDataService _dataService;
+        IDialogService _dialogService;
+        ISoundService _soundService;
+
+        public FormDataEntryLogic(IApplicationController controller
+            , IDialogService dialogService
+            , ISoundService soundService
+            , IDataEntryDataService dataService
             , IDataEntryView view)
         {
-            this.Unit = unit;
             this.Controller = controller;
             this.View = view;
 
-            this.Unit.InitializeStrata();
-            //this.Counts = this.Database.Read<CountTreeVM>((string)null);
+            _dialogService = dialogService;
+            _soundService = soundService;
+            _dataService = dataService;
         }
 
         public string GetViewTitle()
@@ -68,24 +76,10 @@ namespace FSCruiser.Core.DataEntry
             }
             else
             {
-                DialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
+                _dialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
                     , null);
             }
         }
-
-        //public bool ShowLimitingDistanceDialog(Stratum stratum, Plot plot)
-        //{
-        //    string logMessage = String.Empty;
-        //    bool isVariableRadius = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS, stratum.Method) > -1;
-        //    float bafOrFixedPlotSize = (isVariableRadius) ? stratum.BasalAreaFactor : stratum.FixedPlotSize;
-
-        //    if (ViewController.ShowLimitingDistanceDialog(bafOrFixedPlotSize, isVariableRadius, out logMessage))
-        //    {
-        //        plot.Remarks += logMessage;
-        //        return true;
-        //    }
-        //    return false;
-        //}
 
         public void OnTally(CountTree count)
         {
@@ -96,7 +90,7 @@ namespace FSCruiser.Core.DataEntry
             if (sg.SampleSelectorType == CruiseDAL.Schema.CruiseMethods.CLICKER_SAMPLER_TYPE)
             {
                 action = new TallyAction(count);
-                var newTree = Unit.CreateNewTreeEntry(count, true); //create measure tree
+                var newTree = DataService.CreateNewTreeEntry(count, true); //create measure tree
                 newTree.TreeCount = sg.SamplingFrequency;     //increment tree count on tally
                 action.TreeRecord = newTree;
             }
@@ -111,22 +105,29 @@ namespace FSCruiser.Core.DataEntry
 
             if (action != null)
             {
-                SoundService.SignalTally();
+                _soundService.SignalTally();
                 var tree = action.TreeRecord;
                 if (tree != null)
                 {
                     if (tree.CountOrMeasure == "M")
                     {
-                        SoundService.SignalMeasureTree(false);
+                        _soundService.SignalMeasureTree(false);
                     }
                     else if (tree.CountOrMeasure == "I")
                     {
-                        SoundService.SignalInsuranceTree();
+                        _soundService.SignalInsuranceTree();
                     }
 
-                    DialogService.AskCruiser(tree);
+                    _dialogService.AskCruiser(tree);
+                    if (!ApplicationSettings.Instance.EnableCruiserPopup)
+                    {
+                        var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
+                    (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
+                        _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
+                    }
+
                     tree.TrySave();
-                    Unit.AddNonPlotTree(tree);
+                    DataService.AddNonPlotTree(tree);
 
                     if (tree.CountOrMeasure == "M" && AskEnterMeasureTreeData())
                     {
@@ -157,7 +158,7 @@ namespace FSCruiser.Core.DataEntry
             Tree tree = null;
             if (kpi == -1)  //user enterted sure to measure
             {
-                tree = Unit.CreateNewTreeEntry(count);
+                tree = DataService.CreateNewTreeEntry(count);
                 tree.STM = "Y";
             }
             else
@@ -173,7 +174,7 @@ namespace FSCruiser.Core.DataEntry
                     {
                         item.IsInsuranceItem = sampler.InsuranceCounter.Next();
                     }
-                    tree = Unit.CreateNewTreeEntry(count);
+                    tree = DataService.CreateNewTreeEntry(count);
                     tree.KPI = kpi;
                     tree.CountOrMeasure = (item.IsInsuranceItem) ? "I" : "M";
                 }
@@ -190,10 +191,10 @@ namespace FSCruiser.Core.DataEntry
             TallyAction action = new TallyAction(count);
 
             boolItem item = (boolItem)count.SampleGroup.Sampler.NextItem();
-            //If we recieve nothing from from the sampler, we don't have a sample
+            //If we receive nothing from the sampler, we don't have a sample
             if (item != null)//&& (item.IsSelected || item.IsInsuranceItem))
             {
-                Tree tree = Unit.CreateNewTreeEntry(count);
+                Tree tree = DataService.CreateNewTreeEntry(count);
                 tree.CountOrMeasure = (item.IsInsuranceItem) ? "I" : "M";
                 action.TreeRecord = tree;
             }
@@ -207,10 +208,10 @@ namespace FSCruiser.Core.DataEntry
         {
             if (!ApplicationSettings.Instance.EnableAskEnterTreeData) { return false; }
 
-            return DialogService.AskYesNo("Would you like to enter tree data now?", "Sample", false);
+            return _dialogService.AskYesNo("Would you like to enter tree data now?", "Sample", false);
         }
 
-        public void AddStratumHotKey(string hk, int pageIndex)
+        public void RegisterStratumHotKey(string hk, int pageIndex)
         {
             if (string.IsNullOrEmpty(hk)) { return; }
             char stratumHotKey = char.ToUpper(hk[0]);
@@ -254,7 +255,7 @@ namespace FSCruiser.Core.DataEntry
                         }
                         else//not valid hotkey, get grumpy
                         {
-                            SoundService.SignalInvalidAction();
+                            _soundService.SignalInvalidAction();
                             return true;
                         }
                     }
@@ -296,7 +297,7 @@ namespace FSCruiser.Core.DataEntry
                     if (item.KPI < newKPI)
                     {
                         tree.CountOrMeasure = "M";
-                        SoundService.SignalMeasureTree(true);
+                        _soundService.SignalMeasureTree(true);
                     }
                     else
                     {
@@ -314,69 +315,6 @@ namespace FSCruiser.Core.DataEntry
             //if (tree.TreeDefaultValue == tdv) { return true; }
             tree.SetTreeTDV(tdv);
             return tree.TrySave();
-        }
-
-        //public void HandleStratumChanging(Tree tree, StratumDO st, out bool cancel)
-        //{
-        //    if (tree == null || st == null) { cancel = true; return; }
-        //    if (tree.Stratum != null && tree.Stratum.Stratum_CN == st.Stratum_CN) { cancel = true; return; }
-        //    if (tree.Stratum != null)
-        //    {
-        //        if (!DialogService.AskYesNo("You are changing the stratum of a tree, are you sure you want to do this?", "!"))
-        //        {
-        //            cancel = true;//do not change stratum
-        //        }
-        //        else
-        //        {
-        //            //log stratum changed
-        //            this.Database.LogMessage(String.Format("Tree Stratum Changed (Cu:{0} St:{1} -> {2} Sg:{3} Tdv_CN:{4} T#: {5} P#:{6}",
-        //                tree.CuttingUnit.Code,
-        //                tree.Stratum.Code,
-        //                st.Code,
-        //                (tree.SampleGroup != null) ? tree.SampleGroup.Code : "?",
-        //                (tree.TreeDefaultValue != null) ? tree.TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?",
-        //                tree.TreeNumber,
-        //                (tree.Plot != null) ? tree.Plot.PlotNumber.ToString() : "-"), "I");
-        //        }
-        //    }
-        //    cancel = false;
-        //}
-
-        public void HandleAddTreeClick()
-        {
-            ITreeView view = this.View.FocusedLayout as ITreeView;
-            if (view == null) { return; }
-            view.UserAddTree();
-        }
-
-        public void HandleDeleteRowButtonClick()
-        {
-            ITreeView layout = this.View.FocusedLayout as ITreeView;
-            if (layout != null)
-            {
-                layout.DeleteSelectedTree();
-            }
-        }
-
-        public void HandleShowHideErrorCol()
-        {
-            ITreeView view = this.View.FocusedLayout as ITreeView;
-            if (view == null) { return; }
-            view.ToggleErrorColumn();
-        }
-
-        public void HandleShowHideLogCol()
-        {
-            ITreeView view = this.View.FocusedLayout as ITreeView;
-            if (view == null) { return; }
-            view.ToggleLogColumn();
-        }
-
-        public void HandleDisplayLimitingDistance()
-        {
-            LayoutPlot view = this.View.FocusedLayout as LayoutPlot;
-            if (view == null) { return; }
-            view.ShowLimitingDistanceDialog();
         }
 
         public void HandleViewLoading()
@@ -404,7 +342,7 @@ namespace FSCruiser.Core.DataEntry
                 //if a tree view has invalid trees lets ask the user if they want to continue
                 int viewIndex;
                 if (!this.ValidateTreeViews(out viewIndex)
-                    && DialogService.AskYesNo("Error(s) found on tree records. Would you like to continue", "Continue?", true) == false)
+                    && _dialogService.AskYesNo("Error(s) found on tree records. Would you like to continue", "Continue?", true) == false)
                 {
                     e.Cancel = true;
                     this.View.GoToPageIndex(viewIndex);
@@ -417,16 +355,16 @@ namespace FSCruiser.Core.DataEntry
                     view.ViewLogicController.Save();
                 }
 
-                if (!Unit.TrySaveCounts())
+                if (!DataService.TrySaveCounts())
                 {
                     e.Cancel = true;
-                    DialogService.ShowMessage("Something went wrong while saving the tally count for this unit", null);
+                    _dialogService.ShowMessage("Something went wrong while saving the tally count for this unit", null);
                 }
 
-                if (!Unit.SaveFieldData())
+                if (!DataService.SaveFieldData())
                 {
                     e.Cancel = true;
-                    DialogService.ShowMessage("Something went wrong saving the data for this unit, check trees for errors and try again", null);
+                    _dialogService.ShowMessage("Something went wrong saving the data for this unit, check trees for errors and try again", null);
                 }
             }
             finally

@@ -31,6 +31,7 @@ namespace FSCruiser.Core
             View = view;
             Settings = settings;
             Settings.CruisersChanged += new EventHandler(Settings_CruisersChanged);
+            Settings_CruisersChanged(null, null);
         }
 
         void Settings_CruisersChanged(object sender, EventArgs e)
