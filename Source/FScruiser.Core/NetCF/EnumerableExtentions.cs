@@ -8,7 +8,7 @@ namespace System.Linq
     {
         static Exception MoreThanOneElement()
         {
-            return (Exception)new InvalidOperationException("more than one element");
+            return new InvalidOperationException("more than one element");
         }
 
         public static bool Any<TSource>(this IEnumerable<TSource> source)
@@ -21,6 +21,27 @@ namespace System.Linq
                     return true;
             }
             return false;
+        }
+
+        public static TSource First<TSource>(this IEnumerable<TSource> source)
+        {
+            if (source == null) { throw new ArgumentNullException("source"); }
+
+            IList<TSource> list = source as IList<TSource>;
+            if (list != null)
+            {
+                if (list.Count > 0)
+                    return list[0];
+            }
+            else
+            {
+                using (IEnumerator<TSource> enumerator = source.GetEnumerator())
+                {
+                    if (enumerator.MoveNext())
+                        return enumerator.Current;
+                }
+            }
+            throw new InvalidOperationException("No Elements");
         }
 
         public static TSource SingleOrDefault<TSource>(this IEnumerable<TSource> source)

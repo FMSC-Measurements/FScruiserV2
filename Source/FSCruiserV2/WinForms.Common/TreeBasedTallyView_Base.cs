@@ -74,10 +74,9 @@ namespace FSCruiser.WinForms
 
             //if there is only one strata in the unit
             //display the counts for that stratum
-            var singleStratum = Strata.SingleOrDefault();
-
-            if (singleStratum != null)
+            if (Strata.Count() == 1)
             {
+                var singleStratum = Strata.First();
                 this.DisplayTallyPanel(singleStratum);
             }
 
