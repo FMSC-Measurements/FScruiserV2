@@ -74,6 +74,8 @@
     <Compile Include="DataEntryTests.cs" />
     <Compile Include="Mocks\ApplicationControllerMock.cs" />
     <Compile Include="Mocks\DataEntryViewMock.cs" />
+    <Compile Include="Mocks\DialogServiceMock.cs" />
+    <Compile Include="Mocks\SoundServiceMock.cs" />
     <Compile Include="Mocks\ViewControllerMock.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -104,6 +106,10 @@
     <ProjectReference Include="..\..\CruiseDAL\FMSC.ORM\FMSC.ORM.NetCF20.csproj">
       <Project>{D346BFEA-85A0-4A5D-BD89-D07E073B065E}</Project>
       <Name>FMSC.ORM.NetCF20</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FScruiser.Core\FScruiser.Core_CF20.csproj">
+      <Project>{C78E1A49-9F49-45E6-86A4-13C2F22E8450}</Project>
+      <Name>FScruiser.Core_CF20</Name>
     </ProjectReference>
     <ProjectReference Include="..\FSCruiserV2\FSCruiserV2CE_CF20.csproj">
       <Project>{AFD7A43E-A691-4A30-859A-28C9245EB0FC}</Project>

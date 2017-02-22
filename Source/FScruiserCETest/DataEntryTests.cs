@@ -24,7 +24,14 @@ namespace FSCruiserV2.Test
         {
             var cu = new CuttingUnit();
 
-            _de = new FormDataEntryLogic(cu, _controller, _view);
+            var dialogService = new DialogServiceMock();
+            var soundService = new SoundServiceMock();
+
+            _de = new FormDataEntryLogic(cu
+                , _controller
+                , dialogService
+                , soundService
+                , _view);
         }
 
         public void TestTreeTally()
