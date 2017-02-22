@@ -38,8 +38,6 @@ namespace FSCruiser.Core.Models
         [Field(Name = "SampleGroup_CN")]
         public long? SampleGroup_CN { get; set; }
 
-        SampleGroup _sampleGroup;
-
         public SampleGroup SampleGroup { get; set; }
 
         [Field(Name = "TreeDefaultValue_CN")]

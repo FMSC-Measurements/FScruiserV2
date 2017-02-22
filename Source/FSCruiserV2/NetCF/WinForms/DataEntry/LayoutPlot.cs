@@ -296,6 +296,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         public FormDataEntryLogic DataEntryController { get { return this.ViewLogicController.DataEntryController; } }
 
+        IDataEntryDataService DataService { get { return ViewLogicController.DataService; } }
+
         public LayoutPlotLogic ViewLogicController { get; set; }
 
         public PlotStratum Stratum { get { return ViewLogicController.Stratum; } }
@@ -317,6 +319,7 @@ namespace FSCruiser.WinForms.DataEntry
             , Control parent
             , PlotStratum stratum)
         {
+
             this.ViewLogicController = new LayoutPlotLogic(stratum
                 , this
                 , dataEntryController
@@ -483,7 +486,7 @@ namespace FSCruiser.WinForms.DataEntry
             var stratum = Stratum as FixCNTStratum;
             var currentPlot = ViewLogicController.CurrentPlot as FixCNTPlot;
             if (stratum == null || currentPlot == null) { return; }
-            using (var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum))
+            using (var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum, DataService))
             {
                 view.ShowDialog(currentPlot);
             }

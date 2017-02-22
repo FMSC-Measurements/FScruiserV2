@@ -1,6 +1,7 @@
 ﻿using System;
 using CruiseDAL.DataObjects;
 using FSCruiser.Core.Models;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.Core
 {
@@ -38,7 +39,7 @@ namespace FSCruiser.Core
 
         void ShowDataEntry(CuttingUnit unit);
 
-        bool ShowPlotInfo(Plot plotInfo, PlotStratum stratum, bool allowEdit);
+        bool ShowPlotInfo(IDataEntryDataService dataService, Plot plotInfo, PlotStratum stratum, bool allowEdit);
 
         void ShowTallySettings(CountTree count);
 

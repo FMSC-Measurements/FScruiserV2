@@ -1,10 +1,22 @@
 ﻿using System.Windows.Forms;
 using FSCruiser.Core.Models;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.Common
 {
     public partial class FixCNTForm : Form
     {
+        IDataEntryDataService _dataService;
+        IDataEntryDataService DataService 
+        {
+            get { return _dataService; }
+            set
+            {
+                _dataService = value;
+                OnDataServiceChanged();
+            }
+        }
+
         FixCNTForm()
         {
             InitializeComponent();
@@ -15,10 +27,17 @@ namespace FSCruiser.WinForms.Common
 #endif
         }
 
-        public FixCNTForm(IFixCNTTallyPopulationProvider populationProvider)
+        public FixCNTForm(IFixCNTTallyPopulationProvider populationProvider
+            , IDataEntryDataService dataService)
             : this()
         {
+            DataService = dataService;
             _tallyControl.PopulationProvider = populationProvider;
+        }
+
+        private void OnDataServiceChanged()
+        {
+            _tallyControl.DataService = DataService;
         }
 
         public DialogResult ShowDialog(FixCNTPlot plot)

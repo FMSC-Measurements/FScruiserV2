@@ -29,13 +29,15 @@ namespace FSCruiser.WinForms.DataEntry
 
         public FormDataEntryLogic DataEntryController { get { return this.ViewLogicController.DataEntryController; } }
 
+        public IDataEntryDataService DataService { get; set; }
+
         public LayoutPlotLogic ViewLogicController { get; set; }
 
         public bool ViewLoading { get { return _viewLoading; } }
 
         public PlotStratum Stratum { get; set; }
 
-        public IList<Tree> Trees
+        public ICollection<Tree> Trees
         {
             get
             {
@@ -48,10 +50,19 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, PlotStratum stratum)
+        public LayoutPlot(FormDataEntryLogic dataEntryController
+            , IDataEntryDataService dataService
+            , Control parent
+            , PlotStratum stratum)
         {
             Stratum = stratum;
-            this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController, dataEntryController.ViewController);
+            DataService = dataService;
+            this.ViewLogicController = new LayoutPlotLogic(stratum
+                , this
+                , dataEntryController
+                , dataService
+                , dataEntryController.ViewController);
+
             this.Dock = DockStyle.Fill;
             InitializeComponent();
 
@@ -223,7 +234,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_logsColumn != null && e.ColumnIndex == _logsColumn.Index)
             {
-                var curTree = this.Trees[e.RowIndex] as Tree;
+                var curTree = this.Trees.ElementAt(e.RowIndex) as Tree;
                 if (curTree != null)
                 {
                     this.DataEntryController.ShowLogs(curTree);
@@ -260,14 +271,15 @@ namespace FSCruiser.WinForms.DataEntry
             if (_treeNumberColumn != null && e.ColumnIndex == _treeNumberColumn.Index)
             {
                 var newTreeNum = (long)cellValue;
+                var currPlot = ViewLogicController.CurrentPlot;
                 if (curTree.TreeNumber != newTreeNum)
                 {
-                    if (!this.ViewLogicController.CurrentPlot.IsTreeNumberAvalible(newTreeNum))
+                    if (!currPlot.IsTreeNumberAvalible(newTreeNum))
                     {
                         MessageBox.Show("Tree Number already exists");
                         e.Cancel = true;
                     }
-                    else if (!ViewLogicController.CurrentPlot.CrossStrataIsTreeNumberAvalible(newTreeNum))
+                    else if (!ViewLogicController.DataService.CrossStrataIsTreeNumberAvalible(currPlot, newTreeNum))
                     {
                         MessageBox.Show("Tree Number already exist, in a different stratum");
                         e.Cancel = true;
@@ -299,7 +311,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             DataGridViewComboBoxCell cell = _dataGrid[e.ColumnIndex, e.RowIndex] as DataGridViewComboBoxCell;
             if (cell == null) { return; }
-            var curTree = this.Trees[e.RowIndex] as Tree;
+            var curTree = this.Trees.ElementAt(e.RowIndex) as Tree;
             if (curTree == null) { return; }
 
             if (_sgColumn != null && e.ColumnIndex == _sgColumn.Index)
@@ -412,7 +424,7 @@ namespace FSCruiser.WinForms.DataEntry
             var currentPlot = ViewLogicController.CurrentPlot as FixCNTPlot;
             if (currentPlot == null) { ShowNoPlotSelectedMessage(); return; }
             if (stratum == null || currentPlot == null) { return; }
-            using (var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum))
+            using (var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum, DataService))
             {
                 view.ShowDialog(currentPlot);
             }

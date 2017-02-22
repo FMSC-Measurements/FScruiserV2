@@ -8,37 +8,37 @@ using FScruiser.Core.Services;
 
 namespace FSCruiser.Core.Models
 {
-    public class CuttingUnit : CuttingUnitDO, ITreeFieldProvider
+    public class CuttingUnit : CuttingUnitDO //, ITreeFieldProvider
     {
-        protected const int TREE_SAVE_INTERVAL = 10;
-        private int _treesAddedSinceLastSave = 0;
+        //protected const int TREE_SAVE_INTERVAL = 10;
+        //private int _treesAddedSinceLastSave = 0;
 
-        [IgnoreField]
-        public IList<PlotStratum> PlotStrata { get; set; }
+        //[IgnoreField]
+        //public IList<PlotStratum> PlotStrata { get; set; }
 
-        [IgnoreField]
-        public IList<Stratum> TreeStrata { get; set; }
+        //[IgnoreField]
+        //public IList<Stratum> TreeStrata { get; set; }
 
-        [IgnoreField]
-        public IEnumerable<SampleGroup> TreeSampleGroups
-        {
-            get
-            {
-                foreach (var st in TreeStrata)
-                {
-                    foreach (var sg in st.SampleGroups)
-                    {
-                        yield return sg;
-                    }
-                }
-            }
-        }
+        //[IgnoreField]
+        //public IEnumerable<SampleGroup> TreeSampleGroups
+        //{
+        //    get
+        //    {
+        //        foreach (var st in TreeStrata)
+        //        {
+        //            foreach (var sg in st.SampleGroups)
+        //            {
+        //                yield return sg;
+        //            }
+        //        }
+        //    }
+        //}
 
-        [IgnoreField]
-        public Stratum DefaultStratum { get; set; }
+        //[IgnoreField]
+        //public Stratum DefaultStratum { get; set; }
 
-        [IgnoreField]
-        public IList<Tree> NonPlotTrees { get; set; }
+        //[IgnoreField]
+        //public IList<Tree> NonPlotTrees { get; set; }
 
         [IgnoreField]
         public TallyHistoryCollection TallyHistoryBuffer { get; set; }
@@ -245,83 +245,83 @@ namespace FSCruiser.Core.Models
 
         //#endregion Tree stuff
 
-        public void InitializeStrata()
-        {
-            this.TreeStrata = this.ReadTreeBasedStrata().ToList();
-            this.PlotStrata = this.ReadPlotStrata().ToList();
+        //public void InitializeStrata()
+        //{
+        //    this.TreeStrata = this.ReadTreeBasedStrata().ToList();
+        //    this.PlotStrata = this.ReadPlotStrata().ToList();
 
-            this.DefaultStratum = null;
-            foreach (Stratum stratum in this.TreeStrata)
-            {
-                if (stratum.Method == CruiseDAL.Schema.CruiseMethods.H_PCT)
-                {
-                    this.DefaultStratum = stratum;
-                    break;
-                }
-            }
+        //    this.DefaultStratum = null;
+        //    foreach (Stratum stratum in this.TreeStrata)
+        //    {
+        //        if (stratum.Method == CruiseDAL.Schema.CruiseMethods.H_PCT)
+        //        {
+        //            this.DefaultStratum = stratum;
+        //            break;
+        //        }
+        //    }
 
-            if (this.DefaultStratum == null && this.TreeStrata.Count > 0)
-            {
-                this.DefaultStratum = this.TreeStrata[0];
-            }
-        }
+        //    if (this.DefaultStratum == null && this.TreeStrata.Count > 0)
+        //    {
+        //        this.DefaultStratum = this.TreeStrata[0];
+        //    }
+        //}
 
-        public IEnumerable<PlotStratum> ReadPlotStrata()
-        {
-            Debug.Assert(DAL != null);
+        //public IEnumerable<PlotStratum> ReadPlotStrata()
+        //{
+        //    Debug.Assert(DAL != null);
 
-            foreach (var st in
-                 DAL.From<PlotStratum>()
-                .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
-                .Where("CUST.CuttingUnit_CN = ? "
-                + "AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')")
-                .Query(CuttingUnit_CN))
-            {
-                st.LoadSampleGroups();
-                st.LoadCounts(this);
-                st.PopulateHotKeyLookup();
-                yield return st;
-            }
+        //    foreach (var st in
+        //         DAL.From<PlotStratum>()
+        //        .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
+        //        .Where("CUST.CuttingUnit_CN = ? "
+        //        + "AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')")
+        //        .Query(CuttingUnit_CN))
+        //    {
+        //        st.LoadSampleGroups();
+        //        st.LoadCounts(this);
+        //        st.PopulateHotKeyLookup();
+        //        yield return st;
+        //    }
 
-            foreach (var st in DAL.From<FixCNTStratum>()
-                .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
-                .Where("CUST.CuttingUnit_CN = ? "
-                + "AND Stratum.Method = '" + CruiseDAL.Schema.CruiseMethods.FIXCNT + "'")
-                .Query(CuttingUnit_CN))
-            {
-                st.LoadSampleGroups();
-                st.LoadCounts(this);
-                st.PopulateHotKeyLookup();
-                yield return st;
-            }
-        }
+        //    foreach (var st in DAL.From<FixCNTStratum>()
+        //        .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
+        //        .Where("CUST.CuttingUnit_CN = ? "
+        //        + "AND Stratum.Method = '" + CruiseDAL.Schema.CruiseMethods.FIXCNT + "'")
+        //        .Query(CuttingUnit_CN))
+        //    {
+        //        st.LoadSampleGroups();
+        //        st.LoadCounts(this);
+        //        st.PopulateHotKeyLookup();
+        //        yield return st;
+        //    }
+        //}
 
-        public IEnumerable<Stratum> ReadTreeBasedStrata()
-        {
-            Debug.Assert(DAL != null);
+        //public IEnumerable<Stratum> ReadTreeBasedStrata()
+        //{
+        //    Debug.Assert(DAL != null);
 
-            foreach (var st in
-                DAL.From<Stratum>()
-                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
-                .Where("CuttingUnitStratum.CuttingUnit_CN = ?" +
-                        "AND Method IN ( '100', 'STR', '3P', 'S3P')")
-                .Read(CuttingUnit_CN))
-            {
-                st.LoadSampleGroups();
-                st.LoadCounts(this);
-                st.PopulateHotKeyLookup();
-                yield return st;
-            }
-        }
+        //    foreach (var st in
+        //        DAL.From<Stratum>()
+        //        .Join("CuttingUnitStratum", "USING (Stratum_CN)")
+        //        .Where("CuttingUnitStratum.CuttingUnit_CN = ?" +
+        //                "AND Method IN ( '100', 'STR', '3P', 'S3P')")
+        //        .Read(CuttingUnit_CN))
+        //    {
+        //        st.LoadSampleGroups();
+        //        st.LoadCounts(this);
+        //        st.PopulateHotKeyLookup();
+        //        yield return st;
+        //    }
+        //}
 
-        public void ReleaseData()
-        {
-            this.TallyHistoryBuffer = null;
-            this.NonPlotTrees = null;
-            TreeStrata = null;
-            PlotStrata = null;
-            DefaultStratum = null;
-        }
+        //public void ReleaseData()
+        //{
+        //    this.TallyHistoryBuffer = null;
+        //    this.NonPlotTrees = null;
+        //    TreeStrata = null;
+        //    PlotStrata = null;
+        //    DefaultStratum = null;
+        //}
 
         #region save methods
 
@@ -397,66 +397,66 @@ namespace FSCruiser.Core.Models
         //    _treesAddedSinceLastSave = 0;
         //}
 
-        public void TrySaveTreesAsync()
-        {
-            var worker = new SaveTreesWorker(this.DAL, this.NonPlotTrees);
-            worker.TrySaveAllAsync();
-            _treesAddedSinceLastSave = 0;
-        }
+        //public void TrySaveTreesAsync()
+        //{
+        //    var worker = new SaveTreesWorker(this.DAL, this.NonPlotTrees);
+        //    worker.TrySaveAllAsync();
+        //    _treesAddedSinceLastSave = 0;
+        //}
 
         #endregion save methods
 
         #region ITreeFieldProvider
 
-        object _treeFieldsReadLock = new object();
-        IEnumerable<TreeFieldSetupDO> _treeFields;
+        //object _treeFieldsReadLock = new object();
+        //IEnumerable<TreeFieldSetupDO> _treeFields;
 
-        public IEnumerable<TreeFieldSetupDO> TreeFields
-        {
-            get
-            {
-                lock (_treeFieldsReadLock)
-                {
-                    if (_treeFields == null && DAL != null)
-                    { _treeFields = ReadTreeFields().ToList(); }
-                    return _treeFields;
-                }
-            }
-            set { _treeFields = value; }
-        }
+        //public IEnumerable<TreeFieldSetupDO> TreeFields
+        //{
+        //    get
+        //    {
+        //        lock (_treeFieldsReadLock)
+        //        {
+        //            if (_treeFields == null && DAL != null)
+        //            { _treeFields = ReadTreeFields().ToList(); }
+        //            return _treeFields;
+        //        }
+        //    }
+        //    set { _treeFields = value; }
+        //}
 
-        public IEnumerable<TreeFieldSetupDO> ReadTreeFields()
-        {
-            var fields = DAL.From<TreeFieldSetupDO>()
-                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
-                .Join("Stratum", "USING (Stratum_CN)")
-                .Where(String.Format("CuttingUnit_CN = ? AND Stratum.Method NOT IN ({0})"
-                , string.Join(",", CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Select(s => "'" + s + "'").ToArray())))
-                .GroupBy("Field")
-                .OrderBy("FieldOrder")
-                .Query(CuttingUnit_CN).ToList();
+        //public IEnumerable<TreeFieldSetupDO> ReadTreeFields()
+        //{
+        //    var fields = DAL.From<TreeFieldSetupDO>()
+        //        .Join("CuttingUnitStratum", "USING (Stratum_CN)")
+        //        .Join("Stratum", "USING (Stratum_CN)")
+        //        .Where(String.Format("CuttingUnit_CN = ? AND Stratum.Method NOT IN ({0})"
+        //        , string.Join(",", CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Select(s => "'" + s + "'").ToArray())))
+        //        .GroupBy("Field")
+        //        .OrderBy("FieldOrder")
+        //        .Query(CuttingUnit_CN).ToList();
 
-            if (fields.Count == 0)
-            {
-                fields.AddRange(Constants.DEFAULT_TREE_FIELDS);
-            }
+        //    if (fields.Count == 0)
+        //    {
+        //        fields.AddRange(Constants.DEFAULT_TREE_FIELDS);
+        //    }
 
-            //if unit has multiple tree strata
-            //but stratum column is missing
-            if (this.TreeStrata.Count > 1
-                && fields.FindIndex(x => x.Field == "Stratum") == -1)
-            {
-                //find the location of the tree number field
-                int indexOfTreeNum = fields.FindIndex(x => x.Field == CruiseDAL.Schema.TREE.TREENUMBER);
-                //if user doesn't have a tree number field, fall back to the last field index
-                if (indexOfTreeNum == -1) { indexOfTreeNum = fields.Count - 1; }//last item index
-                //add the stratum field to the filed list
-                TreeFieldSetupDO tfs = new TreeFieldSetupDO() { Field = "Stratum", Heading = "St", Format = "[Code]" };
-                fields.Insert(indexOfTreeNum + 1, tfs);
-            }
+        //    //if unit has multiple tree strata
+        //    //but stratum column is missing
+        //    if (this.TreeStrata.Count > 1
+        //        && fields.FindIndex(x => x.Field == "Stratum") == -1)
+        //    {
+        //        //find the location of the tree number field
+        //        int indexOfTreeNum = fields.FindIndex(x => x.Field == CruiseDAL.Schema.TREE.TREENUMBER);
+        //        //if user doesn't have a tree number field, fall back to the last field index
+        //        if (indexOfTreeNum == -1) { indexOfTreeNum = fields.Count - 1; }//last item index
+        //        //add the stratum field to the filed list
+        //        TreeFieldSetupDO tfs = new TreeFieldSetupDO() { Field = "Stratum", Heading = "St", Format = "[Code]" };
+        //        fields.Insert(indexOfTreeNum + 1, tfs);
+        //    }
 
-            return fields;
-        }
+        //    return fields;
+        //}
 
         #endregion ITreeFieldProvider
 

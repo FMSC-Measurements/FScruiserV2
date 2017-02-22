@@ -61,7 +61,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public new bool Remove(TallyAction action)
+        public bool Remove(TallyAction action)
         {
             lock (syncLock)
             {

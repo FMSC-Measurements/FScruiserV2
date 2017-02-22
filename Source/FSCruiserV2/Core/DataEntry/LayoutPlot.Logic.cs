@@ -227,7 +227,7 @@ namespace FSCruiser.Core.DataEntry
         {
             Plot newPlot = Stratum.MakePlot(this.DataEntryController.Unit);
 
-            if (this.ViewController.ShowPlotInfo(newPlot, Stratum, true))
+            if (this.ViewController.ShowPlotInfo(DataService, newPlot, Stratum, true))
             {
                 newPlot.Save();
                 this.Stratum.Plots.Add(newPlot);
@@ -515,7 +515,7 @@ namespace FSCruiser.Core.DataEntry
                 return;
             }
 
-            if (Controller.ViewController.ShowPlotInfo(CurrentPlot, Stratum, false))
+            if (Controller.ViewController.ShowPlotInfo(DataService, CurrentPlot, Stratum, false))
             {
                 CurrentPlot.Save();
                 _BS_Plots.ResetCurrentItem();

@@ -83,7 +83,7 @@ namespace FSCruiser.WinForms.DataEntry
                 InitializeTreesTab();
 
                 // if any strata are not H_PCT
-                if (Unit.TreeStrata.Any(
+                if (DataService.TreeStrata.Any(
                     x => x.Method != CruiseDAL.Schema.CruiseMethods.H_PCT))
                 {
                     InitializeTallyTab();
@@ -130,7 +130,10 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void InitializeTallyTab()
         {
-            _tallyLayout = new LayoutTreeBased(this.Controller, this.LogicController);
+            _tallyLayout = new LayoutTreeBased(Controller
+                , DataService
+                , LogicController);
+
             _tallyLayout.Dock = DockStyle.Fill;
 
             this._tallyPage = new TabPage();
@@ -161,7 +164,10 @@ namespace FSCruiser.WinForms.DataEntry
                 PageContainer.TabPages.Add(page);
 
 
-                LayoutPlot view = new LayoutPlot(this.LogicController, page, st);
+                LayoutPlot view = new LayoutPlot(LogicController
+                    , DataService
+                    , page
+                    , st);
 #if NetCF 
                 view.Sip = SIP;
 #endif 

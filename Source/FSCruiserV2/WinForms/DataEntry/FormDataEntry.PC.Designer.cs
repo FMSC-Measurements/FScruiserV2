@@ -68,7 +68,7 @@
             this._addTreeBTN.TabIndex = 0;
             this._addTreeBTN.Text = "Add Tree (F3)";
             this._addTreeBTN.UseVisualStyleBackColor = true;
-            this._addTreeBTN.Click += new System.EventHandler(this._addTreeBTN_Clicked);
+            this._addTreeBTN.Click += new System.EventHandler(this._addTreeMI_Click);
             // 
             // _mainContenPanel
             // 

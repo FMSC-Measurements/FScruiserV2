@@ -7,10 +7,11 @@ using FSCruiser.Core.Models;
 using FSCruiser.Core;
 using System.Diagnostics;
 using CruiseDAL.DataObjects;
+using System.ComponentModel;
 
 namespace FScruiser.Core.Services
 {
-    public class IDataEntryDataService
+    public class IDataEntryDataService : ITreeFieldProvider
     {
         protected DAL DataStore { get; set; }
 
@@ -27,12 +28,13 @@ namespace FScruiser.Core.Services
                 {
                     if (_nonPlotTrees == null)
                     {
-                        _nonPlotTrees = DataStore.From<Tree>()
+                        var trees = DataStore.From<Tree>()
                             .Join("Stratum", "USING (Stratum_CN)")
                             .Where("Tree.CuttingUnit_CN = ? AND " +
                                     "Stratum.Method IN ('100','STR','3P','S3P')")
                             .OrderBy("TreeNumber")
                             .Read(CuttingUnit.CuttingUnit_CN).ToList();
+                        _nonPlotTrees = new BindingList<Tree>(trees);
                     }
                     return _nonPlotTrees;
                 }
@@ -42,6 +44,22 @@ namespace FScruiser.Core.Services
         public Stratum DefaultStratum { get; protected set; }
 
         public IEnumerable<Stratum> TreeStrata { get; protected set; }
+
+        //PC datagrid requires that we initialize the sample group drop-down with all possible values
+        // another option would be to do TreeStrata.SelectMany(st => st.SampleGroups)
+        public IEnumerable<SampleGroup> TreeSampleGroups
+        {
+            get
+            {
+                foreach (var st in TreeStrata)
+                {
+                    foreach (var sg in st.SampleGroups)
+                    {
+                        yield return sg;
+                    }
+                }
+            }
+        }
 
         public IEnumerable<PlotStratum> PlotStrata { get; protected set; }
 
@@ -484,5 +502,59 @@ namespace FScruiser.Core.Services
         }
 
         #endregion private members
+
+        #region ITreeFieldProvider
+
+        object _treeFieldsReadLock = new object();
+        IEnumerable<TreeFieldSetupDO> _treeFields;
+
+        public IEnumerable<TreeFieldSetupDO> TreeFields
+        {
+            get
+            {
+                lock (_treeFieldsReadLock)
+                {
+                    if (_treeFields == null && DataStore != null)
+                    { _treeFields = ReadTreeFields().ToList(); }
+                    return _treeFields;
+                }
+            }
+            set { _treeFields = value; }
+        }
+
+        public IEnumerable<TreeFieldSetupDO> ReadTreeFields()
+        {
+            var fields = DataStore.From<TreeFieldSetupDO>()
+                .Join("CuttingUnitStratum", "USING (Stratum_CN)")
+                .Join("Stratum", "USING (Stratum_CN)")
+                .Where(String.Format("CuttingUnit_CN = ? AND Stratum.Method NOT IN ({0})"
+                , string.Join(",", CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Select(s => "'" + s + "'").ToArray())))
+                .GroupBy("Field")
+                .OrderBy("FieldOrder")
+                .Query(CuttingUnit.CuttingUnit_CN).ToList();
+
+            if (fields.Count == 0)
+            {
+                fields.AddRange(Constants.DEFAULT_TREE_FIELDS);
+            }
+
+            //if unit has multiple tree strata
+            //but stratum column is missing
+            if (TreeStrata.Count() > 1
+                && !fields.Any(x => x.Field == "Stratum"))
+            {
+                //find the location of the tree number field
+                int indexOfTreeNum = fields.FindIndex(x => x.Field == CruiseDAL.Schema.TREE.TREENUMBER);
+                //if user doesn't have a tree number field, fall back to the last field index
+                if (indexOfTreeNum == -1) { indexOfTreeNum = fields.Count - 1; }//last item index
+                //add the stratum field to the filed list
+                TreeFieldSetupDO tfs = new TreeFieldSetupDO() { Field = "Stratum", Heading = "St", Format = "[Code]" };
+                fields.Insert(indexOfTreeNum + 1, tfs);
+            }
+
+            return fields;
+        }
+
+        #endregion ITreeFieldProvider
     }
 }

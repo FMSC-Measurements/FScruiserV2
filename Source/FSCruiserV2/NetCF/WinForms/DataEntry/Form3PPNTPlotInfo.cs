@@ -5,16 +5,19 @@ using FMSC.Sampling;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
     public partial class Form3PPNTPlotInfo : Form, IPlotInfoDialog
     {
-        public IViewController _viewController;
+        IViewController _viewController;
+        IDataEntryDataService DataService { get; set; }
 
-        public Form3PPNTPlotInfo(IViewController viewController)
+        public Form3PPNTPlotInfo(IViewController viewController, IDataEntryDataService dataService)
         {
             _viewController = viewController;
+            DataService = dataService;
             InitializeComponent();
 
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
@@ -97,7 +100,7 @@ namespace FSCruiser.WinForms.DataEntry
 
                         if (_plot.KPI >= item.KPI)
                         {
-                            _plot.CreateTrees();
+                            _plot.CreateTrees(DataService);
                             SignalMeasurePlot();
                         }
                         else

@@ -6,6 +6,7 @@ using CruiseDAL.DataObjects;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
 using FSCruiser.WinForms.DataEntry;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.Common
 {
@@ -198,14 +199,14 @@ namespace FSCruiser.WinForms.Common
         //    return this.NumPadDialog.UserEnteredValue;
         //}
 
-        public bool ShowPlotInfo(Plot plot, PlotStratum stratum, bool isNewPlot)
+        public bool ShowPlotInfo(IDataEntryDataService dataService, Plot plot, PlotStratum stratum, bool isNewPlot)
         {
             System.Diagnostics.Debug.Assert(plot != null);
             System.Diagnostics.Debug.Assert(stratum != null);
 
             if (stratum.Is3PPNT && isNewPlot)
             {
-                using (var view = new Form3PPNTPlotInfo(this))
+                using (var view = new Form3PPNTPlotInfo(this, dataService))
                 {
 #if !NetCF
                     view.Owner = this._dataEntryView;

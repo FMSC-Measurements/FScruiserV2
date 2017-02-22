@@ -80,7 +80,7 @@ namespace FSCruiser.WinForms.DataEntry
             //_BS_TreeSampleGroups.DataSource = typeof(SampleGroupDO);
             //((System.ComponentModel.ISupportInitialize)_BS_TreeSampleGroups).EndInit();
 
-            var columns = DataEntryController.Unit.MakeTreeColumns();
+            var columns = DataService.MakeTreeColumns();
             base.Columns.AddRange(columns.ToArray());
 
             _speciesColumn = base.Columns["TreeDefaultValue"] as DataGridViewComboBoxColumn;
@@ -97,7 +97,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = DataService.CuttingUnit.TreeSampleGroups.ToList();
+                _sgColumn.DataSource = DataService.TreeSampleGroups.ToList();
             }
             if (_stratumColumn != null)
             {

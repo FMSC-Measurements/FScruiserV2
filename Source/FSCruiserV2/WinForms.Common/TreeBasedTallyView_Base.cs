@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -37,7 +38,7 @@ namespace FSCruiser.WinForms
 
         public Dictionary<Stratum, Panel> StrataViews { get; protected set; }
 
-        public IList<Stratum> Strata { get; protected set; }
+        public IEnumerable<Stratum> Strata { get; protected set; }
 
         public Stratum SelectedStratum { get; protected set; }
 
@@ -54,12 +55,15 @@ namespace FSCruiser.WinForms
         }
 
         protected void Initialize(IApplicationController controller
-            , FormDataEntryLogic dataEntryController, Panel strataViewContainer)
+            , IDataEntryDataService dataService
+            , FormDataEntryLogic dataEntryController
+            , Panel strataViewContainer)
         {
-            this.StrataViewContainer = strataViewContainer;
-            this.DataEntryController = dataEntryController;
-            this.Controller = controller;
-            Strata = dataEntryController.Unit.TreeStrata;
+            StrataViewContainer = strataViewContainer;
+            DataEntryController = dataEntryController;
+            Controller = controller;
+            DataService = dataService;
+            Strata = DataService.TreeStrata;
         }
 
         protected void InitializeStrataViews()
@@ -70,9 +74,11 @@ namespace FSCruiser.WinForms
 
             //if there is only one strata in the unit
             //display the counts for that stratum
-            if (this.Strata.Count == 1)
+            var singleStratum = Strata.SingleOrDefault();
+
+            if (singleStratum != null)
             {
-                this.DisplayTallyPanel(this.Strata[0]);
+                this.DisplayTallyPanel(singleStratum);
             }
 
             this.ResumeLayout(false);

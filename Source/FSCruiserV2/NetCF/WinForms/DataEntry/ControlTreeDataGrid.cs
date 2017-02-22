@@ -60,7 +60,7 @@ namespace FSCruiser.WinForms.DataEntry
             DataEntryController = dataEntryController;
 
             DataGridAdjuster.InitializeGrid(this);
-            DataGridTableStyle tableStyle = DataEntryController.Unit.InitializeTreeColumns(this);
+            DataGridTableStyle tableStyle = dataService.InitializeTreeColumns(this);
 
             
 

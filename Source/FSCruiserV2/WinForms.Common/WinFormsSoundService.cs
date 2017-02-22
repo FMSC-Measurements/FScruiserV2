@@ -80,7 +80,7 @@ namespace FSCruiser.WinForms
         public void SignalInsuranceTree()
         {
 #if NetCF
-            Win32.MessageBeep(Win32.MB_ICONASTERISK);
+            //Win32.MessageBeep(Win32.MB_ICONASTERISK);
             MessageBox.Show("Insurance Tree");
 #else
             System.Media.SystemSounds.Asterisk.Play();
