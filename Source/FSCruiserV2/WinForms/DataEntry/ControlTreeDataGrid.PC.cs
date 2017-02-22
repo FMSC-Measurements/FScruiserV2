@@ -97,7 +97,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = DataService.TreeSampleGroups.ToList();
+                _sgColumn.DataSource = DataService.TreeStrata.SelectMany(st => st.SampleGroups).ToList();
             }
             if (_stratumColumn != null)
             {

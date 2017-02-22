@@ -45,22 +45,6 @@ namespace FScruiser.Core.Services
 
         public IEnumerable<Stratum> TreeStrata { get; protected set; }
 
-        //PC datagrid requires that we initialize the sample group drop-down with all possible values
-        // another option would be to do TreeStrata.SelectMany(st => st.SampleGroups)
-        public IEnumerable<SampleGroup> TreeSampleGroups
-        {
-            get
-            {
-                foreach (var st in TreeStrata)
-                {
-                    foreach (var sg in st.SampleGroups)
-                    {
-                        yield return sg;
-                    }
-                }
-            }
-        }
-
         public IEnumerable<PlotStratum> PlotStrata { get; protected set; }
 
         public IEnumerable<Stratum> Strata
