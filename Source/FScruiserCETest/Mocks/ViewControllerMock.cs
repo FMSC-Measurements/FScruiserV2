@@ -2,6 +2,7 @@
 using CruiseDAL.DataObjects;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using FScruiser.Core.Services;
 
 namespace FSCruiserV2.Test.Mocks
 {
@@ -104,7 +105,7 @@ namespace FSCruiserV2.Test.Mocks
             throw new NotImplementedException();
         }
 
-        public bool ShowPlotInfo(Plot plotInfo, PlotStratum stratum, bool allowEdit)
+        public bool ShowPlotInfo(IDataEntryDataService dataService, Plot plotInfo, PlotStratum stratum, bool allowEdit)
         {
             throw new NotImplementedException();
         }

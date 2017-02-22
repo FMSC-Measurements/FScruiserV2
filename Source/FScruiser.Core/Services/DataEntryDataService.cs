@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
-using CruiseDAL;
-using FSCruiser.Core.Models;
-using FSCruiser.Core;
-using System.Diagnostics;
-using CruiseDAL.DataObjects;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using CruiseDAL;
+using CruiseDAL.DataObjects;
+using FMSC.ORM.SQLite;
+using FSCruiser.Core;
+using FSCruiser.Core.Models;
 
 namespace FScruiser.Core.Services
 {
     public class IDataEntryDataService : ITreeFieldProvider
     {
-        protected DAL DataStore { get; set; }
+        protected SQLiteDatastore DataStore { get; set; }
 
         public CuttingUnit CuttingUnit { get; set; }
 
@@ -63,7 +63,7 @@ namespace FScruiser.Core.Services
             }
         }
 
-        public IDataEntryDataService(string unitCode, DAL dataStore)
+        public IDataEntryDataService(string unitCode, SQLiteDatastore dataStore)
         {
             DataStore = dataStore;
 

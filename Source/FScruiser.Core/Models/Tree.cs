@@ -6,6 +6,7 @@ using CruiseDAL.DataObjects;
 using FMSC.ORM.Core;
 using FMSC.ORM.EntityModel.Attributes;
 using FScruiser.Core.Services;
+using FMSC.ORM.SQLite;
 
 namespace FSCruiser.Core.Models
 {
@@ -35,8 +36,8 @@ namespace FSCruiser.Core.Models
     {
         int cachedLogCount = -1;
 
-        public Tree(DAL dal)
-            : base((DatastoreRedux)dal)
+        public Tree(DatastoreRedux dal)
+            : base(dal)
         {
         }
 
