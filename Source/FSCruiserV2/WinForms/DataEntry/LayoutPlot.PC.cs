@@ -29,8 +29,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         public FormDataEntryLogic DataEntryController { get { return this.ViewLogicController.DataEntryController; } }
 
-        public IDataEntryDataService DataService { get; set; }
-
         public LayoutPlotLogic ViewLogicController { get; set; }
 
         public bool ViewLoading { get { return _viewLoading; } }
@@ -50,10 +48,50 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
+        #region DataService
+
+        IDataEntryDataService _dataService;
+
+        IDataEntryDataService DataService
+        {
+            get { return _dataService; }
+            set
+            {
+                OnDataServiceChanging();
+                _dataService = value;
+                OnDataServiceChanged();
+            }
+        }
+
+        private void OnDataServiceChanged()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
+            }
+        }
+
+        private void OnDataServiceChanging()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
+            }
+        }
+
+        void HandleEnableLogGradingChanged(object sender, EventArgs e)
+        {
+            if (this._logsColumn != null)
+            {
+                this._logsColumn.Visible = DataService.EnableLogGrading;
+            }
+        }
+
+        #endregion DataService
+
         public LayoutPlot(FormDataEntryLogic dataEntryController
             , IDataEntryDataService dataService
             , ISoundService soundService
-            , Control parent
             , PlotStratum stratum)
         {
             Stratum = stratum;
@@ -80,7 +118,6 @@ namespace FSCruiser.WinForms.DataEntry
 
             //no need to load tallies....?
             //Controller.PopulateTallies(this.StratumInfo, this._mode, Controller.CurrentUnit, this._tallyListPanel, this);
-            this.Parent = parent;
         }
 
         void InitializeDataGrid(PlotStratum stratum)
@@ -119,7 +156,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_logsColumn != null)
             {
-                _logsColumn.Visible = AppController.ViewController.EnableLogGrading;
+                _logsColumn.Visible = DataService.EnableLogGrading;
             }
             if (_stColumn != null)
             {
@@ -182,7 +219,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             this.ViewLogicController.UpdateCurrentPlot();
 
-            logToolStripMenuItem.Text = AppController.ViewController.EnableLogGrading ?
+            logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                 "Disable Log Grading" : "Enable Log Grading";
         }
 
@@ -655,14 +692,6 @@ namespace FSCruiser.WinForms.DataEntry
             this.ViewLogicController.HandleViewLoad();
         }
 
-        public void HandleEnableLogGradingChanged()
-        {
-            if (this._logsColumn != null)
-            {
-                this._logsColumn.Visible = this.AppController.ViewController.EnableLogGrading;
-            }
-        }
-
         void Settings_CruisersChanged(object sender, EventArgs e)
         {
             if (this._initialsColoumn != null)
@@ -770,9 +799,9 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void logToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AppController.ViewController.EnableLogGrading = !AppController.ViewController.EnableLogGrading;
+            DataService.EnableLogGrading = !DataService.EnableLogGrading;
 
-            logToolStripMenuItem.Text = AppController.ViewController.EnableLogGrading ?
+            logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                 "Disable Log Grading" : "Enable Log Grading";
         }
 
@@ -780,7 +809,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (e.Button == MouseButtons.Right)
             {
-                logToolStripMenuItem.Text = AppController.ViewController.EnableLogGrading ?
+                logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                     "Disable Log Grading" : "Enable Log Grading";
                 _contexMenu.Show(Cursor.Position);
             }

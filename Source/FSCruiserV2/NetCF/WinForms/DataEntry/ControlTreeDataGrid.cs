@@ -38,7 +38,52 @@ namespace FSCruiser.WinForms.DataEntry
             set { _userCanAddTrees = value; }
         }
 
-        IDataEntryDataService DataService {get;set;}
+        #region DataService
+
+        IDataEntryDataService _dataService;
+
+        IDataEntryDataService DataService
+        {
+            get { return _dataService; }
+            set
+            {
+                OnDataServiceChanging();
+                _dataService = value;
+                OnDataServiceChanged();
+            }
+        }
+
+        private void OnDataServiceChanged()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
+            }
+        }
+
+        private void OnDataServiceChanging()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
+            }
+        }
+
+        void HandleEnableLogGradingChanged(object sender, EventArgs e)
+        {
+            if (_logsColumn == null) { return; }
+            if ((_logsColumn.Width > 0) == DataService.EnableLogGrading) { return; }
+            if (DataService.EnableLogGrading)
+            {
+                _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
+            }
+            else
+            {
+                _logsColumn.Width = -1;
+            }
+        }
+
+        #endregion DataService
 
         public FormDataEntryLogic DataEntryController { get; set; }
 
@@ -342,20 +387,6 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void HandleEnableLogGradingChanged()
-        {
-            if (_logsColumn == null) { return; }
-            if ((_logsColumn.Width > 0) == this.Controller.ViewController.EnableLogGrading) { return; }
-            if (this.Controller.ViewController.EnableLogGrading)
-            {
-                _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
-            }
-            else
-            {
-                _logsColumn.Width = -1;
-            }
-        }
-
         void Settings_CruisersChanged(object sender, EventArgs e)
         {
             if (this._initialsColoumn != null)
@@ -383,6 +414,7 @@ namespace FSCruiser.WinForms.DataEntry
                     this._BS_trees.Dispose();
                     this._BS_trees = null;
                 }
+                DataService = null;
                 try
                 {
                     ApplicationSettings.Instance.CruisersChanged -= Settings_CruisersChanged;

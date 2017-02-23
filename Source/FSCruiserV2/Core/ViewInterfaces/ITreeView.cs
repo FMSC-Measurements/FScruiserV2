@@ -13,8 +13,6 @@ namespace FSCruiser.Core.ViewInterfaces
 
         bool LogColumnVisable { get; set; }
 
-        void HandleEnableLogGradingChanged();
-
         void DeleteSelectedTree();
 
         void EndEdit();

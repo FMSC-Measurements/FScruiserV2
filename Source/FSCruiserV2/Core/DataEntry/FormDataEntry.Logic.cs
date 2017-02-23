@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Forms;
 using CruiseDAL;
 using CruiseDAL.DataObjects;
 using FMSC.Sampling;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
-using FSCruiser.WinForms.DataEntry;
 using FScruiser.Core.Services;
 
 namespace FSCruiser.Core.DataEntry
@@ -23,11 +21,9 @@ namespace FSCruiser.Core.DataEntry
 
         public CuttingUnit Unit { get { return _dataService.CuttingUnit; } }
 
-        public DAL Database { get { return this.Unit.DAL; } }
+        public DAL Database { get { return DataService.DataStore; } }
 
         public IViewController ViewController { get { return this.Controller.ViewController; } }
-
-        LoadCuttingUnitWorker _loadUnitWorker;
 
         public bool HotKeyenabled { get; set; }
 
@@ -283,8 +279,11 @@ namespace FSCruiser.Core.DataEntry
             }
             if (!tree.KPI.EqualsEx(0.0F))
             {
-                string message = string.Format("Tree RecID:{0} KPI changed from {1} to {2}", tree.Tree_CN, tree.KPI, newKPI);
-                this.Database.LogMessage(message, "I");
+                string message = string.Format("Tree RecID:{0} KPI changed from {1} to {2}"
+                    , tree.Tree_CN
+                    , tree.KPI
+                    , newKPI);
+                DataService.LogMessage(message, "I");
             }
             else if (doSample)
             {
@@ -313,21 +312,6 @@ namespace FSCruiser.Core.DataEntry
             //if (tree.TreeDefaultValue == tdv) { return true; }
             tree.SetTreeTDV(tdv);
             return tree.TrySave();
-        }
-
-        public void HandleViewLoading()
-        {
-            //TODO check to see if strata are loaded for this unit, otherwise display error message
-            //Controller.AsyncLoadCuttingUnitData();
-
-            this._loadUnitWorker = new LoadCuttingUnitWorker(this.Unit);
-            this._loadUnitWorker.DoneLoading += new EventHandler(_loadUnitWorker_DoneLoading);
-            this._loadUnitWorker.AsyncLoadCuttingUnitData();
-        }
-
-        void _loadUnitWorker_DoneLoading(object sender, EventArgs e)
-        {
-            this.View.HandleCuttingUnitDataLoaded();
         }
 
         public void HandleViewClosing(CancelEventArgs e)

@@ -146,8 +146,6 @@ namespace FSCruiser.Core
                 _fileLoadWorker.Dispose();
                 _fileLoadWorker = null;
 
-                ViewController.EnableLogGrading = DataStore.ExecuteScalar<bool>("SELECT LogGradingEnabled FROM Sale Limit 1;");
-
                 var filePath = dataStore.Path;
                 var fileName = System.IO.Path.GetFileName(dataStore.Path);
 

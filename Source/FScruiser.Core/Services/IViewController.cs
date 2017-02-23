@@ -13,7 +13,7 @@ namespace FSCruiser.Core
 
         IApplicationController ApplicationController { get; set; }
 
-        bool EnableLogGrading { get; set; }
+        //bool EnableLogGrading { get; set; }
 
         void HandleFileStateChanged();
 

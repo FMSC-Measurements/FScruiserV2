@@ -13,7 +13,9 @@ namespace FScruiser.Core.Services
 {
     public class IDataEntryDataService : ITreeFieldProvider
     {
-        protected SQLiteDatastore DataStore { get; set; }
+        public event EventHandler EnableLogGradingChanged;
+
+        public DAL DataStore { get; protected set; }
 
         public CuttingUnit CuttingUnit { get; set; }
 
@@ -63,12 +65,30 @@ namespace FScruiser.Core.Services
             }
         }
 
-        public IDataEntryDataService(string unitCode, SQLiteDatastore dataStore)
+        bool _enableLogGrading;
+
+        public bool EnableLogGrading
+        {
+            get { return _enableLogGrading; }
+            set
+            {
+                _enableLogGrading = value;
+                OnEnableLogGradingChanged();
+            }
+        }
+
+        private void OnEnableLogGradingChanged()
+        {
+        }
+
+        public IDataEntryDataService(string unitCode, DAL dataStore)
         {
             DataStore = dataStore;
 
             CuttingUnit = DataStore.From<CuttingUnit>()
                 .Where("Code = ?").Read(unitCode).FirstOrDefault();
+
+            EnableLogGrading = DataStore.ExecuteScalar<bool>("SELECT LogGradingEnabled FROM Sale Limit 1;");
 
             var tallyBuffer = new TallyHistoryCollection(this, Constants.MAX_TALLY_HISTORY_SIZE);
             tallyBuffer.Initialize();
@@ -540,5 +560,24 @@ namespace FScruiser.Core.Services
         }
 
         #endregion ITreeFieldProvider
+
+        #region utility
+
+        public void LogMessage(string message, string level)
+        {
+            DataStore.LogMessage(message, level);
+        }
+
+        public bool TryLogMessage(string message, string level)
+        {
+            try
+            {
+                DataStore.LogMessage(message, level);
+                return true;
+            }
+            catch { return false; }
+        }
+
+        #endregion utility
     }
 }

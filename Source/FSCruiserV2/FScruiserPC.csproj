@@ -115,7 +115,6 @@
     </Compile>
     <Compile Include="Core\Workers\FileLoadWorker.cs" />
     <Compile Include="Core\FormCruiserSelection.Logic.cs" />
-    <Compile Include="Core\LoadCuttingUnitWorker.cs" />
     <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
     <Compile Include="Core\ViewInterfaces\IDataEntryPage.cs" />
     <Compile Include="Core\ViewInterfaces\IDataEntryView.cs" />

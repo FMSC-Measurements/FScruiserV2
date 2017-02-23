@@ -30,23 +30,6 @@ namespace FSCruiser.WinForms.Common
 
         public event CancelEventHandler ApplicationClosing;
 
-        public bool EnableLogGrading
-        {
-            get { return _enableLogGrading; }
-            set
-            {
-                lock (_dataEntrySyncLock)
-                {
-                    if (value == _enableLogGrading) { return; }
-                    _enableLogGrading = value;
-                    if (_dataEntryView != null)
-                    {
-                        _dataEntryView.HandleEnableLogGradingChanged();
-                    }
-                }
-            }
-        }
-
         //public bool EnableCruiserSelectionPopup { get; set; }
 
         public FormMain MainView

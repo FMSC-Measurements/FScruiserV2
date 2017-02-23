@@ -6,18 +6,11 @@ namespace FSCruiser.Core.ViewInterfaces
 {
     public interface IDataEntryView
     {
-        CuttingUnit Unit { get; }
-
-        FormDataEntryLogic LogicController { get; }
+        //FormDataEntryLogic LogicController { get; }
 
         IDataEntryPage FocusedLayout { get; }
 
         List<IDataEntryPage> Layouts { get; }
-
-
-        void HandleCuttingUnitDataLoaded();
-
-        //void HandleEnableLogGradingChanged();
 
         void GotoTreePage();
 

@@ -34,6 +34,7 @@ namespace FSCruiser.WinForms.DataEntry
                 {
                     components.Dispose();
                 }
+                DataService = null;
                 try
                 {
                     ApplicationSettings.Instance.CruisersChanged -= Settings_CruisersChanged;
@@ -296,7 +297,52 @@ namespace FSCruiser.WinForms.DataEntry
 
         public FormDataEntryLogic DataEntryController { get { return this.ViewLogicController.DataEntryController; } }
 
-        IDataEntryDataService DataService { get { return ViewLogicController.DataService; } }
+        #region DataService
+
+        IDataEntryDataService _dataService;
+
+        IDataEntryDataService DataService
+        {
+            get { return _dataService; }
+            set
+            {
+                OnDataServiceChanging();
+                _dataService = value;
+                OnDataServiceChanged();
+            }
+        }
+
+        private void OnDataServiceChanged()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
+            }
+        }
+
+        private void OnDataServiceChanging()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
+            }
+        }
+
+        void HandleEnableLogGradingChanged(object sender, EventArgs e)
+        {
+            if (_logsColumn == null) { return; }
+            if ((_logsColumn.Width > 0) == DataService.EnableLogGrading) { return; }
+            if (DataService.EnableLogGrading)
+            {
+                _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
+            }
+            else
+            {
+                _logsColumn.Width = -1;
+            }
+        }
+
+        #endregion DataService
 
         public LayoutPlotLogic ViewLogicController { get; set; }
 
@@ -317,9 +363,9 @@ namespace FSCruiser.WinForms.DataEntry
         public LayoutPlot(FormDataEntryLogic dataEntryController
             , IDataEntryDataService dataService
             , ISoundService soundService
-            , Control parent
             , PlotStratum stratum)
         {
+            DataService = dataService;
 
             this.ViewLogicController = new LayoutPlotLogic(stratum
                 , this
@@ -381,7 +427,6 @@ namespace FSCruiser.WinForms.DataEntry
             }
 
             this.Dock = DockStyle.Fill;
-            this.Parent = parent;
 
             InitializeTallyPanel();
 
@@ -858,20 +903,6 @@ namespace FSCruiser.WinForms.DataEntry
         public void EndEdit()
         {
             this.ViewLogicController.EndEdit();
-        }
-
-        public void HandleEnableLogGradingChanged()
-        {
-            if (_logsColumn == null) { return; }
-            if ((_logsColumn.Width > 0) == this.AppController.ViewController.EnableLogGrading) { return; }
-            if (this.AppController.ViewController.EnableLogGrading)
-            {
-                _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
-            }
-            else
-            {
-                _logsColumn.Width = -1;
-            }
         }
 
         void Settings_CruisersChanged(object sender, EventArgs e)

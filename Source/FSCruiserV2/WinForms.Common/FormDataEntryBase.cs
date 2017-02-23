@@ -72,7 +72,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void InitializePageContainer()
         {
-            Debug.Assert(Unit != null);
+            Debug.Assert(DataService.CuttingUnit != null);
 
             PageContainer.SuspendLayout();
 
@@ -156,7 +156,7 @@ namespace FSCruiser.WinForms.DataEntry
                     st.SampleSelecter = new ThreePSelecter((int)st.KZ3PPNT, 1000000, 0);
                 }
 
-                st.PopulatePlots(Unit.CuttingUnit_CN.GetValueOrDefault());
+                st.PopulatePlots(DataService.CuttingUnit.CuttingUnit_CN.GetValueOrDefault());
 
                 TabPage page = new TabPage();
                 page.Text = String.Format("{0}-{1}[{2}]", st.Code, st.Method, st.Hotkey);
@@ -165,8 +165,8 @@ namespace FSCruiser.WinForms.DataEntry
                 LayoutPlot view = new LayoutPlot(LogicController
                     , DataService
                     , SoundService.Instance
-                    , page
                     , st);
+                view.Parent = page;
 #if NetCF
                 view.Sip = SIP;
 #endif
@@ -186,10 +186,22 @@ namespace FSCruiser.WinForms.DataEntry
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            if (this.LogicController != null)
+            foreach (IDataEntryPage c in this._layouts)
             {
-                this.LogicController.HandleViewLoading();
+                ITreeView tv = c as ITreeView;
+                if (tv != null)
+                {
+                    tv.HandleLoad();
+                }
             }
+
+            if (this._tallyPage != null)
+            {
+                this._tallyLayout.HandleLoad();
+            }
+
+            // Turn off the wait cursor that was turned on in when displaying main form
+            Cursor.Current = Cursors.Default;
             this.OnFocusedLayoutChanged(null, null);
         }
 
@@ -318,14 +330,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         public FormDataEntryLogic LogicController { get; protected set; }
 
-        public CuttingUnit Unit
-        {
-            get
-            {
-                return DataService.CuttingUnit;
-            }
-        }
-
         public IDataEntryPage FocusedLayout
         {
             get
@@ -337,45 +341,6 @@ namespace FSCruiser.WinForms.DataEntry
         public List<IDataEntryPage> Layouts
         {
             get { return _layouts; }
-        }
-
-        public void HandleCuttingUnitDataLoaded()
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new Action(this.HandleCuttingUnitDataLoaded));
-            }
-            else
-            {
-                foreach (IDataEntryPage c in this._layouts)
-                {
-                    ITreeView tv = c as ITreeView;
-                    if (tv != null)
-                    {
-                        tv.HandleLoad();
-                    }
-                }
-
-                if (this._tallyPage != null)
-                {
-                    this._tallyLayout.HandleLoad();
-                }
-
-                // Turn off the waitcursor that was turned on in FormMain.button1_Click()
-                Cursor.Current = Cursors.Default;
-            }
-        }
-
-        public void HandleEnableLogGradingChanged()
-        {
-            foreach (IDataEntryPage c in this._layouts)
-            {
-                ITreeView tv = c as ITreeView;
-                if (tv != null)
-                {
-                    tv.HandleEnableLogGradingChanged();
-                }
-            }
         }
 
         public void GotoTreePage()

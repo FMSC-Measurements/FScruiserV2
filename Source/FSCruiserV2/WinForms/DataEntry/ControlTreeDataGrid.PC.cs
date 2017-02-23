@@ -46,7 +46,46 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        IDataEntryDataService DataService { get; set; }
+        #region DataService
+
+        IDataEntryDataService _dataService;
+
+        IDataEntryDataService DataService
+        {
+            get { return _dataService; }
+            set
+            {
+                OnDataServiceChanging();
+                _dataService = value;
+                OnDataServiceChanged();
+            }
+        }
+
+        private void OnDataServiceChanged()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
+            }
+        }
+
+        private void OnDataServiceChanging()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
+            }
+        }
+
+        void HandleEnableLogGradingChanged(object sender, EventArgs e)
+        {
+            if (this._logsColumn != null)
+            {
+                this._logsColumn.Visible = DataService.EnableLogGrading;
+            }
+        }
+
+        #endregion DataService
 
         public ControlTreeDataGrid(IApplicationController controller
             , IDataEntryDataService dataService
@@ -109,7 +148,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_logsColumn != null)
             {
-                _logsColumn.Visible = Controller.ViewController.EnableLogGrading;
+                _logsColumn.Visible = DataService.EnableLogGrading;
             }
 
             _contexMenu = new ContextMenuStrip(new System.ComponentModel.Container());
@@ -123,7 +162,7 @@ namespace FSCruiser.WinForms.DataEntry
             _contexMenu.Size = new System.Drawing.Size(181, 26);
             logToolStripMenuItem.Name = "logToolStripMenuItem";
             logToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            logToolStripMenuItem.Text = Controller.ViewController.EnableLogGrading ?
+            logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                 "Disable Log Grading" : "Enable Log Grading";
             logToolStripMenuItem.Click += logToolStripMenuItem_Click;
             _contexMenu.ResumeLayout(false);
@@ -133,7 +172,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (e.Button == MouseButtons.Right)
             {
-                logToolStripMenuItem.Text = Controller.ViewController.EnableLogGrading ?
+                logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                     "Disable Log Grading" : "Enable Log Grading";
 
                 _contexMenu.Show(Cursor.Position);
@@ -380,14 +419,6 @@ namespace FSCruiser.WinForms.DataEntry
             _viewLoading = false;
         }
 
-        public void HandleEnableLogGradingChanged()
-        {
-            if (this._logsColumn != null)
-            {
-                this._logsColumn.Visible = this.Controller.ViewController.EnableLogGrading;
-            }
-        }
-
         void Settings_CruisersChanged(object sender, EventArgs e)
         {
             if (this._initialsColoumn != null)
@@ -472,9 +503,9 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void logToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Controller.ViewController.EnableLogGrading = !Controller.ViewController.EnableLogGrading;
+            DataService.EnableLogGrading = !DataService.EnableLogGrading;
 
-            logToolStripMenuItem.Text = Controller.ViewController.EnableLogGrading ?
+            logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                 "Disable Log Grading" : "Enable Log Grading";
         }
 
