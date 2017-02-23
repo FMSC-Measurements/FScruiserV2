@@ -182,7 +182,8 @@ namespace FSCruiser.WinForms.DataEntry
                     MessageBox.Show("Plot Number Already Exists");
                     e.Cancel = true;
                 }
-                else if (IsNull && this.Plot.Trees.Count > 0)
+                else if (IsNull
+                    && (Plot.Trees != null && Plot.Trees.Count > 0))
                 {
                     MessageBox.Show("Null plot can not contain trees");
                     e.Cancel = true;
