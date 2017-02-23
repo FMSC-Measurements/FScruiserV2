@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using FSCruiser.Core.Models;
-using System.Windows.Forms;
-using System.ComponentModel;
 
 namespace FSCruiser.Core
 {
+    public enum BackUpMethod { None = 0, LeaveUnit = 1, TimeInterval = 2 }
+
     [Serializable]
     public class ApplicationSettings
     {
@@ -25,6 +25,7 @@ namespace FSCruiser.Core
                 }
                 return _instance;
             }
+            set { _instance = value; }
         }
 
         public static string ApplicationSettingDirectory
@@ -48,8 +49,6 @@ namespace FSCruiser.Core
                 return System.IO.Path.Combine(dir, Constants.APP_SETTINGS_PATH);
             }
         }
-
-        public static IExceptionHandler ExceptionHandler { get; set; }
 
         #endregion static properties
 
@@ -103,8 +102,6 @@ namespace FSCruiser.Core
         public BackUpMethod BackUpMethod { get; set; }
 
         #endregion backup settings
-
-
 
         [XmlAttribute]
         public bool EnableCruiserPopup { get; set; }
@@ -175,41 +172,33 @@ namespace FSCruiser.Core
 
         public static void Initialize()
         {
-            try
+            if (File.Exists(ApplicationSettingFilePath))
             {
-                if (File.Exists(ApplicationSettingFilePath))
-                {
-                    var appSettingsPath = ApplicationSettingFilePath;
+                var appSettingsPath = ApplicationSettingFilePath;
 
-                    _instance = Deserialize(appSettingsPath);
+                _instance = Deserialize(appSettingsPath);
+            }
+            else
+            {
+                //previous versions stored app settings in the executing dir
+                //so if no app setting file exists check old location
+
+                var oldSettingsPath = System.IO.Path.Combine(GetExecutionDirectory()
+                    , Constants.APP_SETTINGS_PATH);
+
+                if (File.Exists(oldSettingsPath))
+                {
+                    _instance = ApplicationSettings.Deserialize(oldSettingsPath);
+                    try
+                    {
+                        System.IO.File.Delete(oldSettingsPath);
+                    }
+                    catch { }
                 }
                 else
                 {
-                    //previous versions stored app settings in the executing dir
-                    //so if no app setting file exists check old location
-
-                    var oldSettingsPath = System.IO.Path.Combine(GetExecutionDirectory()
-                        , Constants.APP_SETTINGS_PATH);
-
-                    if (File.Exists(oldSettingsPath))
-                    {
-                        _instance = ApplicationSettings.Deserialize(oldSettingsPath);
-                        try
-                        {
-                            System.IO.File.Delete(oldSettingsPath);
-                        }
-                        catch { }
-                    }
-                    else
-                    {
-                        _instance = new ApplicationSettings();
-                    }
+                    _instance = new ApplicationSettings();
                 }
-            }
-            catch (Exception e)
-            {
-                ExceptionHandler.HandelEx(new UserFacingException("Fail to load application settings", e));
-                _instance = new ApplicationSettings();
             }
         }
 
@@ -228,26 +217,20 @@ namespace FSCruiser.Core
             {
                 return;
             }
-            try
+
+            XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
+            var dir = ApplicationSettingDirectory;
+
+            if (!Directory.Exists(dir))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
-                var dir = ApplicationSettingDirectory;
-
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
-
-                var path = ApplicationSettingFilePath;
-
-                using (StreamWriter writer = new StreamWriter(path))
-                {
-                    serializer.Serialize(writer, _instance);
-                }
+                Directory.CreateDirectory(dir);
             }
-            catch (Exception e)
+
+            var path = ApplicationSettingFilePath;
+
+            using (StreamWriter writer = new StreamWriter(path))
             {
-                ExceptionHandler.HandelEx(new UserFacingException("Unabel to save user settings", e));
+                serializer.Serialize(writer, _instance);
             }
         }
 
