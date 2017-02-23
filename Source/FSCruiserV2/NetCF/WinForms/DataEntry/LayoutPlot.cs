@@ -316,6 +316,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public LayoutPlot(FormDataEntryLogic dataEntryController
             , IDataEntryDataService dataService
+            , ISoundService soundService
             , Control parent
             , PlotStratum stratum)
         {
@@ -324,6 +325,7 @@ namespace FSCruiser.WinForms.DataEntry
                 , this
                 , dataEntryController
                 , dataService
+                , soundService
                 , dataEntryController.ViewController);
 
             ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
@@ -759,27 +761,27 @@ namespace FSCruiser.WinForms.DataEntry
             //_BS_Plots.DataSource = this.StratumInfo.Plots;
         }
 
-        public bool PreviewKeypress(KeyEventArgs ea)
+        public bool PreviewKeypress(string keyStr)
         {
             if (_viewLoading) { return false; }
-            if (ea.KeyData == Keys.None) { return false; }
+            if (string.IsNullOrEmpty(keyStr)) { return false; }
 
             var settings = ApplicationSettings.Instance;
 
-            if(ea.KeyData == settings.AddPlotKey)
+            if (keyStr == settings.AddPlotKeyStr)
             {
                 this._addPlotButton_Click(null, null);
                 return true;
             }
-            else if(ea.KeyData == settings.AddTreeKey)
+            else if (keyStr == settings.AddTreeKeyStr)
             {
                 return ViewLogicController.UserAddTree() != null;
             }
-            else if (ea.KeyData == settings.ResequencePlotTreesKey)
+            else if (keyStr == settings.ResequencePlotTreesKeyStr)
             {
                 return ViewLogicController.ResequenceTreeNumbers();
             }
-            else if (ea.KeyData == Keys.Escape)
+            else if (keyStr.StartsWith("ESC", StringComparison.InvariantCultureIgnoreCase))
             {
                 IsGridExpanded = !IsGridExpanded;
                 return true;

@@ -64,10 +64,6 @@ namespace FSCruiser.WinForms
         {
 #if NetCF
             Win32.MessageBeep(Win32.MB_ICONQUESTION);
-            if (showMessage)
-            {
-                MessageBox.Show("Measure Tree");
-            }
 #else
             System.Media.SystemSounds.Exclamation.Play();
             if (showMessage)
@@ -80,8 +76,7 @@ namespace FSCruiser.WinForms
         public void SignalInsuranceTree()
         {
 #if NetCF
-            //Win32.MessageBeep(Win32.MB_ICONASTERISK);
-            MessageBox.Show("Insurance Tree");
+            Win32.MessageBeep(Win32.MB_ICONASTERISK);
 #else
             System.Media.SystemSounds.Asterisk.Play();
             MessageBox.Show("Insurance Tree");

@@ -119,12 +119,10 @@ namespace FSCruiser.Core.DataEntry
                     }
 
                     _dialogService.AskCruiser(tree);
-                    if (!ApplicationSettings.Instance.EnableCruiserPopup)
-                    {
-                        var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
-                    (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
-                        _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
-                    }
+
+                    var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
+                            (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
+                    _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
 
                     tree.TrySave();
                     DataService.AddNonPlotTree(tree);
@@ -218,19 +216,19 @@ namespace FSCruiser.Core.DataEntry
             this.StratumHotKeyLookup.Add(stratumHotKey, pageIndex);
         }
 
-        public bool HandleKeyPress(KeyEventArgs ea)
+        public bool HandleKeyPress(string keyStr)
         {
             var view = this.View.FocusedLayout;
 
             if (view != null)
             {
-                if (view.PreviewKeypress(ea))
+                if (view.PreviewKeypress(keyStr))
                 {
                     return true;
                 }
-                else
+                else if (keyStr.Length == 1)
                 {
-                    var key = PlatformHelper.KeyToChar(ea.KeyData);
+                    var key = keyStr.FirstOrDefault();
                     if (key == char.MinValue) { return false; }
                     key = char.ToUpper(key);
                     if (!IsHotkeyKey(key)) { return false; }
@@ -279,7 +277,7 @@ namespace FSCruiser.Core.DataEntry
             }
             if (tree.SampleGroup == null)
             {
-                MessageBox.Show("Select Sample Group before entering KPI");
+                _dialogService.ShowMessage("Select Sample Group before entering KPI");
                 cancel = true;
                 return;
             }

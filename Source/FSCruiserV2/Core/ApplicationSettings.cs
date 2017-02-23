@@ -13,7 +13,6 @@ namespace FSCruiser.Core
     {
         #region static properties
 
-        static KeysConverter _keyConverter = new KeysConverter();
         static ApplicationSettings _instance;
 
         public static ApplicationSettings Instance
@@ -67,15 +66,15 @@ namespace FSCruiser.Core
             EnableTallySound = true;
 
 #if NetCF
-            AddPlotKey = Keys.None;
+            AddPlotKeyStr = string.Empty;
 #else
-            AddPlotKey = Keys.F3;
+            AddPlotKeyStr = "F3";
 #endif
 
-            AddPlotKey = Keys.Add;
-            ResequencePlotTreesKey = Keys.None;
-            UntallyKey = Keys.None;
-            JumpTreeTallyKey = Keys.Escape;
+            AddPlotKeyStr = "Add"; //plus key
+            ResequencePlotTreesKeyStr = string.Empty;
+            UntallyKeyStr = string.Empty;
+            JumpTreeTallyKeyStr = "Escape";
         }
 
         #region backup settings
@@ -143,69 +142,34 @@ namespace FSCruiser.Core
         #region hotkey settings
 
         [XmlAttribute]
-        public string AddPlotKeyStr
-        {
-            get { return _keyConverter.ConvertToString(AddPlotKey); }
-            set
-            {
-                AddPlotKey = ParseKey(value, Keys.None);
-            }
-        }
+        public string AddPlotKeyStr { get; set; }
 
         [XmlAttribute]
-        public string AddTreeKeyStr
-        {
-            get { return _keyConverter.ConvertToString(AddTreeKey); }
-            set
-            {
-                AddTreeKey = ParseKey(value, Keys.None);
-            }
-        }
+        public string AddTreeKeyStr { get; set; }
 
         [XmlAttribute]
-        public string JumpTreeTallyKeyStr
-        {
-            get { return _keyConverter.ConvertToString(JumpTreeTallyKey); }
-            set
-            {
-                JumpTreeTallyKey = ParseKey(value, Keys.Escape);
-            }
-        }
+        public string JumpTreeTallyKeyStr { get; set; }
 
         [XmlAttribute]
-        public string ResequencePlotTreesKeyStr
-        {
-            get { return _keyConverter.ConvertToString(ResequencePlotTreesKey); }
-            set
-            {
-                ResequencePlotTreesKey = ParseKey(value, Keys.None);
-            }
-        }
+        public string ResequencePlotTreesKeyStr { get; set; }
 
         [XmlAttribute]
-        public string UntallyKeyStr
-        {
-            get { return _keyConverter.ConvertToString(UntallyKey); }
-            set
-            {
-                UntallyKey = ParseKey(value, Keys.None);
-            }
-        }
+        public string UntallyKeyStr { get; set; }
 
-        [XmlIgnore]
-        public Keys AddPlotKey { get; set; }
+        //[XmlIgnore]
+        //public Keys AddPlotKey { get; set; }
 
-        [XmlIgnore]
-        public Keys AddTreeKey { get; set; }
+        //[XmlIgnore]
+        //public Keys AddTreeKey { get; set; }
 
-        [XmlIgnore]
-        public Keys ResequencePlotTreesKey { get; set; }
+        //[XmlIgnore]
+        //public Keys ResequencePlotTreesKey { get; set; }
 
-        [XmlIgnore]
-        public Keys UntallyKey { get; set; }
+        //[XmlIgnore]
+        //public Keys UntallyKey { get; set; }
 
-        [XmlIgnore]
-        public Keys JumpTreeTallyKey { get; set; }
+        //[XmlIgnore]
+        //public Keys JumpTreeTallyKey { get; set; }
 
         #endregion hotkey settings
 
@@ -255,18 +219,6 @@ namespace FSCruiser.Core
             using (StreamReader reader = new StreamReader(path))
             {
                 return (ApplicationSettings)serializer.Deserialize(reader);
-            }
-        }
-
-        static Keys ParseKey(String value, Keys defVal)
-        {
-            try
-            {
-                return (Keys)_keyConverter.ConvertFromString(value);
-            }
-            catch
-            {
-                return defVal;
             }
         }
 

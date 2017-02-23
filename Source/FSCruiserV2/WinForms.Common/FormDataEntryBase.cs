@@ -51,13 +51,12 @@ namespace FSCruiser.WinForms.DataEntry
         #region Inialize Controlls
 
         protected void InitializeCommon(IApplicationController controller
-           , CuttingUnit unit)
+            , IDataEntryDataService dataService)
         {
             KeyPreview = true;
 
             Controller = controller;
-            DataService = new IDataEntryDataService(unit.Code
-                , controller.DataStore);
+            DataService = dataService;
 
             LogicController = new FormDataEntryLogic(Controller
                 , DialogService.Instance
@@ -163,14 +162,14 @@ namespace FSCruiser.WinForms.DataEntry
                 page.Text = String.Format("{0}-{1}[{2}]", st.Code, st.Method, st.Hotkey);
                 PageContainer.TabPages.Add(page);
 
-
                 LayoutPlot view = new LayoutPlot(LogicController
                     , DataService
+                    , SoundService.Instance
                     , page
                     , st);
-#if NetCF 
+#if NetCF
                 view.Sip = SIP;
-#endif 
+#endif
 
                 view.UserCanAddTrees = true;
                 _layouts.Add(view);
@@ -200,12 +199,14 @@ namespace FSCruiser.WinForms.DataEntry
             this.LogicController.HandleViewClosing(e);
         }
 
+        KeysConverter keyConverter = new KeysConverter();
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-            if (e.Handled) { return; }
-
-            e.Handled = this.LogicController.HandleKeyPress(e);
+            if (e.Handled || e.KeyData == Keys.None) { return; }
+            var keyStr = keyConverter.ConvertToString(e.KeyData);
+            e.Handled = this.LogicController.HandleKeyPress(keyStr);
 
             //// HACK when the escape key is pressed on some controls
             //// the device will make a invalid key press sound if OnKeyDown is not handled

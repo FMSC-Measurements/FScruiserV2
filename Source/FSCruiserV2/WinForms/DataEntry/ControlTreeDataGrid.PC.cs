@@ -352,18 +352,18 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public bool PreviewKeypress(KeyEventArgs ea)
+        public bool PreviewKeypress(string keyStr)
         {
-            if (ea.KeyData != Keys.None) { return false; }
+            if (string.IsNullOrWhiteSpace(keyStr)) { return false; }
 
             var settings = ApplicationSettings.Instance;
 
-            if (ea.KeyData == settings.JumpTreeTallyKey)
+            if (keyStr == settings.JumpTreeTallyKeyStr)
             {
                 this.DataEntryController.View.GoToTallyPage();
                 return true;
             }
-            else if (ea.KeyData == settings.AddTreeKey)
+            else if (keyStr == settings.AddTreeKeyStr)
             {
                 return UserAddTree() != null;
             }

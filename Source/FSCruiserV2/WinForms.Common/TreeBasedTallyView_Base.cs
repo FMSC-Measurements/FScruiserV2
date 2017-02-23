@@ -378,31 +378,30 @@ namespace FSCruiser.WinForms
             this._viewLoading = false;
         }
 
-        public bool PreviewKeypress(KeyEventArgs key)
+        public bool PreviewKeypress(string keyStr)
         {
-            if(key.KeyData == Keys.None) {return false;}
+            if (string.IsNullOrEmpty(keyStr)) { return false; }
 
-            if (key.KeyData == ApplicationSettings.Instance.JumpTreeTallyKey)//esc
+            if (keyStr == ApplicationSettings.Instance.JumpTreeTallyKeyStr)
             {
                 this.DataEntryController.View.GotoTreePage();
                 return true;
             }
-            else if (key.KeyData == ApplicationSettings.Instance.UntallyKey)
+            else if (keyStr == ApplicationSettings.Instance.UntallyKeyStr)
             {
                 OnUntallyButtonClicked(null, null);
                 return true;
             }
-            else
+            else if (keyStr.Length == 1)
             {
-                var keyChar = PlatformHelper.KeyToChar(key.KeyCode);
-                if (keyChar != char.MinValue
-                    && StrataHotKeyLookup.ContainsKey(keyChar))
+                var keyChar = keyStr.First();
+                if (StrataHotKeyLookup.ContainsKey(keyChar))
                 {
                     DisplayTallyPanel(StrataHotKeyLookup[keyChar]);
                     return true;
                 }
-                return false;
             }
+            return false;
         }
 
         public void NotifyEnter()

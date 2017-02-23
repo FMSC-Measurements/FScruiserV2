@@ -4,6 +4,7 @@ using FSCruiser.Core;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.Common;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -15,10 +16,10 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         public FormDataEntry(IApplicationController controller
-            , CuttingUnit unit)
+            , IDataEntryDataService dataService)
         {
             InitializeComponent();
-            InitializeCommon(controller, unit);
+            InitializeCommon(controller, dataService);
         }
 
         //protected override void OnKeyUp(KeyEventArgs e)

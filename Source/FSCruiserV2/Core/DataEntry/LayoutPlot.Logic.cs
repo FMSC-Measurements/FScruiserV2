@@ -20,9 +20,11 @@ namespace FSCruiser.Core.DataEntry
 
         public IApplicationController Controller { get { return this.DataEntryController.Controller; } }
 
-        public IDataEntryDataService DataService { get; set; }
+        public IDataEntryDataService DataService { get; protected set; }
 
-        public IViewController ViewController { get; set; }
+        public ISoundService SoundService { get; protected set; }
+
+        public IViewController ViewController { get; protected set; }
 
         public FormDataEntryLogic DataEntryController { get; protected set; }
 
@@ -63,12 +65,14 @@ namespace FSCruiser.Core.DataEntry
             , LayoutPlot view
             , FormDataEntryLogic dataEntryController
             , IDataEntryDataService dataService
+            , ISoundService soundService
             , IViewController viewController)
         {
             this.Stratum = stratum;
             this.View = view;
             this.DataEntryController = dataEntryController;
             DataService = dataService;
+            SoundService = soundService;
             this.ViewController = viewController;
 
             this._BS_Plots = new BindingSource();
@@ -337,6 +341,15 @@ namespace FSCruiser.Core.DataEntry
             else
             {
                 tree = TallyStandard(plot, count);
+            }
+
+            if (tree.CountOrMeasure == "M")
+            {
+                SoundService.SignalMeasureTree(false);
+            }
+            else if (tree.CountOrMeasure == "I")
+            {
+                SoundService.SignalInsuranceTree();
             }
 
             if (tree != null)

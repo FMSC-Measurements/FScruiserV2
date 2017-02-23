@@ -7,6 +7,7 @@ using FSCruiser.Core;
 using FSCruiser.Core.Models;
 using FSCruiser.WinForms.DataEntry;
 using FScruiser.Core.Services;
+using CruiseDAL;
 
 namespace FSCruiser.WinForms.Common
 {
@@ -172,7 +173,9 @@ namespace FSCruiser.WinForms.Common
             {
                 try
                 {
-                    using (_dataEntryView = new FormDataEntry(this.ApplicationController, unit))
+                    var dataService = new IDataEntryDataService(unit.Code, ApplicationController.DataStore);
+                    using (_dataEntryView = new FormDataEntry(this.ApplicationController
+                        , dataService))
                     {
 #if !NetCF
                         _dataEntryView.Owner = MainView;
@@ -185,6 +188,10 @@ namespace FSCruiser.WinForms.Common
                     var exType = e.GetType();
 
                     MessageBox.Show(e.Message, exType.Name);
+                }
+                catch (Exception e)
+                {
+                    ApplicationController.DataStore.LogMessage(e.Message, "E");
                 }
                 finally
                 {

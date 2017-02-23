@@ -2,13 +2,13 @@
 
 namespace FSCruiser.Core.ViewInterfaces
 {
-    public interface IDataEntryPage 
+    public interface IDataEntryPage
     {
         bool ViewLoading { get; }
 
         void HandleLoad();
 
-        bool PreviewKeypress(KeyEventArgs ea);
+        bool PreviewKeypress(string keyStr);
 
         void NotifyEnter();
     }
