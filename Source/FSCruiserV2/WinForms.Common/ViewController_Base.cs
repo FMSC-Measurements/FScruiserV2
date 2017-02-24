@@ -125,10 +125,6 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-        public abstract CruiseDAL.DataObjects.TreeDefaultValueDO ShowAddPopulation();
-
-        public abstract CruiseDAL.DataObjects.TreeDefaultValueDO ShowAddPopulation(CruiseDAL.DataObjects.SampleGroupDO sg);
-
         public abstract void ShowBackupUtil();
 
         public abstract bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);

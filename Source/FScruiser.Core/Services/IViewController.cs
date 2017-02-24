@@ -19,10 +19,6 @@ namespace FSCruiser.Core
 
         void ShowAbout();
 
-        TreeDefaultValueDO ShowAddPopulation();
-
-        TreeDefaultValueDO ShowAddPopulation(SampleGroupDO sg);
-
         void ShowBackupUtil();
 
         bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);

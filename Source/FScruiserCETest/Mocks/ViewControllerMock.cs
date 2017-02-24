@@ -55,16 +55,6 @@ namespace FSCruiserV2.Test.Mocks
             throw new NotImplementedException();
         }
 
-        public TreeDefaultValueDO ShowAddPopulation()
-        {
-            throw new NotImplementedException();
-        }
-
-        public TreeDefaultValueDO ShowAddPopulation(SampleGroupDO sg)
-        {
-            throw new NotImplementedException();
-        }
-
         public void ShowBackupUtil()
         {
             throw new NotImplementedException();

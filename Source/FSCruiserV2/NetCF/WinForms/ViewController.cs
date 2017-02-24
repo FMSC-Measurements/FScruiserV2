@@ -63,21 +63,6 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public override TreeDefaultValueDO ShowAddPopulation(SampleGroupDO sg)
-        {
-            if (this.ApplicationController.DataStore == null)
-            {
-                MessageBox.Show("No File Selected");
-                return null;
-            }
-            using (FormAddPopulation view = new FormAddPopulation(this.ApplicationController))
-            {
-                Cursor.Current = Cursors.WaitCursor;
-                view.ShowDialog(sg);
-                return null;
-            }
-        }
-
         public override void ShowBackupUtil()
         {
             using (FormBackupUtility view = new FormBackupUtility(this.ApplicationController))
