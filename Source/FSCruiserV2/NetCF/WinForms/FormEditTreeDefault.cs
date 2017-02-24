@@ -84,18 +84,18 @@ namespace FSCruiser.WinForms
             }
         }
 
-        private void OnUniqueChanged()
-        {
-            if (this._viewLoading) { return; }
-            if (this.TreeDefaultValue.IsPersisted == false)
-            {
-                if (this.HasUniqueConflict(this.TreeDefaultValue))
-                {
-                    MessageBox.Show("Tree Default values entered conflict with existing Tree Default.\r\n" +
-                        "Please change Species, Primary Product, or Live Dead values");
-                }
-            }
-        }
+        //private void OnUniqueChanged()
+        //{
+        //    if (this._viewLoading) { return; }
+        //    if (this.TreeDefaultValue.IsPersisted == false)
+        //    {
+        //        if (this.HasUniqueConflict(this.TreeDefaultValue))
+        //        {
+        //            MessageBox.Show("Tree Default values entered conflict with existing Tree Default.\r\n" +
+        //                "Please change Species, Primary Product, or Live Dead values");
+        //        }
+        //    }
+        //}
 
         private bool HasUniqueConflict(TreeDefaultValueDO tdv)
         {

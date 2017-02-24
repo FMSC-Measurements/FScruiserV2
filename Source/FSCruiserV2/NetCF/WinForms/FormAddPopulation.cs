@@ -82,6 +82,14 @@ namespace FSCruiser.WinForms
             }
         }
 
+        public override bool ShowEditTreeDefault(TreeDefaultValueDO tdv)
+        {
+            using (FormEditTreeDefault view = new FormEditTreeDefault(Controller.DataStore))
+            {
+                return view.ShowDialog(tdv) == DialogResult.OK;
+            }
+        }
+
         TreeDefaultValueDO CreateNewTreeDefaultValue(String pProd)
         {
             TreeDefaultValueDO newTDV = new TreeDefaultValueDO();
@@ -89,7 +97,7 @@ namespace FSCruiser.WinForms
             newTDV.PrimaryProduct = pProd;
             newTDV.LiveDead = "L";
 
-            if (Controller.ViewController.ShowEditTreeDefault(newTDV))
+            if (ShowEditTreeDefault(newTDV))
             {
                 try
                 {

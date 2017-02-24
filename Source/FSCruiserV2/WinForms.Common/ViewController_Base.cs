@@ -133,7 +133,6 @@ namespace FSCruiser.WinForms.Common
 
         public abstract bool ShowEditSampleGroup(CruiseDAL.DataObjects.SampleGroupDO sg, bool allowEdit);
 
-        public abstract bool ShowEditTreeDefault(CruiseDAL.DataObjects.TreeDefaultValueDO tdv);
 
         public abstract bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);
 

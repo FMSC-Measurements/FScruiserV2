@@ -112,14 +112,6 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public override bool ShowEditTreeDefault(TreeDefaultValueDO tdv)
-        {
-            using (FormEditTreeDefault view = new FormEditTreeDefault(ApplicationController.DataStore))
-            {
-                return view.ShowDialog(tdv) == DialogResult.OK;
-            }
-        }
-
         public override bool ShowOpenCruiseFileDialog(out string fileName)
         {
             using (FMSC.Controls.OpenFileDialogRedux fileDialog = new FMSC.Controls.OpenFileDialogRedux())

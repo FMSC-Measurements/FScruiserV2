@@ -75,10 +75,6 @@ namespace FSCruiserV2.Test.Mocks
             throw new NotImplementedException();
         }
 
-        public bool ShowEditTreeDefault(TreeDefaultValueDO tdv)
-        {
-            throw new NotImplementedException();
-        }
 
         public bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage)
         {
