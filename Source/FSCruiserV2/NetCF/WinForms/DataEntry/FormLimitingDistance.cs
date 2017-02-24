@@ -19,7 +19,7 @@ namespace FSCruiser.WinForms.DataEntry
             InitializeComponent();
 
             //initailize form state
-            this._calculateMI.Enabled = false;
+            this._calculateBTN.Enabled = false;
             this._bafOrfpsLBL.Text = (_calculator.IsVariableRadius) ? "BAF" : "FPS";
 
             _calculator.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_calculator_PropertyChanged);
@@ -30,15 +30,7 @@ namespace FSCruiser.WinForms.DataEntry
             { _measureToCB.Items.Add(i); }
 
 #if NetCF
-            if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
-            {
-                this.WindowState = FormWindowState.Maximized;
-                this._ceControlPanel.Visible = true;
-                this.Menu = null;
-                this.mainMenu1.Dispose();
-                this.mainMenu1 = null;
-            }
-            else if (ViewController.PlatformType == FMSC.Controls.PlatformType.WM)
+            if (ViewController.PlatformType == FMSC.Controls.PlatformType.WM)
             {
                 this.components = this.components ?? new System.ComponentModel.Container();
                 this._sip = new Microsoft.WindowsCE.Forms.InputPanel();
@@ -100,22 +92,14 @@ namespace FSCruiser.WinForms.DataEntry
         void UpdateLimitingDistance()
         {
             var limitingDistance = _calculator.LimitingDistance;
-            if (limitingDistance <= 0
-                || double.IsNaN(limitingDistance))
-            {
-                _calculateBTN.Enabled = _calculateMI.Enabled = false;
+            var isLimitingDistanceValid = limitingDistance > 0
+                && !double.IsNaN(limitingDistance);
 
-                this.LimitingDistance.Text = string.Empty;
-            }
-            else
-            {
-                _calculateBTN.Enabled = _calculateMI.Enabled = true;
+            _limitingDistanceLBL.Text = String.Format("Limiting Distance: {0}"
+                , (isLimitingDistanceValid) ? string.Format( "{0:F3}' to {1} of tree" , limitingDistance , _calculator.MeasureTo)
+                : string.Empty);
 
-                this.LimitingDistance.Text = string.Format(
-                    "{0:F}' to {1} of tree"
-                    , limitingDistance
-                    , _calculator.MeasureTo);
-            }
+            _calculateBTN.Enabled = _calculateBTN.Enabled = isLimitingDistanceValid;
         }
     }
 }

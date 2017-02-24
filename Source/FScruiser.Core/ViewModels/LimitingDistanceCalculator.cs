@@ -138,7 +138,7 @@ namespace FSCruiser.Core.DataEntry
 
         public static bool DeterminTreeInOrOut(double slopeDistance, double limitingDistance)
         {
-            return Math.Round(slopeDistance, 2) <= Math.Round(limitingDistance, 2);
+            return Math.Round(slopeDistance, 3) <= Math.Round(limitingDistance, 3);
         }
 
         public string GenerateReport()
@@ -148,7 +148,7 @@ namespace FSCruiser.Core.DataEntry
             if (String.IsNullOrEmpty(TreeStatus))
             { return string.Empty; }
 
-            return String.Format("Tree was {0} (DBH:{1}, slope:{2}%, slope distance:{3:F2}', limiting distance:{4:F2}' to {5} of tree, {6}:{7}) \r\n",
+            return String.Format("Tree was {0} (DBH:{1}, slope:{2}%, slope distance:{3:F3}', limiting distance:{4:F3}' to {5} of tree, {6}:{7}) \r\n",
                     TreeStatus,
                     DBH,
                     SlopePCT,
