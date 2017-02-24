@@ -25,8 +25,6 @@ namespace FSCruiser.Core
 
         void ShowBackupUtil();
 
-        bool ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit);
-
         bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);
 
         void ShowLogsView(Stratum stratum, Tree tree);

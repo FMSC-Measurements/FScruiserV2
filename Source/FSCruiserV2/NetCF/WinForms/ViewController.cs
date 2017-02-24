@@ -104,14 +104,6 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public override bool ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit)
-        {
-            using (FormEditSampleGroup view = new FormEditSampleGroup())
-            {
-                return view.ShowDialog(sg, allowEdit) == DialogResult.OK;
-            }
-        }
-
         public override bool ShowOpenCruiseFileDialog(out string fileName)
         {
             using (FMSC.Controls.OpenFileDialogRedux fileDialog = new FMSC.Controls.OpenFileDialogRedux())

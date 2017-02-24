@@ -82,11 +82,19 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public override bool ShowEditTreeDefault(TreeDefaultValueDO tdv)
+        bool ShowEditTreeDefault(TreeDefaultValueDO tdv)
         {
             using (FormEditTreeDefault view = new FormEditTreeDefault(Controller.DataStore))
             {
                 return view.ShowDialog(tdv) == DialogResult.OK;
+            }
+        }
+
+        bool ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit)
+        {
+            using (FormEditSampleGroup view = new FormEditSampleGroup())
+            {
+                return view.ShowDialog(sg, allowEdit) == DialogResult.OK;
             }
         }
 
@@ -129,7 +137,7 @@ namespace FSCruiser.WinForms
             newSG.UOM = Controller.DataStore.ExecuteScalar("Select DefaultUOM FROM Sale;") as String;
             //newSG.UOM = this.DataStore.ReadSingleRow<SaleDO>("Sale", false, null).DefaultUOM;
 
-            if (Controller.ViewController.ShowEditSampleGroup(newSG, true))
+            if (ShowEditSampleGroup(newSG, true))
             {
                 return newSG;
             }
@@ -329,7 +337,7 @@ namespace FSCruiser.WinForms
             if (this.SampleGroup != null && this.SampleGroup != this._newSGPlaceHolder)
             {
                 bool allowEdit = this.SampleGroup.CanEditSampleGroup();
-                this.Controller.ViewController.ShowEditSampleGroup(this.SampleGroup, allowEdit);
+                ShowEditSampleGroup(this.SampleGroup, allowEdit);
             }
         }
 

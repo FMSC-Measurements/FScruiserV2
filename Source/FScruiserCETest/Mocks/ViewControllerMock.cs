@@ -70,11 +70,6 @@ namespace FSCruiserV2.Test.Mocks
             throw new NotImplementedException();
         }
 
-        public bool ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit)
-        {
-            throw new NotImplementedException();
-        }
-
 
         public bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage)
         {

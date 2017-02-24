@@ -131,9 +131,6 @@ namespace FSCruiser.WinForms.Common
 
         public abstract void ShowBackupUtil();
 
-        public abstract bool ShowEditSampleGroup(CruiseDAL.DataObjects.SampleGroupDO sg, bool allowEdit);
-
-
         public abstract bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);
 
         public void ShowLogsView(Stratum stratum, Tree tree)
