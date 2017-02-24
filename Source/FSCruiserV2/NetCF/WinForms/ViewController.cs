@@ -47,7 +47,7 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public override TreeDefaultValueDO ShowAddPopulation()
+        TreeDefaultValueDO ShowAddPopulation()
         {
             if (this.ApplicationController.DataStore == null)
             {

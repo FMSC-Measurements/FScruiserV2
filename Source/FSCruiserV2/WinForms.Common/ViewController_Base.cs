@@ -17,7 +17,6 @@ namespace FSCruiser.WinForms.Common
 
         protected object _dataEntrySyncLock = new object();
         private FormMain _main;
-        private FormNumPad _numPadDialog;
         private Form3PNumPad _threePNumPad;
         protected FormDataEntry _dataEntryView;
 
@@ -49,22 +48,6 @@ namespace FSCruiser.WinForms.Common
             protected set
             {
                 _main = value;
-            }
-        }
-
-        public FormNumPad NumPadDialog
-        {
-            get
-            {
-                if (_numPadDialog == null)
-                {
-                    _numPadDialog = new FormNumPad();
-                }
-                return _numPadDialog;
-            }
-            protected set
-            {
-                _numPadDialog = value;
             }
         }
 
@@ -228,34 +211,6 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-        public void ShowMessage(String message, String caption, MessageBoxIcon icon)
-        {
-            MessageBox.Show(message, caption, MessageBoxButtons.OK, icon, MessageBoxDefaultButton.Button1);
-        }
-
-        public bool AskYesNo(String message, String caption, MessageBoxIcon icon)
-        {
-            return DialogResult.Yes == MessageBox.Show(message, caption, MessageBoxButtons.YesNo, icon, MessageBoxDefaultButton.Button2);
-        }
-
-        public bool AskYesNo(String message, String caption, MessageBoxIcon icon, bool defaultNo)
-        {
-            return DialogResult.Yes == MessageBox.Show(message,
-                caption,
-                MessageBoxButtons.YesNo,
-                icon,
-                (defaultNo) ? MessageBoxDefaultButton.Button2 : MessageBoxDefaultButton.Button1);
-        }
-
-        public bool AskCancel(String message, String caption, MessageBoxIcon icon, bool defaultCancel)
-        {
-            return MessageBox.Show(message,
-                caption,
-                MessageBoxButtons.OKCancel,
-                icon,
-                (defaultCancel) ? MessageBoxDefaultButton.Button2 : MessageBoxDefaultButton.Button1) == DialogResult.Cancel;
-        }
-
         /// <summary>
         /// </summary>
         /// <returns>KPI, value is -1 if STM</returns>
@@ -297,11 +252,6 @@ namespace FSCruiser.WinForms.Common
                 {
                     this._main.Dispose();
                     this._main = null;
-                }
-                if (this._numPadDialog != null)
-                {
-                    this._numPadDialog.Dispose();
-                    this._numPadDialog = null;
                 }
             }
         }
