@@ -29,8 +29,9 @@ namespace FSCruiserV2.Test
 
             var dialogService = new DialogServiceMock();
             var soundService = new SoundServiceMock();
-            var dataStore = new SQLiteDatastore();
-            var dataService = new IDataEntryDataService(cu.Code, dataStore);
+            var unit = new CuttingUnit() { Code = "1" };
+            var dataStore = SetupDataStore(unit);
+            var dataService = new IDataEntryDataService("1", dataStore);
 
             _de = new FormDataEntryLogic(_controller
                 , dialogService
@@ -39,12 +40,13 @@ namespace FSCruiserV2.Test
                 , _view);
         }
 
-        SQLiteDatastore SetupDataStore()
+        DAL SetupDataStore(CuttingUnit unit)
         {
-            var dataStore = new SQLiteDatastore();
-            dataStore.DatabaseBuilder = new CruiseDALDatastoreBuilder();
-            
-            
+            var dataStore = new DAL(":memory:");
+
+            dataStore.Insert(unit, FMSC.ORM.Core.SQL.OnConflictOption.Default);
+
+            return dataStore;
         }
 
         public void TestTreeTally()
