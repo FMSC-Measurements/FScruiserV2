@@ -35,26 +35,6 @@ namespace FSCruiser.WinForms
             throw new NotImplementedException();
         }
 
-        public override bool ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool ShowEditTreeDefault(TreeDefaultValueDO tdv)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override TreeDefaultValueDO ShowAddPopulation()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override TreeDefaultValueDO ShowAddPopulation(SampleGroupDO sg)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void ShowBackupUtil()
         {
             throw new NotImplementedException();
