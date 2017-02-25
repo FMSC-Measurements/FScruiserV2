@@ -40,9 +40,10 @@ namespace FSCruiser.Core.Models
 
         public virtual Plot MakePlot(CuttingUnit cuttingUnit)
         {
+            Plot newPlot;
             if (this.Is3PPNT)
             {
-                return new Plot3PPNT(this.DAL)
+                newPlot = new Plot3PPNT(this.DAL)
                 {
                     CuttingUnit = cuttingUnit,
                     Stratum = this,
@@ -51,13 +52,15 @@ namespace FSCruiser.Core.Models
             }
             else
             {
-                return new Plot(this.DAL)
+                newPlot = new Plot(this.DAL)
                 {
                     CuttingUnit = cuttingUnit,
                     Stratum = this,
                     PlotNumber = GetNextPlotNumber(cuttingUnit.CuttingUnit_CN.Value)
                 };
             }
+            newPlot.Trees = new System.ComponentModel.BindingList<Tree>();
+            return newPlot;
         }
 
         protected virtual IEnumerable<Plot> ReadPlots(long cuttingUnit_CN)
@@ -128,11 +131,11 @@ namespace FSCruiser.Core.Models
                 && fields.FindIndex(((tfs) => tfs.Field == CruiseDAL.Schema.TREE.COUNTORMEASURE)) < 0)
             {
                 var cmField = new TreeFieldSetupDO()
-                    {
-                        Field = CruiseDAL.Schema.TREE.COUNTORMEASURE
+                {
+                    Field = CruiseDAL.Schema.TREE.COUNTORMEASURE
                         ,
-                        Heading = "C/M"
-                    };
+                    Heading = "C/M"
+                };
                 if (fields.Count > 5)
                 {
                     fields.Insert(5, cmField);

@@ -57,7 +57,11 @@ namespace FSCruiser.Core.Models
         {
             get
             {
-                return this._trees;
+                return _trees;
+            }
+            set
+            {
+                _trees = value;
             }
         }
 
