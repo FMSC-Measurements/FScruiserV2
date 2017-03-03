@@ -65,12 +65,30 @@ namespace FSCruiser.Core.Models
 
         protected virtual IEnumerable<Plot> ReadPlots(long cuttingUnit_CN)
         {
-            foreach (var plot in DAL.From<Plot>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
-                .OrderBy("PlotNumber")
-                .Read(this.Stratum_CN, cuttingUnit_CN))
+            //HACK covariance wasn't added until C# 4.0 so we need to do some ineffecent coding here
+            if (Is3PPNT)
             {
-                plot.Stratum = this;
-                yield return plot;
+                var source = DAL.From<Plot3PPNT>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
+                .OrderBy("PlotNumber")
+                .Read(this.Stratum_CN, cuttingUnit_CN);
+
+                foreach (var plot in source)
+                {
+                    plot.Stratum = this;
+                    yield return plot;
+                }
+            }
+            else
+            {
+                var source = DAL.From<Plot>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
+                .OrderBy("PlotNumber")
+                .Read(this.Stratum_CN, cuttingUnit_CN);
+
+                foreach (var plot in source)
+                {
+                    plot.Stratum = this;
+                    yield return plot;
+                }
             }
         }
 
