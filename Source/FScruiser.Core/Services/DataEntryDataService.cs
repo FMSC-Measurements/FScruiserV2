@@ -98,6 +98,8 @@ namespace FScruiser.Core.Services
             TreeStrata = ReadTreeBasedStrata().ToList();
             PlotStrata = ReadPlotStrata().ToList();
 
+            LoadNonPlotTrees();
+
             DefaultStratum = null;
             foreach (Stratum stratum in this.TreeStrata)
             {
@@ -112,6 +114,29 @@ namespace FScruiser.Core.Services
             if (this.DefaultStratum == null)
             {
                 this.DefaultStratum = this.TreeStrata.FirstOrDefault();
+            }
+        }
+
+        private void LoadNonPlotTrees()
+        {
+            lock (_nonPlotTreesSyncLock)
+            {
+                if (_nonPlotTrees == null)
+                {
+                    var trees = DataStore.From<Tree>()
+                        .Join("Stratum", "USING (Stratum_CN)")
+                        .Where("Tree.CuttingUnit_CN = ? AND " +
+                                "Stratum.Method IN ('100','STR','3P','S3P')")
+                        .OrderBy("TreeNumber")
+                        .Read(CuttingUnit.CuttingUnit_CN).ToList();
+
+                    foreach (var tree in trees)
+                    {
+                        tree.ValidateVisableFields();
+                    }
+
+                    _nonPlotTrees = new BindingList<Tree>(trees);
+                }
             }
         }
 

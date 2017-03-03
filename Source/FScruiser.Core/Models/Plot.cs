@@ -138,6 +138,12 @@ namespace FSCruiser.Core.Models
                     .Read(base.Stratum.Stratum_CN
                     , base.CuttingUnit.CuttingUnit_CN
                     , base.Plot_CN).ToList();
+
+                foreach(var t in tList)
+                {
+                    t.ValidateVisableFields();
+                }
+
                 this._trees = new BindingList<Tree>(tList);
                 //this._trees = tList;
             }
