@@ -76,6 +76,12 @@ namespace FSCruiser.WinForms.DataEntry
 
             PageContainer.SuspendLayout();
 
+            if((DataService.TreeStrata == null || !DataService.TreeStrata.Any())
+                && (DataService.PlotStrata == null || !DataService.PlotStrata.Any())
+            {
+                throw new UserFacingException("No Valid Strata Found", null);
+            }
+
             //do we have any tree based strata in the unit
             if (DataService.TreeStrata != null && DataService.TreeStrata.Any())
             {
