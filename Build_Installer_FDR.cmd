@@ -1,13 +1,19 @@
 @ECHO OFF
 SETLOCAL ENABLEEXTENSIONS
 
-:: script global variables
-IF NOT DEFINED verStamp (SET verStamp=%date:~10,4%%date:~4,2%%date:~7,2%)
-
+::Boilderplate 
 ::detect if invoked via Window Explorer
 SET interactive=1
 ECHO %CMDCMDLINE% | FIND /I "/c" >NUL 2>&1
 IF %ERRORLEVEL% == 0 SET interactive=0
+
+::name of this script
+SET me=%~n0
+::directory of script
+SET parent=%~dp0
+
+::variables
+IF NOT DEFINED verStamp (SET verStamp=%date:~10,4%%date:~4,2%%date:~7,2%)
 
 ::Build CAB File. This generates FScruiser.CAB and FScruiser_########.cab 
 CALL ./Source/Build_CAB

@@ -1,10 +1,15 @@
 @ECHO OFF
 SETLOCAL ENABLEEXTENSIONS
+:::::::::::::::::
+::Boilderplate 
+
 ::name of this script
 SET me=%~n0
 ::directory of script
 SET parent=%~dp0
 
+:::::::::::::::::
+::variables
 SET devenvPath=C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\devenv.exe
 SET buildLogPath=%parent%\pack.log
 SET cabOutDir=%parent%\FSCruiserV2CECF20_CAB\Release\
@@ -25,5 +30,5 @@ TYPE %buildLogPath%
 
 COPY /Y /B "%cabOutDir%FScruiserV2.CAB" "%cabOutDir%FScruiserV2_%verStamp%.CAB"
 
-EXIT /B
+EXIT /B 0
 
