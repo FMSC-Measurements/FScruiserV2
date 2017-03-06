@@ -14,31 +14,33 @@ GIVEN the following strata exist:
 WHEN the user enters the data entry screen
 THEN the data entry screen contains the folling tabs: Trees, Tally, 01-FIX[], 02-PCM[], 03-PNT[]
 
-GIVEN the user is on the Trees tab
+
+
+GIVEN the user is not on a plot tab
 WHEN the user clicks on Menu
 THEN Limiting Distance is disabled
 
-GIVEN the user is on the Tally tab
-WHEN the user clicks on Menu
-THEN Limiting Distance is disabled
+Senario: plot strata is selected but no plot is selected
+    GIVEN the user is in a plot tab
+    AND no plot is selected
+    WHEN the user opens the limiting distance screen
+    THEN the message "No Plot Selected" is displayed
 
-GIVEN the user is in a plot tab
-AND no plot is selected
-WHEN the user opens the limiting distance screen
-THEN the message "No Plot Selected" is displayed
-
+Senario: FIX strata is selected
 GIVEN the user is on the 01-FIX tab
 AND a plot is selected
 WHEN the user opens the limiting distance screen
 THEN the limiting distance screen has a text box with the label FPS
 AND the FPS text box shows the value 10
 
+Selected: variable radious plot is selected
 GIVEN the user is on the 02-PCM tab
 AND a plot is selected
 WHEN the user opens the limiting distance screen
 THEN the limiting distance screen has a text box with the label BAF
 AND the BAF text box shows the value 30
 
+Senario: limiting distance out puts report when closed
 GIVEN the user is in a plot tab
 AND a plot is selected
 AND the limiting distance screen is open 

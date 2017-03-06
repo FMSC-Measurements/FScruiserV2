@@ -1,19 +1,17 @@
 #define APP "FSCruiserV2"
 
-#define APP_VERSION "2017.02.15"
-#define SETUPVERSION "20170215"
+#define APP_VERSION "2017.03.06"
 #define SPECIALTAG "Production"
 #define BASEURL "http://www.fs.fed.us/fmsc/measure"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
 
 
 [Setup]
-
 AppName=FSCruiser V2
 AppId=FScruiserPC
 AppMutex=FScruiser   
 AppVersion={#APP_VERSION}
-AppVerName=FSCruiser version {#SETUPVERSION} for Windows Desktop
+AppVerName=FSCruiser version {#APP_VERSION} for Windows Desktop
 
 LicenseFile=..\LICENSE.md
 
@@ -31,7 +29,7 @@ UsePreviousAppDir=no
 VersionInfoVersion={#APP_VERSION}
 
 CreateAppDir=yes
-OutputBaseFilename=FScruiserV2_PC_{#SETUPVERSION}
+OutputBaseFilename=FScruiserV2_PC
 
 Compression=lzma
 SolidCompression=yes
