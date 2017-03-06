@@ -7,6 +7,7 @@ using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -37,21 +38,65 @@ namespace FSCruiser.WinForms.DataEntry
 
         public int HomeColumnIndex { get; set; }
 
-        public IList<Tree> Trees
+        public ICollection<Tree> Trees
         {
             get
             {
-                return this.DataEntryController.Unit.NonPlotTrees;
+                return DataService.NonPlotTrees;
             }
         }
 
-        public ControlTreeDataGrid(IApplicationController controller, FormDataEntryLogic dataEntryController)
+        #region DataService
+
+        IDataEntryDataService _dataService;
+
+        IDataEntryDataService DataService
+        {
+            get { return _dataService; }
+            set
+            {
+                OnDataServiceChanging();
+                _dataService = value;
+                OnDataServiceChanged();
+            }
+        }
+
+        private void OnDataServiceChanged()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
+            }
+        }
+
+        private void OnDataServiceChanging()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
+            }
+        }
+
+        void HandleEnableLogGradingChanged(object sender, EventArgs e)
+        {
+            if (this._logsColumn != null)
+            {
+                this._logsColumn.Visible = DataService.EnableLogGrading;
+            }
+        }
+
+        #endregion DataService
+
+        public ControlTreeDataGrid(IApplicationController controller
+            , IDataEntryDataService dataService
+            , FormDataEntryLogic dataEntryController)
         {
             EditMode = DataGridViewEditMode.EditOnEnter;
             AutoGenerateColumns = false;
             AllowUserToDeleteRows = false;
             AllowUserToAddRows = false;
             Controller = controller;
+            DataService = dataService;
             DataEntryController = dataEntryController;
 
             ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
@@ -74,7 +119,7 @@ namespace FSCruiser.WinForms.DataEntry
             //_BS_TreeSampleGroups.DataSource = typeof(SampleGroupDO);
             //((System.ComponentModel.ISupportInitialize)_BS_TreeSampleGroups).EndInit();
 
-            var columns = DataEntryController.Unit.MakeTreeColumns();
+            var columns = DataService.MakeTreeColumns();
             base.Columns.AddRange(columns.ToArray());
 
             _speciesColumn = base.Columns["TreeDefaultValue"] as DataGridViewComboBoxColumn;
@@ -91,11 +136,11 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_sgColumn != null)
             {
-                _sgColumn.DataSource = DataEntryController.Unit.TreeSampleGroups.ToList();
+                _sgColumn.DataSource = DataService.TreeStrata.SelectMany(st => st.SampleGroups).ToList();
             }
             if (_stratumColumn != null)
             {
-                _stratumColumn.DataSource = DataEntryController.Unit.TreeStrata;
+                _stratumColumn.DataSource = DataService.TreeStrata;
             }
             if (_initialsColoumn != null)
             {
@@ -103,7 +148,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_logsColumn != null)
             {
-                _logsColumn.Visible = Controller.ViewController.EnableLogGrading;
+                _logsColumn.Visible = DataService.EnableLogGrading;
             }
 
             _contexMenu = new ContextMenuStrip(new System.ComponentModel.Container());
@@ -117,19 +162,17 @@ namespace FSCruiser.WinForms.DataEntry
             _contexMenu.Size = new System.Drawing.Size(181, 26);
             logToolStripMenuItem.Name = "logToolStripMenuItem";
             logToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            logToolStripMenuItem.Text = Controller.ViewController.EnableLogGrading ?
+            logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                 "Disable Log Grading" : "Enable Log Grading";
             logToolStripMenuItem.Click += logToolStripMenuItem_Click;
             _contexMenu.ResumeLayout(false);
         }
 
-        
-
         void ControlTreeDataGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-                logToolStripMenuItem.Text = Controller.ViewController.EnableLogGrading ?
+                logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                     "Disable Log Grading" : "Enable Log Grading";
 
                 _contexMenu.Show(Cursor.Position);
@@ -140,7 +183,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_logsColumn != null && e.RowIndex > -1 && e.ColumnIndex == _logsColumn.Index)
             {
-                var curTree = this.Trees[e.RowIndex] as Tree;
+                var curTree = this.Trees.ElementAt(e.RowIndex) as Tree;
                 if (curTree != null)
                 {
                     this.DataEntryController.ShowLogs(curTree);
@@ -231,7 +274,7 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 var newTreeNum = (long)cellValue;
                 if (curTree.TreeNumber != newTreeNum
-                    && !this.DataEntryController.Unit.IsTreeNumberAvalible(newTreeNum))
+                    && !DataService.IsTreeNumberAvalible(newTreeNum))
                 {
                     MessageBox.Show("Tree Number already exists");
                     e.Cancel = true;
@@ -348,18 +391,18 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public bool PreviewKeypress(KeyEventArgs ea)
+        public bool PreviewKeypress(string keyStr)
         {
-            if (ea.KeyData != Keys.None) { return false; }
+            if (string.IsNullOrWhiteSpace(keyStr)) { return false; }
 
             var settings = ApplicationSettings.Instance;
 
-            if (ea.KeyData == settings.JumpTreeTallyKey)
+            if (keyStr == settings.JumpTreeTallyKeyStr)
             {
                 this.DataEntryController.View.GoToTallyPage();
                 return true;
             }
-            else if (ea.KeyData == settings.AddTreeKey)
+            else if (keyStr == settings.AddTreeKeyStr)
             {
                 return UserAddTree() != null;
             }
@@ -371,17 +414,9 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void HandleLoad()
         {
-            this._BS_trees.DataSource = DataEntryController.Unit.NonPlotTrees;
+            this._BS_trees.DataSource = DataService.NonPlotTrees;
 
             _viewLoading = false;
-        }
-
-        public void HandleEnableLogGradingChanged()
-        {
-            if (this._logsColumn != null)
-            {
-                this._logsColumn.Visible = this.Controller.ViewController.EnableLogGrading;
-            }
         }
 
         void Settings_CruisersChanged(object sender, EventArgs e)
@@ -407,7 +442,7 @@ namespace FSCruiser.WinForms.DataEntry
                     MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button2))
                 {
-                    DataEntryController.Unit.DeleteTree(curTree);
+                    DataService.DeleteTree(curTree);
                 }
             }
         }
@@ -451,7 +486,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_viewLoading) { return null; }
             EndEdit();
-            var newTree = DataEntryController.Unit.UserAddTree();
+            var newTree = DataService.UserAddTree();
             if (newTree != null)
             {
                 this.MoveLastTree();
@@ -462,16 +497,15 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void NotifyEnter()
         {
-
         }
 
         #endregion ITreeView Members
 
         private void logToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Controller.ViewController.EnableLogGrading = !Controller.ViewController.EnableLogGrading;
+            DataService.EnableLogGrading = !DataService.EnableLogGrading;
 
-            logToolStripMenuItem.Text = Controller.ViewController.EnableLogGrading ?
+            logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                 "Disable Log Grading" : "Enable Log Grading";
         }
 

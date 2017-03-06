@@ -35,7 +35,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public PlotStratum Stratum { get; set; }
 
-        public IList<Tree> Trees
+        public ICollection<Tree> Trees
         {
             get
             {
@@ -48,10 +48,61 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, PlotStratum stratum)
+        #region DataService
+
+        IDataEntryDataService _dataService;
+
+        IDataEntryDataService DataService
+        {
+            get { return _dataService; }
+            set
+            {
+                OnDataServiceChanging();
+                _dataService = value;
+                OnDataServiceChanged();
+            }
+        }
+
+        private void OnDataServiceChanged()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
+            }
+        }
+
+        private void OnDataServiceChanging()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
+            }
+        }
+
+        void HandleEnableLogGradingChanged(object sender, EventArgs e)
+        {
+            if (this._logsColumn != null)
+            {
+                this._logsColumn.Visible = DataService.EnableLogGrading;
+            }
+        }
+
+        #endregion DataService
+
+        public LayoutPlot(FormDataEntryLogic dataEntryController
+            , IDataEntryDataService dataService
+            , ISoundService soundService
+            , PlotStratum stratum)
         {
             Stratum = stratum;
-            this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController, dataEntryController.ViewController);
+            DataService = dataService;
+            this.ViewLogicController = new LayoutPlotLogic(stratum
+                , this
+                , dataEntryController
+                , dataService
+                , soundService
+                , dataEntryController.ViewController);
+
             this.Dock = DockStyle.Fill;
             InitializeComponent();
 
@@ -67,7 +118,6 @@ namespace FSCruiser.WinForms.DataEntry
 
             //no need to load tallies....?
             //Controller.PopulateTallies(this.StratumInfo, this._mode, Controller.CurrentUnit, this._tallyListPanel, this);
-            this.Parent = parent;
         }
 
         void InitializeDataGrid(PlotStratum stratum)
@@ -106,7 +156,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_logsColumn != null)
             {
-                _logsColumn.Visible = AppController.ViewController.EnableLogGrading;
+                _logsColumn.Visible = DataService.EnableLogGrading;
             }
             if (_stColumn != null)
             {
@@ -169,7 +219,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             this.ViewLogicController.UpdateCurrentPlot();
 
-            logToolStripMenuItem.Text = AppController.ViewController.EnableLogGrading ?
+            logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                 "Disable Log Grading" : "Enable Log Grading";
         }
 
@@ -223,7 +273,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_logsColumn != null && e.ColumnIndex == _logsColumn.Index)
             {
-                var curTree = this.Trees[e.RowIndex] as Tree;
+                var curTree = this.Trees.ElementAt(e.RowIndex) as Tree;
                 if (curTree != null)
                 {
                     this.DataEntryController.ShowLogs(curTree);
@@ -260,14 +310,15 @@ namespace FSCruiser.WinForms.DataEntry
             if (_treeNumberColumn != null && e.ColumnIndex == _treeNumberColumn.Index)
             {
                 var newTreeNum = (long)cellValue;
+                var currPlot = ViewLogicController.CurrentPlot;
                 if (curTree.TreeNumber != newTreeNum)
                 {
-                    if (!this.ViewLogicController.CurrentPlot.IsTreeNumberAvalible(newTreeNum))
+                    if (!currPlot.IsTreeNumberAvalible(newTreeNum))
                     {
                         MessageBox.Show("Tree Number already exists");
                         e.Cancel = true;
                     }
-                    else if (!ViewLogicController.CurrentPlot.CrossStrataIsTreeNumberAvalible(newTreeNum))
+                    else if (!ViewLogicController.DataService.CrossStrataIsTreeNumberAvalible(currPlot, newTreeNum))
                     {
                         MessageBox.Show("Tree Number already exist, in a different stratum");
                         e.Cancel = true;
@@ -299,7 +350,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             DataGridViewComboBoxCell cell = _dataGrid[e.ColumnIndex, e.RowIndex] as DataGridViewComboBoxCell;
             if (cell == null) { return; }
-            var curTree = this.Trees[e.RowIndex] as Tree;
+            var curTree = this.Trees.ElementAt(e.RowIndex) as Tree;
             if (curTree == null) { return; }
 
             if (_sgColumn != null && e.ColumnIndex == _sgColumn.Index)
@@ -412,7 +463,7 @@ namespace FSCruiser.WinForms.DataEntry
             var currentPlot = ViewLogicController.CurrentPlot as FixCNTPlot;
             if (currentPlot == null) { ShowNoPlotSelectedMessage(); return; }
             if (stratum == null || currentPlot == null) { return; }
-            using (var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum))
+            using (var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum, DataService))
             {
                 view.ShowDialog(currentPlot);
             }
@@ -471,23 +522,22 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public bool PreviewKeypress(KeyEventArgs ea)
+        public bool PreviewKeypress(string keyStr)
         {
             if (_viewLoading) { return false; }
-            if (ea.KeyData == Keys.None) { return false; }
 
             var settings = ApplicationSettings.Instance;
 
-            if (ea.KeyData == settings.AddPlotKey)
+            if (keyStr == settings.AddPlotKeyStr)
             {
                 this._addPlotButton_Click(null, null);
                 return true;
             }
-            else if (ea.KeyData == settings.AddTreeKey)
+            else if (keyStr == settings.AddTreeKeyStr)
             {
                 return ViewLogicController.UserAddTree() != null;
             }
-            else if (ea.KeyData == settings.ResequencePlotTreesKey)
+            else if (keyStr == settings.ResequencePlotTreesKeyStr)
             {
                 return ViewLogicController.ResequenceTreeNumbers();
             }
@@ -642,14 +692,6 @@ namespace FSCruiser.WinForms.DataEntry
             this.ViewLogicController.HandleViewLoad();
         }
 
-        public void HandleEnableLogGradingChanged()
-        {
-            if (this._logsColumn != null)
-            {
-                this._logsColumn.Visible = this.AppController.ViewController.EnableLogGrading;
-            }
-        }
-
         void Settings_CruisersChanged(object sender, EventArgs e)
         {
             if (this._initialsColoumn != null)
@@ -757,9 +799,9 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void logToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AppController.ViewController.EnableLogGrading = !AppController.ViewController.EnableLogGrading;
+            DataService.EnableLogGrading = !DataService.EnableLogGrading;
 
-            logToolStripMenuItem.Text = AppController.ViewController.EnableLogGrading ?
+            logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                 "Disable Log Grading" : "Enable Log Grading";
         }
 
@@ -767,7 +809,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (e.Button == MouseButtons.Right)
             {
-                logToolStripMenuItem.Text = AppController.ViewController.EnableLogGrading ?
+                logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                     "Disable Log Grading" : "Enable Log Grading";
                 _contexMenu.Show(Cursor.Position);
             }

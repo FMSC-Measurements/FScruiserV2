@@ -47,37 +47,6 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public override TreeDefaultValueDO ShowAddPopulation()
-        {
-            if (this.ApplicationController.DataStore == null)
-            {
-                MessageBox.Show("No File Selected");
-                return null;
-            }
-            using (FormAddPopulation view = new FormAddPopulation(this.ApplicationController))
-            {
-                Cursor.Current = Cursors.WaitCursor;
-                view.ShowDialog();
-
-                return null;
-            }
-        }
-
-        public override TreeDefaultValueDO ShowAddPopulation(SampleGroupDO sg)
-        {
-            if (this.ApplicationController.DataStore == null)
-            {
-                MessageBox.Show("No File Selected");
-                return null;
-            }
-            using (FormAddPopulation view = new FormAddPopulation(this.ApplicationController))
-            {
-                Cursor.Current = Cursors.WaitCursor;
-                view.ShowDialog(sg);
-                return null;
-            }
-        }
-
         public override void ShowBackupUtil()
         {
             using (FormBackupUtility view = new FormBackupUtility(this.ApplicationController))
@@ -101,22 +70,6 @@ namespace FSCruiser.WinForms
             {
                 a.ShowDialog();
                 //Application.Run(a);
-            }
-        }
-
-        public override bool ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit)
-        {
-            using (FormEditSampleGroup view = new FormEditSampleGroup())
-            {
-                return view.ShowDialog(sg, allowEdit) == DialogResult.OK;
-            }
-        }
-
-        public override bool ShowEditTreeDefault(TreeDefaultValueDO tdv)
-        {
-            using (FormEditTreeDefault view = new FormEditTreeDefault(ApplicationController.DataStore))
-            {
-                return view.ShowDialog(tdv) == DialogResult.OK;
             }
         }
 

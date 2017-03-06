@@ -66,11 +66,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\ApplicationController.cs" />
-    <Compile Include="Core\ApplicationSettings.cs" />
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\ExceptionHandler.cs" />
     <Compile Include="Core\IExceptionHandler.cs" />
-    <Compile Include="Core\LoadCuttingUnitWorker.cs" />
     <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
     <Compile Include="Core\Workers\CancelWorkerException.cs" />
@@ -374,6 +372,7 @@
   <ItemGroup>
     <Content Include="..\..\CruiseDAL\SQLite\Mobile_CF20\SQLite.Interop.094.dll">
       <Link>SQLite.Interop.094.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="fscruiser.ico" />
     <Content Include="Sounds\pageChange.wav">
@@ -384,7 +383,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Core\FSCruiser.Core.cd" />
     <None Include="Properties\DataSources\FSCruiser.Core.DataEntry.LimitingDistanceCalculator.datasource" />
     <None Include="Properties\DataSources\FSCruiser.Core.Models.Plot3PPNT.datasource" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />

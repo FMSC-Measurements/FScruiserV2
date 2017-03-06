@@ -8,6 +8,9 @@ using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiserV2.Test.Mocks;
+using FScruiser.Core.Services;
+using FMSC.ORM.SQLite;
+using CruiseDAL;
 
 namespace FSCruiserV2.Test
 {
@@ -24,7 +27,26 @@ namespace FSCruiserV2.Test
         {
             var cu = new CuttingUnit();
 
-            _de = new FormDataEntryLogic(cu, _controller, _view);
+            var dialogService = new DialogServiceMock();
+            var soundService = new SoundServiceMock();
+            var unit = new CuttingUnit() { Code = "1" };
+            var dataStore = SetupDataStore(unit);
+            var dataService = new IDataEntryDataService("1", dataStore);
+
+            _de = new FormDataEntryLogic(_controller
+                , dialogService
+                , soundService
+                , dataService
+                , _view);
+        }
+
+        DAL SetupDataStore(CuttingUnit unit)
+        {
+            var dataStore = new DAL(":memory:");
+
+            dataStore.Insert(unit, FMSC.ORM.Core.SQL.OnConflictOption.Default);
+
+            return dataStore;
         }
 
         public void TestTreeTally()

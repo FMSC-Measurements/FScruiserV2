@@ -6,6 +6,8 @@ using CruiseDAL.DataObjects;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
 using FSCruiser.WinForms.DataEntry;
+using FScruiser.Core.Services;
+using CruiseDAL;
 
 namespace FSCruiser.WinForms.Common
 {
@@ -15,7 +17,6 @@ namespace FSCruiser.WinForms.Common
 
         protected object _dataEntrySyncLock = new object();
         private FormMain _main;
-        private FormNumPad _numPadDialog;
         private Form3PNumPad _threePNumPad;
         protected FormDataEntry _dataEntryView;
 
@@ -27,23 +28,6 @@ namespace FSCruiser.WinForms.Common
         #region IViewController Members
 
         public event CancelEventHandler ApplicationClosing;
-
-        public bool EnableLogGrading
-        {
-            get { return _enableLogGrading; }
-            set
-            {
-                lock (_dataEntrySyncLock)
-                {
-                    if (value == _enableLogGrading) { return; }
-                    _enableLogGrading = value;
-                    if (_dataEntryView != null)
-                    {
-                        _dataEntryView.HandleEnableLogGradingChanged();
-                    }
-                }
-            }
-        }
 
         //public bool EnableCruiserSelectionPopup { get; set; }
 
@@ -64,22 +48,6 @@ namespace FSCruiser.WinForms.Common
             protected set
             {
                 _main = value;
-            }
-        }
-
-        public FormNumPad NumPadDialog
-        {
-            get
-            {
-                if (_numPadDialog == null)
-                {
-                    _numPadDialog = new FormNumPad();
-                }
-                return _numPadDialog;
-            }
-            protected set
-            {
-                _numPadDialog = value;
             }
         }
 
@@ -140,15 +108,7 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-        public abstract CruiseDAL.DataObjects.TreeDefaultValueDO ShowAddPopulation();
-
-        public abstract CruiseDAL.DataObjects.TreeDefaultValueDO ShowAddPopulation(CruiseDAL.DataObjects.SampleGroupDO sg);
-
         public abstract void ShowBackupUtil();
-
-        public abstract bool ShowEditSampleGroup(CruiseDAL.DataObjects.SampleGroupDO sg, bool allowEdit);
-
-        public abstract bool ShowEditTreeDefault(CruiseDAL.DataObjects.TreeDefaultValueDO tdv);
 
         public abstract bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);
 
@@ -171,7 +131,9 @@ namespace FSCruiser.WinForms.Common
             {
                 try
                 {
-                    using (_dataEntryView = new FormDataEntry(this.ApplicationController, unit))
+                    var dataService = new IDataEntryDataService(unit.Code, ApplicationController.DataStore);
+                    using (_dataEntryView = new FormDataEntry(this.ApplicationController
+                        , dataService))
                     {
 #if !NetCF
                         _dataEntryView.Owner = MainView;
@@ -184,6 +146,10 @@ namespace FSCruiser.WinForms.Common
                     var exType = e.GetType();
 
                     MessageBox.Show(e.Message, exType.Name);
+                }
+                catch (Exception e)
+                {
+                    ApplicationController.DataStore.LogMessage(e.Message, "E");
                 }
                 finally
                 {
@@ -198,14 +164,14 @@ namespace FSCruiser.WinForms.Common
         //    return this.NumPadDialog.UserEnteredValue;
         //}
 
-        public bool ShowPlotInfo(Plot plot, PlotStratum stratum, bool isNewPlot)
+        public bool ShowPlotInfo(IDataEntryDataService dataService, Plot plot, PlotStratum stratum, bool isNewPlot)
         {
             System.Diagnostics.Debug.Assert(plot != null);
             System.Diagnostics.Debug.Assert(stratum != null);
 
             if (stratum.Is3PPNT && isNewPlot)
             {
-                using (var view = new Form3PPNTPlotInfo(this))
+                using (var view = new Form3PPNTPlotInfo(this, dataService))
                 {
 #if !NetCF
                     view.Owner = this._dataEntryView;
@@ -243,34 +209,6 @@ namespace FSCruiser.WinForms.Common
             {
                 view.ShowDialog(count);
             }
-        }
-
-        public void ShowMessage(String message, String caption, MessageBoxIcon icon)
-        {
-            MessageBox.Show(message, caption, MessageBoxButtons.OK, icon, MessageBoxDefaultButton.Button1);
-        }
-
-        public bool AskYesNo(String message, String caption, MessageBoxIcon icon)
-        {
-            return DialogResult.Yes == MessageBox.Show(message, caption, MessageBoxButtons.YesNo, icon, MessageBoxDefaultButton.Button2);
-        }
-
-        public bool AskYesNo(String message, String caption, MessageBoxIcon icon, bool defaultNo)
-        {
-            return DialogResult.Yes == MessageBox.Show(message,
-                caption,
-                MessageBoxButtons.YesNo,
-                icon,
-                (defaultNo) ? MessageBoxDefaultButton.Button2 : MessageBoxDefaultButton.Button1);
-        }
-
-        public bool AskCancel(String message, String caption, MessageBoxIcon icon, bool defaultCancel)
-        {
-            return MessageBox.Show(message,
-                caption,
-                MessageBoxButtons.OKCancel,
-                icon,
-                (defaultCancel) ? MessageBoxDefaultButton.Button2 : MessageBoxDefaultButton.Button1) == DialogResult.Cancel;
         }
 
         /// <summary>
@@ -314,11 +252,6 @@ namespace FSCruiser.WinForms.Common
                 {
                     this._main.Dispose();
                     this._main = null;
-                }
-                if (this._numPadDialog != null)
-                {
-                    this._numPadDialog.Dispose();
-                    this._numPadDialog = null;
                 }
             }
         }

@@ -31,6 +31,7 @@ namespace FSCruiser.Core
             View = view;
             Settings = settings;
             Settings.CruisersChanged += new EventHandler(Settings_CruisersChanged);
+            Settings_CruisersChanged(null, null);
         }
 
         void Settings_CruisersChanged(object sender, EventArgs e)
@@ -41,6 +42,7 @@ namespace FSCruiser.Core
             {
                 var key = (i < 10) ? i.ToString() : null;
                 _cruisers.Add(new KeyValuePair<string,Cruiser>(key, c));
+                i++;
             }
 
             NotifyPropertyChanged("Cruisers");

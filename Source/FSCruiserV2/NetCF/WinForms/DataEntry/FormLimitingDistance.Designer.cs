@@ -31,12 +31,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.Label label6;
             System.Windows.Forms.Label label7;
             System.Windows.Forms.Label label4;
             System.Windows.Forms.Label label3;
             System.Windows.Forms.Label label2;
             System.Windows.Forms.Label label1;
+            this._limitingDistanceLBL = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.BAForFPS = new System.Windows.Forms.TextBox();
             this._BS_calculator = new System.Windows.Forms.BindingSource(this.components);
@@ -47,18 +47,13 @@
             this.SlopeDistance = new System.Windows.Forms.TextBox();
             this._measureToCB = new System.Windows.Forms.ComboBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.LimitingDistance = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this._treeIsLBL = new System.Windows.Forms.Label();
             this._sipPlaceholder = new System.Windows.Forms.Panel();
-            this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this._cancelMI = new System.Windows.Forms.MenuItem();
-            this._calculateMI = new System.Windows.Forms.MenuItem();
             this._okBTN = new System.Windows.Forms.Button();
             this._ceControlPanel = new System.Windows.Forms.Panel();
             this._cancelBTN = new System.Windows.Forms.Button();
             this._calculateBTN = new System.Windows.Forms.Button();
-            label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
             label4 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -71,14 +66,6 @@
             this.panel3.SuspendLayout();
             this._ceControlPanel.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label6
-            // 
-            label6.Dock = System.Windows.Forms.DockStyle.Left;
-            label6.Location = new System.Drawing.Point(0, 0);
-            label6.Name = "label6";
-            label6.Size = new System.Drawing.Size(115, 35);
-            label6.Text = "Limiting Distance:";
             // 
             // label7
             // 
@@ -115,6 +102,14 @@
             label1.Size = new System.Drawing.Size(33, 20);
             label1.Text = "DBH:";
             // 
+            // _limitingDistanceLBL
+            // 
+            this._limitingDistanceLBL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._limitingDistanceLBL.Location = new System.Drawing.Point(0, 0);
+            this._limitingDistanceLBL.Name = "_limitingDistanceLBL";
+            this._limitingDistanceLBL.Size = new System.Drawing.Size(638, 35);
+            this._limitingDistanceLBL.Text = "Limiting Distance:";
+            // 
             // panel1
             // 
             this.panel1.AutoScroll = true;
@@ -130,11 +125,11 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(240, 218);
+            this.panel1.Size = new System.Drawing.Size(638, 421);
             // 
             // BAForFPS
             // 
-            this.BAForFPS.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "BAForFPSize", true));
+            this.BAForFPS.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "BAForFPSize", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
             this.BAForFPS.Location = new System.Drawing.Point(94, 59);
             this.BAForFPS.Name = "BAForFPS";
             this.BAForFPS.Size = new System.Drawing.Size(39, 23);
@@ -163,7 +158,7 @@
             // 
             // BAF
             // 
-            this.BAF.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "DBH", true));
+            this.BAF.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "DBH", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
             this.BAF.Location = new System.Drawing.Point(94, 3);
             this.BAF.Name = "BAF";
             this.BAF.Size = new System.Drawing.Size(39, 23);
@@ -177,9 +172,9 @@
             this.panel4.Controls.Add(label3);
             this.panel4.Controls.Add(label4);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(0, 118);
+            this.panel4.Location = new System.Drawing.Point(0, 321);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(240, 31);
+            this.panel4.Size = new System.Drawing.Size(638, 31);
             // 
             // SlopeDistance
             // 
@@ -200,28 +195,20 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.LimitingDistance);
-            this.panel2.Controls.Add(label6);
+            this.panel2.Controls.Add(this._limitingDistanceLBL);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 149);
+            this.panel2.Location = new System.Drawing.Point(0, 352);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(240, 35);
-            // 
-            // LimitingDistance
-            // 
-            this.LimitingDistance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LimitingDistance.Location = new System.Drawing.Point(115, 0);
-            this.LimitingDistance.Name = "LimitingDistance";
-            this.LimitingDistance.Size = new System.Drawing.Size(125, 35);
+            this.panel2.Size = new System.Drawing.Size(638, 35);
             // 
             // panel3
             // 
             this.panel3.Controls.Add(label7);
             this.panel3.Controls.Add(this._treeIsLBL);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 184);
+            this.panel3.Location = new System.Drawing.Point(0, 387);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(240, 34);
+            this.panel3.Size = new System.Drawing.Size(638, 34);
             // 
             // _treeIsLBL
             // 
@@ -233,24 +220,9 @@
             // _sipPlaceholder
             // 
             this._sipPlaceholder.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._sipPlaceholder.Location = new System.Drawing.Point(0, 218);
+            this._sipPlaceholder.Location = new System.Drawing.Point(0, 455);
             this._sipPlaceholder.Name = "_sipPlaceholder";
-            this._sipPlaceholder.Size = new System.Drawing.Size(240, 0);
-            // 
-            // mainMenu1
-            // 
-            this.mainMenu1.MenuItems.Add(this._cancelMI);
-            this.mainMenu1.MenuItems.Add(this._calculateMI);
-            // 
-            // _cancelMI
-            // 
-            this._cancelMI.Text = "Cancel";
-            this._cancelMI.Click += new System.EventHandler(this._cancelMI_Click);
-            // 
-            // _calculateMI
-            // 
-            this._calculateMI.Text = "Calculate";
-            this._calculateMI.Click += new System.EventHandler(this._calculateBTN_Click);
+            this._sipPlaceholder.Size = new System.Drawing.Size(638, 0);
             // 
             // _okBTN
             // 
@@ -258,7 +230,7 @@
             this._okBTN.Dock = System.Windows.Forms.DockStyle.Fill;
             this._okBTN.Location = new System.Drawing.Point(80, 0);
             this._okBTN.Name = "_okBTN";
-            this._okBTN.Size = new System.Drawing.Size(80, 34);
+            this._okBTN.Size = new System.Drawing.Size(478, 34);
             this._okBTN.TabIndex = 1;
             this._okBTN.Text = "OK";
             // 
@@ -268,10 +240,9 @@
             this._ceControlPanel.Controls.Add(this._cancelBTN);
             this._ceControlPanel.Controls.Add(this._calculateBTN);
             this._ceControlPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._ceControlPanel.Location = new System.Drawing.Point(0, 218);
+            this._ceControlPanel.Location = new System.Drawing.Point(0, 421);
             this._ceControlPanel.Name = "_ceControlPanel";
-            this._ceControlPanel.Size = new System.Drawing.Size(240, 34);
-            this._ceControlPanel.Visible = false;
+            this._ceControlPanel.Size = new System.Drawing.Size(638, 34);
             // 
             // _cancelBTN
             // 
@@ -286,7 +257,7 @@
             // _calculateBTN
             // 
             this._calculateBTN.Dock = System.Windows.Forms.DockStyle.Right;
-            this._calculateBTN.Location = new System.Drawing.Point(160, 0);
+            this._calculateBTN.Location = new System.Drawing.Point(558, 0);
             this._calculateBTN.Name = "_calculateBTN";
             this._calculateBTN.Size = new System.Drawing.Size(80, 34);
             this._calculateBTN.TabIndex = 0;
@@ -298,14 +269,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(240, 252);
+            this.ClientSize = new System.Drawing.Size(638, 455);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this._sipPlaceholder);
             this.Controls.Add(this._ceControlPanel);
-            this.Menu = this.mainMenu1;
+            this.Controls.Add(this._sipPlaceholder);
             this.MinimizeBox = false;
             this.Name = "FormLimitingDistance";
             this.Text = "Limiting Distance";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this._BS_calculator)).EndInit();
             this.panel4.ResumeLayout(false);
@@ -318,9 +289,8 @@
 
         #endregion
 
-              
+
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label LimitingDistance;
         private System.Windows.Forms.Label _treeIsLBL;
         private System.Windows.Forms.TextBox BAForFPS;
         private System.Windows.Forms.Label _bafOrfpsLBL;
@@ -331,11 +301,6 @@
         private System.Windows.Forms.Panel _sipPlaceholder;
         private System.Windows.Forms.BindingSource _BS_calculator;
 
-
-        private System.Windows.Forms.MainMenu mainMenu1;
-        private System.Windows.Forms.MenuItem _cancelMI;
-        private System.Windows.Forms.MenuItem _calculateMI;
-
         private Microsoft.WindowsCE.Forms.InputPanel _sip;
         private System.Windows.Forms.Button _okBTN;
         private System.Windows.Forms.Panel _ceControlPanel;
@@ -344,5 +309,6 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label _limitingDistanceLBL;
     }
 }

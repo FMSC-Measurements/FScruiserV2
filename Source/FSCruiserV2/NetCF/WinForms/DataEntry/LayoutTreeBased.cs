@@ -7,6 +7,7 @@ using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -25,10 +26,14 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         public LayoutTreeBased(IApplicationController controller
+            , IDataEntryDataService dataService
             , FormDataEntryLogic dataEntryController)
             : this()
         {
-            base.Initialize(controller, dataEntryController, _leftContentPanel);
+            base.Initialize(controller
+                , dataService
+                , dataEntryController
+                , _leftContentPanel);
         }
 
         public override Control MakeTallyRow(Control container, SubPop subPop)

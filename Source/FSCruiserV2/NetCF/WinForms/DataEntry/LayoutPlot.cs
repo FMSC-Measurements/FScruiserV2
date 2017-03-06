@@ -34,6 +34,7 @@ namespace FSCruiser.WinForms.DataEntry
                 {
                     components.Dispose();
                 }
+                DataService = null;
                 try
                 {
                     ApplicationSettings.Instance.CruisersChanged -= Settings_CruisersChanged;
@@ -296,14 +297,82 @@ namespace FSCruiser.WinForms.DataEntry
 
         public FormDataEntryLogic DataEntryController { get { return this.ViewLogicController.DataEntryController; } }
 
+        #region DataService
+
+        IDataEntryDataService _dataService;
+
+        IDataEntryDataService DataService
+        {
+            get { return _dataService; }
+            set
+            {
+                OnDataServiceChanging();
+                _dataService = value;
+                OnDataServiceChanged();
+            }
+        }
+
+        private void OnDataServiceChanged()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
+            }
+        }
+
+        private void OnDataServiceChanging()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
+            }
+        }
+
+        void HandleEnableLogGradingChanged(object sender, EventArgs e)
+        {
+            if (_logsColumn == null) { return; }
+            if ((_logsColumn.Width > 0) == DataService.EnableLogGrading) { return; }
+            if (DataService.EnableLogGrading)
+            {
+                _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
+            }
+            else
+            {
+                _logsColumn.Width = -1;
+            }
+        }
+
+        #endregion DataService
+
         public LayoutPlotLogic ViewLogicController { get; set; }
 
-        public PlotStratum Stratum { get; set; }
+        public PlotStratum Stratum { get { return ViewLogicController.Stratum; } }
 
-        public LayoutPlot(FormDataEntryLogic dataEntryController, Control parent, PlotStratum stratum, InputPanel sip)
+        public InputPanel Sip
         {
-            Stratum = stratum;
-            this.ViewLogicController = new LayoutPlotLogic(stratum, this, dataEntryController, dataEntryController.ViewController);
+            get
+            {
+                return _dataGrid.SIP;
+            }
+            set
+            {
+                _dataGrid.SIP = value;
+            }
+        }
+
+        public LayoutPlot(FormDataEntryLogic dataEntryController
+            , IDataEntryDataService dataService
+            , ISoundService soundService
+            , PlotStratum stratum)
+        {
+            DataService = dataService;
+
+            this.ViewLogicController = new LayoutPlotLogic(stratum
+                , this
+                , dataEntryController
+                , dataService
+                , soundService
+                , dataEntryController.ViewController);
 
             ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
 
@@ -333,7 +402,6 @@ namespace FSCruiser.WinForms.DataEntry
             //Setup DataGrid
             DataGridAdjuster.InitializeGrid(this._dataGrid);
             _tableStyle = stratum.InitializeTreeColumns(_dataGrid);
-            this._dataGrid.SIP = sip;
             this._dataGrid.CellValidating += new EditableDataGridCellValidatingEventHandler(_dataGrid_CellValidating);
             this._dataGrid.CellValueChanged += new EditableDataGridCellValueChangedEventHandler(this._dataGrid_CellValueChanged);
             //this._dataGrid.DataSource = typeof(FSCruiserV2.Logic.TreeVM);//_BS_Trees;
@@ -359,7 +427,6 @@ namespace FSCruiser.WinForms.DataEntry
             }
 
             this.Dock = DockStyle.Fill;
-            this.Parent = parent;
 
             InitializeTallyPanel();
 
@@ -466,7 +533,7 @@ namespace FSCruiser.WinForms.DataEntry
             var stratum = Stratum as FixCNTStratum;
             var currentPlot = ViewLogicController.CurrentPlot as FixCNTPlot;
             if (stratum == null || currentPlot == null) { return; }
-            using (var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum))
+            using (var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum, DataService))
             {
                 view.ShowDialog(currentPlot);
             }
@@ -739,27 +806,27 @@ namespace FSCruiser.WinForms.DataEntry
             //_BS_Plots.DataSource = this.StratumInfo.Plots;
         }
 
-        public bool PreviewKeypress(KeyEventArgs ea)
+        public bool PreviewKeypress(string keyStr)
         {
             if (_viewLoading) { return false; }
-            if (ea.KeyData == Keys.None) { return false; }
+            if (string.IsNullOrEmpty(keyStr)) { return false; }
 
             var settings = ApplicationSettings.Instance;
 
-            if(ea.KeyData == settings.AddPlotKey)
+            if (keyStr == settings.AddPlotKeyStr)
             {
                 this._addPlotButton_Click(null, null);
                 return true;
             }
-            else if(ea.KeyData == settings.AddTreeKey)
+            else if (keyStr == settings.AddTreeKeyStr)
             {
                 return ViewLogicController.UserAddTree() != null;
             }
-            else if (ea.KeyData == settings.ResequencePlotTreesKey)
+            else if (keyStr == settings.ResequencePlotTreesKeyStr)
             {
                 return ViewLogicController.ResequenceTreeNumbers();
             }
-            else if (ea.KeyData == Keys.Escape)
+            else if (keyStr.StartsWith("ESC", StringComparison.InvariantCultureIgnoreCase))
             {
                 IsGridExpanded = !IsGridExpanded;
                 return true;
@@ -812,7 +879,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public IList<Tree> Trees
+        public ICollection<Tree> Trees
         {
             get
             {
@@ -836,20 +903,6 @@ namespace FSCruiser.WinForms.DataEntry
         public void EndEdit()
         {
             this.ViewLogicController.EndEdit();
-        }
-
-        public void HandleEnableLogGradingChanged()
-        {
-            if (_logsColumn == null) { return; }
-            if ((_logsColumn.Width > 0) == this.AppController.ViewController.EnableLogGrading) { return; }
-            if (this.AppController.ViewController.EnableLogGrading)
-            {
-                _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
-            }
-            else
-            {
-                _logsColumn.Width = -1;
-            }
         }
 
         void Settings_CruisersChanged(object sender, EventArgs e)

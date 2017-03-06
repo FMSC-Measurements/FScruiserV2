@@ -151,7 +151,18 @@ namespace FSCruiser.WinForms
 
         private void _addPopulation_MI_Click(object sender, EventArgs e)
         {
-            Controller.ViewController.ShowAddPopulation();
+            if (Controller.DataStore == null)
+            {
+                MessageBox.Show("No File Selected");
+                return;
+            }
+            using (FormAddPopulation view = new FormAddPopulation(Controller))
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                view.ShowDialog();
+
+                return;
+            }
         }
 
         private void _BS_cuttingUnits_CurrentChanged(object sender, EventArgs e)

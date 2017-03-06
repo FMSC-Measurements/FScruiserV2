@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using FSCruiser.Core.Models;
-using System.Windows.Forms;
-using System.ComponentModel;
 
 namespace FSCruiser.Core
 {
+    public enum BackUpMethod { None = 0, LeaveUnit = 1, TimeInterval = 2 }
+
     [Serializable]
     public class ApplicationSettings
     {
         #region static properties
 
-        static KeysConverter _keyConverter = new KeysConverter();
         static ApplicationSettings _instance;
 
         public static ApplicationSettings Instance
@@ -26,6 +25,7 @@ namespace FSCruiser.Core
                 }
                 return _instance;
             }
+            set { _instance = value; }
         }
 
         public static string ApplicationSettingDirectory
@@ -50,8 +50,6 @@ namespace FSCruiser.Core
             }
         }
 
-        public static IExceptionHandler ExceptionHandler { get; set; }
-
         #endregion static properties
 
         string _backupDir;
@@ -67,15 +65,15 @@ namespace FSCruiser.Core
             EnableTallySound = true;
 
 #if NetCF
-            AddPlotKey = Keys.None;
+            AddPlotKeyStr = string.Empty;
 #else
-            AddPlotKey = Keys.F3;
+            AddPlotKeyStr = "F3";
 #endif
 
-            AddPlotKey = Keys.Add;
-            ResequencePlotTreesKey = Keys.None;
-            UntallyKey = Keys.None;
-            JumpTreeTallyKey = Keys.Escape;
+            AddPlotKeyStr = "Add"; //plus key
+            ResequencePlotTreesKeyStr = string.Empty;
+            UntallyKeyStr = string.Empty;
+            JumpTreeTallyKeyStr = "Escape";
         }
 
         #region backup settings
@@ -104,8 +102,6 @@ namespace FSCruiser.Core
         public BackUpMethod BackUpMethod { get; set; }
 
         #endregion backup settings
-
-
 
         [XmlAttribute]
         public bool EnableCruiserPopup { get; set; }
@@ -143,109 +139,66 @@ namespace FSCruiser.Core
         #region hotkey settings
 
         [XmlAttribute]
-        public string AddPlotKeyStr
-        {
-            get { return _keyConverter.ConvertToString(AddPlotKey); }
-            set
-            {
-                AddPlotKey = ParseKey(value, Keys.None);
-            }
-        }
+        public string AddPlotKeyStr { get; set; }
 
         [XmlAttribute]
-        public string AddTreeKeyStr
-        {
-            get { return _keyConverter.ConvertToString(AddTreeKey); }
-            set
-            {
-                AddTreeKey = ParseKey(value, Keys.None);
-            }
-        }
+        public string AddTreeKeyStr { get; set; }
 
         [XmlAttribute]
-        public string JumpTreeTallyKeyStr
-        {
-            get { return _keyConverter.ConvertToString(JumpTreeTallyKey); }
-            set
-            {
-                JumpTreeTallyKey = ParseKey(value, Keys.Escape);
-            }
-        }
+        public string JumpTreeTallyKeyStr { get; set; }
 
         [XmlAttribute]
-        public string ResequencePlotTreesKeyStr
-        {
-            get { return _keyConverter.ConvertToString(ResequencePlotTreesKey); }
-            set
-            {
-                ResequencePlotTreesKey = ParseKey(value, Keys.None);
-            }
-        }
+        public string ResequencePlotTreesKeyStr { get; set; }
 
         [XmlAttribute]
-        public string UntallyKeyStr
-        {
-            get { return _keyConverter.ConvertToString(UntallyKey); }
-            set
-            {
-                UntallyKey = ParseKey(value, Keys.None);
-            }
-        }
+        public string UntallyKeyStr { get; set; }
 
-        [XmlIgnore]
-        public Keys AddPlotKey { get; set; }
+        //[XmlIgnore]
+        //public Keys AddPlotKey { get; set; }
 
-        [XmlIgnore]
-        public Keys AddTreeKey { get; set; }
+        //[XmlIgnore]
+        //public Keys AddTreeKey { get; set; }
 
-        [XmlIgnore]
-        public Keys ResequencePlotTreesKey { get; set; }
+        //[XmlIgnore]
+        //public Keys ResequencePlotTreesKey { get; set; }
 
-        [XmlIgnore]
-        public Keys UntallyKey { get; set; }
+        //[XmlIgnore]
+        //public Keys UntallyKey { get; set; }
 
-        [XmlIgnore]
-        public Keys JumpTreeTallyKey { get; set; }
+        //[XmlIgnore]
+        //public Keys JumpTreeTallyKey { get; set; }
 
         #endregion hotkey settings
 
         public static void Initialize()
         {
-            try
+            if (File.Exists(ApplicationSettingFilePath))
             {
-                if (File.Exists(ApplicationSettingFilePath))
-                {
-                    var appSettingsPath = ApplicationSettingFilePath;
+                var appSettingsPath = ApplicationSettingFilePath;
 
-                    _instance = Deserialize(appSettingsPath);
+                _instance = Deserialize(appSettingsPath);
+            }
+            else
+            {
+                //previous versions stored app settings in the executing dir
+                //so if no app setting file exists check old location
+
+                var oldSettingsPath = System.IO.Path.Combine(GetExecutionDirectory()
+                    , Constants.APP_SETTINGS_PATH);
+
+                if (File.Exists(oldSettingsPath))
+                {
+                    _instance = ApplicationSettings.Deserialize(oldSettingsPath);
+                    try
+                    {
+                        System.IO.File.Delete(oldSettingsPath);
+                    }
+                    catch { }
                 }
                 else
                 {
-                    //previous versions stored app settings in the executing dir
-                    //so if no app setting file exists check old location
-
-                    var oldSettingsPath = System.IO.Path.Combine(GetExecutionDirectory()
-                        , Constants.APP_SETTINGS_PATH);
-
-                    if (File.Exists(oldSettingsPath))
-                    {
-                        _instance = ApplicationSettings.Deserialize(oldSettingsPath);
-                        try
-                        {
-                            System.IO.File.Delete(oldSettingsPath);
-                        }
-                        catch { }
-                    }
-                    else
-                    {
-                        _instance = new ApplicationSettings();
-                    }
+                    _instance = new ApplicationSettings();
                 }
-            }
-            catch (Exception e)
-            {
-                ExceptionHandler.HandelEx(new UserFacingException("Fail to load application settings", e));
-                _instance = new ApplicationSettings();
             }
         }
 
@@ -258,44 +211,26 @@ namespace FSCruiser.Core
             }
         }
 
-        static Keys ParseKey(String value, Keys defVal)
-        {
-            try
-            {
-                return (Keys)_keyConverter.ConvertFromString(value);
-            }
-            catch
-            {
-                return defVal;
-            }
-        }
-
         public static void Save()
         {
             if (_instance == null)
             {
                 return;
             }
-            try
+
+            XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
+            var dir = ApplicationSettingDirectory;
+
+            if (!Directory.Exists(dir))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
-                var dir = ApplicationSettingDirectory;
-
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
-
-                var path = ApplicationSettingFilePath;
-
-                using (StreamWriter writer = new StreamWriter(path))
-                {
-                    serializer.Serialize(writer, _instance);
-                }
+                Directory.CreateDirectory(dir);
             }
-            catch (Exception e)
+
+            var path = ApplicationSettingFilePath;
+
+            using (StreamWriter writer = new StreamWriter(path))
             {
-                ExceptionHandler.HandelEx(new UserFacingException("Unabel to save user settings", e));
+                serializer.Serialize(writer, _instance);
             }
         }
 

@@ -13,7 +13,7 @@ namespace FSCruiser.WinForms.DataEntry
     public partial class FormDataEntry : FMSC.Controls.CustomForm, IDataEntryView
     {
         public FormDataEntry(IApplicationController controller
-            , CuttingUnit unit)
+            , IDataEntryDataService dataService)
         {
             InitializeComponent();
 
@@ -27,7 +27,7 @@ namespace FSCruiser.WinForms.DataEntry
                 this.WindowState = FormWindowState.Maximized;
             }
 
-            InitializeCommon(controller, unit);
+            InitializeCommon(controller, dataService);
         }
 
         protected FormDataEntry()
@@ -45,31 +45,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         }
 
-        //protected override void OnKeyUp(KeyEventArgs e)
-        //{
-        //    OnKeyUpInternal(e);
-        //}
-
-        private void _addTreeMI_Click(object sender, EventArgs e)
-        {
-            this.LogicController.HandleAddTreeClick();
-        }
-
-        private void _editCruisersMI_Click(object sender, EventArgs e)
-        {
-            Controller.ViewController.ShowManageCruisers();
-        }
-
-        private void _showHideLogColMI_Click(object sender, EventArgs e)
-        {
-            this.LogicController.HandleShowHideLogCol();
-        }
-
-        private void LimitingDistance_Click(object sender, EventArgs e)
-        {
-            this.LogicController.HandleDisplayLimitingDistance();
-        }
-
         private void menuItem1_Popup(object sender, EventArgs e)
         {
             this._limitingDistanceMI.Enabled = this.FocusedLayout is LayoutPlot;
@@ -77,19 +52,5 @@ namespace FSCruiser.WinForms.DataEntry
             this._deleteRowButton.Enabled = this.FocusedLayout is ITreeView;
             this._showHideLogColMI.Enabled = this.FocusedLayout is ITreeView;
         }
-
-        private void showHideErrorMessages_Click(object sender, EventArgs e)
-        {
-            this.LogicController.HandleShowHideErrorCol();
-        }
-
-        private void _settingsMI_Click(object sender, EventArgs e)
-        {
-            using (var view = new FormSettings())
-            {
-                view.ShowDialog();
-            }
-        }
-
     }
 }

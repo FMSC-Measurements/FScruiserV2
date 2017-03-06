@@ -8,6 +8,7 @@ using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using Microsoft.WindowsCE.Forms;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -36,27 +37,79 @@ namespace FSCruiser.WinForms.DataEntry
             get { return _userCanAddTrees; }
             set { _userCanAddTrees = value; }
         }
-        public FormDataEntryLogic DataEntryController { get; set; }
 
-        public IList<Tree> Trees
+        #region DataService
+
+        IDataEntryDataService _dataService;
+
+        IDataEntryDataService DataService
         {
-            get
+            get { return _dataService; }
+            set
             {
-                return this.DataEntryController.Unit.NonPlotTrees;
+                OnDataServiceChanging();
+                _dataService = value;
+                OnDataServiceChanged();
             }
         }
 
-        public ControlTreeDataGrid(IApplicationController controller, FormDataEntryLogic dataEntryController, InputPanel sip)
+        private void OnDataServiceChanged()
         {
-            this.Controller = controller;
-            this.DataEntryController = dataEntryController;
-            DataGridAdjuster.InitializeGrid(this);
-            DataGridTableStyle tableStyle = DataEntryController.Unit.InitializeTreeColumns(this);
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
+            }
+        }
 
-            ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
+        private void OnDataServiceChanging()
+        {
+            if (_dataService != null)
+            {
+                _dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
+            }
+        }
+
+        void HandleEnableLogGradingChanged(object sender, EventArgs e)
+        {
+            if (_logsColumn == null) { return; }
+            if ((_logsColumn.Width > 0) == DataService.EnableLogGrading) { return; }
+            if (DataService.EnableLogGrading)
+            {
+                _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
+            }
+            else
+            {
+                _logsColumn.Width = -1;
+            }
+        }
+
+        #endregion DataService
+
+        public FormDataEntryLogic DataEntryController { get; set; }
+
+        public ICollection<Tree> Trees
+        {
+            get
+            {
+                return DataService.NonPlotTrees;
+            }
+        }
+
+
+        public ControlTreeDataGrid(IApplicationController controller
+            , IDataEntryDataService dataService
+            , FormDataEntryLogic dataEntryController)
+        {
+            Controller = controller;
+            DataService = dataService;
+            DataEntryController = dataEntryController;
+
+            DataGridAdjuster.InitializeGrid(this);
+            DataGridTableStyle tableStyle = dataService.InitializeTreeColumns(this);
+
+            
 
             this.AllowUserToAddRows = false;//don't allow down arrow to add tree
-            this.SIP = sip;
             //this.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Bold);
 
             //initialize _BS_trees
@@ -81,10 +134,22 @@ namespace FSCruiser.WinForms.DataEntry
                 _logsColumn.Click += this.LogsClicked;
             }
 
-            if (_initialsColoumn != null)
+            LoadData();
+
+            ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
+            Settings_CruisersChanged(null, null);
+
+            
+        }
+
+        void LoadData()
+        {
+            if (_stratumColumn != null)
             {
-                _initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
+                _stratumColumn.DataSource = DataService.TreeStrata;
             }
+
+            _BS_trees.DataSource = DataService.NonPlotTrees;
         }
 
         
@@ -120,7 +185,7 @@ namespace FSCruiser.WinForms.DataEntry
                     long newTreeNum = (long)e.Value;
 
                     if (tree.TreeNumber != newTreeNum
-                    && !this.DataEntryController.Unit.IsTreeNumberAvalible(newTreeNum))
+                    && !DataService.IsTreeNumberAvalible(newTreeNum))
                     {
                         MessageBox.Show("Tree Number already exists");
                         e.Cancel = true;
@@ -176,22 +241,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.DataEntryController.ShowLogs(tree);
         }
 
-        public Tree UserAddTree()
-        {
-            if (_viewLoading
-                || this.UserCanAddTrees == false) { return null; }
-
-            var newTree = DataEntryController.Unit.UserAddTree();
-
-            if (newTree != null)
-            {
-                this._BS_trees.MoveLast();
-                this.MoveFirstEmptyCell();
-            }
-            return newTree;
-        }
-
-        private void _BS_trees_CurrentChanged(object sender, EventArgs e)
+        void _BS_trees_CurrentChanged(object sender, EventArgs e)
         {
             Tree tree = _BS_trees.Current as Tree;
 
@@ -202,7 +252,7 @@ namespace FSCruiser.WinForms.DataEntry
             //_changingTree = false;
         }
 
-        public void UpdateSpeciesColumn(Tree tree)
+        void UpdateSpeciesColumn(Tree tree)
         {
             if (_speciesColumn != null)
             {
@@ -210,7 +260,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void UpdateSampleGroupColumn(Tree tree)
+        void UpdateSampleGroupColumn(Tree tree)
         {
             if (_sgColumn != null)
             {
@@ -218,35 +268,22 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void UpdateStratumColumn()
-        {
-            if (_stratumColumn != null)
-            {
-                _stratumColumn.DataSource = DataEntryController.Unit.TreeStrata;
-            }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (disposing)
-            {
-                if (this._BS_trees != null)
-                {
-                    this._BS_trees.Dispose();
-                    this._BS_trees = null;
-                }
-                try
-                {
-                    ApplicationSettings.Instance.CruisersChanged -= Settings_CruisersChanged;
-                }
-                catch (NullReferenceException) { }
-            }
-        }
-
         #region ITreeView Members
 
+        public Tree UserAddTree()
+        {
+            if (_viewLoading
+                || this.UserCanAddTrees == false) { return null; }
 
+            var newTree = DataService.UserAddTree();
+
+            if (newTree != null)
+            {
+                this._BS_trees.MoveLast();
+                this.MoveFirstEmptyCell();
+            }
+            return newTree;
+        }
 
         public bool ErrorColumnVisable
         {
@@ -298,13 +335,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void HandleLoad()
         {
-            UpdateStratumColumn();
-            this._BS_trees.DataSource = DataEntryController.Unit.NonPlotTrees;
-
             _viewLoading = false;
         }
-
-
 
         public void DeleteSelectedTree()
         {
@@ -321,7 +353,7 @@ namespace FSCruiser.WinForms.DataEntry
                     MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button2))
                 {
-                    DataEntryController.Unit.DeleteTree(curTree);
+                    DataService.DeleteTree(curTree);
                     //curTree.Delete();
                     //Controller.DeleteTree(curTree);
                 }
@@ -334,38 +366,24 @@ namespace FSCruiser.WinForms.DataEntry
 
         public bool ViewLoading { get { return _viewLoading; } }
 
-        public bool PreviewKeypress(KeyEventArgs ea)
+        public bool PreviewKeypress(string keyStr)
         {
-            if (ea.KeyData == Keys.None) { return false; }
+            if (string.IsNullOrEmpty(keyStr)) { return false; }
 
-            var settings = ApplicationSettings.Instance; 
+            var settings = ApplicationSettings.Instance;
 
-            if (ea.KeyData == settings.JumpTreeTallyKey)
+            if (keyStr == settings.JumpTreeTallyKeyStr)
             {
                 this.DataEntryController.View.GoToTallyPage();
                 return true;
             }
-            else if (ea.KeyData == settings.AddTreeKey)
+            else if (keyStr == settings.AddTreeKeyStr)
             {
                 return UserAddTree() != null;
             }
             else
             {
                 return false;
-            }
-        }
-
-        public void HandleEnableLogGradingChanged()
-        {
-            if (_logsColumn == null) { return; }
-            if ((_logsColumn.Width > 0) == this.Controller.ViewController.EnableLogGrading) { return; }
-            if (this.Controller.ViewController.EnableLogGrading)
-            {
-                _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
-            }
-            else
-            {
-                _logsColumn.Width = -1;
             }
         }
 
@@ -385,5 +403,24 @@ namespace FSCruiser.WinForms.DataEntry
             Edit();
         }
         #endregion
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing)
+            {
+                if (this._BS_trees != null)
+                {
+                    this._BS_trees.Dispose();
+                    this._BS_trees = null;
+                }
+                DataService = null;
+                try
+                {
+                    ApplicationSettings.Instance.CruisersChanged -= Settings_CruisersChanged;
+                }
+                catch (NullReferenceException) { }
+            }
+        }
     }
 }

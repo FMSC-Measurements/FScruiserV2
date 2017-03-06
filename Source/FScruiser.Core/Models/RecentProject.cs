@@ -28,6 +28,11 @@ namespace FSCruiser.Core.Models
             return FilePath.Equals(((RecentProject)obj).FilePath, StringComparison.InvariantCultureIgnoreCase);
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public override string ToString()
         {
             return ProjectName;

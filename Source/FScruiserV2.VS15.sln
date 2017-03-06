@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSC.Sampling.VS15", "..\FM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseDAL.VS15", "..\CruiseDAL\CruiseDAL\CruiseDAL.VS15.csproj", "{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FScruiser.Core.Test", "FScruiser.Core.Test\FScruiser.Core.Test.csproj", "{76D8D89F-E244-464A-AF59-7B95257A699C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAF1842E-F8C5-47A5-94C6-ADABA8A4B3AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76D8D89F-E244-464A-AF59-7B95257A699C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76D8D89F-E244-464A-AF59-7B95257A699C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76D8D89F-E244-464A-AF59-7B95257A699C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76D8D89F-E244-464A-AF59-7B95257A699C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

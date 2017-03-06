@@ -10,12 +10,12 @@
     <RootNamespace>FSCruiserV2.Test</RootNamespace>
     <AssemblyName>FScruiserCETest</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PlatformFamilyName>PocketPC</PlatformFamilyName>
-    <PlatformID>b2c48bd2-963d-4549-9169-1fa021dce484</PlatformID>
-    <OSVersion>5.02</OSVersion>
+    <PlatformFamilyName>WindowsCE</PlatformFamilyName>
+    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
+    <OSVersion>5.00</OSVersion>
     <DeployDirSuffix>FScruiserCETest</DeployDirSuffix>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <NativePlatformName>Windows Mobile 6 Professional SDK</NativePlatformName>
+    <NativePlatformName>Windows CE</NativePlatformName>
     <FormFactorID>
     </FormFactorID>
   </PropertyGroup>
@@ -74,6 +74,8 @@
     <Compile Include="DataEntryTests.cs" />
     <Compile Include="Mocks\ApplicationControllerMock.cs" />
     <Compile Include="Mocks\DataEntryViewMock.cs" />
+    <Compile Include="Mocks\DialogServiceMock.cs" />
+    <Compile Include="Mocks\SoundServiceMock.cs" />
     <Compile Include="Mocks\ViewControllerMock.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -105,10 +107,20 @@
       <Project>{D346BFEA-85A0-4A5D-BD89-D07E073B065E}</Project>
       <Name>FMSC.ORM.NetCF20</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FScruiser.Core\FScruiser.Core_CF20.csproj">
+      <Project>{C78E1A49-9F49-45E6-86A4-13C2F22E8450}</Project>
+      <Name>FScruiser.Core_CF20</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FSCruiserV2\FSCruiserV2CE_CF20.csproj">
       <Project>{AFD7A43E-A691-4A30-859A-28C9245EB0FC}</Project>
       <Name>FSCruiserV2CE_CF20</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\CruiseDAL\SQLite\Mobile_CF20\SQLite.Interop.094.dll">
+      <Link>SQLite.Interop.094.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests\" />

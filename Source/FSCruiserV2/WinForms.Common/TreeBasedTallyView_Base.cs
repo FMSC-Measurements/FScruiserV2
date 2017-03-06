@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -23,6 +24,8 @@ namespace FSCruiser.WinForms
 
         public IApplicationController Controller { get; protected set; }
 
+        protected IDataEntryDataService DataService { get; set; }
+
         public IDataEntryView DataEntryForm
         {
             get
@@ -35,7 +38,7 @@ namespace FSCruiser.WinForms
 
         public Dictionary<Stratum, Panel> StrataViews { get; protected set; }
 
-        public IList<Stratum> Strata { get; protected set; }
+        public IEnumerable<Stratum> Strata { get; protected set; }
 
         public Stratum SelectedStratum { get; protected set; }
 
@@ -52,12 +55,15 @@ namespace FSCruiser.WinForms
         }
 
         protected void Initialize(IApplicationController controller
-            , FormDataEntryLogic dataEntryController, Panel strataViewContainer)
+            , IDataEntryDataService dataService
+            , FormDataEntryLogic dataEntryController
+            , Panel strataViewContainer)
         {
-            this.StrataViewContainer = strataViewContainer;
-            this.DataEntryController = dataEntryController;
-            this.Controller = controller;
-            Strata = dataEntryController.Unit.TreeStrata;
+            StrataViewContainer = strataViewContainer;
+            DataEntryController = dataEntryController;
+            Controller = controller;
+            DataService = dataService;
+            Strata = DataService.TreeStrata;
         }
 
         protected void InitializeStrataViews()
@@ -68,9 +74,10 @@ namespace FSCruiser.WinForms
 
             //if there is only one strata in the unit
             //display the counts for that stratum
-            if (this.Strata.Count == 1)
+            if (Strata.Count() == 1)
             {
-                this.DisplayTallyPanel(this.Strata[0]);
+                var singleStratum = Strata.First();
+                this.DisplayTallyPanel(singleStratum);
             }
 
             this.ResumeLayout(false);
@@ -153,12 +160,12 @@ namespace FSCruiser.WinForms
             Button button = (Button)sender;
             SubPop subPop = (SubPop)button.Tag;
 
-            var tree = DataEntryController.Unit.CreateNewTreeEntry(subPop.SG.Stratum, subPop.SG, subPop.TDV, true);
+            var tree = DataService.CreateNewTreeEntry(subPop.SG.Stratum, subPop.SG, subPop.TDV, true);
             tree.TreeCount = 1;
 
             DialogService.AskCruiser(tree);
 
-            DataEntryController.Unit.AddNonPlotTree(tree);
+            DataService.AddNonPlotTree(tree);
             DataEntryForm.GotoTreePage();
         }
 
@@ -371,31 +378,30 @@ namespace FSCruiser.WinForms
             this._viewLoading = false;
         }
 
-        public bool PreviewKeypress(KeyEventArgs key)
+        public bool PreviewKeypress(string keyStr)
         {
-            if(key.KeyData == Keys.None) {return false;}
+            if (string.IsNullOrEmpty(keyStr)) { return false; }
 
-            if (key.KeyData == ApplicationSettings.Instance.JumpTreeTallyKey)//esc
+            if (keyStr == ApplicationSettings.Instance.JumpTreeTallyKeyStr)
             {
                 this.DataEntryController.View.GotoTreePage();
                 return true;
             }
-            else if (key.KeyData == ApplicationSettings.Instance.UntallyKey)
+            else if (keyStr == ApplicationSettings.Instance.UntallyKeyStr)
             {
                 OnUntallyButtonClicked(null, null);
                 return true;
             }
-            else
+            else if (keyStr.Length == 1)
             {
-                var keyChar = PlatformHelper.KeyToChar(key.KeyCode);
-                if (keyChar != char.MinValue
-                    && StrataHotKeyLookup.ContainsKey(keyChar))
+                var keyChar = keyStr.First();
+                if (StrataHotKeyLookup.ContainsKey(keyChar))
                 {
                     DisplayTallyPanel(StrataHotKeyLookup[keyChar]);
                     return true;
                 }
-                return false;
             }
+            return false;
         }
 
         public void NotifyEnter()

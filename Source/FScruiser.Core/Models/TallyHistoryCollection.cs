@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Xml.Serialization;
 using CruiseDAL.DataObjects;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.Core.Models
 {
@@ -13,16 +14,17 @@ namespace FSCruiser.Core.Models
     {
         object syncLock = new object();
         List<TallyAction> _list = new List<TallyAction>();
-        protected CuttingUnit _unit;
 
         public int MaxSize { get; protected set; }
 
         public int Count { get { return _list.Count; } }
 
-        public TallyHistoryCollection(CuttingUnit unit, int maxSize)
+        IDataEntryDataService _dataService;
+
+        public TallyHistoryCollection(IDataEntryDataService dataService, int maxSize)
         {
             this.MaxSize = maxSize;
-            this._unit = unit;
+            _dataService = dataService;
         }
 
         public void Add(TallyAction action)
@@ -59,7 +61,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public new bool Remove(TallyAction action)
+        public bool Remove(TallyAction action)
         {
             lock (syncLock)
             {
@@ -77,7 +79,7 @@ namespace FSCruiser.Core.Models
 
                     if (action.TreeRecord != null)
                     {
-                        _unit.DeleteTree(action.TreeRecord);
+                        _dataService.DeleteTree(action.TreeRecord);
                     }
 
                     return true;
@@ -135,9 +137,9 @@ namespace FSCruiser.Core.Models
 
         public void Initialize()
         {
-            if (!String.IsNullOrEmpty(_unit.TallyHistory))
+            if (!String.IsNullOrEmpty(_dataService.CuttingUnit.TallyHistory))
             {
-                foreach (TallyAction action in this.DeserializeTallyHistory(_unit.TallyHistory))
+                foreach (TallyAction action in this.DeserializeTallyHistory(_dataService.CuttingUnit.TallyHistory))
                 {
                     _list.Add(action);
                 }
@@ -152,8 +154,8 @@ namespace FSCruiser.Core.Models
 
                 if (!String.IsNullOrEmpty(xmlStr))
                 {
-                    _unit.TallyHistory = xmlStr;
-                    _unit.Save();
+                    _dataService.CuttingUnit.TallyHistory = xmlStr;
+                    _dataService.CuttingUnit.Save();
                 }
             }
             catch (Exception e)
@@ -182,7 +184,7 @@ namespace FSCruiser.Core.Models
                 }
                 foreach (TallyAction action in tallyHistory)
                 {
-                    action.PopulateData(_unit.DAL);
+                    action.PopulateData(_dataService.CuttingUnit.DAL);
                 }
             }
             catch (Exception e)

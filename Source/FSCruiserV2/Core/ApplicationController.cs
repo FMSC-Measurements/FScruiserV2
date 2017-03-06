@@ -9,8 +9,6 @@ using FScruiser.Core.Services;
 
 namespace FSCruiser.Core
 {
-    public enum BackUpMethod { None = 0, LeaveUnit = 1, TimeInterval = 2 }
-
     public class ApplicationController : IApplicationController
     {
         FileLoadWorker _fileLoadWorker;
@@ -33,9 +31,16 @@ namespace FSCruiser.Core
             this.ViewController = viewController;
 
             ExceptionHandler = new FSCruiser.WinForms.ExceptionHandler();
-            ApplicationSettings.ExceptionHandler = ExceptionHandler;
 
-            ApplicationSettings.Initialize();
+            try
+            {
+                ApplicationSettings.Initialize();
+            }
+            catch
+            {
+                DialogService.Instance.ShowMessage("Unable to load applications settings");
+                ApplicationSettings.Instance = new ApplicationSettings();
+            }
         }
 
         #region exception handleing
@@ -141,13 +146,15 @@ namespace FSCruiser.Core
                 _fileLoadWorker.Dispose();
                 _fileLoadWorker = null;
 
-                ViewController.EnableLogGrading = DataStore.ExecuteScalar<bool>("SELECT LogGradingEnabled FROM Sale Limit 1;");
-
                 var filePath = dataStore.Path;
                 var fileName = System.IO.Path.GetFileName(dataStore.Path);
 
                 ApplicationSettings.Instance.AddRecentProject(new RecentProject(fileName, filePath));
-                ApplicationSettings.Save();
+                try
+                {
+                    ApplicationSettings.Save();
+                }
+                catch { /* do nothing */ } //TODO Nbug
             }
             ViewController.HandleFileStateChanged();
         }
@@ -256,7 +263,11 @@ namespace FSCruiser.Core
 
         private void OnApplicationClosing(object sender, CancelEventArgs e)
         {
-            ApplicationSettings.Save();
+            try
+            {
+                ApplicationSettings.Save();
+            }
+            catch { /* do nothing */ }
             if (this.DataStore != null)
             {
                 this.DataStore.Dispose();

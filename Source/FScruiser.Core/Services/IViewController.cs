@@ -1,6 +1,7 @@
 ﻿using System;
 using CruiseDAL.DataObjects;
 using FSCruiser.Core.Models;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.Core
 {
@@ -12,21 +13,13 @@ namespace FSCruiser.Core
 
         IApplicationController ApplicationController { get; set; }
 
-        bool EnableLogGrading { get; set; }
+        //bool EnableLogGrading { get; set; }
 
         void HandleFileStateChanged();
 
         void ShowAbout();
 
-        TreeDefaultValueDO ShowAddPopulation();
-
-        TreeDefaultValueDO ShowAddPopulation(SampleGroupDO sg);
-
         void ShowBackupUtil();
-
-        bool ShowEditSampleGroup(SampleGroupDO sg, bool allowEdit);
-
-        bool ShowEditTreeDefault(TreeDefaultValueDO tdv);
 
         bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);
 
@@ -38,7 +31,7 @@ namespace FSCruiser.Core
 
         void ShowDataEntry(CuttingUnit unit);
 
-        bool ShowPlotInfo(Plot plotInfo, PlotStratum stratum, bool allowEdit);
+        bool ShowPlotInfo(IDataEntryDataService dataService, Plot plotInfo, PlotStratum stratum, bool allowEdit);
 
         void ShowTallySettings(CountTree count);
 

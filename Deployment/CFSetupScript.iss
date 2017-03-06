@@ -2,8 +2,7 @@
 ; #defines require the ISPP add-on: http://sourceforge.net/projects/ispp/
 #define APP "FSCruiserV2"
 
-#define APP_VERSION "2017.02.15"
-#define SETUPVERSION "20170215"
+#define APP_VERSION "2017.03.06"
 #define SPECIALTAG "Production"
 #define BASEURL "http://www.fs.fed.us/fmsc/measure"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
@@ -15,7 +14,7 @@
 [Setup]
 AppName         =FSCruiser V2
 AppVersion      ={#APP_VERSION}
-AppVerName      =FSCruiser version {#SETUPVERSION} for Windows CE, and Windows Mobile devices
+AppVerName      =FSCruiser version {#APP_VERSION} for Windows CE, and Windows Mobile devices
 AppPublisher    ={#ORGANIZATION}
 AppPublisherURL ={#BASEURL}
 AppSupportURL   ={#BASEURL}/support.shtml
@@ -32,9 +31,10 @@ DisableProgramGroupPage = yes
 DefaultGroupName        =FMSC\{#APP}
 
 
-OutputBaseFilename=FScruiserV2_FDR_{#SETUPVERSION}
+OutputBaseFilename=FScruiserV2_FDR
 Compression=lzma
 SolidCompression=yes
+;PrivilegesRequired=lowest
 PrivilegesRequired=lowest
 
 

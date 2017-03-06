@@ -12,6 +12,8 @@ using CruiseDAL.Schema;
 using FSCruiser.Core.Models;
 using FSCruiser.WinForms;
 using FSCruiser.WinForms.DataEntry;
+using CruiseDAL;
+using FMSC.ORM.Core.SQL;
 
 namespace FSCruiserV2.Test
 {
@@ -30,7 +32,7 @@ namespace FSCruiserV2.Test
 
             using (var view = new FormEditTreeDefault((FMSC.ORM.Core.DatastoreRedux)null))
             {
-                view.Load += (Object sndr, EventArgs args) =>
+                view.Activated += (Object sndr, EventArgs args) =>
                     {
                         view.Controls.Find<TextBox>(TREEDEFAULTVALUE.SPECIES).Text = "test";
                         view.Controls.Find<ComboBox>(TREEDEFAULTVALUE.LIVEDEAD).Text = "D";
@@ -81,12 +83,20 @@ namespace FSCruiserV2.Test
 
         private void _plotInfo_BTN_Click(object sender, EventArgs e)
         {
-            var stratum = new PlotStratum();
-            var plot = new Plot() { Stratum = stratum };
-
-            using (var view = new FormPlotInfo())
+            using (var ds = new DAL(":memory:", true))
             {
-                view.ShowDialog(plot, stratum, false);
+                var stratum = new PlotStratum() { DAL = ds, Code = "1", Method = "something" };
+                var unit = new CuttingUnit() { DAL = ds, Code = "1" };
+                ds.Insert(unit, OnConflictOption.Default);
+                ds.Insert(stratum, OnConflictOption.Default);
+                stratum.PopulatePlots(unit.CuttingUnit_CN.Value);
+                
+                var plot = new Plot() { Stratum = stratum };
+
+                using (var view = new FormPlotInfo())
+                {
+                    view.ShowDialog(plot, stratum, false);
+                }
             }
         }
 
@@ -102,6 +112,8 @@ namespace FSCruiserV2.Test
                     {
                         MessageBox.Show(view.Report);
                     }
+                    //var ldValue = view.Controls.Find("_limitingDistanceLBL").Text;
+                    //Debug.Assert(ldValue == "19.03");
                 };
 
                 view.Activated += (obj, ea) =>
@@ -113,9 +125,32 @@ namespace FSCruiserV2.Test
                     };
 
                 view.ShowDialog();
+            }
+        }
 
-                var ldValue = view.Controls.Find("LimitingDistance").Text;
-                Debug.Assert(ldValue == "19.03");
+        private void _selectCruiser_Click(object sender, EventArgs e)
+        {
+            var appSettings = new FSCruiser.Core.ApplicationSettings();
+            appSettings.Cruisers.Add(new Cruiser("A"));
+            appSettings.Cruisers.Add(new Cruiser("B"));
+
+            FSCruiser.Core.ApplicationSettings.Instance = appSettings;
+
+            var stratum = new Stratum() { Code = "st1", Method = "P"};
+            var sg = new SampleGroup() {Code = "sg1"};
+
+            var tree = new Tree()
+            {
+                TreeNumber = 1
+                ,
+                Stratum = stratum
+                ,
+                SampleGroup = sg
+            };
+
+            using (var view = new FormCruiserSelection())
+            {
+                view.ShowDialog(tree);
             }
         }
     }

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using FSCruiser.Core.Models;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.Common
 {
@@ -10,6 +11,8 @@ namespace FSCruiser.WinForms.Common
         IFixCNTTallyPopulationProvider _populationProvider;
 
         IFixCNTTallyCountProvider _tallyCountProvider;
+
+        public IDataEntryDataService DataService { get; set; }
 
         public IFixCNTTallyCountProvider TallyCountProvider
         {
@@ -113,7 +116,7 @@ namespace FSCruiser.WinForms.Common
 
         public void OnTallyClicked(FixCNTTallyEventArgs e)
         {
-            TallyCountProvider.Tally(e.TallyBucket);
+            TallyCountProvider.Tally(DataService, e.TallyBucket);
         }
 
         protected override void OnResize(EventArgs e)

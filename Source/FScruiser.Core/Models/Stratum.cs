@@ -137,7 +137,7 @@ namespace FSCruiser.Core.Models
             return success;
         }
 
-        IEnumerable<SampleGroup> ReadSampleGroups()
+        new IEnumerable<SampleGroup> ReadSampleGroups()
         {
             foreach (var sg in DAL.From<SampleGroup>()
                         .Where("Stratum_CN = ?")

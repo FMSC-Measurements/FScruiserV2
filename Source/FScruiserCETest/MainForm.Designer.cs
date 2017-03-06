@@ -38,12 +38,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.STRSampplingTest_BTN = new System.Windows.Forms.Button();
+            this._selectCruiser = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this._selectCruiser);
             this.panel1.Controls.Add(this.LimitingDistance);
             this.panel1.Controls.Add(this._plotInfo_BTN);
             this.panel1.Controls.Add(this._editTDV_BTN);
@@ -112,6 +114,15 @@
             this.STRSampplingTest_BTN.Text = "STR Sampling";
             this.STRSampplingTest_BTN.Click += new System.EventHandler(this.STRSampplingTest_BTN_Click);
             // 
+            // _selectCruiser
+            // 
+            this._selectCruiser.Location = new System.Drawing.Point(120, 30);
+            this._selectCruiser.Name = "_selectCruiser";
+            this._selectCruiser.Size = new System.Drawing.Size(82, 20);
+            this._selectCruiser.TabIndex = 3;
+            this._selectCruiser.Text = "Select Cruiser";
+            this._selectCruiser.Click += new System.EventHandler(this._selectCruiser_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -141,5 +152,6 @@
         private System.Windows.Forms.Button STRSampplingTest_BTN;
         private System.Windows.Forms.Button _plotInfo_BTN;
         private System.Windows.Forms.Button LimitingDistance;
+        private System.Windows.Forms.Button _selectCruiser;
     }
 }
