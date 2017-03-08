@@ -1025,7 +1025,7 @@ namespace FSCruiser.WinForms.DataEntry
             row.TallyButtonClicked += new EventHandler(this.TallyButton_Click);
             row.SettingsButtonClicked += new EventHandler(this.SettingsButton_Click);
 
-            row.Width = 90;
+            //row.Width = 90;
             row.Parent = container;
 
             row.Dock = DockStyle.Left;
