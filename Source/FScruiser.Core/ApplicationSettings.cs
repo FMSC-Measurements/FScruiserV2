@@ -65,9 +65,9 @@ namespace FSCruiser.Core
             EnableTallySound = true;
 
 #if NetCF
-            AddPlotKeyStr = string.Empty;
+            AddTreeKeyStr = string.Empty;
 #else
-            AddPlotKeyStr = "F3";
+            AddTreeKeyStr = "F3";
 #endif
 
             AddPlotKeyStr = "Add"; //plus key
