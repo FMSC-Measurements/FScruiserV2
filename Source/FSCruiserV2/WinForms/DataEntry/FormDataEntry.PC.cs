@@ -20,6 +20,12 @@ namespace FSCruiser.WinForms.DataEntry
         {
             InitializeComponent();
             InitializeCommon(controller, dataService);
+
+            var addTreeKey = ApplicationSettings.Instance.AddTreeKeyStr;
+            if (!string.IsNullOrWhiteSpace(addTreeKey))
+            {
+                _addTreeBTN.Text = _addTreeBTN.Text + $"({addTreeKey})";
+            }
         }
 
         //protected override void OnKeyUp(KeyEventArgs e)
