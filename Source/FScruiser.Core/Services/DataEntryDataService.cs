@@ -13,7 +13,12 @@ namespace FScruiser.Core.Services
 {
     public class IDataEntryDataService : ITreeFieldProvider
     {
+        #region Events
         public event EventHandler EnableLogGradingChanged;
+
+        #endregion
+
+        public bool IsReconCruise { get; set; }
 
         public DAL DataStore { get; protected set; }
 
@@ -89,6 +94,7 @@ namespace FScruiser.Core.Services
                 .Where("Code = ?").Read(unitCode).FirstOrDefault();
 
             EnableLogGrading = DataStore.ExecuteScalar<bool>("SELECT LogGradingEnabled FROM Sale Limit 1;");
+            IsReconCruise = DataStore.ExecuteScalar<bool>("SELECT [Purpose] == 'Recon' FROM Sale LIMIT 1;");
 
             var tallyBuffer = new TallyHistoryCollection(this, Constants.MAX_TALLY_HISTORY_SIZE);
             tallyBuffer.Initialize();
@@ -265,7 +271,14 @@ namespace FScruiser.Core.Services
             var newTree = CreateNewTreeEntryInternal(plot.Stratum, sg, tdv, isMeasure);
 
             newTree.Plot = plot;
-            newTree.TreeNumber = GetNextPlotTreeNumber(plot.PlotNumber);
+            if (IsReconCruise)
+            {
+                newTree.TreeNumber = plot.GetNextTreeNumber();
+            }
+            else
+            {
+                newTree.TreeNumber = GetNextPlotTreeNumber(plot.PlotNumber);
+            }
             newTree.TreeCount = 1;
 
             return newTree;

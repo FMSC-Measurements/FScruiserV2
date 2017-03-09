@@ -65,18 +65,18 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        [IgnoreField]
-        public long HighestTreeNum
-        {
-            get
-            {
-                if (this._trees == null || this.Trees.Count == 0)
-                {
-                    return 0L;
-                }
-                return this.Trees[this.Trees.Count - 1].TreeNumber;
-            }
-        }
+        //[IgnoreField]
+        //public long HighestTreeNum
+        //{
+        //    get
+        //    {
+        //        if (this._trees == null || this.Trees.Count == 0)
+        //        {
+        //            return 0L;
+        //        }
+        //        return this.Trees[this.Trees.Count - 1].TreeNumber;
+        //    }
+        //}
 
         [IgnoreField]
         public bool IsNull
@@ -147,6 +147,12 @@ namespace FSCruiser.Core.Models
                 this._trees = new BindingList<Tree>(tList);
                 //this._trees = tList;
             }
+        }
+
+        public long GetNextTreeNumber()
+        {
+            if(Trees.Count == 0) { return 0L;}
+            return Trees.Max(x => x.TreeNumber); 
         }
 
         public void ResequenceTreeNumbers()
