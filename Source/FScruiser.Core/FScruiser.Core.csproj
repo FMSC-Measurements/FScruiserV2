@@ -122,6 +122,7 @@
     </Compile>
     <Compile Include="Services\ISoundService.cs" />
     <Compile Include="Services\SoundService.cs" />
+    <Compile Include="Util\DictionaryExtentions.cs" />
     <Compile Include="ViewModels\LimitingDistanceCalculator.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Workers\SaveTreesWorker.cs" />

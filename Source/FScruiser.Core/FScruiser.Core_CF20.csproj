@@ -98,6 +98,7 @@
     <Compile Include="Services\ISoundService.cs" />
     <Compile Include="Services\IViewController.cs" />
     <Compile Include="Services\SoundService.cs" />
+    <Compile Include="Util\DictionaryExtentions.cs" />
     <Compile Include="ViewModels\LimitingDistanceCalculator.cs">
       <SubType>Code</SubType>
     </Compile>

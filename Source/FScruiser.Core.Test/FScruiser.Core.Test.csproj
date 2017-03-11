@@ -95,6 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationSetting.Test.CS" />
     <Compile Include="Models\PlotStratum.test.cs" />
     <Compile Include="ViewModels\LimitingDistanceCalculatorTest.cs" />
     <Compile Include="Models\SampleGroup.Test.cs" />

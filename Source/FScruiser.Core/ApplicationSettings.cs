@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
@@ -7,6 +8,8 @@ using FSCruiser.Core.Models;
 namespace FSCruiser.Core
 {
     public enum BackUpMethod { None = 0, LeaveUnit = 1, TimeInterval = 2 }
+
+    public enum HotKeyAction { None = 0, AddTree, AddPlot, JumpTreeTally, ResequencePlotTrees, UnTally }
 
     [Serializable]
     public class ApplicationSettings
@@ -63,6 +66,7 @@ namespace FSCruiser.Core
 
             EnablePageChangeSound = true;
             EnableTallySound = true;
+            EnableAskEnterTreeData = true;
 
 #if NetCF
             AddTreeKeyStr = string.Empty;
@@ -138,35 +142,103 @@ namespace FSCruiser.Core
 
         #region hotkey settings
 
-        [XmlAttribute]
-        public string AddPlotKeyStr { get; set; }
+        Dictionary<string, HotKeyAction> _keyAction = new Dictionary<string, HotKeyAction>();
+        Dictionary<HotKeyAction, string> _actionKey = new Dictionary<HotKeyAction, string>();
+
+        void RegisterHotKey(string key, HotKeyAction action)
+        {
+            _actionKey.Remove(action);
+            _keyAction.RemoveByValue(action);
+
+            if (!string.IsNullOrEmpty(key) && key != "None")
+            {
+                _keyAction.Remove(key);
+                _actionKey.RemoveByValue(key);
+
+                _keyAction.Add(key, action);
+                _actionKey.Add(action, key);
+            }
+        }
 
         [XmlAttribute]
-        public string AddTreeKeyStr { get; set; }
+        public string AddPlotKeyStr
+        {
+            get
+            {
+                if (_actionKey.ContainsKey(HotKeyAction.AddPlot))
+                { return _actionKey[HotKeyAction.AddPlot]; }
+                else
+                { return null; }
+            }
+            set
+            {
+                RegisterHotKey(value, HotKeyAction.AddPlot);
+            }
+        }
 
         [XmlAttribute]
-        public string JumpTreeTallyKeyStr { get; set; }
+        public string AddTreeKeyStr
+        {
+            get
+            {
+                if (_actionKey.ContainsKey(HotKeyAction.AddTree))
+                { return _actionKey[HotKeyAction.AddTree]; }
+                else
+                { return null; }
+            }
+            set
+            {
+                RegisterHotKey(value, HotKeyAction.AddTree);
+            }
+        }
 
         [XmlAttribute]
-        public string ResequencePlotTreesKeyStr { get; set; }
+        public string JumpTreeTallyKeyStr
+        {
+            get
+            {
+                if (_actionKey.ContainsKey(HotKeyAction.JumpTreeTally))
+                { return _actionKey[HotKeyAction.JumpTreeTally]; }
+                else
+                { return null; }
+            }
+            set
+            {
+                RegisterHotKey(value, HotKeyAction.JumpTreeTally);
+            }
+        }
 
         [XmlAttribute]
-        public string UntallyKeyStr { get; set; }
+        public string ResequencePlotTreesKeyStr
+        {
+            get
+            {
+                if (_actionKey.ContainsKey(HotKeyAction.ResequencePlotTrees))
+                { return _actionKey[HotKeyAction.ResequencePlotTrees]; }
+                else
+                { return null; }
+            }
+            set
+            {
+                RegisterHotKey(value, HotKeyAction.ResequencePlotTrees);
+            }
+        }
 
-        //[XmlIgnore]
-        //public Keys AddPlotKey { get; set; }
-
-        //[XmlIgnore]
-        //public Keys AddTreeKey { get; set; }
-
-        //[XmlIgnore]
-        //public Keys ResequencePlotTreesKey { get; set; }
-
-        //[XmlIgnore]
-        //public Keys UntallyKey { get; set; }
-
-        //[XmlIgnore]
-        //public Keys JumpTreeTallyKey { get; set; }
+        [XmlAttribute]
+        public string UntallyKeyStr
+        {
+            get
+            {
+                if (_actionKey.ContainsKey(HotKeyAction.UnTally))
+                { return _actionKey[HotKeyAction.UnTally]; }
+                else
+                { return null; }
+            }
+            set
+            {
+                RegisterHotKey(value, HotKeyAction.UnTally);
+            }
+        }
 
         #endregion hotkey settings
 

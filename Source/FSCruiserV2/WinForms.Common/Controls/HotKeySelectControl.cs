@@ -15,39 +15,37 @@ namespace FSCruiser.WinForms.Controls
         Keys[] INVALID_MODIFIER_VALUES = new Keys[] { Keys.Shift, Keys.ShiftKey };
 
         KeysConverter _keysConverter = new KeysConverter();
-        string _keyInfo;
-        public string KeyInfo 
+        string _keyStr;
+        public string KeyStr 
         {
-            get { return _keyInfo; }
+            get { return _keyStr; }
             set
             {
-                _keyInfo = value;
+                _keyStr = value;
                 Text = value;
             }
         }
 
         public HotKeySelectControl()
         {
-            KeyInfo = String.Empty;
+            KeyStr = String.Empty;
         }
 
         public override bool Multiline
         {
             get
             {
-                return base.Multiline;
+                return false;
             }
             set
-            {
-                base.Multiline = false;// ignore user entered value
-            }
+            {}
         }
 
         
 
         void ResetKeys()
         {
-            KeyInfo = String.Empty;
+            KeyStr = String.Empty;
         }
 
         protected override void OnKeyUp(KeyEventArgs e)
@@ -77,7 +75,7 @@ namespace FSCruiser.WinForms.Controls
                 return;
             }
 
-            KeyInfo = _keysConverter.ConvertToString(ea.KeyData);
+            KeyStr = _keysConverter.ConvertToString(ea.KeyData);
         }
 
 

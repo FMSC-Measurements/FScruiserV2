@@ -391,6 +391,7 @@
     <None Include="Properties\DataSources\FSCruiserV2.Logic.PlotInfo.datasource" />
     <None Include="Properties\DataSources\FSCruiserV2.Logic.TallyAction.datasource" />
     <None Include="Properties\DataSources\FSCruiserV2.Logic.TreeVM.datasource" />
+    <None Include="WinForms.Common\Controls\HotKeySelectControl.xmta" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CruiseDAL\CruiseDAL\CruiseDAL_CF20.csproj">
