@@ -107,7 +107,7 @@ namespace FSCruiser.Core.DataEntry
                 {
                     if (tree.CountOrMeasure == "M")
                     {
-                        _soundService.SignalMeasureTree(false);
+                        _soundService.SignalMeasureTree();
                     }
                     else if (tree.CountOrMeasure == "I")
                     {
@@ -294,7 +294,8 @@ namespace FSCruiser.Core.DataEntry
                     if (item.KPI < newKPI)
                     {
                         tree.CountOrMeasure = "M";
-                        _soundService.SignalMeasureTree(true);
+                        _soundService.SignalMeasureTree();
+                        _dialogService.ShowMessage("Measure Tree");
                     }
                     else
                     {

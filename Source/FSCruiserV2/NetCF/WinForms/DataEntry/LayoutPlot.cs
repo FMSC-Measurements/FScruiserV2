@@ -372,6 +372,7 @@ namespace FSCruiser.WinForms.DataEntry
                 , dataEntryController
                 , dataService
                 , soundService
+                , DialogService.Instance
                 , dataEntryController.ViewController);
 
             ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);

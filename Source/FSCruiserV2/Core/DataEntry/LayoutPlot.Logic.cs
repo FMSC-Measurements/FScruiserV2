@@ -22,6 +22,8 @@ namespace FSCruiser.Core.DataEntry
 
         public IDataEntryDataService DataService { get; protected set; }
 
+        public IDialogService DialogService { get; protected set; }
+
         public ISoundService SoundService { get; protected set; }
 
         public IViewController ViewController { get; protected set; }
@@ -66,6 +68,7 @@ namespace FSCruiser.Core.DataEntry
             , FormDataEntryLogic dataEntryController
             , IDataEntryDataService dataService
             , ISoundService soundService
+            , IDialogService dialogService
             , IViewController viewController)
         {
             this.Stratum = stratum;
@@ -73,6 +76,7 @@ namespace FSCruiser.Core.DataEntry
             this.DataEntryController = dataEntryController;
             DataService = dataService;
             SoundService = soundService;
+            DialogService = dialogService;
             this.ViewController = viewController;
 
             this._BS_Plots = new BindingSource();
@@ -348,7 +352,7 @@ namespace FSCruiser.Core.DataEntry
 
             if (tree.CountOrMeasure == "M")
             {
-                SoundService.SignalMeasureTree(false);
+                SoundService.SignalMeasureTree();
             }
             else if (tree.CountOrMeasure == "I")
             {
@@ -402,7 +406,8 @@ namespace FSCruiser.Core.DataEntry
                     }
                     else
                     {
-                        SoundService.SignalMeasureTree(true);
+                        SoundService.SignalMeasureTree();
+                        DialogService.ShowMessage("Measure Tree");
                         tree = DataService.CreateNewTreeEntry(plot, count, true);
                         //tree.CountOrMeasure = "M";
                     }
@@ -433,7 +438,8 @@ namespace FSCruiser.Core.DataEntry
             boolItem item = (sampler != null) ? (boolItem)sampler.NextItem() : (boolItem)null;
             if (item != null && !item.IsInsuranceItem)
             {
-                SoundService.SignalMeasureTree(true);
+                SoundService.SignalMeasureTree();
+                DialogService.ShowMessage("Measure Tree");
                 tree = DataService.CreateNewTreeEntry(plot, count, true);
                 //tree.CountOrMeasure = "M";
             }
