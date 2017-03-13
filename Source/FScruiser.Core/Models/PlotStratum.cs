@@ -105,12 +105,10 @@ namespace FSCruiser.Core.Models
                 int highestInStratum = 0;
 
                 var query1 = string.Format("Select Max(PlotNumber) FROM Plot WHERE CuttingUnit_CN = {0}", cuttingUnit_CN);
-                int? result1 = DAL.ExecuteScalar<int?>(query1);
-                highestInUnit = result1.GetValueOrDefault(0);
+                highestInUnit = DAL.ExecuteScalar<int?>(query1) ?? 0;
 
                 string query2 = string.Format("Select Max(PlotNumber) FROM Plot WHERE CuttingUnit_CN = {0} AND Stratum_CN = {1}", cuttingUnit_CN, Stratum_CN);
-                int? result2 = DAL.ExecuteScalar<int?>(query2);
-                highestInStratum = result2.GetValueOrDefault(0);
+                highestInStratum = DAL.ExecuteScalar<int?>(query2) ?? 0;
 
                 if (highestInUnit > highestInStratum && highestInUnit > 0)
                 {
@@ -121,7 +119,7 @@ namespace FSCruiser.Core.Models
             catch (Exception e)
             {
                 Logger.Log.E("Unable to establish next plot number", e);
-                return 0;
+                return 1;
             }
         }
 

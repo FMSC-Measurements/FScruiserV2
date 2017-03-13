@@ -16,65 +16,84 @@ namespace FScruiser.Core.Test.Models
         [Fact]
         public void TestMakePlot()
         {
-            var dal = new CruiseDAL.DAL("something");
-
-            var unit = new CuttingUnit()
+            using (var dal = new CruiseDAL.DAL(":memory:", true))
             {
-                DAL = dal
-            };
+                var unit = new CuttingUnit()
+                {
+                    Code = "01",
+                    DAL = dal
+                };
 
-            var stratum = new PlotStratum()
-            {
-                DAL = dal
-            };
+                dal.Insert(unit);
 
-            var plot = stratum.MakePlot(unit);
+                var stratum = new PlotStratum()
+                {
+                    Code = "01",
+                    Method = "something",
+                    DAL = dal
+                };
 
-            plot.Should().BeOfType<Plot>();
+                dal.Insert(stratum);
 
-            plot.DAL.ShouldBeEquivalentTo(dal);
+                var plot = stratum.MakePlot(unit);
 
-            plot.CuttingUnit.ShouldBeEquivalentTo(unit);
-            plot.Stratum.ShouldBeEquivalentTo(stratum);
+                plot.Should().BeOfType<Plot>();
 
-            plot.Trees.Should().NotBeNull();
+                plot.PlotNumber.ShouldBeEquivalentTo(1L);
+
+                plot.DAL.ShouldBeEquivalentTo(dal);
+
+                plot.CuttingUnit.ShouldBeEquivalentTo(unit);
+                plot.Stratum.ShouldBeEquivalentTo(stratum);
+
+                plot.Trees.Should().NotBeNull();
+
+                plot.Save();
+
+                plot = stratum.MakePlot(unit);
+                plot.PlotNumber.ShouldBeEquivalentTo(2L);
+            }
         }
 
         [Fact]
         public void TestMakePlot_3ppnt()
         {
-            var dal = new CruiseDAL.DAL("something");
-
-            var unit = new CuttingUnit()
+            using (var dal = new CruiseDAL.DAL(":memory:", true))
             {
-                DAL = dal
-            };
+                var unit = new CuttingUnit()
+                {
+                    Code = "01",
+                    DAL = dal
+                };
 
-            var stratum = new PlotStratum()
-            {
-                DAL = dal
-            };
+                dal.Insert(unit);
 
-            var plot = stratum.MakePlot(unit);
+                var stratum = new PlotStratum()
+                {
+                    Code = "01",
+                    Method = CruiseMethods.THREEPPNT,
+                    DAL = dal
+                };
 
-            plot.Should().BeOfType<Plot3PPNT>();
+                dal.Insert(stratum);
 
-            plot.CuttingUnit.ShouldBeEquivalentTo(unit);
-            plot.Stratum.ShouldBeEquivalentTo(stratum);
+                var plot = stratum.MakePlot(unit);
 
-            plot.Trees.Should().NotBeNull();
+                plot.Should().BeOfType<Plot3PPNT>();
+
+                plot.PlotNumber.ShouldBeEquivalentTo(1L);
+
+                plot.CuttingUnit.ShouldBeEquivalentTo(unit);
+                plot.Stratum.ShouldBeEquivalentTo(stratum);
+
+                plot.Trees.Should().NotBeNull();
+            }
         }
 
         [Fact]
         public void TestReadPlots()
         {
-            var tempPath = "temp.cruise";
-            if (File.Exists(tempPath))
-            {
-                File.Delete(tempPath);
-            }
-
-            using (var ds = new CruiseDAL.DAL(tempPath, true))
+            using (var ds = new CruiseDAL.DAL(":memory:", true))
             {
                 var unit = new CuttingUnit()
                 {
