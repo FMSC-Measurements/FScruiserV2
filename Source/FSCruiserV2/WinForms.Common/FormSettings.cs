@@ -54,10 +54,6 @@ namespace FSCruiser.WinForms
                 settings.EnableTallySound = _enableTallySound.Checked;
                 settings.EnableAskEnterTreeData = _askEnterTreeData.Checked;
             }
-            else
-            {
-                var setting = ApplicationSettings
-            }
         }
 
         /// <summary>
