@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace FSCruiser.Core.ViewInterfaces
+﻿namespace FSCruiser.Core.ViewInterfaces
 {
     public interface IDataEntryPage
     {

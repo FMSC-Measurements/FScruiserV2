@@ -217,11 +217,8 @@
       <DependentUpon>FormTallySetup.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
-    <Compile Include="Core\ViewInterfaces\IDataEntryPage.cs" />
-    <Compile Include="Core\ViewInterfaces\IDataEntryView.cs" />
     <Compile Include="Core\ViewInterfaces\IPlotInfoDialog.cs" />
     <Compile Include="Core\ViewInterfaces\IPlotLayout.cs" />
-    <Compile Include="Core\ViewInterfaces\ITallyView.cs" />
     <Compile Include="NetCF\WinForms\DataEntry\LayoutPlot.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -232,7 +229,6 @@
       <DependentUpon>LayoutTreeBased.cs</DependentUpon>
     </Compile>
     <Compile Include="NetCF\DataGridAdjuster.cs" />
-    <Compile Include="Core\ViewInterfaces\ITreeView.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="NetCF\WinForms\ViewController.cs" />
     <Compile Include="WinForms.Common\FormManageCruisers.cs">

@@ -99,6 +99,10 @@
     <Compile Include="Services\IViewController.cs" />
     <Compile Include="Services\SoundService.cs" />
     <Compile Include="Util\DictionaryExtentions.cs" />
+    <Compile Include="ViewInterfaces\IDataEntryPage.cs" />
+    <Compile Include="ViewInterfaces\IDataEntryView.cs" />
+    <Compile Include="ViewInterfaces\ITallyView.cs" />
+    <Compile Include="ViewInterfaces\ITreeView.cs" />
     <Compile Include="ViewModels\LimitingDistanceCalculator.cs">
       <SubType>Code</SubType>
     </Compile>
