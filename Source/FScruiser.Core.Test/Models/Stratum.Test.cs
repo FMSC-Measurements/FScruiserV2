@@ -3,10 +3,12 @@ using CruiseDAL.DataObjects;
 using FSCruiser.Core.Models;
 using Xunit;
 using FluentAssertions;
+using CruiseDAL.Schema;
+using System.Linq;
 
 namespace FScruiser.Core.Test
 {
-    public class StratumVMTest
+    public class StratumTest
     {
         [Fact]
         public void PopulateHotKeyLookupTest()
@@ -54,6 +56,38 @@ namespace FScruiser.Core.Test
             stratum.GetCountByHotKey('B').ShouldBeEquivalentTo(counts[1]);
             stratum.GetCountByHotKey('C').ShouldBeEquivalentTo(counts[2]);
             stratum.GetCountByHotKey('0').Should().BeNull();
+        }
+
+        [Fact]
+        public void TestIs3P()
+        {
+            foreach (var st in MakeThreePMethods())
+            {
+                st.Is3P.Should().BeTrue();
+            }
+
+            foreach (var st in MakeNonThreePMethods())
+            {
+                st.Is3P.Should().BeFalse();
+            }
+        }
+
+        IEnumerable<Stratum> MakeThreePMethods()
+        {
+            foreach (var method in CruiseMethods.THREE_P_METHODS)
+            {
+                yield return new Stratum()
+                { Method = method };
+            }
+        }
+
+        IEnumerable<Stratum> MakeNonThreePMethods()
+        {
+            foreach (var method in CruiseMethods.SUPPORTED_METHODS.Except(CruiseMethods.THREE_P_METHODS))
+            {
+                yield return new Stratum()
+                { Method = method };
+            }
         }
     }
 }

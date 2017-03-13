@@ -100,7 +100,7 @@
     <Compile Include="ViewModels\LimitingDistanceCalculatorTest.cs" />
     <Compile Include="Models\SampleGroup.Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\StratumVM.Test.cs" />
+    <Compile Include="Models\Stratum.Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CruiseDAL\CruiseDAL\CruiseDAL.VS15.csproj">
