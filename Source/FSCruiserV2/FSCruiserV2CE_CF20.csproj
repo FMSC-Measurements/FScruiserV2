@@ -375,6 +375,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="fscruiser.ico" />
+    <Content Include="Sounds\insurance.wav" />
+    <Content Include="Sounds\measure.wav" />
     <Content Include="Sounds\pageChange.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

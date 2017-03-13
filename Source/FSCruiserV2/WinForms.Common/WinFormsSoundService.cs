@@ -18,6 +18,8 @@ namespace FSCruiser.WinForms
 #if NetCF
         SoundPlayer _tallySoundPlayer;
         SoundPlayer _pageChangedSoundPlayer;
+        SoundPlayer _measureSoundPlayer;
+        SoundPlayer _insuranceSoundPlayer;
 #endif 
 
         public WinFormsSoundService()
@@ -29,6 +31,8 @@ namespace FSCruiser.WinForms
 
                 _tallySoundPlayer = new SoundPlayer(new FileStream(soundsDir + "\\tally.wav", System.IO.FileMode.Open));
                 _pageChangedSoundPlayer = new SoundPlayer(new FileStream(soundsDir + "\\pageChange.wav", FileMode.Open));
+                _measureSoundPlayer = new SoundPlayer(new FileStream(soundsDir + "\\measure.wav", FileMode.Open));
+                _insuranceSoundPlayer = new SoundPlayer(new FileStream(soundsDir + "\\insurance.wav", FileMode.Open));
             }
             catch
             {
@@ -60,51 +64,55 @@ namespace FSCruiser.WinForms
 #endif
         }
 
-        public void SignalMeasureTree(bool showMessage)
+        public void SignalMeasureTree()
         {
 #if NetCF
-            Win32.MessageBeep(Win32.MB_ICONQUESTION);
+            _measureSoundPlayer.Play();
+            //Win32.MessageBeep(Win32.MB_ICONQUESTION);
 #else
             System.Media.SystemSounds.Exclamation.Play();
-            if (showMessage)
-            {
-                MessageBox.Show("Measure Tree");
-            }
 #endif
         }
 
         public void SignalInsuranceTree()
         {
 #if NetCF
-            Win32.MessageBeep(Win32.MB_ICONASTERISK);
+            _insuranceSoundPlayer.Play();
+            //Win32.MessageBeep(Win32.MB_ICONASTERISK);
 #else
             System.Media.SystemSounds.Asterisk.Play();
-            MessageBox.Show("Insurance Tree");
 #endif
         }
 
-        public void SignalTally()
+
+        public void SignalTally(bool force)
         {
 #if NetCF
             var settings = ApplicationSettings.Instance;
             if (settings.EnableTallySound
-                && _tallySoundPlayer != null)
+                || force)
             {
-                _tallySoundPlayer.Play();
+                if (_tallySoundPlayer != null)
+                {
+                    _tallySoundPlayer.Play();
+                }
             }
 #else
             //not implemented
 #endif
         }
 
-        public void SignalPageChanged()
+        public void SignalPageChanged(bool force)
         {
             #if NetCF
             var settings = ApplicationSettings.Instance;
             if (settings.EnablePageChangeSound
-                && _pageChangedSoundPlayer != null)
+                || force)
             {
-                _pageChangedSoundPlayer.Play();
+                if (_pageChangedSoundPlayer != null)
+                {
+                    _pageChangedSoundPlayer.Play();
+                }
             }
 #else
             //not implemented
