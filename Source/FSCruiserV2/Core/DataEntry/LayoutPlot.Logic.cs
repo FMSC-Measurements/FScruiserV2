@@ -236,7 +236,7 @@ namespace FSCruiser.Core.DataEntry
         /// <returns>reference to newly created plot</returns>
         protected Plot AddPlot()
         {
-            Plot newPlot = Stratum.MakePlot(this.DataEntryController.Unit);
+            Plot newPlot = Stratum.MakePlot(DataService.CuttingUnit);
 
             if (this.ViewController.ShowPlotInfo(DataService, newPlot, Stratum, true))
             {

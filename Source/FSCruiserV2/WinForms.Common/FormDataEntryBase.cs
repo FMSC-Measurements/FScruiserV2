@@ -304,7 +304,7 @@ namespace FSCruiser.WinForms.DataEntry
                     {
                         try
                         {
-                            var worker = new SaveTreesWorker(LogicController.Database, oldTreeView.Trees);
+                            var worker = new SaveTreesWorker(DataService.DataStore, oldTreeView.Trees);
                             worker.SaveAll();
                             //this.Controller.SaveTrees(((ITreeView)_previousLayout).Trees);
                         }

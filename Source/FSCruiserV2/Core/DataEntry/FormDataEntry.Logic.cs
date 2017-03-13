@@ -19,10 +19,6 @@ namespace FSCruiser.Core.DataEntry
 
         public IDataEntryView View { get; set; }
 
-        public CuttingUnit Unit { get { return _dataService.CuttingUnit; } }
-
-        public DAL Database { get { return DataService.DataStore; } }
-
         public IViewController ViewController { get { return this.Controller.ViewController; } }
 
         public bool HotKeyenabled { get; set; }
@@ -61,7 +57,7 @@ namespace FSCruiser.Core.DataEntry
 
         public string GetViewTitle()
         {
-            return "Unit: " + this.Unit.Code + ", " + this.Unit.Description;
+            return "Unit: " + DataService.CuttingUnit.Code + ", " + DataService.CuttingUnit.Description;
         }
 
         public void ShowLogs(Tree tree)
@@ -129,7 +125,7 @@ namespace FSCruiser.Core.DataEntry
                         //this.View.TreeViewMoveLast();
                     }
                 }
-                Unit.TallyHistoryBuffer.Add(action);
+                DataService.CuttingUnit.TallyHistoryBuffer.Add(action);
             }
         }
 
