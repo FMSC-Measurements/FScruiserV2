@@ -11,6 +11,10 @@ namespace FSCruiser.Core.DataEntry
 {
     public class LayoutPlotLogic
     {
+        IDialogService _dialogService;
+        ISoundService _soundService;
+        ApplicationSettings _appSettings;
+
         private bool _disableCheckPlot = false;
         private Plot _prevPlot;
         private System.Windows.Forms.BindingSource _BS_Plots;
@@ -21,10 +25,6 @@ namespace FSCruiser.Core.DataEntry
         public IApplicationController Controller { get { return this.DataEntryController.Controller; } }
 
         public IDataEntryDataService DataService { get; protected set; }
-
-        public IDialogService DialogService { get; protected set; }
-
-        public ISoundService SoundService { get; protected set; }
 
         public IViewController ViewController { get; protected set; }
 
@@ -69,14 +69,16 @@ namespace FSCruiser.Core.DataEntry
             , IDataEntryDataService dataService
             , ISoundService soundService
             , IDialogService dialogService
+            , ApplicationSettings settings
             , IViewController viewController)
         {
             this.Stratum = stratum;
             this.View = view;
             this.DataEntryController = dataEntryController;
             DataService = dataService;
-            SoundService = soundService;
-            DialogService = dialogService;
+            _soundService = soundService;
+            _dialogService = dialogService;
+            _appSettings = settings;
             this.ViewController = viewController;
 
             this._BS_Plots = new BindingSource();
@@ -110,7 +112,7 @@ namespace FSCruiser.Core.DataEntry
                     && !plot.IsNull
                     && (plot.Trees != null && plot.Trees.Count == 0))
                 {
-                    plot.IsNull |= DialogService.AskYesNo("Plot Contains No Trees, Mark it as Empty Plot?",
+                    plot.IsNull |= _dialogService.AskYesNo("Plot Contains No Trees, Mark it as Empty Plot?",
                         "Mark Plot Empty?");
                     _BS_Plots.ResetItem(_BS_Plots.IndexOf(plot));
                 }
@@ -118,7 +120,7 @@ namespace FSCruiser.Core.DataEntry
                 string error;
                 if (!plot.ValidatePlot(out error))
                 {
-                    return DialogService.AskYesNo(error
+                    return _dialogService.AskYesNo(error
                         , "Continue?", true);
                 }
             }
@@ -134,7 +136,7 @@ namespace FSCruiser.Core.DataEntry
 
         public void EndEdit()
         {
-            this.View.ViewEndEdit();   //HACK force datagrid to end edits to cause data validation to occure
+            this.View.ViewEndEdit();   //HACK force datagrid to end edits to cause data validation to occur
             this._BS_Plots.EndEdit();
             this._BS_Trees.EndEdit();
         }
@@ -175,7 +177,7 @@ namespace FSCruiser.Core.DataEntry
             }
             catch (FMSC.ORM.SQLException)
             {
-                if (!DialogService.AskYesNo("Can not save all trees in the plot, Would you like to continue?"
+                if (!_dialogService.AskYesNo("Can not save all trees in the plot, Would you like to continue?"
                     , "Continue?", true))
                 {
                     goOn = false;
@@ -264,7 +266,7 @@ namespace FSCruiser.Core.DataEntry
                 return;
             }
 
-            if (DialogService.AskYesNo("Are you sure you want to delete this plot?"
+            if (_dialogService.AskYesNo("Are you sure you want to delete this plot?"
                 , String.Empty, true))
             {
                 this._disableCheckPlot = true;
@@ -284,7 +286,7 @@ namespace FSCruiser.Core.DataEntry
             Tree curTree = this._BS_Trees.Current as Tree;
             if (curTree != null)
             {
-                if (!DialogService.AskCancel("Delete Tree #" + curTree.TreeNumber.ToString(),
+                if (!_dialogService.AskCancel("Delete Tree #" + curTree.TreeNumber.ToString(),
                     "Delete Tree", true))
                 {
                     //this._BS_Trees.Remove(curTree);
@@ -294,7 +296,7 @@ namespace FSCruiser.Core.DataEntry
             }
             else
             {
-                SoundService.SignalInvalidAction();
+                _soundService.SignalInvalidAction();
             }
         }
 
@@ -350,18 +352,31 @@ namespace FSCruiser.Core.DataEntry
                 tree = TallyStandard(plot, count);
             }
 
-            if (tree.CountOrMeasure == "M")
-            {
-                SoundService.SignalMeasureTree();
-            }
-            else if (tree.CountOrMeasure == "I")
-            {
-                SoundService.SignalInsuranceTree();
-            }
+            _soundService.SignalTally();
 
+            //tree may be null if user didn't enter kpi
             if (tree != null)
             {
-                DialogService.AskCruiser(tree);
+                if (tree.CountOrMeasure == "M")
+                {
+                    _soundService.SignalMeasureTree();
+                }
+                else if (tree.CountOrMeasure == "I")
+                {
+                    _soundService.SignalInsuranceTree();
+                }
+
+                if (_appSettings.EnableCruiserPopup)
+                {
+                    _dialogService.AskCruiser(tree);
+                }
+                else
+                {
+                    var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
+                             (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
+                    _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
+                }
+
                 tree.TrySave();
                 plot.AddTree(tree);
                 SelectLastTree();
@@ -400,14 +415,14 @@ namespace FSCruiser.Core.DataEntry
                     }
                     if (item.IsInsuranceItem)
                     {
-                        SoundService.SignalInsuranceTree();
+                        _soundService.SignalInsuranceTree();
                         tree = DataService.CreateNewTreeEntry(plot, count, true);
                         tree.CountOrMeasure = "I";
                     }
                     else
                     {
-                        SoundService.SignalMeasureTree();
-                        DialogService.ShowMessage("Measure Tree");
+                        _soundService.SignalMeasureTree();
+                        _dialogService.ShowMessage("Measure Tree");
                         tree = DataService.CreateNewTreeEntry(plot, count, true);
                         //tree.CountOrMeasure = "M";
                     }
@@ -438,14 +453,14 @@ namespace FSCruiser.Core.DataEntry
             boolItem item = (sampler != null) ? (boolItem)sampler.NextItem() : (boolItem)null;
             if (item != null && !item.IsInsuranceItem)
             {
-                SoundService.SignalMeasureTree();
-                DialogService.ShowMessage("Measure Tree");
+                _soundService.SignalMeasureTree();
+                _dialogService.ShowMessage("Measure Tree");
                 tree = DataService.CreateNewTreeEntry(plot, count, true);
                 //tree.CountOrMeasure = "M";
             }
             else if (item != null && item.IsInsuranceItem)
             {
-                SoundService.SignalInsuranceTree();
+                _soundService.SignalInsuranceTree();
                 tree = DataService.CreateNewTreeEntry(plot, count, true);
                 tree.CountOrMeasure = "I";
             }
@@ -464,7 +479,7 @@ namespace FSCruiser.Core.DataEntry
         {
             Tree tree = DataService.CreateNewTreeEntry(CurrentPlot, subPop);
 
-            DialogService.AskCruiser(tree);
+            _dialogService.AskCruiser(tree);
 
             tree.TrySave();
             CurrentPlot.AddTree(tree);
@@ -574,7 +589,7 @@ namespace FSCruiser.Core.DataEntry
                 }
                 catch (FMSC.ORM.SQLException e)
                 {
-                    DialogService.ShowMessage(e.Message
+                    _dialogService.ShowMessage(e.Message
                         , "Stratum " + this.Stratum.Code + "Plot " + p.PlotNumber.ToString());
                 }
             }

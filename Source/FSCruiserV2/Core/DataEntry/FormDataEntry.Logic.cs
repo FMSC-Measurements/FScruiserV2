@@ -40,11 +40,13 @@ namespace FSCruiser.Core.DataEntry
         IDataEntryDataService _dataService;
         IDialogService _dialogService;
         ISoundService _soundService;
+        ApplicationSettings _appSettings;
 
         public FormDataEntryLogic(IApplicationController controller
             , IDialogService dialogService
             , ISoundService soundService
             , IDataEntryDataService dataService
+            , ApplicationSettings settings
             , IDataEntryView view)
         {
             this.Controller = controller;
@@ -53,6 +55,7 @@ namespace FSCruiser.Core.DataEntry
             _dialogService = dialogService;
             _soundService = soundService;
             _dataService = dataService;
+            _appSettings = settings;
         }
 
         public string GetViewTitle()
@@ -95,6 +98,7 @@ namespace FSCruiser.Core.DataEntry
                 action = TallyStandard(count);
             }
 
+            //action may be null if cruising 3P and user doesn't enter a kpi
             if (action != null)
             {
                 _soundService.SignalTally();
@@ -110,11 +114,16 @@ namespace FSCruiser.Core.DataEntry
                         _soundService.SignalInsuranceTree();
                     }
 
-                    _dialogService.AskCruiser(tree);
-
-                    var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
-                            (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
-                    _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
+                    if (_appSettings.EnableCruiserPopup)
+                    {
+                        _dialogService.AskCruiser(tree);
+                    }
+                    else
+                    {
+                        var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
+                                 (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
+                        _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
+                    }
 
                     tree.TrySave();
                     DataService.AddNonPlotTree(tree);
@@ -196,7 +205,7 @@ namespace FSCruiser.Core.DataEntry
 
         protected bool AskEnterMeasureTreeData()
         {
-            if (!ApplicationSettings.Instance.EnableAskEnterTreeData) { return false; }
+            if (!_appSettings.EnableAskEnterTreeData) { return false; }
 
             return _dialogService.AskYesNo("Would you like to enter tree data now?", "Sample", false);
         }
