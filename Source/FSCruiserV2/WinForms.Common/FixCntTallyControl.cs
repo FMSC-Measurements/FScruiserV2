@@ -14,7 +14,7 @@ namespace FSCruiser.WinForms.Common
 
         public IDataEntryDataService DataService { get; set; }
 
-        public IFixCNTTallyCountProvider TallyCountProvider
+        public IFixCNTTallyCountProvider TallyCountProvider //plot
         {
             get { return _tallyCountProvider; }
             set
@@ -26,12 +26,11 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-        public IFixCNTTallyPopulationProvider PopulationProvider
+        public IFixCNTTallyPopulationProvider PopulationProvider //stratum
         {
             get { return _populationProvider; }
             set
             {
-                OnPopulationProviderChanging();
                 _populationProvider = value;
                 OnPopulationProviderChanged();
             }
@@ -42,9 +41,6 @@ namespace FSCruiser.WinForms.Common
             InitializeComponent();
         }
 
-        void OnPopulationProviderChanging()
-        {
-        }
 
         void OnPopulationProviderChanged()
         {

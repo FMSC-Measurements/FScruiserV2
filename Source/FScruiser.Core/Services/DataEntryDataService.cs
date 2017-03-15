@@ -14,9 +14,10 @@ namespace FScruiser.Core.Services
     public class IDataEntryDataService : ITreeFieldProvider
     {
         #region Events
+
         public event EventHandler EnableLogGradingChanged;
 
-        #endregion
+        #endregion Events
 
         public bool IsReconCruise { get; set; }
 
@@ -216,7 +217,7 @@ namespace FScruiser.Core.Services
 
             if (templateTree != null)
             {
-                assumedSG = templateTree.SampleGroup; ;
+                assumedSG = templateTree.SampleGroup;
                 assumedTDV = templateTree.TreeDefaultValue;
             }
 

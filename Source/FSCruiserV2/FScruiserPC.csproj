@@ -123,6 +123,7 @@
     <Compile Include="Core\Workers\Worker.cs" />
     <Compile Include="Core\Workers\WorkerExceptionThrownEventArgs.cs" />
     <Compile Include="Core\Workers\WorkerProgressChangedEventArgs.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IHotKeySettings.cs" />
     <Compile Include="PlatformHelper.WinForms.cs" />
     <Compile Include="WinForms.Common\Controls\HotKeySelectControl.cs">

@@ -21,7 +21,7 @@ using Microsoft.WindowsCE.Forms;
 namespace FSCruiser.WinForms.DataEntry
 {
     /// <summary>
-    /// Base class for winform Data Entry Form
+    /// Base class for win-forms Data Entry Form
     /// </summary>
     public partial class FormDataEntry : FMSC.Controls.CustomForm, IDataEntryView
     {
@@ -48,7 +48,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public IApplicationController Controller { get; protected set; }
 
-        #region Inialize Controlls
+        #region Initialize Controls
 
         protected void InitializeCommon(IApplicationController controller
             , IDataEntryDataService dataService)
@@ -62,6 +62,7 @@ namespace FSCruiser.WinForms.DataEntry
                 , DialogService.Instance
                 , SoundService.Instance
                 , DataService
+                , ApplicationSettings.Instance
                 , this);
 
             // Set the form title (Text) with current cutting unit and description.
@@ -185,7 +186,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        #endregion Inialize Controlls
+        #endregion Initialize Controls
 
         #region Overrides
 

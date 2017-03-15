@@ -589,11 +589,6 @@ namespace FSCruiser.WinForms.DataEntry
             return row;
         }
 
-        public Control MakeTallyRow(Control container, SubPop subPop)
-        {
-            return null;
-        }
-
         private void tallyRow_TallyButtonClicked(object sender, EventArgs e)
         {
             if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
@@ -615,12 +610,6 @@ namespace FSCruiser.WinForms.DataEntry
         public void OnTally(CountTree count)
         {
             this.ViewLogicController.OnTally(count);
-        }
-
-        public void HandleStratumLoaded(Control container)
-        {
-            //do nothing
-            return;
         }
 
         public void SaveCounts()
