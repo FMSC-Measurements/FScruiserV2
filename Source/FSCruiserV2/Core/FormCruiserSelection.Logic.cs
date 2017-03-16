@@ -26,6 +26,33 @@ namespace FSCruiser.Core
             set { SetValue(ref _tree, value, "Tree"); }
         }
 
+        public string TreeCountMeasure
+        {
+            get
+            {
+                if (Tree == null) { return null; }
+                switch (Tree.CountOrMeasure)
+                {
+                    case "M":
+                        {
+                            return "Measure Tree";
+                        }
+                    case "I":
+                        {
+                            return "Insureance Tree";
+                        }
+                    case "C":
+                        {
+                            return "Count Tree";
+                        }
+                    default:
+                        {
+                            return string.Empty;
+                        }
+                }
+            }
+        }
+
         public FormCruiserSelectionLogic(ApplicationSettings settings, ICruiserSelectionView view)
         {
             View = view;
