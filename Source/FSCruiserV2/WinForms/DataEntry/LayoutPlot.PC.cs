@@ -102,6 +102,7 @@ namespace FSCruiser.WinForms.DataEntry
                 , dataService
                 , soundService
                 , DialogService.Instance
+                , ApplicationSettings.Instance
                 , dataEntryController.ViewController);
 
             this.Dock = DockStyle.Fill;

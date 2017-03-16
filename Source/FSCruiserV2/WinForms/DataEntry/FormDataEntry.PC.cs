@@ -24,7 +24,7 @@ namespace FSCruiser.WinForms.DataEntry
             var addTreeKey = ApplicationSettings.Instance.AddTreeKeyStr;
             if (!string.IsNullOrWhiteSpace(addTreeKey))
             {
-                _addTreeBTN.Text = _addTreeBTN.Text + $"({addTreeKey})";
+                _addTreeBTN.Text = _addTreeBTN.Text + "(" + addTreeKey + ")";
             }
         }
 

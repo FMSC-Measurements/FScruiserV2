@@ -11,12 +11,10 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class Form3PPNTPlotInfo : Form, IPlotInfoDialog
     {
-        IViewController _viewController;
         IDataEntryDataService DataService { get; set; }
 
-        public Form3PPNTPlotInfo(IViewController viewController, IDataEntryDataService dataService)
+        public Form3PPNTPlotInfo(IDataEntryDataService dataService)
         {
-            _viewController = viewController;
             DataService = dataService;
             InitializeComponent();
 

@@ -12,7 +12,7 @@ namespace FSCruiser.WinForms.DataEntry
     {
         IDataEntryDataService DataService { get; set; }
 
-        public Form3PPNTPlotInfo(IViewController viewController, IDataEntryDataService dataService)
+        public Form3PPNTPlotInfo(IDataEntryDataService dataService)
         {
             DataService = dataService;
             InitializeComponent();

@@ -171,7 +171,7 @@ namespace FSCruiser.WinForms.Common
 
             if (stratum.Is3PPNT && isNewPlot)
             {
-                using (var view = new Form3PPNTPlotInfo(this, dataService))
+                using (var view = new Form3PPNTPlotInfo(dataService))
                 {
 #if !NetCF
                     view.Owner = this._dataEntryView;
