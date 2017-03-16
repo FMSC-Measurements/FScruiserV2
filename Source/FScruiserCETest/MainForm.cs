@@ -139,17 +139,47 @@ namespace FSCruiserV2.Test
             var stratum = new Stratum() { Code = "st1", Method = "P"};
             var sg = new SampleGroup() {Code = "sg1"};
 
-            var tree = new Tree()
-            {
-                TreeNumber = 1
-                ,
-                Stratum = stratum
-                ,
-                SampleGroup = sg
-            };
+
 
             using (var view = new FormCruiserSelection())
             {
+                var tree = new Tree()
+                {
+                    TreeNumber = 1,
+                    Stratum = stratum,
+                    SampleGroup = sg,
+                    CountOrMeasure = "C"
+                };
+
+                view.ShowDialog(tree);
+
+                tree = new Tree()
+                {
+                    TreeNumber = 1,
+                    Stratum = stratum,
+                    SampleGroup = sg,
+                    CountOrMeasure = "M"
+                };
+
+                view.ShowDialog(tree);
+
+                tree = new Tree()
+                {
+                    TreeNumber = 1,
+                    Stratum = stratum,
+                    SampleGroup = sg,
+                    CountOrMeasure = "I"
+                };
+
+                view.ShowDialog(tree);
+
+                tree = new Tree()
+                {
+                    TreeNumber = 1,
+                    Stratum = stratum,
+                    SampleGroup = sg,
+                };
+
                 view.ShowDialog(tree);
             }
         }

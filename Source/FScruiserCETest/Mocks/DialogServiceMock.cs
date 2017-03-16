@@ -8,36 +8,39 @@ namespace FSCruiserV2.Test.Mocks
 {
     public class DialogServiceMock : IDialogService
     {
+        public int AskCruiserCallCnt = 0;
+        public int ShowMessageCallCnt = 0;
+
         #region IDialogService Members
 
         public bool AskCancel(string message, string caption, bool defaultCancel)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public void AskCruiser(FSCruiser.Core.Models.Tree tree)
         {
-            throw new NotImplementedException();
+            AskCruiserCallCnt++;
         }
 
         public bool AskYesNo(string message, string caption)
         {
-            throw new NotImplementedException();
+            return AskYesNo(message, string.Empty, true);
         }
 
         public bool AskYesNo(string message, string caption, bool defaultNo)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public void ShowMessage(string message)
         {
-            throw new NotImplementedException();
+            ShowMessage(message, string.Empty);
         }
 
         public void ShowMessage(string message, string caption)
         {
-            throw new NotImplementedException();
+            ShowMessageCallCnt++;
         }
 
         #endregion

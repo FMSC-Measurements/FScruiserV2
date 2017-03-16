@@ -11,12 +11,16 @@ using FSCruiserV2.Test.Mocks;
 using FScruiser.Core.Services;
 using FMSC.ORM.SQLite;
 using CruiseDAL;
+using CruiseDAL.Schema;
 
 namespace FSCruiserV2.Test
 {
     public class DataEntryTests
     {
         ApplicationControllerMock _controller = new ApplicationControllerMock();
+        DAL _dataStore;
+        IDialogService _dialogService;
+        ISoundService _soundService;
 
         IApplicationController Controller { get { return _controller; } }
 
@@ -25,45 +29,79 @@ namespace FSCruiserV2.Test
 
         public DataEntryTests()
         {
-            var cu = new CuttingUnit();
 
-            var dialogService = new DialogServiceMock();
-            var soundService = new SoundServiceMock();
-            var unit = new CuttingUnit() { Code = "1" };
-            var dataStore = SetupDataStore(unit);
-            var dataService = new IDataEntryDataService("1", dataStore);
+            _dataStore = SetupDataStore();
+            _dialogService = new DialogServiceMock();
+            _soundService = new SoundServiceMock();
+            var dataService = new IDataEntryDataService("01", _dataStore);
+            var appSettings = new ApplicationSettings();
 
             _de = new FormDataEntryLogic(_controller
-                , dialogService
-                , soundService
+                , _dialogService
+                , _soundService
                 , dataService
+                , appSettings
                 , _view);
         }
 
-        DAL SetupDataStore(CuttingUnit unit)
+        DAL SetupDataStore()
         {
-            var dataStore = new DAL(":memory:");
+            var dataStore = new DAL();
 
-            dataStore.Insert(unit, FMSC.ORM.Core.SQL.OnConflictOption.Default);
+            var sale = new SaleDO(dataStore)
+            {
+                LogGradingEnabled = false,
+                SaleNumber = "12345",
+                Region = "01",
+                Forest = "01",
+                District = "01"
+            };
+            sale.Save();
+
+            var unit = new CuttingUnitDO(dataStore) { 
+                Code = "01"
+            };
+
+            unit.Save();
+
+            var stratum = new StratumDO(dataStore) { Code = "01", 
+                Method = CruiseMethods.STR };
+            stratum.Save();
+            unit.Strata.Add(stratum);
+            unit.Strata.Save();
+
+            var sg = new SampleGroupDO(dataStore) { Code = "01", 
+                CutLeave = "C", 
+                UOM = "1",
+                PrimaryProduct = "01"
+            };
+            sg.Stratum = stratum;
+            sg.SamplingFrequency = 5;
+            sg.InsuranceFrequency = 0;
+
+            sg.Save();
+
+            var countTree = new CountTreeDO(dataStore)
+            {
+                SampleGroup = sg,
+                CuttingUnit = unit
+            };
+
+            countTree.Save();
 
             return dataStore;
         }
 
         public void TestTreeTally()
         {
-            var st = new Stratum();
-            st.Method = CruiseDAL.Schema.CruiseMethods.STR;
+            var st = _dataStore.From<Stratum>().Read().First();
 
-            var sg = new SampleGroup();
-            sg.Stratum = st;
-            sg.SamplingFrequency = 5;
-            sg.InsuranceFrequency = 0;
+            var sg = _dataStore.From<SampleGroup>().Read().First();
             sg.SampleSelectorType = CruiseDAL.Enums.SampleSelectorType.Block.ToString();
 
-            CountTree count = new CountTree();
-            count.SampleGroup = sg;
+            CountTree count = _dataStore.From<CountTree>().Read().First();
 
-            int numSamples = 10000;
+            int numSamples = 500;
             for (int i = 0; i < numSamples; i++)
             {
                 _de.OnTally(count);
