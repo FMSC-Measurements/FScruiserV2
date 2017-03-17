@@ -83,6 +83,11 @@ namespace FScruiser.Core.Services
             }
         }
 
+        public IEnumerable<TreeDefaultValueDO> GetTreeDefaultValuesAll()
+        {
+            return DataStore.From<TreeDefaultValueDO>().Read();
+        }
+
         private void OnEnableLogGradingChanged()
         {
         }

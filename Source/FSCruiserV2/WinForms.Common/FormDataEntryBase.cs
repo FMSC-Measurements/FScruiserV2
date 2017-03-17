@@ -112,8 +112,8 @@ namespace FSCruiser.WinForms.DataEntry
             _treePage.Text = "Trees";
 
 #if NetCF
-            _treeView = new ControlTreeDataGrid(this.Controller
-                , DataService
+            _treeView = new ControlTreeDataGrid(DataService
+                , ApplicationSettings.Instance
                 , this.LogicController)
             {
                 Dock = DockStyle.Fill,
@@ -121,9 +121,9 @@ namespace FSCruiser.WinForms.DataEntry
                 SIP = SIP
             };
 #else
-            _treeView = new ControlTreeDataGrid(this.Controller
-            , DataService
-            , this.LogicController);
+            _treeView = new ControlTreeDataGrid(DataService
+                , ApplicationSettings.Instance
+                , this.LogicController);
 #endif
             _treeView.Dock = DockStyle.Fill;
 

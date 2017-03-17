@@ -28,8 +28,6 @@ namespace FSCruiser.WinForms.DataEntry
         private DataGridTextBoxColumn _errorsColumn;
         private System.Windows.Forms.BindingSource _BS_trees;
 
-        private IApplicationController Controller { get; set; }
-
         private bool _userCanAddTrees;
 
         public bool UserCanAddTrees
@@ -95,14 +93,45 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
+        #region AppSettings
+        ApplicationSettings _appSettings;
+        public ApplicationSettings AppSettings
+        {
+            get { return _appSettings; }
+            set
+            {
+                OnAppSettingsChanging();
+                _appSettings = value;
+                OnAppSettingsChanged();
+            }
+        }
 
-        public ControlTreeDataGrid(IApplicationController controller
-            , IDataEntryDataService dataService
+        private void OnAppSettingsChanged()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.CruisersChanged -= Settings_CruisersChanged;
+            }
+        }
+
+        private void OnAppSettingsChanging()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.CruisersChanged += Settings_CruisersChanged;
+                Settings_CruisersChanged(null, null);
+            }
+        }
+        #endregion
+
+
+        public ControlTreeDataGrid(IDataEntryDataService dataService
+            , ApplicationSettings appSettings
             , FormDataEntryLogic dataEntryController)
         {
-            Controller = controller;
             DataService = dataService;
             DataEntryController = dataEntryController;
+            AppSettings = appSettings;
 
             DataGridAdjuster.InitializeGrid(this);
             DataGridTableStyle tableStyle = dataService.InitializeTreeColumns(this);
@@ -135,11 +164,6 @@ namespace FSCruiser.WinForms.DataEntry
             }
 
             LoadData();
-
-            ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
-            Settings_CruisersChanged(null, null);
-
-            
         }
 
         void LoadData()
