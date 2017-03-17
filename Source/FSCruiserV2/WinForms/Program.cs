@@ -11,12 +11,7 @@ namespace FSCruiser.WinForms
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-#if PocketPC
-        [MTAThread]
-#else
-
         [STAThread]
-#endif
         static void Main()
         {
             //read command line arguments
