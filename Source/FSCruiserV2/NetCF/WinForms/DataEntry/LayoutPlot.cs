@@ -767,26 +767,20 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void ShowLimitingDistanceDialog()
         {
-            if (this.ViewLogicController.CurrentPlot == null)
+            var plot = ViewLogicController.CurrentPlot;
+            if (plot == null)
             {
                 ShowNoPlotSelectedMessage();
                 return;
             }
 
-            ViewLogicController.ShowLimitingDistanceDialog();
-
-            //TreeVM tree = null;
-            ////see if the user is in the DBH column
-            //if (this._dataGrid.CurrentCollumn != null
-            //    && this._dataGrid.CurrentCollumn.MappingName == "DBH")
-            //{
-            //    //is a tree selected and if so grab it and take its dbh
-            //    TreeVM curTree = this.ViewLogicController.CurrentTree;
-            //    if (curTree != null && curTree.DBH == 0)
-            //    {
-            //        tree = curTree;
-            //    }
-            //}
+            using (var view = new FormLimitingDistance())
+            {
+                if (view.ShowDialog(plot) == DialogResult.OK)
+                {
+                    plot.Remarks += view.Report;
+                }
+            }
         }
 
         public void ViewEndEdit()

@@ -9,9 +9,9 @@ namespace FSCruiser.WinForms
     {
         public ApplicationSettings Settings { get; set; }
 
-        public FormManageCruisers(ApplicationSettings appSettings)
+        public FormManageCruisers(ApplicationSettings settings)
         {
-            Settings = appSettings;
+            Settings = settings;
             InitializeComponent();
 
 #if NetCF

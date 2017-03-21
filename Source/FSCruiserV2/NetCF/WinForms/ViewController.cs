@@ -28,25 +28,6 @@ namespace FSCruiser.WinForms
         {
         }
 
-        public override bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage)
-        {
-            using (FormLimitingDistance view = new FormLimitingDistance(baf, isVariableRadius))
-            {
-                var result = view.ShowDialog();
-                logMessage = view.Report;
-
-                return result == DialogResult.OK;
-            }
-        }
-
-        public override void ShowManageCruisers()
-        {
-            using (FormManageCruisers view = new FormManageCruisers(this.ApplicationController))
-            {
-                view.ShowDialog();
-            }
-        }
-
         public override void ShowBackupUtil()
         {
             using (FormBackupUtility view = new FormBackupUtility(this.ApplicationController))

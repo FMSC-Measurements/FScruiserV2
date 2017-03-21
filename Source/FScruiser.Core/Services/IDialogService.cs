@@ -19,7 +19,5 @@ namespace FScruiser.Core.Services
         void ShowMessage(string message);
 
         void ShowMessage(string message, string caption);
-
-
     }
 }

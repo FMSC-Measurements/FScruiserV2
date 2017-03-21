@@ -51,12 +51,14 @@ namespace FSCruiser.WinForms.DataEntry
         #region Initialize Controls
 
         protected void InitializeCommon(IApplicationController controller
+            , ApplicationSettings appSettings
             , IDataEntryDataService dataService)
         {
             KeyPreview = true;
 
             Controller = controller;
             DataService = dataService;
+            _appSettings = appSettings;
 
             LogicController = new FormDataEntryLogic(Controller
                 , DialogService.Instance
@@ -219,6 +221,7 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         KeysConverter keyConverter = new KeysConverter();
+        private ApplicationSettings _appSettings;
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -249,7 +252,15 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void _editCruisersMI_Click(object sender, EventArgs e)
         {
-            Controller.ViewController.ShowManageCruisers();
+            using (FormManageCruisers view = new FormManageCruisers(_appSettings))
+            {
+#if NetCF
+                view.ShowDialog();
+#else
+                view.ShowDialog(this);
+#endif
+
+            }
         }
 
         protected void _showHideLogColMI_Click(object sender, EventArgs e)
@@ -286,7 +297,11 @@ namespace FSCruiser.WinForms.DataEntry
         {
             using (var view = new FormSettings())
             {
+#if NetCF
                 view.ShowDialog();
+#else
+                view.ShowDialog(this);
+#endif
             }
         }
 
@@ -311,7 +326,7 @@ namespace FSCruiser.WinForms.DataEntry
                         }
                         catch (Exception ex)
                         {
-                            this.Controller.HandleNonCriticalException(ex, "Unable to compleate last tree save");
+                            this.Controller.HandleNonCriticalException(ex, "Unable to complete last tree save");
                         }
                     }
                 }

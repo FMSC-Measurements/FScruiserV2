@@ -69,7 +69,7 @@
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\ExceptionHandler.cs" />
     <Compile Include="Core\IExceptionHandler.cs" />
-    <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
+    <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
     <Compile Include="Core\Workers\CancelWorkerException.cs" />
     <Compile Include="Core\Workers\FileLoadWorker.cs" />
@@ -216,8 +216,6 @@
     <Compile Include="NetCF\WinForms\FormTallySetup.Designer.cs">
       <DependentUpon>FormTallySetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
-    <Compile Include="Core\ViewInterfaces\IPlotInfoDialog.cs" />
     <Compile Include="Core\ViewInterfaces\IPlotLayout.cs" />
     <Compile Include="NetCF\WinForms\DataEntry\LayoutPlot.cs">
       <SubType>UserControl</SubType>

@@ -9,7 +9,7 @@ using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public partial class Form3PPNTPlotInfo : Form, IPlotInfoDialog
+    public partial class Form3PPNTPlotInfo : Form
     {
         IDataEntryDataService DataService { get; set; }
 

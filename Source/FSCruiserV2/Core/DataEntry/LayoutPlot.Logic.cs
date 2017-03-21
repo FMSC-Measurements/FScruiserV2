@@ -560,23 +560,6 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        public bool ShowLimitingDistanceDialog()
-        {
-            var plot = CurrentPlot;
-            var stratum = plot.Stratum;
-
-            string logMessage = String.Empty;
-            bool isVariableRadius = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS, stratum.Method) > -1;
-            float bafOrFixedPlotSize = (isVariableRadius) ? stratum.BasalAreaFactor : stratum.FixedPlotSize;
-
-            if (ViewController.ShowLimitingDistanceDialog(bafOrFixedPlotSize, isVariableRadius, out logMessage))
-            {
-                plot.Remarks += logMessage;
-                return true;
-            }
-            return false;
-        }
-
         public void Save()
         {
             foreach (Plot p in Stratum.Plots)

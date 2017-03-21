@@ -136,8 +136,6 @@ namespace FSCruiser.WinForms.DataEntry
             _logToolStripMenuItem = new ToolStripMenuItem();
             _logToolStripMenuItem.Name = "logToolStripMenuItem";
             _logToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            _logToolStripMenuItem.Text = DataService.EnableLogGrading ?
-                "Disable Log Grading" : "Enable Log Grading";
             _logToolStripMenuItem.Click += logToolStripMenuItem_Click;
 
             _contexMenu = new ContextMenuStrip(new System.ComponentModel.Container());
@@ -156,6 +154,9 @@ namespace FSCruiser.WinForms.DataEntry
             DataService = dataService;
             DataEntryController = dataEntryController;
             AppSettings = appSettings;
+
+            _logToolStripMenuItem.Text = DataService.EnableLogGrading ?
+                "Disable Log Grading" : "Enable Log Grading";
 
             var columns = DataService.MakeTreeColumns();
             base.Columns.AddRange(columns.ToArray());

@@ -25,16 +25,6 @@ namespace FSCruiser.WinForms
             //}
         }
 
-        public override bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void ShowManageCruisers()
-        {
-            throw new NotImplementedException();
-        }
-
         public override void ShowBackupUtil()
         {
             throw new NotImplementedException();

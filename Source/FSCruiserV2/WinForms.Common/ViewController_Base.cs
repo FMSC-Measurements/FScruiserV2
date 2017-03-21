@@ -110,8 +110,6 @@ namespace FSCruiser.WinForms.Common
 
         public abstract void ShowBackupUtil();
 
-        public abstract bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);
-
         public void ShowLogsView(Stratum stratum, Tree tree)
         {
             if (stratum == null)
@@ -120,8 +118,6 @@ namespace FSCruiser.WinForms.Common
             }
             this.GetLogsView(stratum).ShowDialog(tree);
         }
-
-        public abstract void ShowManageCruisers();
 
         public abstract bool ShowOpenCruiseFileDialog(out string fileName);
 
@@ -133,6 +129,7 @@ namespace FSCruiser.WinForms.Common
                 {
                     var dataService = new IDataEntryDataService(unit.Code, ApplicationController.DataStore);
                     using (_dataEntryView = new FormDataEntry(this.ApplicationController
+                        , ApplicationSettings.Instance
                         , dataService))
                     {
 #if !NetCF

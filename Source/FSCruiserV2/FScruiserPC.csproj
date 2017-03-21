@@ -110,12 +110,10 @@
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="Core\ExceptionHandler.cs" />
     <Compile Include="Core\IExceptionHandler.cs" />
+    <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
     <Compile Include="Core\Workers\FileLoadWorker.cs" />
     <Compile Include="Core\FormCruiserSelection.Logic.cs" />
-    <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
-    <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
-    <Compile Include="Core\ViewInterfaces\IPlotInfoDialog.cs" />
     <Compile Include="Core\ViewInterfaces\IPlotLayout.cs" />
     <Compile Include="Core\Workers\CancelWorkerException.cs" />
     <Compile Include="Core\Workers\IWorker.cs" />
@@ -156,12 +154,6 @@
     <Compile Include="WinForms.Common\FormDataEntryBase.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WinForms.Common\FormManageCruisers.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\FormManageCruisers.Designer.cs">
-      <DependentUpon>FormManageCruisers.cs</DependentUpon>
-    </Compile>
     <Compile Include="WinForms.Common\FormPlotInfo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -199,11 +191,29 @@
     <Compile Include="WinForms\DataEntry\Form3PNumPad.PC.Designer.cs">
       <DependentUpon>Form3PNumPad.PC.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinForms\DataEntry\FormCruiserSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\DataEntry\FormCruiserSelection.Designer.cs">
+      <DependentUpon>FormCruiserSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\DataEntry\FormLimitingDistance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\DataEntry\FormLimitingDistance.Designer.cs">
+      <DependentUpon>FormLimitingDistance.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms\DataEntry\FormLogs.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinForms\DataEntry\FormLogs.Designer.cs">
       <DependentUpon>FormLogs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\DataEntry\FormManageCruisers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\DataEntry\FormManageCruisers.Designer.cs">
+      <DependentUpon>FormManageCruisers.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms\DataEntry\SampleGroupRow.cs">
       <SubType>UserControl</SubType>
@@ -280,9 +290,6 @@
     <EmbeddedResource Include="WinForms.Common\FixCntTallyRow.resx">
       <DependentUpon>FixCntTallyRow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\FormManageCruisers.resx">
-      <DependentUpon>FormManageCruisers.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormPlotInfo.resx">
       <DependentUpon>FormPlotInfo.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -306,9 +313,18 @@
       <DependentUpon>Form3PNumPad.PC.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\DataEntry\FormCruiserSelection.resx">
+      <DependentUpon>FormCruiserSelection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\DataEntry\FormLimitingDistance.resx">
+      <DependentUpon>FormLimitingDistance.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinForms\DataEntry\FormLogs.resx">
       <DependentUpon>FormLogs.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\DataEntry\FormManageCruisers.resx">
+      <DependentUpon>FormManageCruisers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\DataEntry\SampleGroupRow.resx">
       <DependentUpon>SampleGroupRow.cs</DependentUpon>
@@ -351,7 +367,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="Core\ViewInterfaces\FSCruiser.Core.ViewInterfaces.cd" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />
     <None Include="Properties\DataSources\CruiseDAL.DataObjects.TreeDO.datasource" />

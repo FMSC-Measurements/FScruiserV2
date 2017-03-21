@@ -752,13 +752,20 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void ShowLimitingDistanceDialog()
         {
-            if (this.ViewLogicController.CurrentPlot == null)
+            var plot = ViewLogicController.CurrentPlot;
+            if (plot == null)
             {
                 ShowNoPlotSelectedMessage();
                 return;
             }
 
-            ViewLogicController.ShowLimitingDistanceDialog();
+            using (var view = new FormLimitingDistance())
+            {
+                if (view.ShowDialog(this, ViewLogicController.CurrentPlot) == DialogResult.OK)
+                {
+                    plot.Remarks += view.Report;
+                }
+            }
         }
 
         public void RefreshTreeView(Plot currentPlot)
