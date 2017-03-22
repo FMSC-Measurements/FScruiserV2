@@ -13,6 +13,7 @@ namespace FSCruiser.WinForms.DataEntry
     public partial class FormDataEntry : FMSC.Controls.CustomForm, IDataEntryView
     {
         public FormDataEntry(IApplicationController controller
+            , ApplicationSettings appSettings
             , IDataEntryDataService dataService)
         {
             InitializeComponent();
@@ -27,7 +28,7 @@ namespace FSCruiser.WinForms.DataEntry
                 this.WindowState = FormWindowState.Maximized;
             }
 
-            InitializeCommon(controller, dataService);
+            InitializeCommon(controller, appSettings, dataService);
         }
 
         protected FormDataEntry()

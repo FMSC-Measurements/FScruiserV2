@@ -222,7 +222,10 @@ namespace FSCruiser.WinForms
 
         private void _manageCruisersMI_Click(object sender, EventArgs e)
         {
-            this.Controller.ViewController.ShowManageCruisers();
+            using (var view = new FormManageCruisers(ApplicationSettings.Instance))
+            {
+                view.ShowDialog();
+            }
         }
 
         private void _menu_MI_Popup(object sender, EventArgs e)

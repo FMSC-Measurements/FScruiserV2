@@ -439,15 +439,10 @@ namespace FSCruiser.WinForms
             this.Name = "FormSettings";
             this.Text = "Settings";
             panel8.ResumeLayout(false);
-            panel8.PerformLayout();
-            panel7.ResumeLayout(false);
-            panel7.PerformLayout();
-            panel6.ResumeLayout(false);
-            panel6.PerformLayout();
+            panel7.ResumeLayout(false);;
+            panel6.ResumeLayout(false);;
             panel5.ResumeLayout(false);
-            panel5.PerformLayout();
             panel4.ResumeLayout(false);
-            panel4.PerformLayout();
             this.soundsPanel.ResumeLayout(false);
             dialogBtnPanel.ResumeLayout(false);
             notificationsPanel.ResumeLayout(false);
