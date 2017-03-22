@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using FSCruiser.Core.Models;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -124,6 +125,8 @@ namespace FSCruiser.WinForms.DataEntry
 
             this._BS_Plot.ResetBindings(false);
 
+            _resequenceTreeNumsBtn.Visible = (plot.Trees != null && plot.Trees.Count > 0);
+
             //this.DialogResult = DialogResult.OK;
             return this.ShowDialog();
         }
@@ -213,8 +216,13 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void _resequenceTreeNumsBtn_Click(object sender, EventArgs e)
         {
-            Plot.ResequenceTreeNumbers();
-            DialogResult = DialogResult.Cancel;
+            if (DialogService.AskYesNo("This will renumber all trees in the plot starting at 1"
+                , "Continue?"
+                , false))
+            {
+                Plot.ResequenceTreeNumbers();
+                DialogResult = DialogResult.Cancel;
+            }
         }
 
         #region INotifyPropertyChanged Members
