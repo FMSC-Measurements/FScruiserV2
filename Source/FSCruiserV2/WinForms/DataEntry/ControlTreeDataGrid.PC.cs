@@ -161,7 +161,9 @@ namespace FSCruiser.WinForms.DataEntry
             _logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                 "Disable Log Grading" : "Enable Log Grading";
 
-            var columns = DataService.MakeTreeColumns();
+            var fontWidth = (int)Math.Ceiling(CreateGraphics().MeasureString("_", Font).Width);
+
+            var columns = DataService.MakeTreeColumns(fontWidth);
             base.Columns.AddRange(columns.ToArray());
 
             _speciesColumn = base.Columns["TreeDefaultValue"] as DataGridViewComboBoxColumn;

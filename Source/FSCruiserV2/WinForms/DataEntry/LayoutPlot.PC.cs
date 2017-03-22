@@ -132,7 +132,10 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.AutoGenerateColumns = false;
 
             this._dataGrid.SuspendLayout();
-            var columns = stratum.MakeTreeColumns();
+
+            var fontWidth = (int)Math.Ceiling(CreateGraphics().MeasureString("_", Font).Width);
+
+            var columns = stratum.MakeTreeColumns(fontWidth);
             this._dataGrid.Columns.AddRange(columns.ToArray());
             this._dataGrid.ResumeLayout();
 
