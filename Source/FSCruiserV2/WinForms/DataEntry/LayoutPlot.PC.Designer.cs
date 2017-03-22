@@ -1,4 +1,6 @@
-﻿namespace FSCruiser.WinForms.DataEntry
+﻿
+
+namespace FSCruiser.WinForms.DataEntry
 {
     partial class LayoutPlot
     {
@@ -22,7 +24,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this._tallyListPanel = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this._dataGrid = new System.Windows.Forms.DataGridView();
+            this._dataGrid = new FSCruiser.WinForms.Controls.CustomDataGridView();
             this._bindingNavigator = new System.Windows.Forms.BindingNavigator(this.components);
             this.bindingNavigatorMoveFirstItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMovePreviousItem = new System.Windows.Forms.ToolStripButton();
@@ -37,6 +39,7 @@
             this._plotInfoBTN = new System.Windows.Forms.ToolStripButton();
             this._contexMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.logToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -49,6 +52,7 @@
             // 
             // splitContainer1
             // 
+            this.splitContainer1.BackColor = System.Drawing.SystemColors.ControlDark;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
@@ -67,6 +71,7 @@
             // _tallyListPanel
             // 
             this._tallyListPanel.AutoScroll = true;
+            this._tallyListPanel.BackColor = System.Drawing.SystemColors.Control;
             this._tallyListPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this._tallyListPanel.Location = new System.Drawing.Point(0, 0);
             this._tallyListPanel.Margin = new System.Windows.Forms.Padding(0);
@@ -92,6 +97,7 @@
             this._dataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this._dataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this._dataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this._dataGrid.ImeMode = System.Windows.Forms.ImeMode.AlphaFull;
             this._dataGrid.Location = new System.Drawing.Point(0, 25);
             this._dataGrid.Margin = new System.Windows.Forms.Padding(0);
             this._dataGrid.Name = "_dataGrid";
@@ -236,6 +242,7 @@
             this.Size = new System.Drawing.Size(484, 283);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -253,7 +260,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Panel _tallyListPanel;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.DataGridView _dataGrid;
+        private FSCruiser.WinForms.Controls.CustomDataGridView _dataGrid;
         private System.Windows.Forms.BindingNavigator _bindingNavigator;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveFirstItem;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMovePreviousItem;

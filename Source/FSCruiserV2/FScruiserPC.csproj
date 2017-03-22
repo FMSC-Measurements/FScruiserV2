@@ -176,6 +176,9 @@
     <Compile Include="WinForms.Common\ViewController_Base.cs" />
     <Compile Include="WinForms.Common\WinFormsDialogService.cs" />
     <Compile Include="WinForms.Common\WinFormsSoundService.cs" />
+    <Compile Include="WinForms\Controls\CustomDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WinForms\DataEntry\ControlTreeDataGrid.PC.cs">
       <SubType>Component</SubType>
     </Compile>

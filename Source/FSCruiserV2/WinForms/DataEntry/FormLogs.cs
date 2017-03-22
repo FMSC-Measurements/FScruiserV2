@@ -18,33 +18,47 @@ namespace FSCruiser.WinForms.DataEntry
 
         public FormLogs(IApplicationController controller, Stratum stratum)
         {
-            this.Controller = controller;
+            Controller = controller;
             InitializeComponent();
 
-            this._dataGrid.AutoGenerateColumns = false;
-            this._dataGrid.SuspendLayout();
-            this._dataGrid.Columns.AddRange(
+            _dataGrid.AutoGenerateColumns = false;
+            _dataGrid.SuspendLayout();
+            _dataGrid.Columns.AddRange(
                 stratum.MakeLogColumns().ToArray());
-            this._dataGrid.ResumeLayout();
+            _dataGrid.ResumeLayout();
 
             _logNumColumn = _dataGrid.Columns[CruiseDAL.Schema.LOG.LOGNUMBER] as DataGridViewTextBoxColumn;
         }
 
         public DialogResult ShowDialog(Tree tree)
         {
-            if (tree == null) { throw new ArgumentNullException("tree"); }
+            if (tree == null) { throw new ArgumentNullException(nameof(tree)); }
 
-            this._logs = new BindingList<LogDO>(tree.LoadLogs());
+            _logs = new BindingList<LogDO>(tree.LoadLogs());
 
-            this._currentTree = tree;
-            this._treeDesLbl.Text = tree.LogLevelDiscription;
+            _currentTree = tree;
+            _treeDesLbl.Text = tree.LogLevelDiscription;
 
-            this._dataGrid.DataSource = this._logs;
-            this._dataGrid.Focus();
+            _dataGrid.DataSource = _logs;
+            _dataGrid.Focus();
 
             var result = ShowDialog();
             tree.LogCountDirty = true;
             return result;
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+
+            for (int i = 0; i < _dataGrid.RowCount; i++)
+            {
+                _dataGrid.CurrentCell = _dataGrid[_dataGrid.CurrentCellAddress.X, i];
+                if (_dataGrid.MoveFirstEmptyCell())
+                {
+                    break;
+                }
+            }
         }
 
         int GetHighestLogNum()
@@ -80,15 +94,15 @@ namespace FSCruiser.WinForms.DataEntry
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            this._dataGrid.EndEdit();
+            _dataGrid.EndEdit();
 
             try
             {
                 //this._currentTree.Save();//tree is saved before entering log screen.
-                foreach (LogDO log in this._logs)
+                foreach (LogDO log in _logs)
                 {
                     //log.Tree = this._currentTree;
-                    this.Controller.DataStore.Save(log
+                    Controller.DataStore.Save(log
                         , FMSC.ORM.Core.SQL.OnConflictOption.Fail
                         , false);
                 }
@@ -101,19 +115,19 @@ namespace FSCruiser.WinForms.DataEntry
 
         private LogDO AddLogRec()
         {
-            LogDO newLog = new LogDO(this.Controller.DataStore);
+            LogDO newLog = new LogDO(Controller.DataStore);
             newLog.Tree_CN = _currentTree.Tree_CN;
             newLog.LogNumber = (GetHighestLogNum() + 1).ToString();
 
-            this._logs.Add(newLog);
-            this._dataGrid.GoToLastRow();
-            this._dataGrid.GoToFirstColumn();
+            _logs.Add(newLog);
+            _dataGrid.GoToLastRow();
+            _dataGrid.GoToFirstColumn();
             return newLog;
         }
 
         void _dataGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if (e.ColumnIndex == this._logNumColumn.Index)
+            if (e.ColumnIndex == _logNumColumn.Index)
             {
                 try
                 {
@@ -126,7 +140,7 @@ namespace FSCruiser.WinForms.DataEntry
                     int newLogNumber;
                     if (int.TryParse(cellValue, out newLogNumber))
                     {
-                        if (!this.IsLogNumAvalible(newLogNumber))
+                        if (!IsLogNumAvalible(newLogNumber))
                         {
                             e.Cancel = true;
                         }
@@ -145,12 +159,12 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void _BTN_delete_Click(object sender, EventArgs e)
         {
-            if (this._dataGrid.CurrentRow == null) { return; }
-            LogDO log = this._dataGrid.CurrentRow.DataBoundItem as LogDO;
+            if (_dataGrid.CurrentRow == null) { return; }
+            LogDO log = _dataGrid.CurrentRow.DataBoundItem as LogDO;
             if (log == null) { return; }
 
             log.Delete();
-            this._logs.Remove(log);
+            _logs.Remove(log);
         }
 
         private void _BTN_add_Click(object sender, EventArgs e)

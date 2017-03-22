@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormLogs));
-            this._dataGrid = new System.Windows.Forms.DataGridView();
+            this._dataGrid = new Controls.CustomDataGridView();
             this._BS_Logs = new System.Windows.Forms.BindingSource(this.components);
             this._treeDesLbl = new System.Windows.Forms.Label();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -118,7 +118,7 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView _dataGrid;
+        private Controls.CustomDataGridView _dataGrid;
         private System.Windows.Forms.BindingSource _BS_Logs;
         private System.Windows.Forms.Label _treeDesLbl;
         private System.Windows.Forms.ToolStrip toolStrip1;

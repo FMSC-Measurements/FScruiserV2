@@ -717,13 +717,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void MoveHomeField()
         {
-            if (this._dataGrid.CurrentCellAddress.Y == -1) { return; }
-            try
-            {
-                this._dataGrid.CurrentCell = this._dataGrid[0, this._dataGrid.CurrentCellAddress.Y];
-            }
-            catch
-            { }
+            _dataGrid.MoveFirstEmptyCell();
         }
 
         public Tree UserAddTree()

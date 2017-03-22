@@ -8,10 +8,11 @@ using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FScruiser.Core.Services;
+using FSCruiser.WinForms.Controls;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public class ControlTreeDataGrid : DataGridView, ITreeView
+    public class ControlTreeDataGrid : CustomDataGridView, ITreeView
     {
         bool _userCanAddTrees;
         bool _viewLoading = true;
@@ -34,8 +35,6 @@ namespace FSCruiser.WinForms.DataEntry
         public FormDataEntryLogic DataEntryController { get; set; }
 
         public bool ViewLoading { get { return _viewLoading; } }
-
-        public int HomeColumnIndex { get; set; }
 
         public ICollection<Tree> Trees
         {
@@ -87,6 +86,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         #endregion DataService
 
+        #region AppSettings
+
         public ApplicationSettings AppSettings
         {
             get { return _appSettings; }
@@ -113,6 +114,8 @@ namespace FSCruiser.WinForms.DataEntry
                 _appSettings.CruisersChanged += Settings_CruisersChanged;
             }
         }
+
+        #endregion AppSettings
 
         #endregion Properties
 
@@ -463,27 +466,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void MoveHomeField()
         {
-            var row = CurrentRow;
-            if (row == null) { return; }
-            try
-            {
-                var cells = row.Cells.OfType<DataGridViewCell>()
-                    .Where(c => !c.ReadOnly && c.Visible && !(c is DataGridViewButtonCell));
-                foreach (var cell in cells)
-                {
-                    var cellValue = cell.Value;
-                    var cellType = cell.ValueType;
-                    if (cellValue == null
-                        || (cellValue is String && string.IsNullOrEmpty(cellValue as string)) //is empty string
-                        || (cellType.IsValueType && cellValue.Equals(Activator.CreateInstance(cellType)))) //is the default value of a value type
-                    {
-                        CurrentCell = cell;
-                        break;
-                    }
-                }
-            }
-            catch
-            { }
+            MoveFirstEmptyCell();
         }
 
         public Tree UserAddTree()
