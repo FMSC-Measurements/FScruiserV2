@@ -36,6 +36,8 @@ namespace FSCruiser.WinForms.DataEntry
             set { _userCanAddTrees = value; }
         }
 
+
+
         #region DataService
 
         IDataEntryDataService _dataService;
@@ -262,7 +264,20 @@ namespace FSCruiser.WinForms.DataEntry
         {
             Tree tree = this._BS_trees[e.RowNumber] as Tree;
             if (tree == null) { return; }
-            this.DataEntryController.ShowLogs(tree);
+
+            if (tree.TrySave())
+            {
+                var dataService = DataService.MakeLogDataService(tree);
+                using(var view = new FormLogs(dataService))
+                {
+                    view.ShowDialog();
+                }
+            }
+            else
+            {
+                DialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
+                    , null);
+            }
         }
 
         void _BS_trees_CurrentChanged(object sender, EventArgs e)

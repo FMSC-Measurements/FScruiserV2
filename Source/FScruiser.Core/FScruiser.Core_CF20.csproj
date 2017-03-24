@@ -74,6 +74,7 @@
     <Compile Include="Models\Interfaces\ITreeFieldProvider.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\Log.cs" />
     <Compile Include="Models\LogHeightClass.cs" />
     <Compile Include="Models\LogRule.cs" />
     <Compile Include="Models\Plot.cs" />
@@ -95,6 +96,8 @@
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\IApplicationController.cs" />
     <Compile Include="Services\IDialogService.cs" />
+    <Compile Include="Services\ILogDataService.cs" />
+    <Compile Include="Services\IRegionalLogRuleDataService.cs" />
     <Compile Include="Services\ISoundService.cs" />
     <Compile Include="Services\IViewController.cs" />
     <Compile Include="Services\SoundService.cs" />

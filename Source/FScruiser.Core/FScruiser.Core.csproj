@@ -98,6 +98,7 @@
     <Compile Include="Models\FixCNTTallyPopulation.cs" />
     <Compile Include="Models\Interfaces\ILogFieldProvider.cs" />
     <Compile Include="Models\Interfaces\ITreeFieldProvider.cs" />
+    <Compile Include="Models\Log.cs" />
     <Compile Include="Models\LogHeightClass.cs" />
     <Compile Include="Models\LogRule.cs" />
     <Compile Include="Models\Plot.cs" />
@@ -120,6 +121,8 @@
     <Compile Include="Services\IApplicationController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Services\ILogDataService.cs" />
+    <Compile Include="Services\IRegionalLogRuleDataService.cs" />
     <Compile Include="Services\ISoundService.cs" />
     <Compile Include="Services\SoundService.cs" />
     <Compile Include="Util\DictionaryExtentions.cs" />

@@ -10,41 +10,62 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormLogs : Form
     {
-        public IApplicationController Controller { get; protected set; }
-
-        TreeDO _currentTree;
-        BindingList<LogDO> _logs;
         DataGridViewTextBoxColumn _logNumColumn;
 
-        public FormLogs(IApplicationController controller, Stratum stratum)
+        #region DataService
+
+        ILogDataService _dataService;
+
+        public ILogDataService DataService
         {
-            Controller = controller;
-            InitializeComponent();
-
-            _dataGrid.AutoGenerateColumns = false;
-            _dataGrid.SuspendLayout();
-            _dataGrid.Columns.AddRange(
-                stratum.MakeLogColumns().ToArray());
-            _dataGrid.ResumeLayout();
-
-            _logNumColumn = _dataGrid.Columns[CruiseDAL.Schema.LOG.LOGNUMBER] as DataGridViewTextBoxColumn;
+            get { return _dataService; }
+            set
+            {
+                OnDataServiceChanging();
+                _dataService = value;
+                OnDataServiceChanged();
+            }
         }
 
-        public DialogResult ShowDialog(Tree tree)
+        void OnDataServiceChanging()
         {
-            if (tree == null) { throw new ArgumentNullException(nameof(tree)); }
+        }
 
-            _logs = new BindingList<LogDO>(tree.LoadLogs());
+        void OnDataServiceChanged()
+        {
+            if (DataService != null)
+            {
+                _dataGrid.SuspendLayout();
+                _dataGrid.Columns.AddRange(
+                    DataService.Stratum.MakeLogColumns().ToArray());
+                _dataGrid.ResumeLayout();
 
-            _currentTree = tree;
-            _treeDesLbl.Text = tree.LogLevelDiscription;
+                _logNumColumn = _dataGrid.Columns[CruiseDAL.Schema.LOG.LOGNUMBER] as DataGridViewTextBoxColumn;
+            }
+        }
 
-            _dataGrid.DataSource = _logs;
+        #endregion DataService
+
+        public FormLogs()
+        {
+            InitializeComponent();
+            _dataGrid.AutoGenerateColumns = false;
+            base.StartPosition = FormStartPosition.CenterParent;
+        }
+
+        public FormLogs(ILogDataService dataService) : this()
+        {
+            DataService = dataService;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            _BS_Logs.DataSource = DataService.Logs;
+            _treeDesLbl.Text = DataService.Tree.LogLevelDiscription;
+
             _dataGrid.Focus();
-
-            var result = ShowDialog();
-            tree.LogCountDirty = true;
-            return result;
         }
 
         protected override void OnActivated(EventArgs e)
@@ -61,68 +82,20 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        int GetHighestLogNum()
-        {
-            int highest = 0;
-            foreach (var log in _logs)
-            {
-                int logNum = 0;
-                if (int.TryParse(log.LogNumber, out logNum))
-                {
-                    highest = Math.Max(highest, logNum);
-                }
-            }
-            return highest;
-        }
-
-        bool IsLogNumAvalible(int newLogNum)
-        {
-            foreach (var log in _logs)
-            {
-                int logNum = 0;
-                if (int.TryParse(log.LogNumber, out logNum))
-                {
-                    if (newLogNum == logNum)
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            _dataGrid.EndEdit();
+            this._dataGrid.EndEdit();
 
             try
             {
-                //this._currentTree.Save();//tree is saved before entering log screen.
-                foreach (LogDO log in _logs)
-                {
-                    //log.Tree = this._currentTree;
-                    Controller.DataStore.Save(log
-                        , FMSC.ORM.Core.SQL.OnConflictOption.Fail
-                        , false);
-                }
+                DataService.Save();
             }
             catch (Exception)
             {
-                e.Cancel = !DialogService.AskYesNo("Opps, logs weren't saved. Would you like to abort?", String.Empty);
+                e.Cancel = !DialogService.AskYesNo("Opps, logs weren't saved. Would you like to abort?"
+                    , String.Empty);
             }
-        }
-
-        private LogDO AddLogRec()
-        {
-            LogDO newLog = new LogDO(Controller.DataStore);
-            newLog.Tree_CN = _currentTree.Tree_CN;
-            newLog.LogNumber = (GetHighestLogNum() + 1).ToString();
-
-            _logs.Add(newLog);
-            _dataGrid.GoToLastRow();
-            _dataGrid.GoToFirstColumn();
-            return newLog;
         }
 
         void _dataGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -140,7 +113,7 @@ namespace FSCruiser.WinForms.DataEntry
                     int newLogNumber;
                     if (int.TryParse(cellValue, out newLogNumber))
                     {
-                        if (!IsLogNumAvalible(newLogNumber))
+                        if (!DataService.IsLogNumAvalible(newLogNumber))
                         {
                             e.Cancel = true;
                         }
@@ -160,16 +133,17 @@ namespace FSCruiser.WinForms.DataEntry
         private void _BTN_delete_Click(object sender, EventArgs e)
         {
             if (_dataGrid.CurrentRow == null) { return; }
-            LogDO log = _dataGrid.CurrentRow.DataBoundItem as LogDO;
+            Log log = _dataGrid.CurrentRow.DataBoundItem as Log;
             if (log == null) { return; }
 
-            log.Delete();
-            _logs.Remove(log);
+            DataService.DeleteLog(log);
+            _BS_Logs.ResetBindings(false);
         }
 
         private void _BTN_add_Click(object sender, EventArgs e)
         {
-            AddLogRec();
+            DataService.AddLogRec();
+            _BS_Logs.ResetBindings(false);
         }
     }
 }

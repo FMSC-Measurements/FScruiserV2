@@ -13,7 +13,7 @@ namespace FSCruiser.WinForms.Common
 {
     public abstract class WinFormsViewControllerBase : IViewController
     {
-        private Dictionary<StratumDO, FormLogs> _logViews = new Dictionary<StratumDO, FormLogs>();
+        //private Dictionary<StratumDO, FormLogs> _logViews = new Dictionary<StratumDO, FormLogs>();
 
         protected object _dataEntrySyncLock = new object();
         private FormMain _main;
@@ -75,18 +75,6 @@ namespace FSCruiser.WinForms.Common
 
         public abstract void BeginShowSplash();
 
-        public FormLogs GetLogsView(Stratum stratum)
-        {
-            if (_logViews.ContainsKey(stratum))
-            {
-                return _logViews[stratum];
-            }
-            FormLogs logView = new FormLogs(this.ApplicationController, stratum);
-            _logViews.Add(stratum, logView);
-
-            return logView;
-        }
-
         public void HandleFileStateChanged()
         {
             if (this.MainView != null)
@@ -109,15 +97,6 @@ namespace FSCruiser.WinForms.Common
         }
 
         public abstract void ShowBackupUtil();
-
-        public void ShowLogsView(Stratum stratum, Tree tree)
-        {
-            if (stratum == null)
-            {
-                MessageBox.Show("Invalid Action. Stratum not set.");
-            }
-            this.GetLogsView(stratum).ShowDialog(tree);
-        }
 
         public abstract bool ShowOpenCruiseFileDialog(out string fileName);
 

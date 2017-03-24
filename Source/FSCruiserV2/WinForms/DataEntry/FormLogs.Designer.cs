@@ -41,6 +41,10 @@
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
+            // _BS_Logs
+            // 
+            this._BS_Logs.DataSource = typeof(Core.Models.Log);
+            // 
             // _dataGrid
             // 
             this._dataGrid.AllowUserToAddRows = false;
@@ -51,10 +55,7 @@
             this._dataGrid.Name = "_dataGrid";
             this._dataGrid.Size = new System.Drawing.Size(428, 231);
             this._dataGrid.TabIndex = 2;
-            // 
-            // _BS_Logs
-            // 
-            this._BS_Logs.DataSource = typeof(CruiseDAL.DataObjects.LogDO);
+            _dataGrid.DataSource = _BS_Logs;
             // 
             // _treeDesLbl
             // 

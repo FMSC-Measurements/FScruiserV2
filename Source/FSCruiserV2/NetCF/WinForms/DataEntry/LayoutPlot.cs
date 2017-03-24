@@ -557,7 +557,19 @@ namespace FSCruiser.WinForms.DataEntry
             catch { return; }
             if (tree == null) { return; }
 
-            DataEntryController.ShowLogs(tree);
+            if (tree.TrySave())
+            {
+                var dataService = DataService.MakeLogDataService(tree);
+                using (var view = new FormLogs(dataService))
+                {
+                    view.ShowDialog();
+                }
+            }
+            else
+            {
+                DialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
+                    , null);
+            }
         }
 
         void _dataGrid_CellValidating(object sender, EditableDataGridCellValidatingEventArgs e)

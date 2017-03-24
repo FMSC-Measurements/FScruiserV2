@@ -19,8 +19,6 @@ namespace FSCruiser.Core
 
         void ShowBackupUtil();
 
-        void ShowLogsView(Stratum stratum, Tree tree);
-
         bool ShowOpenCruiseFileDialog(out string fileName);
 
         void ShowDataEntry(CuttingUnit unit);

@@ -43,7 +43,7 @@ namespace FSCruiser.WinForms
         public static DataGridTableStyle InitializeLogColumns(this ILogFieldProvider stratum, EditableDataGrid grid)
         {
             DataGridTableStyle tblStyle = new DataGridTableStyle();
-            tblStyle.MappingName = "LogDO";
+            tblStyle.MappingName = "Log";
 
             foreach (LogFieldSetupDO field in stratum.LogFields)
             {

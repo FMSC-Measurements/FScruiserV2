@@ -19,7 +19,12 @@ namespace FScruiser.Core.Services
 
         #endregion Events
 
+        IRegionalLogRuleDataService _logRuleDataService;
+        public RegionLogInfo RegionalLogRule { get { return _logRuleDataService.RegionLogInfo; } }
+
         public bool IsReconCruise { get; set; }
+
+        public uint Region { get; set; }
 
         public DAL DataStore { get; protected set; }
 
@@ -101,6 +106,10 @@ namespace FScruiser.Core.Services
 
             EnableLogGrading = DataStore.ExecuteScalar<bool>("SELECT LogGradingEnabled FROM Sale Limit 1;");
             IsReconCruise = DataStore.ExecuteScalar<bool>("SELECT [Purpose] == 'Recon' FROM Sale LIMIT 1;");
+            Region = DataStore.ExecuteScalar<uint>("SELECT Region FROM Sale LIMIT 1;");
+
+
+            _logRuleDataService = new IRegionalLogRuleDataService(Region);
 
             var tallyBuffer = new TallyHistoryCollection(this, Constants.MAX_TALLY_HISTORY_SIZE);
             tallyBuffer.Initialize();
@@ -150,6 +159,11 @@ namespace FScruiser.Core.Services
                     _nonPlotTrees = new BindingList<Tree>(trees);
                 }
             }
+        }
+
+        public ILogDataService MakeLogDataService(Tree tree)
+        {
+            return new ILogDataService(tree, tree.Stratum, RegionalLogRule, DataStore);
         }
 
         #region Tree

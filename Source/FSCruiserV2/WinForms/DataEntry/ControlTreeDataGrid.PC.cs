@@ -220,7 +220,19 @@ namespace FSCruiser.WinForms.DataEntry
                 var curTree = Trees.ElementAt(e.RowIndex) as Tree;
                 if (curTree != null)
                 {
-                    DataEntryController.ShowLogs(curTree);
+                    if (curTree.TrySave())
+                    {
+                        var dataService = DataService.MakeLogDataService(curTree);
+                        using (var view = new FormLogs(dataService))
+                        {
+                            view.ShowDialog(this);
+                        }
+                    }
+                    else
+                    {
+                        DialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
+                            , null);
+                    }
                 }
             }
         }

@@ -63,19 +63,6 @@ namespace FSCruiser.Core.DataEntry
             return "Unit: " + DataService.CuttingUnit.Code + ", " + DataService.CuttingUnit.Description;
         }
 
-        public void ShowLogs(Tree tree)
-        {
-            if (tree.TrySave())
-            {
-                this.ViewController.ShowLogsView(tree.Stratum, tree);
-            }
-            else
-            {
-                _dialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
-                    , null);
-            }
-        }
-
         public void OnTally(CountTree count)
         {
             TallyAction action = null;
