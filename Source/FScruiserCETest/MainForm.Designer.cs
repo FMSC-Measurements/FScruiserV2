@@ -39,12 +39,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.STRSampplingTest_BTN = new System.Windows.Forms.Button();
+            this.logsButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.logsButton);
             this.panel1.Controls.Add(this._selectCruiser);
             this.panel1.Controls.Add(this.LimitingDistance);
             this.panel1.Controls.Add(this._plotInfo_BTN);
@@ -123,6 +125,15 @@
             this.STRSampplingTest_BTN.Text = "STR Sampling";
             this.STRSampplingTest_BTN.Click += new System.EventHandler(this.STRSampplingTest_BTN_Click);
             // 
+            // logsButton
+            // 
+            this.logsButton.Location = new System.Drawing.Point(3, 56);
+            this.logsButton.Name = "logsButton";
+            this.logsButton.Size = new System.Drawing.Size(60, 20);
+            this.logsButton.TabIndex = 4;
+            this.logsButton.Text = "Logs";
+            this.logsButton.Click += new System.EventHandler(this.logsButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -153,5 +164,6 @@
         private System.Windows.Forms.Button _plotInfo_BTN;
         private System.Windows.Forms.Button LimitingDistance;
         private System.Windows.Forms.Button _selectCruiser;
+        private System.Windows.Forms.Button logsButton;
     }
 }
