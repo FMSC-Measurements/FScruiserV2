@@ -11,12 +11,7 @@ namespace FSCruiser.WinForms
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-#if PocketPC
-        [MTAThread]
-#else
-
         [STAThread]
-#endif
         static void Main()
         {
             //read command line arguments
@@ -27,24 +22,7 @@ namespace FSCruiser.WinForms
                 dalPath = args[1];
             }
 
-            NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
-            NBug.Settings.StoragePath = NBug.Enums.StoragePath.WindowsTemp;
-            NBug.Settings.Destinations.Add(new NBug.Core.Submission.Tracker.Redmine()
-            {
-                ApiKey = "6cf4343091c7509dbf27d6afd84a267189b9d3b9",
-                CustomSubject = "CrashReport",
-                Url = "http://fmsc-projects.herokuapp.com/projects/fscruiser/",
-                ProjectId = "fscruiser",
-                TrackerId = "5",
-                PriorityId = "1",
-                StatusId = "1"
-            });
-
-            NBug.Settings.ReleaseMode = true;//only create error reports if debugger not attached
-            NBug.Settings.StopReportingAfter = 60;
-
-            AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
-            Application.ThreadException += NBug.Handler.ThreadException;
+            InitializeNBug();
 
             DialogService.Instance = new WinFormsDialogService();
             using (var appMutex = new System.Threading.Mutex(true, "FScruiser"))
@@ -61,6 +39,35 @@ namespace FSCruiser.WinForms
             }
             Debug.Close();
             Application.Exit();// forces any extra forms (splash screen) to close
+        }
+
+        static void InitializeNBug()
+        {
+            try
+            {
+                NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
+                NBug.Settings.StoragePath = NBug.Enums.StoragePath.WindowsTemp;
+                NBug.Settings.Destinations.Add(new NBug.Core.Submission.Tracker.Redmine()
+                {
+                    ApiKey = "6cf4343091c7509dbf27d6afd84a267189b9d3b9",
+                    CustomSubject = "CrashReport",
+                    Url = "http://fmsc-projects.herokuapp.com/projects/fscruiser/",
+                    ProjectId = "fscruiser",
+                    TrackerId = "5",
+                    PriorityId = "1",
+                    StatusId = "1"
+                });
+
+                NBug.Settings.ReleaseMode = true;//only create error reports if debugger not attached
+                NBug.Settings.StopReportingAfter = 60;
+
+                AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
+                Application.ThreadException += NBug.Handler.ThreadException;
+            }
+            catch (Exception e)
+            {
+                Debug.Write(e.ToString());
+            }
         }
     }
 }

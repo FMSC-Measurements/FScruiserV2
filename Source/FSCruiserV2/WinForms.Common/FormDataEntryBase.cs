@@ -21,7 +21,7 @@ using Microsoft.WindowsCE.Forms;
 namespace FSCruiser.WinForms.DataEntry
 {
     /// <summary>
-    /// Base class for winform Data Entry Form
+    /// Base class for win-forms Data Entry Form
     /// </summary>
     public partial class FormDataEntry : FMSC.Controls.CustomForm, IDataEntryView
     {
@@ -48,20 +48,23 @@ namespace FSCruiser.WinForms.DataEntry
 
         public IApplicationController Controller { get; protected set; }
 
-        #region Inialize Controlls
+        #region Initialize Controls
 
         protected void InitializeCommon(IApplicationController controller
+            , ApplicationSettings appSettings
             , IDataEntryDataService dataService)
         {
             KeyPreview = true;
 
             Controller = controller;
             DataService = dataService;
+            _appSettings = appSettings;
 
             LogicController = new FormDataEntryLogic(Controller
                 , DialogService.Instance
                 , SoundService.Instance
                 , DataService
+                , ApplicationSettings.Instance
                 , this);
 
             // Set the form title (Text) with current cutting unit and description.
@@ -111,8 +114,8 @@ namespace FSCruiser.WinForms.DataEntry
             _treePage.Text = "Trees";
 
 #if NetCF
-            _treeView = new ControlTreeDataGrid(this.Controller
-                , DataService
+            _treeView = new ControlTreeDataGrid(DataService
+                , ApplicationSettings.Instance
                 , this.LogicController)
             {
                 Dock = DockStyle.Fill,
@@ -120,9 +123,9 @@ namespace FSCruiser.WinForms.DataEntry
                 SIP = SIP
             };
 #else
-            _treeView = new ControlTreeDataGrid(this.Controller
-            , DataService
-            , this.LogicController);
+            _treeView = new ControlTreeDataGrid(DataService
+                , ApplicationSettings.Instance
+                , this.LogicController);
 #endif
             _treeView.Dock = DockStyle.Fill;
 
@@ -185,7 +188,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        #endregion Inialize Controlls
+        #endregion Initialize Controls
 
         #region Overrides
 
@@ -218,6 +221,7 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         KeysConverter keyConverter = new KeysConverter();
+        private ApplicationSettings _appSettings;
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -248,7 +252,15 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void _editCruisersMI_Click(object sender, EventArgs e)
         {
-            Controller.ViewController.ShowManageCruisers();
+            using (FormManageCruisers view = new FormManageCruisers(_appSettings))
+            {
+#if NetCF
+                view.ShowDialog();
+#else
+                view.ShowDialog(this);
+#endif
+
+            }
         }
 
         protected void _showHideLogColMI_Click(object sender, EventArgs e)
@@ -285,12 +297,17 @@ namespace FSCruiser.WinForms.DataEntry
         {
             using (var view = new FormSettings())
             {
+#if NetCF
                 view.ShowDialog();
+#else
+                view.ShowDialog(this);
+#endif
             }
         }
 
         protected void OnFocusedLayoutChangedInternal(object sender, EventArgs e)
         {
+            SoundService.SignalPageChanged();
             if (_previousLayout != null)
             {
                 //note: a view can be a tree view and a tally view,
@@ -304,13 +321,13 @@ namespace FSCruiser.WinForms.DataEntry
                     {
                         try
                         {
-                            var worker = new SaveTreesWorker(LogicController.Database, oldTreeView.Trees);
+                            var worker = new SaveTreesWorker(DataService.DataStore, oldTreeView.Trees);
                             worker.SaveAll();
                             //this.Controller.SaveTrees(((ITreeView)_previousLayout).Trees);
                         }
                         catch (Exception ex)
                         {
-                            this.Controller.HandleNonCriticalException(ex, "Unable to compleate last tree save");
+                            this.Controller.HandleNonCriticalException(ex, "Unable to complete last tree save");
                         }
                     }
                 }

@@ -16,10 +16,17 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         public FormDataEntry(IApplicationController controller
+            , ApplicationSettings appSettings
             , IDataEntryDataService dataService)
         {
             InitializeComponent();
-            InitializeCommon(controller, dataService);
+            InitializeCommon(controller, appSettings, dataService);
+
+            var addTreeKey = ApplicationSettings.Instance.AddTreeKeyStr;
+            if (!string.IsNullOrWhiteSpace(addTreeKey))
+            {
+                _addTreeBTN.Text = _addTreeBTN.Text + "(" + addTreeKey + ")";
+            }
         }
 
         //protected override void OnKeyUp(KeyEventArgs e)
@@ -42,6 +49,15 @@ namespace FSCruiser.WinForms.DataEntry
             var treeView = FocusedLayout as ITreeView;
             _addTreeBTN.Enabled = (treeView != null && treeView.UserCanAddTrees);
             _deleteTreeBTN.Enabled = (treeView != null);
+
+            var plotView = FocusedLayout as IPlotLayout;
+            _limitingDistanceMI.Enabled = (plotView != null);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var point = button1.PointToScreen(new System.Drawing.Point(0, button1.Height));
+            contextMenuStrip1.Show(point);
         }
     }
 }

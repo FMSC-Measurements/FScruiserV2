@@ -34,6 +34,7 @@
             this._sampleGroupLBL = new System.Windows.Forms.Label();
             this._stratumLBL = new System.Windows.Forms.Label();
             this._crusierSelectPanel = new System.Windows.Forms.Panel();
+            this._cmLBL = new System.Windows.Forms.Label();
             button1 = new System.Windows.Forms.Button();
             panel1 = new System.Windows.Forms.Panel();
             panel1.SuspendLayout();
@@ -55,9 +56,9 @@
             panel1.Controls.Add(this._sampleGroupLBL);
             panel1.Controls.Add(this._stratumLBL);
             panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            panel1.Location = new System.Drawing.Point(0, 0);
+            panel1.Location = new System.Drawing.Point(0, 20);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(240, 41);
+            panel1.Size = new System.Drawing.Size(240, 43);
             // 
             // _treeNumLBL
             // 
@@ -88,9 +89,16 @@
             // 
             this._crusierSelectPanel.Controls.Add(button1);
             this._crusierSelectPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._crusierSelectPanel.Location = new System.Drawing.Point(0, 41);
+            this._crusierSelectPanel.Location = new System.Drawing.Point(0, 63);
             this._crusierSelectPanel.Name = "_crusierSelectPanel";
-            this._crusierSelectPanel.Size = new System.Drawing.Size(240, 253);
+            this._crusierSelectPanel.Size = new System.Drawing.Size(240, 231);
+            // 
+            // _cmLBL
+            // 
+            this._cmLBL.Dock = System.Windows.Forms.DockStyle.Top;
+            this._cmLBL.Location = new System.Drawing.Point(0, 0);
+            this._cmLBL.Name = "_cmLBL";
+            this._cmLBL.Size = new System.Drawing.Size(240, 20);
             // 
             // FormCruiserSelection
             // 
@@ -100,6 +108,7 @@
             this.ClientSize = new System.Drawing.Size(240, 294);
             this.Controls.Add(this._crusierSelectPanel);
             this.Controls.Add(panel1);
+            this.Controls.Add(this._cmLBL);
             this.MinimizeBox = false;
             this.Name = "FormCruiserSelection";
             this.Text = "Select Cruiser";
@@ -115,6 +124,7 @@
         private System.Windows.Forms.Label _stratumLBL;
         private System.Windows.Forms.Label _treeNumLBL;
         private System.Windows.Forms.Panel _crusierSelectPanel;
+        private System.Windows.Forms.Label _cmLBL;
 
     }
 }

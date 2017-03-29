@@ -8,31 +8,48 @@ namespace FSCruiserV2.Test.Mocks
 {
     public class SoundServiceMock : ISoundService
     {
+        public int SignalMeasureTreeCallCnt = 0;
+        public int SignalInvalidActionCallCnt = 0;
+        public int SignalInsuranceTreeCallCnt = 0;
+        public int SignalTallyCallCnt = 0;
+        public int SignalPageChangedCallCnt = 0;
+        public int DisposedCallCnt = 0;
+
         #region ISoundService Members
 
-        public void SignalMeasureTree(bool showMessage)
+        public void SignalMeasureTree()
         {
-            throw new NotImplementedException();
+            SignalMeasureTreeCallCnt++;
         }
 
         public void SignalInvalidAction()
         {
-            throw new NotImplementedException();
+            SignalInvalidActionCallCnt++;
         }
 
         public void SignalInsuranceTree()
         {
-            throw new NotImplementedException();
+            SignalInsuranceTreeCallCnt++;
         }
 
         public void SignalTally()
         {
-            throw new NotImplementedException();
+            SignalTally(false);
         }
 
         public void SignalPageChanged()
         {
-            throw new NotImplementedException();
+            SignalPageChanged(false);
+        }
+
+        public void SignalTally(bool force)
+        {
+            SignalTallyCallCnt++;
+        }
+
+        public void SignalPageChanged(bool force)
+        {
+            SignalPageChangedCallCnt++;
         }
 
         #endregion
@@ -41,7 +58,7 @@ namespace FSCruiserV2.Test.Mocks
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            DisposedCallCnt++;
         }
 
         #endregion

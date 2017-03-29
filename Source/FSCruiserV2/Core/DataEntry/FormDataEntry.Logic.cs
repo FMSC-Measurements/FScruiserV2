@@ -19,10 +19,6 @@ namespace FSCruiser.Core.DataEntry
 
         public IDataEntryView View { get; set; }
 
-        public CuttingUnit Unit { get { return _dataService.CuttingUnit; } }
-
-        public DAL Database { get { return DataService.DataStore; } }
-
         public IViewController ViewController { get { return this.Controller.ViewController; } }
 
         public bool HotKeyenabled { get; set; }
@@ -44,11 +40,13 @@ namespace FSCruiser.Core.DataEntry
         IDataEntryDataService _dataService;
         IDialogService _dialogService;
         ISoundService _soundService;
+        ApplicationSettings _appSettings;
 
         public FormDataEntryLogic(IApplicationController controller
             , IDialogService dialogService
             , ISoundService soundService
             , IDataEntryDataService dataService
+            , ApplicationSettings settings
             , IDataEntryView view)
         {
             this.Controller = controller;
@@ -57,24 +55,12 @@ namespace FSCruiser.Core.DataEntry
             _dialogService = dialogService;
             _soundService = soundService;
             _dataService = dataService;
+            _appSettings = settings;
         }
 
         public string GetViewTitle()
         {
-            return "Unit: " + this.Unit.Code + ", " + this.Unit.Description;
-        }
-
-        public void ShowLogs(Tree tree)
-        {
-            if (tree.TrySave())
-            {
-                this.ViewController.ShowLogsView(tree.Stratum, tree);
-            }
-            else
-            {
-                _dialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
-                    , null);
-            }
+            return "Unit: " + DataService.CuttingUnit.Code + ", " + DataService.CuttingUnit.Description;
         }
 
         public void OnTally(CountTree count)
@@ -99,6 +85,7 @@ namespace FSCruiser.Core.DataEntry
                 action = TallyStandard(count);
             }
 
+            //action may be null if cruising 3P and user doesn't enter a kpi
             if (action != null)
             {
                 _soundService.SignalTally();
@@ -107,18 +94,23 @@ namespace FSCruiser.Core.DataEntry
                 {
                     if (tree.CountOrMeasure == "M")
                     {
-                        _soundService.SignalMeasureTree(false);
+                        _soundService.SignalMeasureTree();
                     }
                     else if (tree.CountOrMeasure == "I")
                     {
                         _soundService.SignalInsuranceTree();
                     }
 
-                    _dialogService.AskCruiser(tree);
-
-                    var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
-                            (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
-                    _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
+                    if (_appSettings.EnableCruiserPopup)
+                    {
+                        _dialogService.AskCruiser(tree);
+                    }
+                    else
+                    {
+                        var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
+                                 (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
+                        _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
+                    }
 
                     tree.TrySave();
                     DataService.AddNonPlotTree(tree);
@@ -129,7 +121,7 @@ namespace FSCruiser.Core.DataEntry
                         //this.View.TreeViewMoveLast();
                     }
                 }
-                Unit.TallyHistoryBuffer.Add(action);
+                DataService.CuttingUnit.TallyHistoryBuffer.Add(action);
             }
         }
 
@@ -200,7 +192,7 @@ namespace FSCruiser.Core.DataEntry
 
         protected bool AskEnterMeasureTreeData()
         {
-            if (!ApplicationSettings.Instance.EnableAskEnterTreeData) { return false; }
+            if (!_appSettings.EnableAskEnterTreeData) { return false; }
 
             return _dialogService.AskYesNo("Would you like to enter tree data now?", "Sample", false);
         }
@@ -294,7 +286,8 @@ namespace FSCruiser.Core.DataEntry
                     if (item.KPI < newKPI)
                     {
                         tree.CountOrMeasure = "M";
-                        _soundService.SignalMeasureTree(true);
+                        _soundService.SignalMeasureTree();
+                        _dialogService.ShowMessage("Measure Tree");
                     }
                     else
                     {

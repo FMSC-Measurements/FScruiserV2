@@ -48,12 +48,12 @@
             // 
             // _BS_Logs
             // 
-            this._BS_Logs.DataSource = typeof(CruiseDAL.DataObjects.LogDO);
-            this._BS_Logs.AddingNew += new System.ComponentModel.AddingNewEventHandler(this._BS_Logs_AddingNew);
+            this._BS_Logs.DataSource = typeof(FSCruiser.Core.Models.Log);
+            _BS_Logs.AllowNew = false;
             // 
             // _dataGrid
             // 
-            //this._dataGrid.DataSource = this._BS_Logs;
+            this._dataGrid.DataSource = this._BS_Logs;
             this._dataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this._dataGrid.Location = new System.Drawing.Point(0, 30);
             this._dataGrid.Name = "_dataGrid";

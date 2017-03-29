@@ -28,8 +28,6 @@ namespace FSCruiser.WinForms.DataEntry
         private DataGridTextBoxColumn _errorsColumn;
         private System.Windows.Forms.BindingSource _BS_trees;
 
-        private IApplicationController Controller { get; set; }
-
         private bool _userCanAddTrees;
 
         public bool UserCanAddTrees
@@ -37,6 +35,8 @@ namespace FSCruiser.WinForms.DataEntry
             get { return _userCanAddTrees; }
             set { _userCanAddTrees = value; }
         }
+
+
 
         #region DataService
 
@@ -95,14 +95,45 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
+        #region AppSettings
+        ApplicationSettings _appSettings;
+        public ApplicationSettings AppSettings
+        {
+            get { return _appSettings; }
+            set
+            {
+                OnAppSettingsChanging();
+                _appSettings = value;
+                OnAppSettingsChanged();
+            }
+        }
 
-        public ControlTreeDataGrid(IApplicationController controller
-            , IDataEntryDataService dataService
+        private void OnAppSettingsChanged()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.CruisersChanged -= Settings_CruisersChanged;
+            }
+        }
+
+        private void OnAppSettingsChanging()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.CruisersChanged += Settings_CruisersChanged;
+                Settings_CruisersChanged(null, null);
+            }
+        }
+        #endregion
+
+
+        public ControlTreeDataGrid(IDataEntryDataService dataService
+            , ApplicationSettings appSettings
             , FormDataEntryLogic dataEntryController)
         {
-            Controller = controller;
             DataService = dataService;
             DataEntryController = dataEntryController;
+            AppSettings = appSettings;
 
             DataGridAdjuster.InitializeGrid(this);
             DataGridTableStyle tableStyle = dataService.InitializeTreeColumns(this);
@@ -135,11 +166,6 @@ namespace FSCruiser.WinForms.DataEntry
             }
 
             LoadData();
-
-            ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
-            Settings_CruisersChanged(null, null);
-
-            
         }
 
         void LoadData()
@@ -238,7 +264,20 @@ namespace FSCruiser.WinForms.DataEntry
         {
             Tree tree = this._BS_trees[e.RowNumber] as Tree;
             if (tree == null) { return; }
-            this.DataEntryController.ShowLogs(tree);
+
+            if (tree.TrySave())
+            {
+                var dataService = DataService.MakeLogDataService(tree);
+                using(var view = new FormLogs(dataService))
+                {
+                    view.ShowDialog();
+                }
+            }
+            else
+            {
+                DialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
+                    , null);
+            }
         }
 
         void _BS_trees_CurrentChanged(object sender, EventArgs e)

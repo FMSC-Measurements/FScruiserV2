@@ -45,13 +45,13 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CustomMarshalers" />
     <Reference Include="FMSC.Core_CF20, Version=1.2.0.29775, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\FMSC.Core\NetCF20\FMSC.Core_CF20.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -106,6 +106,10 @@
     <ProjectReference Include="..\..\CruiseDAL\FMSC.ORM\FMSC.ORM.NetCF20.csproj">
       <Project>{D346BFEA-85A0-4A5D-BD89-D07E073B065E}</Project>
       <Name>FMSC.ORM.NetCF20</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FMSC.Controls\FMSC.Controls\FMSC.Controls_CF20.csproj">
+      <Project>{66B57265-EED3-49D7-B3B7-68CDE1061085}</Project>
+      <Name>FMSC.Controls_CF20</Name>
     </ProjectReference>
     <ProjectReference Include="..\FScruiser.Core\FScruiser.Core_CF20.csproj">
       <Project>{C78E1A49-9F49-45E6-86A4-13C2F22E8450}</Project>

@@ -65,7 +65,7 @@ namespace FSCruiser.Core.Models
         {
             var regionalLogRules = new RegionLogInfo(10);
 
-            var spruce = new LogRule("98");// Spruce
+            var spruce = new LogRule("098");// Spruce
             spruce.Add(new LogHeightClass(36, 45, 1));
             spruce.Add(new LogHeightClass(46, 55, 1).WithBreaks(13));
             spruce.Add(new LogHeightClass(56, 65, 1).WithBreaks(18));
@@ -104,7 +104,7 @@ namespace FSCruiser.Core.Models
 
             regionalLogRules.AddRule(spruceYoung);
 
-            var wrc = new LogRule("242");//western redcedar
+            var wrc = new LogRule("242");//western red-cedar
             wrc.Add(new LogHeightClass(36, 45, 1));
             wrc.Add(new LogHeightClass(46, 55, 1).WithBreaks(14));
             wrc.Add(new LogHeightClass(56, 65, 1).WithBreaks(11));
@@ -122,7 +122,7 @@ namespace FSCruiser.Core.Models
 
             regionalLogRules.AddRule(wrc);
 
-            var ayc = new LogRule("42"); //Alaska Yellow-cedar
+            var ayc = new LogRule("042"); //Alaska Yellow-cedar
             ayc.Add(new LogHeightClass(36, 45, 1));
             ayc.Add(new LogHeightClass(46, 55, 1).WithBreaks(13));
             ayc.Add(new LogHeightClass(56, 65, 1).WithBreaks(10));

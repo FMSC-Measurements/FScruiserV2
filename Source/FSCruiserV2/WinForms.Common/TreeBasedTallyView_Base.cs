@@ -202,7 +202,7 @@ namespace FSCruiser.WinForms
             if (MessageBox.Show("Are you sure you want to untally the selected record?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
                 == DialogResult.No) { return; }
 
-            DataEntryController.Unit.TallyHistoryBuffer.Remove(selectedAction);
+            DataService.CuttingUnit.TallyHistoryBuffer.Remove(selectedAction);
         }
 
         protected void AdjustPanelHeight(Panel panel)
@@ -326,19 +326,6 @@ namespace FSCruiser.WinForms
             this._BS_tallyHistory.MoveLast();
         }
 
-        public void HandleStratumLoaded(Control container)
-        {
-            if (container.InvokeRequired)
-            {
-                Action<Panel> a = new Action<Panel>(AdjustPanelHeight);
-                container.Invoke(a, container);
-            }
-            else
-            {
-                this.AdjustPanelHeight((Panel)container);
-            }
-        }
-
         public void SaveCounts()
         {
             foreach (Stratum stratum in Strata)
@@ -374,7 +361,7 @@ namespace FSCruiser.WinForms
         {
             this.InitializeStrataViews();
 
-            _BS_tallyHistory.DataSource = DataEntryController.Unit.TallyHistoryBuffer;
+            _BS_tallyHistory.DataSource = DataService.CuttingUnit.TallyHistoryBuffer;
             this._viewLoading = false;
         }
 

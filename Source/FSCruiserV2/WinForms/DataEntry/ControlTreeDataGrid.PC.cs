@@ -8,35 +8,33 @@ using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FScruiser.Core.Services;
+using FSCruiser.WinForms.Controls;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public class ControlTreeDataGrid : DataGridView, ITreeView
+    public class ControlTreeDataGrid : CustomDataGridView, ITreeView
     {
         bool _userCanAddTrees;
-        private bool _viewLoading = true;
-        private BindingSource _BS_trees;
-        private DataGridViewComboBoxColumn _speciesColumn;
-        private DataGridViewComboBoxColumn _sgColumn;
-        private DataGridViewComboBoxColumn _stratumColumn;
-        private DataGridViewTextBoxColumn _treeNumberColumn;
-        private DataGridViewButtonColumn _logsColumn;
-        private DataGridViewTextBoxColumn _errorMessageColumn;
-        private DataGridViewComboBoxColumn _initialsColoumn;
+        bool _viewLoading = true;
+        BindingSource _BS_trees;
+        DataGridViewComboBoxColumn _speciesColumn;
+        DataGridViewComboBoxColumn _sgColumn;
+        DataGridViewComboBoxColumn _stratumColumn;
+        DataGridViewTextBoxColumn _treeNumberColumn;
+        DataGridViewButtonColumn _logsColumn;
+        DataGridViewTextBoxColumn _errorMessageColumn;
+        DataGridViewComboBoxColumn _initialsColoumn;
 
-        private ContextMenuStrip _contexMenu;
-        private ToolStripMenuItem logToolStripMenuItem;
+        ContextMenuStrip _contexMenu;
+        ToolStripMenuItem _logToolStripMenuItem;
 
-        //private BindingSource _BS_TreeSampleGroups;
-        //private BindingSource _BS_TreeSpecies;
+        #region Properties
 
         public IApplicationController Controller { get; protected set; }
 
         public FormDataEntryLogic DataEntryController { get; set; }
 
         public bool ViewLoading { get { return _viewLoading; } }
-
-        public int HomeColumnIndex { get; set; }
 
         public ICollection<Tree> Trees
         {
@@ -49,6 +47,7 @@ namespace FSCruiser.WinForms.DataEntry
         #region DataService
 
         IDataEntryDataService _dataService;
+        private ApplicationSettings _appSettings;
 
         IDataEntryDataService DataService
         {
@@ -61,7 +60,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        private void OnDataServiceChanged()
+        void OnDataServiceChanged()
         {
             if (_dataService != null)
             {
@@ -69,7 +68,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        private void OnDataServiceChanging()
+        void OnDataServiceChanging()
         {
             if (_dataService != null)
             {
@@ -79,27 +78,53 @@ namespace FSCruiser.WinForms.DataEntry
 
         void HandleEnableLogGradingChanged(object sender, EventArgs e)
         {
-            if (this._logsColumn != null)
+            if (_logsColumn != null)
             {
-                this._logsColumn.Visible = DataService.EnableLogGrading;
+                _logsColumn.Visible = DataService.EnableLogGrading;
             }
         }
 
         #endregion DataService
 
-        public ControlTreeDataGrid(IApplicationController controller
-            , IDataEntryDataService dataService
-            , FormDataEntryLogic dataEntryController)
+        #region AppSettings
+
+        public ApplicationSettings AppSettings
+        {
+            get { return _appSettings; }
+            set
+            {
+                OnAppSettingsChanging();
+                _appSettings = value;
+                OnAppSettingsChanged();
+            }
+        }
+
+        private void OnAppSettingsChanged()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.CruisersChanged -= Settings_CruisersChanged;
+            }
+        }
+
+        private void OnAppSettingsChanging()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.CruisersChanged += Settings_CruisersChanged;
+            }
+        }
+
+        #endregion AppSettings
+
+        #endregion Properties
+
+        ControlTreeDataGrid()
         {
             EditMode = DataGridViewEditMode.EditOnEnter;
             AutoGenerateColumns = false;
             AllowUserToDeleteRows = false;
             AllowUserToAddRows = false;
-            Controller = controller;
-            DataService = dataService;
-            DataEntryController = dataEntryController;
-
-            ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
 
             CellClick += new DataGridViewCellEventHandler(ControlTreeDataGrid_CellClick);
 
@@ -109,17 +134,36 @@ namespace FSCruiser.WinForms.DataEntry
             DataSource = _BS_trees;
             ((System.ComponentModel.ISupportInitialize)_BS_trees).EndInit();
 
-            //_BS_TreeSpecies = new BindingSource();
-            //((System.ComponentModel.ISupportInitialize)_BS_TreeSpecies).BeginInit();
-            //_BS_TreeSpecies.DataSource = typeof(TreeDefaultValueDO);
-            //((System.ComponentModel.ISupportInitialize)_BS_TreeSpecies).EndInit();
+            ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(ControlTreeDataGrid_ColumnHeaderMouseClick);
 
-            //_BS_TreeSampleGroups = new BindingSource();
-            //((System.ComponentModel.ISupportInitialize)_BS_TreeSampleGroups).BeginInit();
-            //_BS_TreeSampleGroups.DataSource = typeof(SampleGroupDO);
-            //((System.ComponentModel.ISupportInitialize)_BS_TreeSampleGroups).EndInit();
+            _logToolStripMenuItem = new ToolStripMenuItem();
+            _logToolStripMenuItem.Name = "logToolStripMenuItem";
+            _logToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            _logToolStripMenuItem.Click += logToolStripMenuItem_Click;
 
-            var columns = DataService.MakeTreeColumns();
+            _contexMenu = new ContextMenuStrip(new System.ComponentModel.Container());
+            _contexMenu.SuspendLayout();
+            _contexMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { _logToolStripMenuItem });
+            _contexMenu.Name = "_contexMenu";
+            _contexMenu.Size = new System.Drawing.Size(181, 26);
+
+            _contexMenu.ResumeLayout(false);
+        }
+
+        public ControlTreeDataGrid(IDataEntryDataService dataService
+            , ApplicationSettings appSettings
+            , FormDataEntryLogic dataEntryController) : this()
+        {
+            DataService = dataService;
+            DataEntryController = dataEntryController;
+            AppSettings = appSettings;
+
+            _logToolStripMenuItem.Text = DataService.EnableLogGrading ?
+                "Disable Log Grading" : "Enable Log Grading";
+
+            var fontWidth = (int)Math.Ceiling(CreateGraphics().MeasureString("_", Font).Width);
+
+            var columns = DataService.MakeTreeColumns(fontWidth);
             base.Columns.AddRange(columns.ToArray());
 
             _speciesColumn = base.Columns["TreeDefaultValue"] as DataGridViewComboBoxColumn;
@@ -132,7 +176,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             if (_speciesColumn != null)
             {
-                _speciesColumn.DataSource = Controller.DataStore.From<TreeDefaultValueDO>().Read().ToList();
+                _speciesColumn.DataSource = DataService.GetTreeDefaultValuesAll().ToList();
             }
             if (_sgColumn != null)
             {
@@ -150,29 +194,17 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _logsColumn.Visible = DataService.EnableLogGrading;
             }
-
-            _contexMenu = new ContextMenuStrip(new System.ComponentModel.Container());
-            logToolStripMenuItem = new ToolStripMenuItem();
-            _contexMenu.SuspendLayout();
-
-            this.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(ControlTreeDataGrid_ColumnHeaderMouseClick);
-
-            _contexMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { logToolStripMenuItem });
-            _contexMenu.Name = "_contexMenu";
-            _contexMenu.Size = new System.Drawing.Size(181, 26);
-            logToolStripMenuItem.Name = "logToolStripMenuItem";
-            logToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            logToolStripMenuItem.Text = DataService.EnableLogGrading ?
-                "Disable Log Grading" : "Enable Log Grading";
-            logToolStripMenuItem.Click += logToolStripMenuItem_Click;
-            _contexMenu.ResumeLayout(false);
         }
+
+        #region event handlers
 
         void ControlTreeDataGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-                logToolStripMenuItem.Text = DataService.EnableLogGrading ?
+                if (_logToolStripMenuItem == null || _contexMenu == null) { return; }
+
+                _logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                     "Disable Log Grading" : "Enable Log Grading";
 
                 _contexMenu.Show(Cursor.Position);
@@ -181,15 +213,33 @@ namespace FSCruiser.WinForms.DataEntry
 
         void ControlTreeDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (_logsColumn != null && e.RowIndex > -1 && e.ColumnIndex == _logsColumn.Index)
+            if (e.RowIndex < 0 || e.RowIndex > Trees.Count) { return; }
+
+            if (_logsColumn != null && e.ColumnIndex == _logsColumn.Index)
             {
-                var curTree = this.Trees.ElementAt(e.RowIndex) as Tree;
+                var curTree = Trees.ElementAt(e.RowIndex) as Tree;
                 if (curTree != null)
                 {
-                    this.DataEntryController.ShowLogs(curTree);
+                    if (curTree.TrySave())
+                    {
+                        var dataService = DataService.MakeLogDataService(curTree);
+                        using (var view = new FormLogs(dataService))
+                        {
+                            view.ShowDialog(this);
+                        }
+                    }
+                    else
+                    {
+                        DialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
+                            , null);
+                    }
                 }
             }
         }
+
+        #endregion event handlers
+
+        #region overrides
 
         protected override void OnDataError(bool displayErrorDialogIfNoHandler, DataGridViewDataErrorEventArgs e)
         {
@@ -203,50 +253,19 @@ namespace FSCruiser.WinForms.DataEntry
 
             DataGridViewComboBoxCell cell = base[e.ColumnIndex, e.RowIndex] as DataGridViewComboBoxCell;
             if (cell == null) { return; }
-            var curTree = this._BS_trees[e.RowIndex] as Tree;
+            var curTree = _BS_trees[e.RowIndex] as Tree;
             if (curTree == null) { return; }
 
             if (_sgColumn != null && e.ColumnIndex == _sgColumn.Index)
             {
-                this.UpdateSampleGroupColumn(curTree, cell);
+                UpdateSampleGroupColumn(curTree, cell);
             }
 
             if (_speciesColumn != null && e.ColumnIndex == _speciesColumn.Index)
             {
-                this.UpdateSpeciesColumn(curTree, cell);
+                UpdateSpeciesColumn(curTree, cell);
             }
         }
-
-        //protected override void OnCurrentCellDirtyStateChanged(EventArgs e)
-        //{
-        //    base.OnCurrentCellDirtyStateChanged(e);
-
-        //    DataGridViewComboBoxCell cell = base.CurrentCell as DataGridViewComboBoxCell;
-        //    if (cell == null) { return; }
-
-        //    TreeVM curTree = null;
-        //    try
-        //    {
-        //        curTree = this._BS_trees[cell.RowIndex] as TreeVM;
-        //    }
-        //    catch (SystemException) { return; }//ignore posible out of bound exceptions
-
-        //    object cellValue = cell.EditedFormattedValue;
-        //    cellValue = cell.ParseFormattedValue(cellValue, cell.InheritedStyle, null, null);
-        //    if (curTree == null) { return; }
-
-        //    if (_sgColumn != null && cell.ColumnIndex == _sgColumn.Index)
-        //    {
-        //        SampleGroupDO sg = cellValue as SampleGroupDO;
-        //        HandleSampleGroupChanging(curTree, sg);
-
-        //    }
-        //    if (_speciesColumn != null && cell.ColumnIndex == _speciesColumn.Index)
-        //    {
-        //        TreeDefaultValueDO tdv = cellValue as TreeDefaultValueDO;
-        //        HandleSpeciesChanged(curTree, tdv);
-        //    }
-        //}
 
         protected override void OnCellValidating(DataGridViewCellValidatingEventArgs e)
         {
@@ -262,10 +281,10 @@ namespace FSCruiser.WinForms.DataEntry
             Tree curTree = null;
             try
             {
-                curTree = this._BS_trees[e.RowIndex] as Tree;
+                curTree = _BS_trees[e.RowIndex] as Tree;
                 if (curTree == null) { return; }
             }
-            catch (ArgumentOutOfRangeException) { return; }//ignore posible out of bound exceptions
+            catch (ArgumentOutOfRangeException) { return; }//ignore possible out of bound exceptions
 
             object cellValue = e.FormattedValue;
             cellValue = cell.ParseFormattedValue(cellValue, cell.InheritedStyle, null, null);
@@ -297,7 +316,7 @@ namespace FSCruiser.WinForms.DataEntry
             else if (_speciesColumn != null && e.ColumnIndex == _speciesColumn.Index)
             {
                 TreeDefaultValueDO tdv = cellValue as TreeDefaultValueDO;
-                e.Cancel = !this.DataEntryController.HandleSpeciesChanged(curTree, tdv);
+                e.Cancel = !DataEntryController.HandleSpeciesChanged(curTree, tdv);
             }
             else if (_stratumColumn != null && e.ColumnIndex == _stratumColumn.Index)
             {
@@ -315,14 +334,16 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
+        #endregion overrides
+
         public void UpdateSampleGroupColumn(Tree tree)
         {
-            this.UpdateSampleGroupColumn(tree, this.CurrentCell as DataGridViewComboBoxCell);
+            UpdateSampleGroupColumn(tree, CurrentCell as DataGridViewComboBoxCell);
         }
 
         public void UpdateSpeciesColumn(Tree tree)
         {
-            this.UpdateSpeciesColumn(tree, this.CurrentCell as DataGridViewComboBoxCell);
+            UpdateSpeciesColumn(tree, CurrentCell as DataGridViewComboBoxCell);
         }
 
         protected void UpdateSampleGroupColumn(Tree tree, DataGridViewComboBoxCell cell)
@@ -399,7 +420,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             if (keyStr == settings.JumpTreeTallyKeyStr)
             {
-                this.DataEntryController.View.GoToTallyPage();
+                DataEntryController.View.GoToTallyPage();
                 return true;
             }
             else if (keyStr == settings.AddTreeKeyStr)
@@ -414,22 +435,22 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void HandleLoad()
         {
-            this._BS_trees.DataSource = DataService.NonPlotTrees;
+            _BS_trees.DataSource = DataService.NonPlotTrees;
 
             _viewLoading = false;
         }
 
         void Settings_CruisersChanged(object sender, EventArgs e)
         {
-            if (this._initialsColoumn != null)
+            if (_initialsColoumn != null)
             {
-                this._initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
+                _initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
             }
         }
 
         public void DeleteSelectedTree()
         {
-            var curTree = this._BS_trees.Current as Tree;
+            var curTree = _BS_trees.Current as Tree;
             if (curTree == null)
             {
                 MessageBox.Show("No Tree Selected");
@@ -454,32 +475,12 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void MoveLastTree()
         {
-            this._BS_trees.MoveLast();
+            _BS_trees.MoveLast();
         }
 
         public void MoveHomeField()
         {
-            var row = CurrentRow;
-            if (row == null) { return; }
-            try
-            {
-                var cells = row.Cells.OfType<DataGridViewCell>()
-                    .Where(c => !c.ReadOnly && c.Visible && !(c is DataGridViewButtonCell));
-                foreach (var cell in cells)
-                {
-                    var cellValue = cell.Value;
-                    var cellType = cell.ValueType;
-                    if (cellValue == null
-                        || (cellValue is String && string.IsNullOrEmpty(cellValue as string)) //is empty string
-                        || (cellType.IsValueType && cellValue.Equals(Activator.CreateInstance(cellType)))) //is the default value of a value type
-                    {
-                        CurrentCell = cell;
-                        break;
-                    }
-                }
-            }
-            catch
-            { }
+            MoveFirstEmptyCell();
         }
 
         public Tree UserAddTree()
@@ -489,8 +490,8 @@ namespace FSCruiser.WinForms.DataEntry
             var newTree = DataService.UserAddTree();
             if (newTree != null)
             {
-                this.MoveLastTree();
-                this.MoveHomeField();
+                MoveLastTree();
+                MoveHomeField();
             }
             return newTree;
         }
@@ -501,11 +502,11 @@ namespace FSCruiser.WinForms.DataEntry
 
         #endregion ITreeView Members
 
-        private void logToolStripMenuItem_Click(object sender, EventArgs e)
+        void logToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DataService.EnableLogGrading = !DataService.EnableLogGrading;
 
-            logToolStripMenuItem.Text = DataService.EnableLogGrading ?
+            _logToolStripMenuItem.Text = DataService.EnableLogGrading ?
                 "Disable Log Grading" : "Enable Log Grading";
         }
 
@@ -519,11 +520,7 @@ namespace FSCruiser.WinForms.DataEntry
                     _BS_trees = null;
                 }
 
-                try
-                {
-                    ApplicationSettings.Instance.CruisersChanged -= Settings_CruisersChanged;
-                }
-                catch { }
+                AppSettings = null;
             }
             base.Dispose(disposing);
         }

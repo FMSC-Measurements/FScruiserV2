@@ -69,7 +69,7 @@
     <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\ExceptionHandler.cs" />
     <Compile Include="Core\IExceptionHandler.cs" />
-    <Compile Include="Core\ViewInterfaces\ILimitingDistanceView.cs" />
+    <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
     <Compile Include="Core\ViewInterfaces\INumPad.cs" />
     <Compile Include="Core\Workers\CancelWorkerException.cs" />
     <Compile Include="Core\Workers\FileLoadWorker.cs" />
@@ -216,12 +216,7 @@
     <Compile Include="NetCF\WinForms\FormTallySetup.Designer.cs">
       <DependentUpon>FormTallySetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
-    <Compile Include="Core\ViewInterfaces\IDataEntryPage.cs" />
-    <Compile Include="Core\ViewInterfaces\IDataEntryView.cs" />
-    <Compile Include="Core\ViewInterfaces\IPlotInfoDialog.cs" />
     <Compile Include="Core\ViewInterfaces\IPlotLayout.cs" />
-    <Compile Include="Core\ViewInterfaces\ITallyView.cs" />
     <Compile Include="NetCF\WinForms\DataEntry\LayoutPlot.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -232,7 +227,6 @@
       <DependentUpon>LayoutTreeBased.cs</DependentUpon>
     </Compile>
     <Compile Include="NetCF\DataGridAdjuster.cs" />
-    <Compile Include="Core\ViewInterfaces\ITreeView.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="NetCF\WinForms\ViewController.cs" />
     <Compile Include="WinForms.Common\FormManageCruisers.cs">
@@ -375,6 +369,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="fscruiser.ico" />
+    <Content Include="Sounds\insurance.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\measure.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sounds\pageChange.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -391,6 +391,7 @@
     <None Include="Properties\DataSources\FSCruiserV2.Logic.PlotInfo.datasource" />
     <None Include="Properties\DataSources\FSCruiserV2.Logic.TallyAction.datasource" />
     <None Include="Properties\DataSources\FSCruiserV2.Logic.TreeVM.datasource" />
+    <None Include="WinForms.Common\Controls\HotKeySelectControl.xmta" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CruiseDAL\CruiseDAL\CruiseDAL_CF20.csproj">

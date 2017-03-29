@@ -22,22 +22,22 @@ namespace FSCruiser.WinForms
                 == DialogResult.Cancel;
         }
 
-#if NetCF
         FormCruiserSelection _cruiserSelectionView;
-#endif
 
         public void AskCruiser(FSCruiser.Core.Models.Tree tree)
         {
-#if NetCF
             if (ApplicationSettings.Instance.EnableCruiserPopup)
             {
                 if (_cruiserSelectionView == null)
                 {
                     _cruiserSelectionView = new FormCruiserSelection();
                 }
+#if NetCF
                 _cruiserSelectionView.ShowDialog(tree);
-            }
+#else
+                _cruiserSelectionView.ShowDialog(Form.ActiveForm, tree);
 #endif
+            }
         }
 
         public bool AskYesNo(string message, string caption)
@@ -69,6 +69,6 @@ namespace FSCruiser.WinForms
                 , MessageBoxDefaultButton.Button1);
         }
 
-        #endregion
+        #endregion IDialogService Members
     }
 }

@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormLogs));
-            this._dataGrid = new System.Windows.Forms.DataGridView();
+            this._dataGrid = new Controls.CustomDataGridView();
             this._BS_Logs = new System.Windows.Forms.BindingSource(this.components);
             this._treeDesLbl = new System.Windows.Forms.Label();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -40,6 +40,10 @@
             ((System.ComponentModel.ISupportInitialize)(this._BS_Logs)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // _BS_Logs
+            // 
+            this._BS_Logs.DataSource = typeof(Core.Models.Log);
             // 
             // _dataGrid
             // 
@@ -51,10 +55,7 @@
             this._dataGrid.Name = "_dataGrid";
             this._dataGrid.Size = new System.Drawing.Size(428, 231);
             this._dataGrid.TabIndex = 2;
-            // 
-            // _BS_Logs
-            // 
-            this._BS_Logs.DataSource = typeof(CruiseDAL.DataObjects.LogDO);
+            _dataGrid.DataSource = _BS_Logs;
             // 
             // _treeDesLbl
             // 
@@ -118,7 +119,7 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView _dataGrid;
+        private Controls.CustomDataGridView _dataGrid;
         private System.Windows.Forms.BindingSource _BS_Logs;
         private System.Windows.Forms.Label _treeDesLbl;
         private System.Windows.Forms.ToolStrip toolStrip1;

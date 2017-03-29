@@ -101,6 +101,8 @@ namespace FSCruiser.WinForms.DataEntry
                 , dataEntryController
                 , dataService
                 , soundService
+                , DialogService.Instance
+                , ApplicationSettings.Instance
                 , dataEntryController.ViewController);
 
             this.Dock = DockStyle.Fill;
@@ -130,7 +132,10 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.AutoGenerateColumns = false;
 
             this._dataGrid.SuspendLayout();
-            var columns = stratum.MakeTreeColumns();
+
+            var fontWidth = (int)Math.Ceiling(CreateGraphics().MeasureString("_", Font).Width);
+
+            var columns = stratum.MakeTreeColumns(fontWidth);
             this._dataGrid.Columns.AddRange(columns.ToArray());
             this._dataGrid.ResumeLayout();
 
@@ -276,7 +281,19 @@ namespace FSCruiser.WinForms.DataEntry
                 var curTree = this.Trees.ElementAt(e.RowIndex) as Tree;
                 if (curTree != null)
                 {
-                    this.DataEntryController.ShowLogs(curTree);
+                    if (curTree.TrySave())
+                    {
+                        var dataService = DataService.MakeLogDataService(curTree);
+                        using (var view = new FormLogs(dataService))
+                        {
+                            view.ShowDialog(this);
+                        }
+                    }
+                    else
+                    {
+                        DialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
+                            , null);
+                    }
                 }
             }
         }
@@ -588,11 +605,6 @@ namespace FSCruiser.WinForms.DataEntry
             return row;
         }
 
-        public Control MakeTallyRow(Control container, SubPop subPop)
-        {
-            return null;
-        }
-
         private void tallyRow_TallyButtonClicked(object sender, EventArgs e)
         {
             if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
@@ -614,12 +626,6 @@ namespace FSCruiser.WinForms.DataEntry
         public void OnTally(CountTree count)
         {
             this.ViewLogicController.OnTally(count);
-        }
-
-        public void HandleStratumLoaded(Control container)
-        {
-            //do nothing
-            return;
         }
 
         public void SaveCounts()
@@ -726,13 +732,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void MoveHomeField()
         {
-            if (this._dataGrid.CurrentCellAddress.Y == -1) { return; }
-            try
-            {
-                this._dataGrid.CurrentCell = this._dataGrid[0, this._dataGrid.CurrentCellAddress.Y];
-            }
-            catch
-            { }
+            _dataGrid.MoveFirstEmptyCell();
         }
 
         public Tree UserAddTree()
@@ -761,13 +761,20 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void ShowLimitingDistanceDialog()
         {
-            if (this.ViewLogicController.CurrentPlot == null)
+            var plot = ViewLogicController.CurrentPlot;
+            if (plot == null)
             {
                 ShowNoPlotSelectedMessage();
                 return;
             }
 
-            ViewLogicController.ShowLimitingDistanceDialog();
+            using (var view = new FormLimitingDistance())
+            {
+                if (view.ShowDialog(this, ViewLogicController.CurrentPlot) == DialogResult.OK)
+                {
+                    plot.Remarks += view.Report;
+                }
+            }
         }
 
         public void RefreshTreeView(Plot currentPlot)

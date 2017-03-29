@@ -372,6 +372,8 @@ namespace FSCruiser.WinForms.DataEntry
                 , dataEntryController
                 , dataService
                 , soundService
+                , DialogService.Instance
+                , ApplicationSettings.Instance
                 , dataEntryController.ViewController);
 
             ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
@@ -555,7 +557,19 @@ namespace FSCruiser.WinForms.DataEntry
             catch { return; }
             if (tree == null) { return; }
 
-            DataEntryController.ShowLogs(tree);
+            if (tree.TrySave())
+            {
+                var dataService = DataService.MakeLogDataService(tree);
+                using (var view = new FormLogs(dataService))
+                {
+                    view.ShowDialog();
+                }
+            }
+            else
+            {
+                DialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
+                    , null);
+            }
         }
 
         void _dataGrid_CellValidating(object sender, EditableDataGridCellValidatingEventArgs e)
@@ -765,26 +779,20 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void ShowLimitingDistanceDialog()
         {
-            if (this.ViewLogicController.CurrentPlot == null)
+            var plot = ViewLogicController.CurrentPlot;
+            if (plot == null)
             {
                 ShowNoPlotSelectedMessage();
                 return;
             }
 
-            ViewLogicController.ShowLimitingDistanceDialog();
-
-            //TreeVM tree = null;
-            ////see if the user is in the DBH column
-            //if (this._dataGrid.CurrentCollumn != null
-            //    && this._dataGrid.CurrentCollumn.MappingName == "DBH")
-            //{
-            //    //is a tree selected and if so grab it and take its dbh
-            //    TreeVM curTree = this.ViewLogicController.CurrentTree;
-            //    if (curTree != null && curTree.DBH == 0)
-            //    {
-            //        tree = curTree;
-            //    }
-            //}
+            using (var view = new FormLimitingDistance())
+            {
+                if (view.ShowDialog(plot) == DialogResult.OK)
+                {
+                    plot.Remarks += view.Report;
+                }
+            }
         }
 
         public void ViewEndEdit()
@@ -835,7 +843,14 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         public void NotifyEnter()
-        { /*do nothing */}
+        {
+            
+            MoveLastTree();
+            if (IsGridExpanded)
+            {
+                _dataGrid.Edit();
+            }
+        }
 
         #endregion IDataEntryPage
 
@@ -1025,7 +1040,7 @@ namespace FSCruiser.WinForms.DataEntry
             row.TallyButtonClicked += new EventHandler(this.TallyButton_Click);
             row.SettingsButtonClicked += new EventHandler(this.SettingsButton_Click);
 
-            row.Width = 90;
+            //row.Width = 90;
             row.Parent = container;
 
             row.Dock = DockStyle.Left;

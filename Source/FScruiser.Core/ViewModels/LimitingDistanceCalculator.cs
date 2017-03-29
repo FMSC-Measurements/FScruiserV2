@@ -14,13 +14,13 @@ namespace FSCruiser.Core.DataEntry
         double _dbh;
         int _slopePCT;
         double _slopeDistance;
+        bool _isVariableRadious;
 
         public double BAForFPSize
         {
             get { return _bafOrFPS; }
             set
             {
-                if (value < 0.0) { return; }
                 _bafOrFPS = value;
                 NotifyPropertyChanged("BAForFPSize");
                 Recalculate();
@@ -32,7 +32,6 @@ namespace FSCruiser.Core.DataEntry
             get { return _dbh; }
             set
             {
-                if (value < 0.0) { return; }
                 _dbh = value;
                 NotifyPropertyChanged("DBH");
                 Recalculate();
@@ -44,7 +43,6 @@ namespace FSCruiser.Core.DataEntry
             get { return _slopePCT; }
             set
             {
-                if (value < 0) { return; }
                 _slopePCT = value;
                 NotifyPropertyChanged("SlopePCT");
                 Recalculate();
@@ -56,7 +54,6 @@ namespace FSCruiser.Core.DataEntry
             get { return _slopeDistance; }
             set
             {
-                if (_slopeDistance < 0.0) { return; }
                 _slopeDistance = value;
                 NotifyPropertyChanged("SlopeDistance");
                 Recalculate();
@@ -82,7 +79,6 @@ namespace FSCruiser.Core.DataEntry
             get { return _measureTo; }
             set
             {
-                if (value == _measureTo) { return; }
                 _measureTo = value;
                 NotifyPropertyChanged("MeasureTo");
                 Recalculate();
@@ -97,18 +93,29 @@ namespace FSCruiser.Core.DataEntry
             { return _treeStatus; }
             set
             {
-                if (_treeStatus == value) { return; }
                 _treeStatus = value;
                 NotifyPropertyChanged("TreeStatus");
             }
         }
 
-        public bool IsVariableRadius { get; protected set; }
+        public bool IsVariableRadius
+        {
+            get { return _isVariableRadious; }
+            set
+            {
+                _isVariableRadious = value;
+                NotifyPropertyChanged("IsVariableRadius");
+            }
+        }
 
-        public LimitingDistanceCalculator(bool isVariableRadius)
+        public LimitingDistanceCalculator()
+        {
+            Reset(); //set all values to default values
+        }
+
+        public LimitingDistanceCalculator(bool isVariableRadius) : this()
         {
             IsVariableRadius = isVariableRadius;
-            Reset();
         }
 
         public void Recalculate()
@@ -201,6 +208,5 @@ namespace FSCruiser.Core.DataEntry
                 return limitingDistance;
             }
         }
-
     }
 }

@@ -13,7 +13,18 @@ namespace FScruiser.Core.Services
 {
     public class IDataEntryDataService : ITreeFieldProvider
     {
+        #region Events
+
         public event EventHandler EnableLogGradingChanged;
+
+        #endregion Events
+
+        IRegionalLogRuleDataService _logRuleDataService;
+        public RegionLogInfo RegionalLogRule { get { return _logRuleDataService.RegionLogInfo; } }
+
+        public bool IsReconCruise { get; set; }
+
+        public uint Region { get; set; }
 
         public DAL DataStore { get; protected set; }
 
@@ -77,6 +88,11 @@ namespace FScruiser.Core.Services
             }
         }
 
+        public IEnumerable<TreeDefaultValueDO> GetTreeDefaultValuesAll()
+        {
+            return DataStore.From<TreeDefaultValueDO>().Read();
+        }
+
         private void OnEnableLogGradingChanged()
         {
         }
@@ -89,6 +105,10 @@ namespace FScruiser.Core.Services
                 .Where("Code = ?").Read(unitCode).FirstOrDefault();
 
             EnableLogGrading = DataStore.ExecuteScalar<bool>("SELECT LogGradingEnabled FROM Sale Limit 1;");
+            IsReconCruise = DataStore.ExecuteScalar<bool>("SELECT [Purpose] == 'Recon' FROM Sale LIMIT 1;");
+            Region = DataStore.ExecuteScalar<uint>("SELECT Region FROM Sale LIMIT 1;");
+
+            _logRuleDataService = new IRegionalLogRuleDataService(Region);
 
             var tallyBuffer = new TallyHistoryCollection(this, Constants.MAX_TALLY_HISTORY_SIZE);
             tallyBuffer.Initialize();
@@ -138,6 +158,11 @@ namespace FScruiser.Core.Services
                     _nonPlotTrees = new BindingList<Tree>(trees);
                 }
             }
+        }
+
+        public ILogDataService MakeLogDataService(Tree tree)
+        {
+            return new ILogDataService(tree, tree.Stratum, RegionalLogRule, DataStore);
         }
 
         #region Tree
@@ -202,7 +227,7 @@ namespace FScruiser.Core.Services
             return true;
         }
 
-        public Tree UserAddTree(Plot plot, Tree templateTree, IViewController viewController)
+        public Tree UserAddTree(Plot plot, Tree templateTree)
         {
             Tree newTree;
             SampleGroup assumedSG = null;
@@ -210,7 +235,7 @@ namespace FScruiser.Core.Services
 
             if (templateTree != null)
             {
-                assumedSG = templateTree.SampleGroup; ;
+                assumedSG = templateTree.SampleGroup;
                 assumedTDV = templateTree.TreeDefaultValue;
             }
 
@@ -265,7 +290,14 @@ namespace FScruiser.Core.Services
             var newTree = CreateNewTreeEntryInternal(plot.Stratum, sg, tdv, isMeasure);
 
             newTree.Plot = plot;
-            newTree.TreeNumber = GetNextPlotTreeNumber(plot.PlotNumber);
+            if (IsReconCruise)
+            {
+                newTree.TreeNumber = plot.GetNextTreeNumber();
+            }
+            else
+            {
+                newTree.TreeNumber = GetNextPlotTreeNumber(plot.PlotNumber);
+            }
             newTree.TreeCount = 1;
 
             return newTree;
@@ -378,7 +410,7 @@ namespace FScruiser.Core.Services
 
         public Tree UserAddTree()
         {
-            Tree templateTree = NonPlotTrees.LastOrDefault(); ;
+            Tree templateTree = NonPlotTrees.LastOrDefault();
             Stratum stratum = null;
             SampleGroup samplegroup = null;
             TreeDefaultValueDO tdv = null;

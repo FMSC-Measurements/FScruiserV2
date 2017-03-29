@@ -13,6 +13,7 @@ namespace FSCruiser.WinForms.DataEntry
     public partial class FormDataEntry : FMSC.Controls.CustomForm, IDataEntryView
     {
         public FormDataEntry(IApplicationController controller
+            , ApplicationSettings appSettings
             , IDataEntryDataService dataService)
         {
             InitializeComponent();
@@ -27,7 +28,7 @@ namespace FSCruiser.WinForms.DataEntry
                 this.WindowState = FormWindowState.Maximized;
             }
 
-            InitializeCommon(controller, dataService);
+            InitializeCommon(controller, appSettings, dataService);
         }
 
         protected FormDataEntry()
@@ -38,7 +39,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void OnFocusedLayoutChanged(object sender, EventArgs e)
         {
-            SoundService.SignalPageChanged();
+            
             OnFocusedLayoutChangedInternal(sender, e);
             var view = FocusedLayout as ITreeView;
             _addTreeMI.Enabled = view != null && view.UserCanAddTrees;

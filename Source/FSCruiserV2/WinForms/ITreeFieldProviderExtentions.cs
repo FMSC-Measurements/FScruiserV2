@@ -8,7 +8,7 @@ namespace FSCruiser.WinForms
 {
     public static class ITreeFieldProviderExtentions
     {
-        public static IEnumerable<DataGridViewColumn> MakeTreeColumns(this ITreeFieldProvider provider)
+        public static IEnumerable<DataGridViewColumn> MakeTreeColumns(this ITreeFieldProvider provider, int fontWidth)
         {
             var fieldSetups = provider.TreeFields;
             List<DataGridViewColumn> columns = new List<DataGridViewColumn>();
@@ -59,11 +59,11 @@ namespace FSCruiser.WinForms
                     case "Stratum":
                         {
                             col = new DataGridViewComboBoxColumn()
-                                {
-                                    DisplayMember = "Code",
-                                    ValueMember = "Self",
-                                    FlatStyle = FlatStyle.Flat
-                                };
+                            {
+                                DisplayMember = "Code",
+                                ValueMember = "Self",
+                                FlatStyle = FlatStyle.Flat
+                            };
                             break;
                         }
                     case "SampleGroup":
@@ -114,13 +114,21 @@ namespace FSCruiser.WinForms
                     || string.IsNullOrEmpty(col.DefaultCellStyle.Format)))
                 {
                     col.DefaultCellStyle = new DataGridViewCellStyle()
-                        {
-                            Format = fieldSetup.Format
-                        };
+                    {
+                        Format = fieldSetup.Format
+                    };
                 }
 
-                //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-                //col.Resizable = DataGridViewTriState.True;
+                if (fieldSetup.Width > 0)
+                {
+                    col.Width = (int)fieldSetup.Width * fontWidth;
+                    col.Resizable = DataGridViewTriState.True;
+                }
+                else
+                {
+                    col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                    col.Resizable = DataGridViewTriState.True;
+                }
 
                 columns.Add(col);
             }

@@ -14,6 +14,8 @@ using FSCruiser.WinForms;
 using FSCruiser.WinForms.DataEntry;
 using CruiseDAL;
 using FMSC.ORM.Core.SQL;
+using FSCruiser.Core;
+using FScruiser.Core.Services;
 
 namespace FSCruiserV2.Test
 {
@@ -83,7 +85,7 @@ namespace FSCruiserV2.Test
 
         private void _plotInfo_BTN_Click(object sender, EventArgs e)
         {
-            using (var ds = new DAL(":memory:", true))
+            using (var ds = new DAL())
             {
                 var stratum = new PlotStratum() { DAL = ds, Code = "1", Method = "something" };
                 var unit = new CuttingUnit() { DAL = ds, Code = "1" };
@@ -139,18 +141,103 @@ namespace FSCruiserV2.Test
             var stratum = new Stratum() { Code = "st1", Method = "P"};
             var sg = new SampleGroup() {Code = "sg1"};
 
-            var tree = new Tree()
-            {
-                TreeNumber = 1
-                ,
-                Stratum = stratum
-                ,
-                SampleGroup = sg
-            };
+
 
             using (var view = new FormCruiserSelection())
             {
+                var tree = new Tree()
+                {
+                    TreeNumber = 1,
+                    Stratum = stratum,
+                    SampleGroup = sg,
+                    CountOrMeasure = "C"
+                };
+
                 view.ShowDialog(tree);
+
+                tree = new Tree()
+                {
+                    TreeNumber = 1,
+                    Stratum = stratum,
+                    SampleGroup = sg,
+                    CountOrMeasure = "M"
+                };
+
+                view.ShowDialog(tree);
+
+                tree = new Tree()
+                {
+                    TreeNumber = 1,
+                    Stratum = stratum,
+                    SampleGroup = sg,
+                    CountOrMeasure = "I"
+                };
+
+                view.ShowDialog(tree);
+
+                tree = new Tree()
+                {
+                    TreeNumber = 1,
+                    Stratum = stratum,
+                    SampleGroup = sg,
+                };
+
+                view.ShowDialog(tree);
+            }
+        }
+
+        private void logsButton_Click(object sender, EventArgs e)
+        {
+            using (var ds = new DAL())
+            {
+                var cuttingUnit = new CuttingUnit()
+                {
+                    DAL = ds,
+                    Code = "01"
+                };
+                cuttingUnit.Save();
+
+                var stratum = new Stratum()
+                {
+                    DAL = ds,
+                    Code = "01"
+                };
+                stratum.Save();
+
+                var fieldSetup = new LogFieldSetupDO()
+                {
+                    DAL = ds,
+                    Stratum_CN = stratum.Stratum_CN,
+                    Field = LOG.LOGNUMBER,
+                    Heading = LOG.LOGNUMBER
+                };
+                fieldSetup.Save();
+
+                fieldSetup = new LogFieldSetupDO()
+                {
+                    DAL = ds,
+                    Stratum_CN = stratum.Stratum_CN,
+                    Field = LOG.GRADE,
+                    Heading = LOG.GRADE
+                };
+                fieldSetup.Save();
+
+                var controller = new ApplicationController(null);
+                var tree = new Tree()
+                {
+                    DAL = ds,
+                    CuttingUnit_CN = cuttingUnit.CuttingUnit_CN,
+                    Stratum_CN = stratum.Stratum_CN,
+                    TreeNumber = 1
+                };
+                tree.Save();
+
+                var dataService = new ILogDataService(tree, stratum, null, ds);
+
+                using (var view = new FormLogs(dataService))
+                {
+                    view.ShowDialog();
+                }
             }
         }
     }

@@ -13,19 +13,11 @@ namespace FSCruiser.Core
 
         IApplicationController ApplicationController { get; set; }
 
-        //bool EnableLogGrading { get; set; }
-
         void HandleFileStateChanged();
 
         void ShowAbout();
 
         void ShowBackupUtil();
-
-        bool ShowLimitingDistanceDialog(float baf, bool isVariableRadius, out string logMessage);
-
-        void ShowLogsView(Stratum stratum, Tree tree);
-
-        void ShowManageCruisers();
 
         bool ShowOpenCruiseFileDialog(out string fileName);
 

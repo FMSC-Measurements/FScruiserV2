@@ -7,14 +7,12 @@ namespace FSCruiser.WinForms
 {
     public partial class FormManageCruisers : Form
     {
-        public IApplicationController Controller { get; private set; }
         public ApplicationSettings Settings { get; set; }
 
-        public FormManageCruisers(IApplicationController controller)
+        public FormManageCruisers(ApplicationSettings appSettings)
         {
-            Settings = ApplicationSettings.Instance;
+            Settings = appSettings;
             InitializeComponent();
-            this.Controller = controller;
 
 #if NetCF
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)

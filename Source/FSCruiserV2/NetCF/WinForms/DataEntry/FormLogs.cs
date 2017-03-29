@@ -11,31 +11,43 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormLogs : FMSC.Controls.CustomForm
     {
-        //        public FormLogs(IApplicationController controller)
-        //        {
-        //            this.Controller = controller;
-        //            InitializeComponent();
-        //#if WindowsCE
-        //            this.WindowState = FormWindowState.Maximized;
-        //#endif
+        #region DataService
+        ILogDataService _dataService;
+        public ILogDataService DataService 
+        {
+            get { return _dataService; }
+            set
+            {
+                OnDataServiceChanging();
+                _dataService = value;
+                OnDataServiceChanged();
+            }
+        }
 
-        //        }
+        void OnDataServiceChanging()
+        {
+            
+        }
+
+        void OnDataServiceChanged()
+        {
+            if (DataService != null)
+            {
+                DataGridTableStyle tableStyle = DataService.Stratum.InitializeLogColumns(_dataGrid);
+                _logNumColumn = tableStyle.GridColumnStyles[CruiseDAL.Schema.LOG.LOGNUMBER] as EditableTextBoxColumn;
+            }
+        }
+        #endregion
 
         private EditableTextBoxColumn _logNumColumn;
 
         private Microsoft.WindowsCE.Forms.InputPanel _sip;
 
-        public FormLogs()
+        public FormLogs() : base()
         {
-            this.InitializeComponent();
-        }
-
-        public FormLogs(IApplicationController controller, Stratum stratum)
-            : base()
-        {
-            this.Controller = controller;
             InitializeComponent();
-            this.KeyPreview = true;
+
+            KeyPreview = true;
 
             if (ViewController.PlatformType == PlatformType.WinCE)
             {
@@ -55,9 +67,12 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.CellValidating += new EditableDataGridCellValidatingEventHandler(_dataGrid_CellValidating);
 
             DataGridAdjuster.InitializeGrid(this._dataGrid);
-            DataGridTableStyle tableStyle = DataGridAdjuster.InitializeLogColumns(stratum, _dataGrid);
+        }
 
-            _logNumColumn = tableStyle.GridColumnStyles[CruiseDAL.Schema.LOG.LOGNUMBER] as EditableTextBoxColumn;
+        public FormLogs(ILogDataService dataService)
+            : this()
+        {
+            DataService = dataService;
         }
 
         //void _sip_EnabledChanged(object sender, EventArgs e)
@@ -65,27 +80,31 @@ namespace FSCruiser.WinForms.DataEntry
         //    this._sipPlaceHolder.Height = (this._sip.Enabled) ? this._sip.Bounds.Height : 0;
         //}
 
-        public IApplicationController Controller { get; protected set; }
+        #region overridden methods
 
-        private TreeDO _currentTree;
-        private BindingList<LogDO> _logs;
-
-        public DialogResult ShowDialog(Tree tree)
+        protected override void OnLoad(EventArgs e)
         {
-            this._currentTree = tree;
+            base.OnLoad(e);
 
-            this._logs = new BindingList<LogDO>(tree.LoadLogs());
+            _BS_Logs.DataSource = DataService.Logs;
+            _treeDesLbl.Text = DataService.Tree.LogLevelDiscription;
 
-            this._treeDesLbl.Text = tree.LogLevelDiscription;
-
-            this._BS_Logs.DataSource = this._logs;
-            this._dataGrid.DataSource = this._BS_Logs;
-            this._dataGrid.Focus();
-            tree.LogCountDirty = true;
-            return this.ShowDialog();
+            _dataGrid.Focus();
         }
 
-        #region overridden methods
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+
+            for (int i = 0; i < _dataGrid.RowCount; i++)
+            {
+                _dataGrid.CurrentRowIndex = i;
+                if (_dataGrid.MoveFirstEmptyCell())
+                {
+                    break;
+                }
+            }
+        }
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -109,15 +128,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             try
             {
-                //this._currentTree.Save();//tree is saved before entering log screen.
-                foreach (LogDO log in this._logs)
-                {
-                    //log.Tree = this._currentTree;
-                    this.Controller.DataStore.Save(log
-                        , FMSC.ORM.Core.SQL.OnConflictOption.Fail
-                        , false);
-                }
-                //this.Controller.DataStore.Save(this._logs);
+                DataService.Save();
             }
             catch (Exception)
             {
@@ -126,41 +137,33 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-        }
-
         #endregion overridden methods
 
         #region event handlers
 
-        private void _addBtn_Click(object sender, EventArgs e)
+        void _addBtn_Click(object sender, EventArgs e)
         {
-            AddLogRec();
+            DataService.AddLogRec();
+            _BS_Logs.ResetBindings(false);
         }
 
-        private void _doneBtn_Click(object sender, EventArgs e)
+        void _doneBtn_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void _deleteBtn_Click(object sender, EventArgs e)
+        void _deleteBtn_Click(object sender, EventArgs e)
         {
-            if (this._dataGrid.CurrentRowIndex < 0
-                || this._dataGrid.CurrentRowIndex >= this._logs.Count)
-            { return; }
+            //if (this._dataGrid.CurrentRowIndex < 0
+            //    || this._dataGrid.CurrentRowIndex >= DataService.Logs.Count)
+            //{ return; }
 
-            LogDO log = this._logs[this._dataGrid.CurrentRowIndex] as LogDO;
+            Log log = _BS_Logs.Current as Log;
             if (log == null) { return; }
 
-            log.Delete();
-            this._logs.Remove(log);
-        }
+            DataService.DeleteLog(log);
 
-        private void _BS_Logs_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            e.NewObject = AddLogRec();
+            _BS_Logs.ResetBindings(false);
         }
 
         void _dataGrid_CellValidating(object sender, EditableDataGridCellValidatingEventArgs e)
@@ -172,7 +175,7 @@ namespace FSCruiser.WinForms.DataEntry
                 int newLogNumber;
                 if (TryParseInt(cellValue, out newLogNumber))
                 {
-                    if (!this.IsLogNumAvalible(newLogNumber))
+                    if (!DataService.IsLogNumAvalible(newLogNumber))
                     {
                         e.Cancel = true;
                     }
@@ -185,55 +188,11 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        #endregion event handlers
-
-        LogDO AddLogRec()
-        {
-            LogDO newLog = new LogDO(this.Controller.DataStore);
-            newLog.Tree_CN = _currentTree.Tree_CN;
-            newLog.LogNumber = (GetHighestLogNum() + 1).ToString();
-
-            this._logs.Add(newLog);
-            this._dataGrid.CurrentRowIndex = this._dataGrid.RowCount - 1;
-            this._dataGrid.MoveFirstEmptyCell();
-            return newLog;
-        }
-
-        int GetHighestLogNum()
-        {
-            int highest = 0;
-            foreach (var log in _logs)
-            {
-                int logNum = 0;
-                if (TryParseInt(log.LogNumber, out logNum))
-                {
-                    highest = Math.Max(highest, logNum);
-                }
-            }
-            return highest;
-        }
-
-        bool IsLogNumAvalible(int newLogNum)
-        {
-            foreach (var log in _logs)
-            {
-                int logNum = 0;
-                if (TryParseInt(log.LogNumber, out logNum))
-                {
-                    if (newLogNum == logNum)
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        bool TryParseInt(string s, out int result)
+        bool TryParseInt(string value, out int result)
         {
             try
             {
-                result = int.Parse(s);
+                result = int.Parse(value);
                 return true;
             }
             catch
@@ -243,22 +202,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        //private void LogColumn_Validating(object sender, CancelEventArgs e)
-        //{
-        //    TextBox tb = (TextBox)sender;
-        //    try
-        //    {
-        //        int newLogNumber = Convert.ToInt32(tb.Text);
-        //        if (!this.SetLogNumberSequance(newLogNumber))
-        //        {
-        //            tb.Undo();
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        tb.Undo();
-        //    }
+        #endregion event handlers
 
-        //}
     }
 }

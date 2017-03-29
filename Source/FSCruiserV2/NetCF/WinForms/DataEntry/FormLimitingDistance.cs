@@ -9,25 +9,20 @@ namespace FSCruiser.WinForms.DataEntry
     {
         LimitingDistanceCalculator _calculator;
 
-        public FormLimitingDistance(float bafOrFPS, bool isVariableRadius)
+        public FormLimitingDistance()
         {
-            _calculator = new LimitingDistanceCalculator(isVariableRadius)
-                {
-                    BAForFPSize = bafOrFPS
-                };
-
             InitializeComponent();
-
-            //initailize form state
-            this._calculateBTN.Enabled = false;
-            this._bafOrfpsLBL.Text = (_calculator.IsVariableRadius) ? "BAF" : "FPS";
-
-            _calculator.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_calculator_PropertyChanged);
-
-            _BS_calculator.DataSource = _calculator;
 
             foreach (var i in LimitingDistanceCalculator.MEASURE_TO_OPTIONS)
             { _measureToCB.Items.Add(i); }
+
+            //initialize form state
+            this._calculateBTN.Enabled = false;
+
+            _calculator = new LimitingDistanceCalculator();
+            _calculator.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_calculator_PropertyChanged);
+
+            _BS_calculator.DataSource = _calculator;
 
 #if NetCF
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WM)
@@ -40,7 +35,12 @@ namespace FSCruiser.WinForms.DataEntry
 #endif
         }
 
-        public bool IsVariableRadius { get; set; }
+        public FormLimitingDistance(float bafOrFPS, bool isVariableRadius)
+            : this()
+        {
+            _calculator.IsVariableRadius = isVariableRadius;
+            _calculator.BAForFPSize = bafOrFPS;
+        }
 
         public string Report
         {
@@ -48,6 +48,16 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 return _calculator.GenerateReport();
             }
+        }
+
+        public DialogResult ShowDialog(Plot plot)
+        {
+            var stratum = plot.Stratum;
+
+            _calculator.IsVariableRadius = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS, stratum.Method) > -1;
+            _calculator.BAForFPSize = (_calculator.IsVariableRadius) ? stratum.BasalAreaFactor : stratum.FixedPlotSize;
+
+            return ShowDialog();
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -68,6 +78,10 @@ namespace FSCruiser.WinForms.DataEntry
             if (e.PropertyName == "LimitingDistance")
             {
                 UpdateLimitingDistance();
+            }
+            else if (e.PropertyName == "IsVariableRadius")
+            {
+                _bafOrfpsLBL.Text = (_calculator.IsVariableRadius) ? "BAF" : "FPS";
             }
         }
 

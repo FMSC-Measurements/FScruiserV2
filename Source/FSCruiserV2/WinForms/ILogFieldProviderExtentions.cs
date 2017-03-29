@@ -16,6 +16,7 @@ namespace FSCruiser.WinForms
                 var col = MakeColumn(field.ColumnType);
                 col.DataPropertyName = field.Field;
                 col.HeaderText = field.Heading;
+                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
                 if (!string.IsNullOrEmpty(field.Format))                                // AND field has format
                 {

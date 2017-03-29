@@ -5,13 +5,13 @@ using System.Text;
 
 namespace FScruiser.Core.Services
 {
-    public class SoundService
+    public class SoundService 
     {
         public static ISoundService Instance { get; set; }
 
-        public static void SignalMeasureTree(bool showMessage)
+        public static void SignalMeasureTree()
         {
-            Instance.SignalMeasureTree(showMessage);
+            Instance.SignalMeasureTree();
         }
 
         public static void SignalInvalidAction()
@@ -29,9 +29,19 @@ namespace FScruiser.Core.Services
             Instance.SignalTally();
         }
 
+        public static void SignalTally(bool force)
+        {
+            Instance.SignalTally(force);
+        }
+
         public static void SignalPageChanged()
         {
             Instance.SignalPageChanged();
+        }
+
+        public static void SignalPageChanged(bool force)
+        {
+            Instance.SignalPageChanged(force);
         }
 
     }

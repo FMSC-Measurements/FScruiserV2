@@ -46,8 +46,8 @@ namespace FSCruiser.WinForms.DataEntry
         public void AdjustWidth()
         {
             var g = base.CreateGraphics();
-            var fWidth = g.MeasureString(_tallyBTN.Text, _tallyBTN.Font).Width;
-            fWidth += g.MeasureString(_settingsBTN.Text, _settingsBTN.Font).Width;
+            var fWidth = g.MeasureString(_tallyBTN.Text, _tallyBTN.Font).Width + 10;
+            fWidth += _settingsBTN.Width;
             this.Width = (int)Math.Ceiling(fWidth);
             //FMSC.Controls.DpiHelper.AdjustControl(this);
         }

@@ -9,14 +9,12 @@ using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public partial class Form3PPNTPlotInfo : Form, IPlotInfoDialog
+    public partial class Form3PPNTPlotInfo : Form
     {
-        IViewController _viewController;
         IDataEntryDataService DataService { get; set; }
 
-        public Form3PPNTPlotInfo(IViewController viewController, IDataEntryDataService dataService)
+        public Form3PPNTPlotInfo(IDataEntryDataService dataService)
         {
-            _viewController = viewController;
             DataService = dataService;
             InitializeComponent();
 

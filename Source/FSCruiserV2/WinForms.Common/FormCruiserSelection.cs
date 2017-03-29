@@ -54,6 +54,9 @@ namespace FSCruiser.WinForms
                 _stratumLBL.Text = String.Empty;
                 _sampleGroupLBL.Text = String.Empty;
             }
+
+            _cmLBL.Text = _logicController.TreeCountMeasure;
+            _cmLBL.Visible = !string.IsNullOrEmpty(_cmLBL.Text);
         }
 
         void UpdateCruiserList()
@@ -92,6 +95,7 @@ namespace FSCruiser.WinForms
         public void ShowDialog(Tree tree)
         {
             _logicController.Tree = tree;
+
             ShowDialog();
         }
 

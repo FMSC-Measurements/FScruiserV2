@@ -8,7 +8,5 @@ namespace FSCruiser.Core.ViewInterfaces
     public interface ICruiserSelectionView
     {
         void Close();
-
-        void ShowDialog(Tree tree);
     }
 }

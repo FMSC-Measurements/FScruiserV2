@@ -98,6 +98,7 @@
     <Compile Include="Models\FixCNTTallyPopulation.cs" />
     <Compile Include="Models\Interfaces\ILogFieldProvider.cs" />
     <Compile Include="Models\Interfaces\ITreeFieldProvider.cs" />
+    <Compile Include="Models\Log.cs" />
     <Compile Include="Models\LogHeightClass.cs" />
     <Compile Include="Models\LogRule.cs" />
     <Compile Include="Models\Plot.cs" />
@@ -120,8 +121,15 @@
     <Compile Include="Services\IApplicationController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Services\ILogDataService.cs" />
+    <Compile Include="Services\IRegionalLogRuleDataService.cs" />
     <Compile Include="Services\ISoundService.cs" />
     <Compile Include="Services\SoundService.cs" />
+    <Compile Include="Util\DictionaryExtentions.cs" />
+    <Compile Include="ViewInterfaces\IDataEntryPage.cs" />
+    <Compile Include="ViewInterfaces\IDataEntryView.cs" />
+    <Compile Include="ViewInterfaces\ITallyView.cs" />
+    <Compile Include="ViewInterfaces\ITreeView.cs" />
     <Compile Include="ViewModels\LimitingDistanceCalculator.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Workers\SaveTreesWorker.cs" />
@@ -130,9 +138,7 @@
     <Compile Include="Services\IViewController.cs" />
     <Compile Include="Workers\TreeValidationWorker.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewInterfaces\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
