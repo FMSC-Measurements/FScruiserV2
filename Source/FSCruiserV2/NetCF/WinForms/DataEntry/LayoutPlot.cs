@@ -843,7 +843,14 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         public void NotifyEnter()
-        { /*do nothing */}
+        {
+            
+            MoveLastTree();
+            if (IsGridExpanded)
+            {
+                _dataGrid.Edit();
+            }
+        }
 
         #endregion IDataEntryPage
 

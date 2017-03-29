@@ -357,24 +357,28 @@ namespace FSCruiser.Core.DataEntry
             //tree may be null if user didn't enter kpi
             if (tree != null)
             {
-                if (tree.CountOrMeasure == "M")
+                if (tree.CountOrMeasure == "M"
+                    || tree.CountOrMeasure == "I")
                 {
-                    _soundService.SignalMeasureTree();
-                }
-                else if (tree.CountOrMeasure == "I")
-                {
-                    _soundService.SignalInsuranceTree();
-                }
+                    if (tree.CountOrMeasure == "M")
+                    {
+                        _soundService.SignalMeasureTree();
+                    }
+                    else if (tree.CountOrMeasure == "I")
+                    {
+                        _soundService.SignalInsuranceTree();
+                    }
 
-                if (_appSettings.EnableCruiserPopup)
-                {
-                    _dialogService.AskCruiser(tree);
-                }
-                else
-                {
-                    var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
-                             (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
-                    _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
+                    if (_appSettings.EnableCruiserPopup)
+                    {
+                        _dialogService.AskCruiser(tree);
+                    }
+                    //else
+                    //{
+                    //    var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
+                    //             (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
+                    //    _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
+                    //}
                 }
 
                 tree.TrySave();
@@ -498,7 +502,7 @@ namespace FSCruiser.Core.DataEntry
                 prevTree = (Tree)_BS_Trees[_BS_Trees.Count - 1];
             }
 
-            var newTree = DataService.UserAddTree(CurrentPlot, prevTree, this.DataEntryController.ViewController);
+            var newTree = DataService.UserAddTree(CurrentPlot, prevTree);
 
             if (newTree != null)
             {
@@ -510,12 +514,18 @@ namespace FSCruiser.Core.DataEntry
 
         public bool ResequenceTreeNumbers()
         {
-            if (!EnsureCurrentPlotWorkable()
-                || EnsureCurrentPlotNotEmpty())
-            { return false; }
-
-            CurrentPlot.ResequenceTreeNumbers();
-            return true;
+            if (EnsureCurrentPlotWorkable()
+                && DialogService.AskYesNo("This will renumber all trees in the plot starting at 1"
+                    , "Continue?"
+                    , false))
+            {
+                CurrentPlot.ResequenceTreeNumbers();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public void SelectFirstPlot()
