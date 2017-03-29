@@ -7,11 +7,11 @@ namespace FSCruiser.Core
     {
         public static bool NEW_SPECIES_OPTION = false;
 
-        public const string FSCRUISER_VERSION = "2017.03.06";
+        public const string FSCRUISER_VERSION = "2017.03.29";
 
         public const string APP_TITLE = "FScruiser - " + FSCRUISER_VERSION;
 
-        public const string CRUISERS_FILENAME = "\\Cruisers.xml";//depeciated, cruiser info now stored in setting file
+        public const string CRUISERS_FILENAME = "\\Cruisers.xml";//depreciated, cruiser info now stored in setting file
         public const string APP_SETTINGS_PATH = "Settings.xml";
 
         public const string BACKUP_PREFIX = "BACK_";

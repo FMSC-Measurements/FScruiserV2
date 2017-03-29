@@ -2,7 +2,7 @@
 ; #defines require the ISPP add-on: http://sourceforge.net/projects/ispp/
 #define APP "FSCruiserV2"
 
-#define APP_VERSION "2017.03.06"
+#define APP_VERSION "2017.03.29"
 #define SPECIALTAG "Production"
 #define BASEURL "http://www.fs.fed.us/fmsc/measure"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
@@ -34,7 +34,6 @@ DefaultGroupName        =FMSC\{#APP}
 OutputBaseFilename=FScruiserV2_FDR
 Compression=lzma
 SolidCompression=yes
-;PrivilegesRequired=lowest
 PrivilegesRequired=lowest
 
 
