@@ -143,7 +143,7 @@ namespace FSCruiser.Core.Models
             set
             {
                 if (Math.Abs(_smallenddiameter - value) < float.Epsilon) { return; }
-                _smallenddiameter = value; ;
+                _smallenddiameter = value;
                 this.NotifyPropertyChanged(LOG.SMALLENDDIAMETER);
             }
         }

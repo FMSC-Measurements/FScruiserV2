@@ -108,7 +108,6 @@ namespace FScruiser.Core.Services
             IsReconCruise = DataStore.ExecuteScalar<bool>("SELECT [Purpose] == 'Recon' FROM Sale LIMIT 1;");
             Region = DataStore.ExecuteScalar<uint>("SELECT Region FROM Sale LIMIT 1;");
 
-
             _logRuleDataService = new IRegionalLogRuleDataService(Region);
 
             var tallyBuffer = new TallyHistoryCollection(this, Constants.MAX_TALLY_HISTORY_SIZE);
@@ -228,7 +227,7 @@ namespace FScruiser.Core.Services
             return true;
         }
 
-        public Tree UserAddTree(Plot plot, Tree templateTree, IViewController viewController)
+        public Tree UserAddTree(Plot plot, Tree templateTree)
         {
             Tree newTree;
             SampleGroup assumedSG = null;
@@ -411,7 +410,7 @@ namespace FScruiser.Core.Services
 
         public Tree UserAddTree()
         {
-            Tree templateTree = NonPlotTrees.LastOrDefault(); ;
+            Tree templateTree = NonPlotTrees.LastOrDefault();
             Stratum stratum = null;
             SampleGroup samplegroup = null;
             TreeDefaultValueDO tdv = null;
