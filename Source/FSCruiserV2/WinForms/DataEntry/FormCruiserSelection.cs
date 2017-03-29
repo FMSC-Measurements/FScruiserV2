@@ -17,8 +17,9 @@ namespace FSCruiser.WinForms
             _logicController = new FormCruiserSelectionLogic(ApplicationSettings.Instance, this);
             _logicController.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_logicController_PropertyChanged);
 
-            this.KeyPreview = true;
             InitializeComponent();
+            StartPosition = FormStartPosition.CenterParent;
+            KeyPreview = true;
             UpdateCruiserList();
         }
 

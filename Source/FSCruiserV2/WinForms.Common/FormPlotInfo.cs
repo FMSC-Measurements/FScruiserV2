@@ -112,6 +112,8 @@ namespace FSCruiser.WinForms.DataEntry
             Microsoft.WindowsCE.Forms.InputModeEditor.SetInputMode(_plotNumTB, Microsoft.WindowsCE.Forms.InputMode.Numeric);
             Microsoft.WindowsCE.Forms.InputModeEditor.SetInputMode(_aspect, Microsoft.WindowsCE.Forms.InputMode.Numeric);
             Microsoft.WindowsCE.Forms.InputModeEditor.SetInputMode(_slope, Microsoft.WindowsCE.Forms.InputMode.Numeric);
+#else
+            StartPosition = FormStartPosition.CenterParent;
 #endif
         }
 

@@ -151,7 +151,6 @@ namespace FSCruiser.WinForms.Common
                 {
 #if !NetCF
                     view.Owner = this._dataEntryView;
-                    view.StartPosition = FormStartPosition.CenterParent;
 #endif
                     return view.ShowDialog(plot, stratum, isNewPlot) == DialogResult.OK;
                 }
@@ -162,7 +161,6 @@ namespace FSCruiser.WinForms.Common
                 {
 #if !NetCF
                     view.Owner = this._dataEntryView;
-                    view.StartPosition = FormStartPosition.CenterParent;
 #endif
                     return view.ShowDialog(plot, stratum, isNewPlot) == DialogResult.OK;
                 }
