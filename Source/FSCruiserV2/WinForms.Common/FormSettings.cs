@@ -31,9 +31,7 @@ namespace FSCruiser.WinForms
 #if NetCF
 
 #else
-            soundsPanel.Visible = false;
-            _enableTallySound.Visible = false;
-            _enablePageChangeSound.Visible = false;
+            StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 #endif
 

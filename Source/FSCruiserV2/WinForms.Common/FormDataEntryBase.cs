@@ -307,6 +307,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void OnFocusedLayoutChangedInternal(object sender, EventArgs e)
         {
+            SoundService.SignalPageChanged();
             if (_previousLayout != null)
             {
                 //note: a view can be a tree view and a tally view,

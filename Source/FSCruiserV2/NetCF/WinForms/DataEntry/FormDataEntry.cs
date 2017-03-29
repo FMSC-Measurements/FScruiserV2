@@ -39,7 +39,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void OnFocusedLayoutChanged(object sender, EventArgs e)
         {
-            SoundService.SignalPageChanged();
+            
             OnFocusedLayoutChangedInternal(sender, e);
             var view = FocusedLayout as ITreeView;
             _addTreeMI.Enabled = view != null && view.UserCanAddTrees;

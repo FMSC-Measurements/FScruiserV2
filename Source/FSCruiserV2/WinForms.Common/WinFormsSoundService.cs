@@ -7,24 +7,26 @@ using System.Windows.Forms;
 using FSCruiser.Core;
 
 #if NetCF
-using OpenNETCF.Media;
+using SoundPlayer = OpenNETCF.Media.SoundPlayer;
 using System.IO;
+#else
+
+using SoundPlayer = System.Media.SoundPlayer;
+using System.IO;
+
 #endif
 
 namespace FSCruiser.WinForms
 {
-    public class WinFormsSoundService: ISoundService
+    public class WinFormsSoundService : ISoundService
     {
-#if NetCF
         SoundPlayer _tallySoundPlayer;
         SoundPlayer _pageChangedSoundPlayer;
         SoundPlayer _measureSoundPlayer;
         SoundPlayer _insuranceSoundPlayer;
-#endif 
 
         public WinFormsSoundService()
         {
-#if NetCF
             try
             {
                 var soundsDir = System.IO.Path.Combine(GetExecutionDirectory(), "Sounds");
@@ -37,7 +39,6 @@ namespace FSCruiser.WinForms
             catch
             {
             }
-#endif
         }
 
         static string GetExecutionDirectory()
@@ -66,28 +67,38 @@ namespace FSCruiser.WinForms
 
         public void SignalMeasureTree()
         {
+            if (_measureSoundPlayer != null)
+            {
+                _measureSoundPlayer.Play();
+            }
+            else
+            {
 #if NetCF
-            _measureSoundPlayer.Play();
-            //Win32.MessageBeep(Win32.MB_ICONQUESTION);
+                //Win32.MessageBeep(Win32.MB_ICONQUESTION);
 #else
-            System.Media.SystemSounds.Exclamation.Play();
+                System.Media.SystemSounds.Exclamation.Play();
 #endif
+            }
         }
 
         public void SignalInsuranceTree()
         {
+            if (_insuranceSoundPlayer != null)
+            {
+                _insuranceSoundPlayer.Play();
+            }
+            else
+            {
 #if NetCF
-            _insuranceSoundPlayer.Play();
-            //Win32.MessageBeep(Win32.MB_ICONASTERISK);
+                Win32.MessageBeep(Win32.MB_ICONASTERISK);
 #else
-            System.Media.SystemSounds.Asterisk.Play();
+                System.Media.SystemSounds.Asterisk.Play();
 #endif
+            }
         }
-
 
         public void SignalTally(bool force)
         {
-#if NetCF
             var settings = ApplicationSettings.Instance;
             if (settings.EnableTallySound
                 || force)
@@ -97,14 +108,10 @@ namespace FSCruiser.WinForms
                     _tallySoundPlayer.Play();
                 }
             }
-#else
-            //not implemented
-#endif
         }
 
         public void SignalPageChanged(bool force)
         {
-            #if NetCF
             var settings = ApplicationSettings.Instance;
             if (settings.EnablePageChangeSound
                 || force)
@@ -114,9 +121,6 @@ namespace FSCruiser.WinForms
                     _pageChangedSoundPlayer.Play();
                 }
             }
-#else
-            //not implemented
-#endif
         }
 
         #region IDisposable Members
@@ -146,6 +150,6 @@ namespace FSCruiser.WinForms
             }
         }
 
-        #endregion
+        #endregion IDisposable Members
     }
 }
