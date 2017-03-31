@@ -142,7 +142,7 @@ namespace FSCruiser.Core.Models
         {
             get
             {
-                return String.Format("Tree:{0}  Sp:{1}  DBH:{2} Ht:{3}  Log Length:{4}  Logs:{5}",
+                return String.Format("Tree:{0}  Sp:{1}  DBH:{2} Ht:{3}  Log Length:{4}",
                 TreeNumber,
                 Species,
                 DBH,
