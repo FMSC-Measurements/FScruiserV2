@@ -112,7 +112,7 @@ namespace FSCruiser.Core.DataEntry
                     && !plot.IsNull
                     && (plot.Trees != null && plot.Trees.Count == 0))
                 {
-                    plot.IsNull |= _dialogService.AskYesNo("Plot Contains No Trees, Mark it as Empty Plot?",
+                    plot.IsNull |= _dialogService.AskYesNo("Plot contains no tree records. Make it a NULL plot?",
                         "Mark Plot Empty?");
                     _BS_Plots.ResetItem(_BS_Plots.IndexOf(plot));
                 }
