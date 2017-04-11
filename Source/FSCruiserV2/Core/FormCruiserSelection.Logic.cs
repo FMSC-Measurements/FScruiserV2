@@ -39,7 +39,7 @@ namespace FSCruiser.Core
                         }
                     case "I":
                         {
-                            return "Insureance Tree";
+                            return "Insurance Tree";
                         }
                     case "C":
                         {

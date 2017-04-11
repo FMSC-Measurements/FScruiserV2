@@ -112,7 +112,7 @@ namespace FSCruiser.Core.DataEntry
                     && !plot.IsNull
                     && (plot.Trees != null && plot.Trees.Count == 0))
                 {
-                    plot.IsNull |= _dialogService.AskYesNo("Plot Contains No Trees, Mark it as Empty Plot?",
+                    plot.IsNull |= _dialogService.AskYesNo("Plot contains no tree records. Make it a NULL plot?",
                         "Mark Plot Empty?");
                     _BS_Plots.ResetItem(_BS_Plots.IndexOf(plot));
                 }
@@ -328,6 +328,7 @@ namespace FSCruiser.Core.DataEntry
         protected void OnTally(CountTree count, Plot plot)
         {
             if (plot == null) { throw new ArgumentNullException("plot"); }
+            if (count == null) { throw new ArgumentNullException("count"); }
             Tree tree = null;
 
             var sg = count.SampleGroup;
@@ -340,7 +341,7 @@ namespace FSCruiser.Core.DataEntry
             if (Stratum.Method == CruiseMethods.FIX
             || Stratum.Method == CruiseMethods.PNT)
             {
-                DataService.CreateNewTreeEntry(plot, count, true);
+                tree = DataService.CreateNewTreeEntry(plot, count, true);
                 tree.TreeCount = 1;
             }
             else if (sg.Stratum.Is3P)
