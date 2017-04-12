@@ -8,7 +8,7 @@ When WMDC starts you may be asked for credentials, just ignore and click cancel.
 
 Download WMDC
 -------------
-- Windows 7 (x64) : https://www.microsoft.com/en-us/download/details.aspx?id=33154
+- Windows 7 (x64) : https://www.microsoft.com/en-us/download/details.aspx?id=3182
 - Windows 7 (x86) : https://www.microsoft.com/en-us/download/details.aspx?id=14 
 
 Troubleshooting Connection issues
