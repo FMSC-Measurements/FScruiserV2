@@ -110,6 +110,7 @@
     <Compile Include="ApplicationSetting.Test.CS" />
     <Compile Include="Models\LogHeightClass.Test.cs" />
     <Compile Include="Models\PlotStratum.test.cs" />
+    <Compile Include="Models\RegionLogInfo.Test.cs" />
     <Compile Include="Services\LogDataService.Test.cs" />
     <Compile Include="ViewModels\LimitingDistanceCalculatorTest.cs" />
     <Compile Include="Models\SampleGroup.Test.cs" />

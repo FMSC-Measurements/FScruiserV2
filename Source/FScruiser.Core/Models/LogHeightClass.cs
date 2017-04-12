@@ -5,55 +5,51 @@ namespace FSCruiser.Core.Models
 {
     public class LogHeightClass
     {
-        public class HeightRange : IComparable<HeightRange>
+        public double Num16FtLogs { get; set; }
+        public float From { get; set; }
+        public float To { get; set; }
+
+        List<uint> _breaks;
+
+        public List<uint> Breaks
         {
-            public HeightRange(float from, float to)
+            get { return _breaks; }
+            set
             {
-                From = from;
-                To = to;
+                if (value != null)
+                {
+                    value.Sort();
+                }
+                _breaks = value;
             }
-
-            public float From = float.MinValue;
-            public float To = float.MaxValue;
-
-            public bool IsInRange(float value)
-            {
-                return value.GreaterThanOrEqualsEx(From)
-                    && value.LessThanOrEqualsEx(To);
-            }
-
-            #region IComparable<HeightRange> Members
-
-            public int CompareTo(HeightRange other)
-            {
-                return From.CompareTo(other.From);
-            }
-
-            #endregion IComparable<HeightRange> Members
         }
 
-        double _num16FtLogs = 0;
-
-        public HeightRange Range { get; set; }
-
-        public List<uint> Breaks { get; set; }
+        public LogHeightClass()
+        {
+        }
 
         public LogHeightClass(float rangeFrom, float rangeTo, float num16FtLogs)
         {
-            this.Range = new HeightRange(rangeFrom, rangeTo);
-            this._num16FtLogs = num16FtLogs;
+            From = rangeFrom;
+            To = rangeTo;
+            Num16FtLogs = num16FtLogs;
         }
 
         public LogHeightClass WithBreaks(params uint[] breaks)
         {
-            this.Breaks = new List<uint>(breaks);
-
+            Breaks = new List<uint>(breaks);
             return this;
+        }
+
+        public bool IsInRange(float value)
+        {
+            return value.GreaterThanOrEqualsEx(From)
+                    && value.LessThanOrEqualsEx(To);
         }
 
         public double GetDefaultLogCount(float dbh)
         {
-            var logCount = this._num16FtLogs;
+            var logCount = Num16FtLogs;
 
             if (Breaks != null)
             {
