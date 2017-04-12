@@ -38,7 +38,10 @@ namespace FScruiser.Core.Services
 
         IList<Log> LoadLogs()
         {
-            var logs = ReadLogs().ToList();
+            var logs = DataStore.From<Log>()
+                .Where("Tree_CN = ?")
+                .OrderBy("CAST (LogNumber AS NUMERIC)")
+                .Read(Tree.Tree_CN).ToList();
 
             if (logs.Count == 0)
             {
@@ -58,22 +61,16 @@ namespace FScruiser.Core.Services
             return logs;
         }
 
-        IEnumerable<Log> ReadLogs()
-        {
-            return DataStore.From<Log>()
-                .Where("Tree_CN = ?")
-                .OrderBy("CAST (LogNumber AS NUMERIC)")
-                .Read(Tree.Tree_CN);
-        }
-
         double GetDefaultLogCount()
         {
             if (Tree.TreeDefaultValue == null) { return 0.0; }
+
             var mrchHtLL = Tree.TreeDefaultValue.MerchHeightLogLength;
+            var species = Tree.TreeDefaultValue.Species;
 
             if (RegionalLogRule != null)
             {
-                var logRule = RegionalLogRule.GetLogRule(Tree.Species);
+                var logRule = RegionalLogRule.GetLogRule(species);
                 if (logRule != null)
                 {
                     return logRule.GetDefaultLogCount(Tree.TotalHeight, Tree.DBH, mrchHtLL);
@@ -101,6 +98,7 @@ namespace FScruiser.Core.Services
         public Log AddLogRec()
         {
             var newLog = new Log();
+            newLog.DAL = DataStore;
             newLog.Tree_CN = Tree.Tree_CN;
             newLog.LogNumber = GetNextLogNum();
 
@@ -110,8 +108,11 @@ namespace FScruiser.Core.Services
 
         public bool DeleteLog(Log log)
         {
-            Tree.LogCountDirty = true;
-            log.Delete();
+            if (log.IsPersisted)
+            {
+                Tree.LogCountDirty = true;
+                log.Delete();
+            }
             return Logs.Remove(log);
         }
 
