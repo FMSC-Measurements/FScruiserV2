@@ -96,10 +96,11 @@ namespace FSCruiser.Core.Models
         {
             String stCode = "--";
             string sgCode = "----";
-            SampleGroupDO sg = (Count != null) ? Count.SampleGroup : null;
-            try//TODO remove try catch?
+
+            if (Count != null)
             {
-                if (sg != null)
+                var sg = Count.SampleGroup;
+                if (sg != null && sg.Stratum != null)
                 {
                     stCode = sg.Stratum.Code;
                     if (stCode.Length > 2) { stCode = stCode.Substring(0, 2); }
@@ -108,7 +109,6 @@ namespace FSCruiser.Core.Models
                     if (sgCode.Length > 4) { sgCode = sgCode.Substring(0, 4); }
                 }
             }
-            catch { }
 
             String[] a = new String[3];
             a[0] = string.Format("{0} {1}", stCode, sgCode);
