@@ -139,7 +139,7 @@ namespace FSCruiser.Core.Models
                     , base.CuttingUnit.CuttingUnit_CN
                     , base.Plot_CN).ToList();
 
-                foreach(var t in tList)
+                foreach (var t in tList)
                 {
                     t.ValidateVisableFields();
                 }
@@ -151,8 +151,8 @@ namespace FSCruiser.Core.Models
 
         public long GetNextTreeNumber()
         {
-            if(Trees.Count == 0) { return 0L;}
-            return Trees.Max(x => x.TreeNumber); 
+            if (Trees == null || Trees.Count == 0) { return 1L; }
+            return Trees.Max(x => x.TreeNumber) + 1;
         }
 
         public void ResequenceTreeNumbers()
@@ -170,7 +170,7 @@ namespace FSCruiser.Core.Models
 
         public bool IsTreeNumberAvalible(long treeNumber)
         {
-            foreach (Tree tree in this.Trees)
+            foreach (Tree tree in Trees)
             {
                 if (tree.TreeNumber == treeNumber)
                 {

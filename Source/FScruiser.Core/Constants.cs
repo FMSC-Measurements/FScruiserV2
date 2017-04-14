@@ -7,7 +7,7 @@ namespace FSCruiser.Core
     {
         public static bool NEW_SPECIES_OPTION = false;
 
-        public const string FSCRUISER_VERSION = "2017.04.11";
+        public const string FSCRUISER_VERSION = "2017.04.14";
 
         public const string APP_TITLE = "FScruiser - " + FSCRUISER_VERSION;
 
@@ -24,8 +24,8 @@ namespace FSCruiser.Core
 
         public static readonly decimal DEFAULT_VOL_FACTOR = new Decimal(333, 0, 0, false, 3);
 
-        public static readonly TreeDefaultValueDO[] EMPTY_SPECIES_LIST = new TreeDefaultValueDO[] { };
-        public static readonly SampleGroupDO[] EMPTY_SG_LIST = new SampleGroupDO[] { };
+        public static readonly TreeDefaultValueDO[] EMPTY_SPECIES_LIST = new TreeDefaultValueDO[0];
+        public static readonly SampleGroupDO[] EMPTY_SG_LIST = new SampleGroupDO[0];
 
         public static readonly TreeFieldSetupDO[] DEFAULT_TREE_FIELDS = new TreeFieldSetupDO[]{
             new TreeFieldSetupDO(){

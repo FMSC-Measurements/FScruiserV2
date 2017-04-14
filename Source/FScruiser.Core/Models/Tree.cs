@@ -27,7 +27,7 @@ namespace FSCruiser.Core.Models
                 {
                     _fieldNames = FieldsStr.Split(',');
                 }
-                return _fieldNames;
+                return _fieldNames ?? new string[0];
             }
         }
     }

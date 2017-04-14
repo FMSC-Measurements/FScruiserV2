@@ -20,9 +20,9 @@ namespace FScruiser.Core.Test
         {
             var settings = new ApplicationSettings();
 
-            settings.AddPlotKeyStr.Should().BeEquivalentTo("Add");
-            settings.AddTreeKeyStr.Should().BeEquivalentTo("F3");
-            settings.JumpTreeTallyKeyStr.Should().BeEquivalentTo("Escape");
+            settings.AddPlotKeyStr.Should().BeEquivalentTo(ADD_PLOT_DEFAULT);
+            settings.AddTreeKeyStr.Should().BeEquivalentTo(ADD_TREE_DEFAULT);
+            settings.JumpTreeTallyKeyStr.Should().BeEquivalentTo(JUMP_TREE_TALLY_DEFAULT);
             settings.UntallyKeyStr.Should().BeNullOrEmpty();
         }
 
