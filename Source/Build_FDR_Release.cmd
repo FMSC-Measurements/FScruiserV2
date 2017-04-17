@@ -3,6 +3,9 @@ SETLOCAL ENABLEEXTENSIONS
 
 ::name of this script
 SET me=%~n0
+
+ECHO %me%
+
 ::directory of script
 SET parent=%~dp0
 

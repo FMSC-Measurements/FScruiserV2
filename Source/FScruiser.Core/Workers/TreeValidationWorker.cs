@@ -48,6 +48,7 @@ namespace FSCruiser.Core
                 }
                 catch (Exception e)
                 {
+                    //TODO NBug
                     Debug.WriteLine(e);
                 }
                 //var visableFields = tree.Stratum.TreeFields;
@@ -65,7 +66,7 @@ namespace FSCruiser.Core
                 //}
                 //catch
                 //{
-                //    //TODO should we do something if tree error unable to save
+                //
                 //}
             }
 

@@ -65,7 +65,7 @@ namespace FSCruiser.Core.Models
 
         protected virtual IEnumerable<Plot> ReadPlots(long cuttingUnit_CN)
         {
-            //HACK covariance wasn't added until C# 4.0 so we need to do some ineffecent coding here
+            //HACK covariance wasn't added until C# 4.0 so we need to do some inefficient coding here
             if (Is3PPNT)
             {
                 var source = DAL.From<Plot3PPNT>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
