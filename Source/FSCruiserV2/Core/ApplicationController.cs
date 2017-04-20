@@ -208,14 +208,14 @@ namespace FSCruiser.Core
         {
             string backupDir;
 
-            if (ApplicationSettings.Instance.BackUpToCurrentDir
-                || String.IsNullOrEmpty(ApplicationSettings.Instance.BackupDir))
+            if (Settings.BackUpToCurrentDir
+                || String.IsNullOrEmpty(Settings.BackupDir))
             {
                 backupDir = System.IO.Path.GetDirectoryName(this.DataStore.Path);
             }
             else
             {
-                backupDir = ApplicationSettings.Instance.BackupDir;
+                backupDir = Settings.BackupDir;
             }
 
             this.PerformBackup(this.GetBackupFileName(backupDir, useTS));
@@ -276,9 +276,9 @@ namespace FSCruiser.Core
 
         public void OnLeavingCurrentUnit(System.ComponentModel.CancelEventArgs e)
         {
-            if (!e.Cancel && ApplicationSettings.Instance.BackUpMethod == BackUpMethod.LeaveUnit)
+            if (!e.Cancel && Settings.BackUpMethod == BackUpMethod.LeaveUnit)
             {
-                this.PerformBackup(false);
+                this.PerformBackup(true);
             }
         }
 
