@@ -370,10 +370,10 @@ namespace FSCruiser.Core.DataEntry
                         _soundService.SignalInsuranceTree();
                     }
 
-                    if (_appSettings.EnableCruiserPopup)
-                    {
-                        _dialogService.AskCruiser(tree);
-                    }
+                    //if (_appSettings.EnableCruiserPopup)
+                    //{
+                    //    _dialogService.AskCruiser(tree);
+                    //}
                     //else
                     //{
                     //    var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
@@ -458,14 +458,11 @@ namespace FSCruiser.Core.DataEntry
             boolItem item = (sampler != null) ? (boolItem)sampler.NextItem() : (boolItem)null;
             if (item != null && !item.IsInsuranceItem)
             {
-                _soundService.SignalMeasureTree();
-                _dialogService.ShowMessage("Measure Tree");
                 tree = DataService.CreateNewTreeEntry(plot, count, true);
                 //tree.CountOrMeasure = "M";
             }
             else if (item != null && item.IsInsuranceItem)
             {
-                _soundService.SignalInsuranceTree();
                 tree = DataService.CreateNewTreeEntry(plot, count, true);
                 tree.CountOrMeasure = "I";
             }
