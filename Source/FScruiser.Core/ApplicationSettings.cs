@@ -283,13 +283,8 @@ namespace FSCruiser.Core
             }
         }
 
-        public static void Save()
+        public void Save()
         {
-            if (_instance == null)
-            {
-                return;
-            }
-
             XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
             var dir = ApplicationSettingDirectory;
 
@@ -302,7 +297,7 @@ namespace FSCruiser.Core
 
             using (StreamWriter writer = new StreamWriter(path))
             {
-                serializer.Serialize(writer, _instance);
+                serializer.Serialize(writer, this);
             }
         }
 

@@ -13,16 +13,13 @@ namespace FSCruiser.Core
     {
         FileLoadWorker _fileLoadWorker;
 
-        public ApplicationSettings Settings
-        {
-            get { return ApplicationSettings.Instance; }
-        }
-
         public IExceptionHandler ExceptionHandler { get; set; }
 
         public DAL DataStore { get; protected set; }
 
         public IViewController ViewController { get; protected set; }
+
+        public ApplicationSettings Settings { get; set; }
 
         public ApplicationController(IViewController viewController)
         {
@@ -41,6 +38,7 @@ namespace FSCruiser.Core
                 DialogService.Instance.ShowMessage("Unable to load applications settings");
                 ApplicationSettings.Instance = new ApplicationSettings();
             }
+            Settings = ApplicationSettings.Instance;
         }
 
         #region exception handleing
@@ -149,10 +147,12 @@ namespace FSCruiser.Core
                 var filePath = dataStore.Path;
                 var fileName = System.IO.Path.GetFileName(dataStore.Path);
 
-                ApplicationSettings.Instance.AddRecentProject(new RecentProject(fileName, filePath));
+                var appSettings = ApplicationSettings.Instance;
+
+                appSettings.AddRecentProject(new RecentProject(fileName, filePath));
                 try
                 {
-                    ApplicationSettings.Save();
+                    Settings.Save();
                 }
                 catch { /* do nothing */ } //TODO Nbug
             }
@@ -265,7 +265,7 @@ namespace FSCruiser.Core
         {
             try
             {
-                ApplicationSettings.Save();
+                Settings.Save();
             }
             catch { /* do nothing */ }
             if (this.DataStore != null)

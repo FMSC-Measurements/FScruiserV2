@@ -32,6 +32,19 @@ namespace FSCruiser.WinForms
             base.OnLoad(e);
         }
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            try
+            {
+                Settings.Save();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Unable to save settings");
+            }
+        }
+
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
@@ -100,10 +113,10 @@ namespace FSCruiser.WinForms
 
         private void _addBTN_Click(object sender, EventArgs e)
         {
-            OnAddCruiser();
+            AddCruiser();
         }
 
-        protected void OnAddCruiser()
+        protected void AddCruiser()
         {
             if (!String.IsNullOrEmpty(this._initialsTB.Text))
             {
@@ -130,7 +143,7 @@ namespace FSCruiser.WinForms
         {
             if (e.KeyCode == Keys.Enter)
             {
-                this.OnAddCruiser();
+                this.AddCruiser();
             }
         }
     }
