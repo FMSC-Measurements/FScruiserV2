@@ -108,7 +108,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        private void OnAppSettingsChanged()
+        private void OnAppSettingsChanging()
         {
             if (_appSettings != null)
             {
@@ -116,7 +116,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        private void OnAppSettingsChanging()
+        private void OnAppSettingsChanged()
         {
             if (_appSettings != null)
             {
@@ -159,6 +159,8 @@ namespace FSCruiser.WinForms.DataEntry
             _logsColumn = tableStyle.GridColumnStyles["LogCountActual"] as DataGridButtonColumn;
             _kpiColumn = tableStyle.GridColumnStyles["KPI"] as EditableTextBoxColumn;
             _errorsColumn = tableStyle.GridColumnStyles["Errors"] as DataGridTextBoxColumn;
+
+            Settings_CruisersChanged(null, null);//initialize initials column
 
             if (_logsColumn != null)
             {
@@ -409,7 +411,8 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (string.IsNullOrEmpty(keyStr)) { return false; }
 
-            var settings = ApplicationSettings.Instance;
+            var settings = AppSettings;
+            if (settings == null) { return false; }
 
             if (keyStr == settings.JumpTreeTallyKeyStr)
             {
@@ -430,7 +433,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this._initialsColoumn != null)
             {
-                this._initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
+                this._initialsColoumn.DataSource = AppSettings.Cruisers.ToArray();
             }
         }
 
@@ -454,11 +457,7 @@ namespace FSCruiser.WinForms.DataEntry
                     this._BS_trees = null;
                 }
                 DataService = null;
-                try
-                {
-                    ApplicationSettings.Instance.CruisersChanged -= Settings_CruisersChanged;
-                }
-                catch (NullReferenceException) { }
+                AppSettings = null;
             }
         }
     }

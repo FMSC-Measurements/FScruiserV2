@@ -47,7 +47,6 @@ namespace FSCruiser.WinForms.DataEntry
         #region DataService
 
         IDataEntryDataService _dataService;
-        private ApplicationSettings _appSettings;
 
         IDataEntryDataService DataService
         {
@@ -80,13 +79,19 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_logsColumn != null)
             {
-                _logsColumn.Visible = DataService.EnableLogGrading;
+                var logGradingEnabled = DataService.EnableLogGrading;
+                _logsColumn.Visible = logGradingEnabled;
+
+                _logToolStripMenuItem.Text = logGradingEnabled ?
+                "Disable Log Grading" : "Enable Log Grading";
             }
         }
 
         #endregion DataService
 
         #region AppSettings
+
+        private ApplicationSettings _appSettings;
 
         public ApplicationSettings AppSettings
         {
@@ -99,7 +104,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        private void OnAppSettingsChanged()
+        private void OnAppSettingsChanging()
         {
             if (_appSettings != null)
             {
@@ -107,7 +112,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        private void OnAppSettingsChanging()
+        private void OnAppSettingsChanged()
         {
             if (_appSettings != null)
             {
@@ -158,9 +163,6 @@ namespace FSCruiser.WinForms.DataEntry
             DataEntryController = dataEntryController;
             AppSettings = appSettings;
 
-            _logToolStripMenuItem.Text = DataService.EnableLogGrading ?
-                "Disable Log Grading" : "Enable Log Grading";
-
             var fontWidth = (int)Math.Ceiling(CreateGraphics().MeasureString("_", Font).Width);
 
             var columns = DataService.MakeTreeColumns(fontWidth);
@@ -188,7 +190,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_initialsColoumn != null)
             {
-                _initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
+                _initialsColoumn.DataSource = AppSettings.Cruisers.ToArray();
             }
             if (_logsColumn != null)
             {
