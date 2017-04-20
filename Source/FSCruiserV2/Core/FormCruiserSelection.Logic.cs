@@ -20,7 +20,8 @@ namespace FSCruiser.Core
         }
 
         Tree _tree;
-        public Tree Tree 
+
+        public Tree Tree
         {
             get { return _tree; }
             set { SetValue(ref _tree, value, "Tree"); }
@@ -68,18 +69,15 @@ namespace FSCruiser.Core
             foreach (var c in Settings.Cruisers)
             {
                 var key = (i < 10) ? i.ToString() : null;
-                _cruisers.Add(new KeyValuePair<string,Cruiser>(key, c));
+                _cruisers.Add(new KeyValuePair<string, Cruiser>(key, c));
                 i++;
             }
 
             NotifyPropertyChanged("Cruisers");
         }
 
-
-
         public void HandleKeyDown(string key)
         {
-            int value = Convert.ToInt32(key.ToString());
             foreach (var c in Cruisers)
             {
                 if (c.Key == key)
