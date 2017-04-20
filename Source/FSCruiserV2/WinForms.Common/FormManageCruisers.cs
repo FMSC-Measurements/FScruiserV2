@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using System.ComponentModel;
 
 namespace FSCruiser.WinForms
 {
@@ -32,7 +33,7 @@ namespace FSCruiser.WinForms
             base.OnLoad(e);
         }
 
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void  OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
             try
@@ -139,11 +140,12 @@ namespace FSCruiser.WinForms
             Settings.EnableCruiserPopup = this._enableCruiserPopupCB.Checked;
         }
 
-        private void _initialsTB_KeyDown(object sender, KeyEventArgs e)
+        private void _initialsTB_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyChar == '\r')
             {
                 this.AddCruiser();
+                e.Handled = true;
             }
         }
     }
