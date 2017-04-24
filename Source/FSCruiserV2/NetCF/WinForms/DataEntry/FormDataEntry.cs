@@ -12,6 +12,8 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormDataEntry : FMSC.Controls.CustomForm, IDataEntryView
     {
+        System.Threading.Timer preventSleepTimer;
+
         public FormDataEntry(IApplicationController controller
             , ApplicationSettings appSettings
             , IDataEntryDataService dataService)
@@ -28,7 +30,14 @@ namespace FSCruiser.WinForms.DataEntry
                 this.WindowState = FormWindowState.Maximized;
             }
 
+            preventSleepTimer = new System.Threading.Timer(CallSystemIdleTimerReset, null, 0, 30 * 1000);
+
             InitializeCommon(controller, appSettings, dataService);
+        }
+
+        void CallSystemIdleTimerReset(object obj)
+        {
+            Win32.SystemIdleTimerReset();
         }
 
         protected FormDataEntry()
@@ -52,6 +61,28 @@ namespace FSCruiser.WinForms.DataEntry
             this._showHideErrorColMI.Enabled = this.FocusedLayout is ITreeView;
             this._deleteRowButton.Enabled = this.FocusedLayout is ITreeView;
             this._showHideLogColMI.Enabled = this.FocusedLayout is ITreeView;
+        }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+                if (preventSleepTimer != null)
+                {
+                    preventSleepTimer.Dispose();
+                    preventSleepTimer = null;
+                }
+
+            }
+            base.Dispose(disposing);
         }
     }
 }
