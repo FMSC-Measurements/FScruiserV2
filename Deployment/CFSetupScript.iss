@@ -88,18 +88,14 @@ begin
     CEAppMgrPath:= GetCEappManager('');
     if CEAppMgrPath <>'' then
     begin
-          
-
       Prams:= ExpandConstant(' "{localappdata}\{#APP}\FDR_Install\{#FSCRUISER_INI}"');
-      ExecAsOriginalUser(CEAppMgrPath , Prams, '', SW_SHOW, ewNoWait, ErrorCode); 
-        
-    end
 
-    if IsTaskSelected('netcf') then
-    begin
-        ExecAsOriginalUser(CEAppMgrPath 
-      , ExpandConstant(' "{localappdata}\{#APP}\FDR_Install\{#DOTNET_INI}"')
-      , '', SW_SHOW, ewNoWait, ErrorCode);
+      if IsTaskSelected('netcf') then
+      begin
+        Prams:=Prams+ ExpandConstant(' "{localappdata}\{#APP}\FDR_Install\{#DOTNET_INI}"')
+      end
+
+      ExecAsOriginalUser(CEAppMgrPath , Prams, '', SW_SHOW, ewNoWait, ErrorCode);  
     end
   end;   
 end;
