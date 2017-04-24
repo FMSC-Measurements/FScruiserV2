@@ -28,10 +28,17 @@ IF EXIST "%cabOutDir%FScruiserV2.CAB" DEL /Q "%cabOutDir%FScruiserV2.CAB"
 ECHO %me%:Start Building Cab
 "%devenvPath%" %parent%\FScruiserV2.sln /build "Release|AnyCPU" /project "FSCruiserV2CECF20_CAB" /Out "%buildLogPath%"
 
+IF /I "%ERRORLEVEL%" NEQ "0" (
+    ::display build log
+    TYPE %buildLogPath%
+    ECHO %me%:Build Failed
+    EXIT /B 1
+)
+
 ::display build log
 TYPE %buildLogPath%
 
 COPY /Y /B "%cabOutDir%FScruiserV2.CAB" "%cabOutDir%FScruiserV2_%verStamp%.CAB"
 
-EXIT /B 0
+EXIT /B %ERRORLEVEL%
 
