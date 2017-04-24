@@ -115,7 +115,7 @@ namespace FSCruiser.WinForms.DataEntry
 
 #if NetCF
             _treeView = new ControlTreeDataGrid(DataService
-                , ApplicationSettings.Instance
+                , AppSettings
                 , this.LogicController)
             {
                 Dock = DockStyle.Fill,
