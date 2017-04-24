@@ -21,6 +21,8 @@ namespace FSCruiser.Core
 
         public ApplicationSettings Settings { get; set; }
 
+        public event Action FileStateChanged;
+
         public ApplicationController(IViewController viewController)
         {
             viewController.ApplicationController = this;
@@ -101,6 +103,15 @@ namespace FSCruiser.Core
             this._fileLoadWorker = worker;
         }
 
+        protected void OnFileStateChanged()
+        {
+            var fileStateChanged = FileStateChanged;
+            if (fileStateChanged != null)
+            {
+                fileStateChanged();
+            }
+        }
+
         void HandleFileLoadError(object sender, WorkerExceptionThrownEventArgs e)
         {
             var ex = e.Exception;
@@ -120,7 +131,7 @@ namespace FSCruiser.Core
                 e.Handled = true;
             }
 
-            ViewController.HandleFileStateChanged();
+            OnFileStateChanged();
         }
 
         void HandleFileLoadStart(object sender
@@ -156,7 +167,7 @@ namespace FSCruiser.Core
                 }
                 catch { /* do nothing */ } //TODO Nbug
             }
-            ViewController.HandleFileStateChanged();
+            OnFileStateChanged();
         }
 
         #endregion File

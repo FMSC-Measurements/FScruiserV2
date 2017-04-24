@@ -7,6 +7,8 @@ namespace FSCruiser.Core
 {
     public interface IApplicationController : IDisposable
     {
+        event Action FileStateChanged;
+
         #region Properties
 
         IViewController ViewController { get; }

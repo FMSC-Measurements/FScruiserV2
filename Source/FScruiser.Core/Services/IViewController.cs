@@ -13,8 +13,6 @@ namespace FSCruiser.Core
 
         IApplicationController ApplicationController { get; set; }
 
-        void HandleFileStateChanged();
-
         void ShowAbout();
 
         void ShowBackupUtil();

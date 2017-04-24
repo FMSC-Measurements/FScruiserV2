@@ -17,12 +17,55 @@ namespace FSCruiser.WinForms
             public string FilePath { get; set; }
         }
 
-        private int _fontHeight = 0;
+        int _fontHeight = 0;
+
+        #region Controller
+        IApplicationController _controller;
+        IApplicationController Controller
+        {
+            get { return _controller; }
+            set
+            {
+                OnControllerChanging();
+                _controller = value;
+                OnControllerChanged();
+            }
+        }
+
+        private void OnControllerChanged()
+        {
+            if (_controller != null)
+            {
+                _controller.FileStateChanged += HandleFileStateChanged;
+            }
+        }
+
+        private void OnControllerChanging()
+        {
+            if (_controller != null)
+            {
+                _controller.FileStateChanged -= HandleFileStateChanged;
+            }
+        }
+        #endregion
+
+        CuttingUnit SelectedUnit
+        {
+            get
+            {
+                CuttingUnit unitVM = _BS_cuttingUnits.Current as CuttingUnit;
+                if (unitVM != null && unitVM.Code != null)
+                {
+                    return unitVM;
+                }
+                return null;
+            }
+        }
 
         public FormMain(IApplicationController controller)
         {
-            this.Controller = controller;
-            this.KeyPreview = true;
+            Controller = controller;
+            KeyPreview = true;
             InitializeComponent();
 
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
@@ -54,27 +97,14 @@ namespace FSCruiser.WinForms
             //Thread.Sleep(1000);
         }
 
-        IApplicationController Controller { get; set; }
 
-        CuttingUnit SelectedUnit
-        {
-            get
-            {
-                CuttingUnit unitVM = _BS_cuttingUnits.Current as CuttingUnit;
-                if (unitVM != null && unitVM.Code != null)
-                {
-                    return unitVM;
-                }
-                return null;
-            }
-        }
 
-        private void OpenButton_Click(object sender, EventArgs e)
+        void OpenButton_Click(object sender, EventArgs e)
         {
             this.Controller.OpenFile();
         }
 
-        public void HandleFileStateChanged()
+        void HandleFileStateChanged()
         {
             if (this.InvokeRequired)
             {
@@ -94,6 +124,8 @@ namespace FSCruiser.WinForms
                     : FSCruiser.Constants.APP_TITLE;
 
                 UpdateCuttingUnits();
+
+                _cuttingUnitCB.Focus();
             }
         }
 
@@ -102,7 +134,7 @@ namespace FSCruiser.WinForms
             _BS_cuttingUnits.DataSource = ReadCuttingUnits().ToArray();
         }
 
-        public IEnumerable<CuttingUnit> ReadCuttingUnits()
+        IEnumerable<CuttingUnit> ReadCuttingUnits()
         {
             if (Controller.DataStore != null)
             {
