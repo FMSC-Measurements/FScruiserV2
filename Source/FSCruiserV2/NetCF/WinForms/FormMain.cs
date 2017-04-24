@@ -3,10 +3,10 @@ using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
-using FSCruiser.Core;
 using FSCruiser.Core.Models;
 using System.Collections.Generic;
 using FSCruiser.WinForms;
+using FSCruiser.Core;
 
 namespace FSCruiser.WinForms
 {
@@ -91,7 +91,7 @@ namespace FSCruiser.WinForms
 
                 Text = (fileLoaded) ?
                     ("FScruiser - " + System.IO.Path.GetFileName(Controller.DataStore.Path))
-                    : FSCruiser.Core.Constants.APP_TITLE;
+                    : FSCruiser.Constants.APP_TITLE;
 
                 UpdateCuttingUnits();
             }

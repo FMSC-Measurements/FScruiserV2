@@ -105,7 +105,7 @@ namespace FSCruiser.Core.Models
         {
             if (tree == null || tree.Stratum == null)
             {
-                return Constants.EMPTY_SG_LIST;
+                return new SampleGroupDO[0];
             }
 
             return tree.DAL.From<SampleGroup>()
@@ -116,7 +116,7 @@ namespace FSCruiser.Core.Models
         public static ICollection<TreeDefaultValueDO> ReadValidTDVs(this Tree tree)
         {
             if (tree == null || tree.Stratum == null)
-            { return Constants.EMPTY_SPECIES_LIST; }
+            { return new TreeDefaultValueDO[0]; }
 
             if (tree.SampleGroup == null)
             {
@@ -131,7 +131,7 @@ namespace FSCruiser.Core.Models
 
                 if (tree.SampleGroup == null)
                 {
-                    return Constants.EMPTY_SPECIES_LIST;
+                    return new TreeDefaultValueDO[0];
                 }
             }
 

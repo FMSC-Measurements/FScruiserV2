@@ -24,7 +24,7 @@ namespace FSCruiser.Core.Workers
         protected override void WorkerMain()
         {
             this.DataStore = new DAL(Path);
-            DataStore.LogMessage(string.Format("Opened By FSCruiser ({0})", Constants.FSCRUISER_VERSION), "I");
+            DataStore.LogMessage(string.Format("Opened By FSCruiser ({0})", FSCruiser.Constants.FSCRUISER_VERSION), "I");
             this.UnitsOfWorkCompleated = 1;
             this.NotifyProgressChanged(null);
         }

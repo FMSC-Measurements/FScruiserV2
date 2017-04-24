@@ -29,7 +29,7 @@ namespace FSCruiser.WinForms
         {
             Datastore = dataStore;
             InitializeComponent();
-            this.PProd.DataSource = Constants.PRODUCT_CODES;
+            this.PProd.DataSource = FSCruiser.Constants.PRODUCT_CODES;
 
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
             {

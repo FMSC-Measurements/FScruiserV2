@@ -15,6 +15,8 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class LayoutPlot : UserControl, ITallyView, ITreeView, IPlotLayout
     {
+        public const int LOG_COLUMN_WIDTH = 40;
+
         #region Designer code
 
         /// <summary>

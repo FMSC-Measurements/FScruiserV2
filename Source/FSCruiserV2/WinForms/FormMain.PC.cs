@@ -29,7 +29,7 @@ namespace FSCruiser.WinForms
             this.Controller = controller;
             InitializeComponent();
 
-            this.Text = "FScruiser - " + FSCruiser.Core.Constants.FSCRUISER_VERSION;
+            this.Text = FSCruiser.Constants.APP_TITLE;
 
             this.ClearNavPanel();
 
@@ -80,7 +80,7 @@ namespace FSCruiser.WinForms
                 else
                 {
                     this._dataEntryButton.Enabled = false;
-                    Text = FSCruiser.Core.Constants.APP_TITLE;
+                    Text = FSCruiser.Constants.APP_TITLE;
                 }
                 CuttingUnitSelectView.HandleFileStateChanged();
             }
