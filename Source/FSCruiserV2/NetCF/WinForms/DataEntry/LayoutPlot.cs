@@ -4,17 +4,19 @@ using System.Linq;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using FMSC.Controls;
+using FScruiser.Core.Services;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using Microsoft.WindowsCE.Forms;
-using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
     public partial class LayoutPlot : UserControl, ITallyView, ITreeView, IPlotLayout
     {
+        public const int LOG_COLUMN_WIDTH = 40;
+
         #region Designer code
 
         /// <summary>
@@ -35,11 +37,7 @@ namespace FSCruiser.WinForms.DataEntry
                     components.Dispose();
                 }
                 DataService = null;
-                try
-                {
-                    ApplicationSettings.Instance.CruisersChanged -= Settings_CruisersChanged;
-                }
-                catch (NullReferenceException) { }
+                AppSettings = null;
             }
             base.Dispose(disposing);
         }
@@ -344,6 +342,39 @@ namespace FSCruiser.WinForms.DataEntry
 
         #endregion DataService
 
+        #region AppSettings
+
+        ApplicationSettings _appSettings;
+
+        public ApplicationSettings AppSettings
+        {
+            get { return _appSettings; }
+            set
+            {
+                OnAppSettingsChanging();
+                _appSettings = value;
+                OnAppSettingsChanged();
+            }
+        }
+
+        private void OnAppSettingsChanged()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.CruisersChanged += Settings_CruisersChanged;
+            }
+        }
+
+        private void OnAppSettingsChanging()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.CruisersChanged -= Settings_CruisersChanged;
+            }
+        }
+
+        #endregion AppSettings
+
         public LayoutPlotLogic ViewLogicController { get; set; }
 
         public PlotStratum Stratum { get { return ViewLogicController.Stratum; } }
@@ -362,10 +393,12 @@ namespace FSCruiser.WinForms.DataEntry
 
         public LayoutPlot(FormDataEntryLogic dataEntryController
             , IDataEntryDataService dataService
+            , ApplicationSettings appSettings
             , ISoundService soundService
             , PlotStratum stratum)
         {
             DataService = dataService;
+            AppSettings = appSettings;
 
             this.ViewLogicController = new LayoutPlotLogic(stratum
                 , this
@@ -373,10 +406,8 @@ namespace FSCruiser.WinForms.DataEntry
                 , dataService
                 , soundService
                 , DialogService.Instance
-                , ApplicationSettings.Instance
+                , AppSettings
                 , dataEntryController.ViewController);
-
-            ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
 
             InitializeComponent();
             InitializePlotNavIcons();
@@ -425,7 +456,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (this._initialsColoumn != null)
             {
-                this._initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
+                this._initialsColoumn.DataSource = AppSettings.Cruisers.ToArray();
             }
 
             this.Dock = DockStyle.Fill;
@@ -434,8 +465,6 @@ namespace FSCruiser.WinForms.DataEntry
 
             this.ViewLogicController.UpdateCurrentPlot();
         }
-
-        
 
         void InitializeTallyPanel()
         {
@@ -819,7 +848,7 @@ namespace FSCruiser.WinForms.DataEntry
             if (_viewLoading) { return false; }
             if (string.IsNullOrEmpty(keyStr)) { return false; }
 
-            var settings = ApplicationSettings.Instance;
+            var settings = AppSettings;
 
             if (keyStr == settings.AddPlotKeyStr)
             {
@@ -844,7 +873,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         public void NotifyEnter()
         {
-            
             MoveLastTree();
             if (IsGridExpanded)
             {
@@ -924,7 +952,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this._initialsColoumn != null)
             {
-                this._initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
+                this._initialsColoumn.DataSource = AppSettings.Cruisers.ToArray();
             }
         }
 

@@ -142,7 +142,7 @@ namespace FSCruiser.Core.DataEntry
             }
 
             Tree tree = null;
-            if (kpi == -1)  //user enterted sure to measure
+            if (kpi == -1)  //user entered sure to measure
             {
                 tree = DataService.CreateNewTreeEntry(count);
                 tree.STM = "Y";

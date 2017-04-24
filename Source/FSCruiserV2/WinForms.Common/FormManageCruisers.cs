@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using System.ComponentModel;
 
 namespace FSCruiser.WinForms
 {
@@ -30,6 +31,19 @@ namespace FSCruiser.WinForms
             this.UpdateCruiserList();
             this._enableCruiserPopupCB.Checked = Settings.EnableCruiserPopup;
             base.OnLoad(e);
+        }
+
+        protected override void  OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            try
+            {
+                Settings.Save();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Unable to save settings");
+            }
         }
 
         protected override void OnClosed(EventArgs e)
@@ -100,10 +114,10 @@ namespace FSCruiser.WinForms
 
         private void _addBTN_Click(object sender, EventArgs e)
         {
-            OnAddCruiser();
+            AddCruiser();
         }
 
-        protected void OnAddCruiser()
+        protected void AddCruiser()
         {
             if (!String.IsNullOrEmpty(this._initialsTB.Text))
             {
@@ -126,11 +140,12 @@ namespace FSCruiser.WinForms
             Settings.EnableCruiserPopup = this._enableCruiserPopupCB.Checked;
         }
 
-        private void _initialsTB_KeyDown(object sender, KeyEventArgs e)
+        private void _initialsTB_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyChar == '\r')
             {
-                this.OnAddCruiser();
+                this.AddCruiser();
+                e.Handled = true;
             }
         }
     }

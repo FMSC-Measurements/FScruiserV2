@@ -12,7 +12,38 @@ namespace FSCruiser.WinForms
 
         public Panel ViewNavPanel { get { return this._viewNavPanel; } }
 
-        public IApplicationController Controller { get; protected set; }
+        #region Controller
+
+        IApplicationController _controller;
+
+        protected IApplicationController Controller
+        {
+            get { return _controller; }
+            set
+            {
+                OnControllerChanging();
+                _controller = value;
+                OnControllerChanged();
+            }
+        }
+
+        private void OnControllerChanged()
+        {
+            if (_controller != null)
+            {
+                _controller.FileStateChanged += HandleFileStateChanged;
+            }
+        }
+
+        private void OnControllerChanging()
+        {
+            if (_controller != null)
+            {
+                _controller.FileStateChanged -= HandleFileStateChanged;
+            }
+        }
+
+        #endregion Controller
 
         private Control _dataEntryButton;
 
@@ -29,7 +60,7 @@ namespace FSCruiser.WinForms
             this.Controller = controller;
             InitializeComponent();
 
-            this.Text = "FScruiser - " + FSCruiser.Core.Constants.FSCRUISER_VERSION;
+            this.Text = FSCruiser.Constants.APP_TITLE;
 
             this.ClearNavPanel();
 
@@ -63,7 +94,7 @@ namespace FSCruiser.WinForms
             return newNavButton;
         }
 
-        public void HandleFileStateChanged()
+        protected void HandleFileStateChanged()
         {
             if (this.InvokeRequired)
             {
@@ -71,7 +102,8 @@ namespace FSCruiser.WinForms
             }
             else
             {
-                if (Controller.DataStore != null && Controller.DataStore.Exists)
+                var controller = Controller;
+                if (controller.DataStore != null && controller.DataStore.Exists)
                 {
                     var fileName = System.IO.Path.GetFileName(Controller.DataStore.Path);
                     this._dataEntryButton.Enabled = true;
@@ -80,7 +112,7 @@ namespace FSCruiser.WinForms
                 else
                 {
                     this._dataEntryButton.Enabled = false;
-                    Text = FSCruiser.Core.Constants.APP_TITLE;
+                    Text = FSCruiser.Constants.APP_TITLE;
                 }
                 CuttingUnitSelectView.HandleFileStateChanged();
             }

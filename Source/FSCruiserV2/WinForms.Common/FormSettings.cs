@@ -55,6 +55,15 @@ namespace FSCruiser.WinForms
                 settings.EnablePageChangeSound = _enablePageChangeSound.Checked;
                 settings.EnableTallySound = _enableTallySound.Checked;
                 settings.EnableAskEnterTreeData = _askEnterTreeData.Checked;
+
+                try
+                {
+                    settings.Save();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Unable to save settings", ex.GetType().Name);
+                }
             }
         }
 

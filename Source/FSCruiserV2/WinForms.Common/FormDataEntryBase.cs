@@ -58,13 +58,13 @@ namespace FSCruiser.WinForms.DataEntry
 
             Controller = controller;
             DataService = dataService;
-            _appSettings = appSettings;
+            AppSettings = appSettings;
 
             LogicController = new FormDataEntryLogic(Controller
                 , DialogService.Instance
                 , SoundService.Instance
                 , DataService
-                , ApplicationSettings.Instance
+                , AppSettings
                 , this);
 
             // Set the form title (Text) with current cutting unit and description.
@@ -115,7 +115,7 @@ namespace FSCruiser.WinForms.DataEntry
 
 #if NetCF
             _treeView = new ControlTreeDataGrid(DataService
-                , ApplicationSettings.Instance
+                , AppSettings
                 , this.LogicController)
             {
                 Dock = DockStyle.Fill,
@@ -173,6 +173,7 @@ namespace FSCruiser.WinForms.DataEntry
 
                 LayoutPlot view = new LayoutPlot(LogicController
                     , DataService
+                    , AppSettings
                     , SoundService.Instance
                     , st);
                 view.Parent = page;
@@ -222,6 +223,14 @@ namespace FSCruiser.WinForms.DataEntry
 
         KeysConverter keyConverter = new KeysConverter();
         private ApplicationSettings _appSettings;
+        public ApplicationSettings AppSettings
+        {
+            get { return _appSettings; }
+            set { _appSettings = value; }
+
+        }
+
+
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -252,7 +261,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void _editCruisersMI_Click(object sender, EventArgs e)
         {
-            using (FormManageCruisers view = new FormManageCruisers(_appSettings))
+            using (FormManageCruisers view = new FormManageCruisers(AppSettings))
             {
 #if NetCF
                 view.ShowDialog();

@@ -12,11 +12,5 @@ namespace FSCruiser
         string JumpTreeTallyKeyStr { get; set; }
         string ResequencePlotTreesKeyStr { get; set; }
         string UntallyKeyStr { get; set; }
-
-        System.Windows.Forms.Keys AddPlotKey { get; set; }
-        System.Windows.Forms.Keys AddTreeKey { get; set; }
-        System.Windows.Forms.Keys JumpTreeTallyKey { get; set; }
-        System.Windows.Forms.Keys ResequencePlotTreesKey { get; set; }
-        System.Windows.Forms.Keys UntallyKey { get; set; }
     }
 }

@@ -11,5 +11,8 @@ namespace FSCruiser.WinForms
 
         [DllImport("CoreDll.dll")]
         public static extern void MessageBeep(int code);
+
+        [DllImport("CoreDll.dll")]
+        public static extern void SystemIdleTimerReset();
     }
 }

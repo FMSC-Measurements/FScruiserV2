@@ -18,6 +18,11 @@ IF NOT DEFINED verStamp (SET verStamp=%date:~10,4%%date:~4,2%%date:~7,2%)
 ::Build CAB File. This generates FScruiser.CAB and FScruiser_########.cab 
 CALL ./Source/Build_CAB
 
+IF /I "%errorlevel%" NEQ "0" (
+IF "%interactive%"=="0" PAUSE
+EXIT /B 1
+)
+
 ::Build Inno Setup Installer
 SET appVer=%date:~10,4%.%date:~4,2%.%date:~7,2%
 

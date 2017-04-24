@@ -7,6 +7,8 @@ using FSCruiser.Core.Models;
 
 namespace FSCruiser.Core
 {
+    
+
     public enum BackUpMethod { None = 0, LeaveUnit = 1, TimeInterval = 2 }
 
     public enum HotKeyAction { None = 0, AddTree, AddPlot, JumpTreeTally, ResequencePlotTrees, UnTally }
@@ -14,6 +16,8 @@ namespace FSCruiser.Core
     [Serializable]
     public class ApplicationSettings
     {
+        protected const string APP_SETTINGS_PATH = "Settings.xml";
+
         #region static properties
 
         static ApplicationSettings _instance;
@@ -49,7 +53,7 @@ namespace FSCruiser.Core
             get
             {
                 var dir = ApplicationSettingDirectory;
-                return System.IO.Path.Combine(dir, Constants.APP_SETTINGS_PATH);
+                return System.IO.Path.Combine(dir, APP_SETTINGS_PATH);
             }
         }
 
@@ -256,7 +260,7 @@ namespace FSCruiser.Core
                 //so if no app setting file exists check old location
 
                 var oldSettingsPath = System.IO.Path.Combine(GetExecutionDirectory()
-                    , Constants.APP_SETTINGS_PATH);
+                    , APP_SETTINGS_PATH);
 
                 if (File.Exists(oldSettingsPath))
                 {
@@ -283,13 +287,8 @@ namespace FSCruiser.Core
             }
         }
 
-        public static void Save()
+        public void Save()
         {
-            if (_instance == null)
-            {
-                return;
-            }
-
             XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
             var dir = ApplicationSettingDirectory;
 
@@ -302,7 +301,7 @@ namespace FSCruiser.Core
 
             using (StreamWriter writer = new StreamWriter(path))
             {
-                serializer.Serialize(writer, _instance);
+                serializer.Serialize(writer, this);
             }
         }
 

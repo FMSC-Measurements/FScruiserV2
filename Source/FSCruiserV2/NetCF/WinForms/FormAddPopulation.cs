@@ -271,7 +271,7 @@ namespace FSCruiser.WinForms
             }
             else
             {
-                this._BS_SampleGroups.DataSource = Constants.EMPTY_SG_LIST;
+                this._BS_SampleGroups.DataSource = new SGType[0];
             }
             Cursor.Current = Cursors.Default;
         }

@@ -17,6 +17,12 @@ IF NOT DEFINED verStamp (SET verStamp=%date:~10,4%%date:~4,2%%date:~7,2%)
 
 CALL %parent%/Source/Build_PC_Release.cmd
 
+IF /I "%ERRORLEVEL%" NEQ "0" (
+ECHO build failed
+IF "%interactive%"=="0" PAUSE
+EXIT /B 1
+)
+
 "C:\Program Files (x86)\Inno Setup 5\iscc" /dAPP_VERSION=%appVer% /F"FScruiserV2_PC_%verStamp%" "./Deployment/PCSetupScript.iss" 
 
 ::if invoked from windows explorer, pause

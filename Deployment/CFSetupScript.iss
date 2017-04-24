@@ -2,7 +2,7 @@
 ; #defines require the ISPP add-on: http://sourceforge.net/projects/ispp/
 #define APP "FSCruiserV2"
 
-#define APP_VERSION "2017.04.14"
+#define APP_VERSION "2017.04.24"
 #define SPECIALTAG "Production"
 #define BASEURL "http://www.fs.fed.us/fmsc/measure"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
@@ -88,18 +88,14 @@ begin
     CEAppMgrPath:= GetCEappManager('');
     if CEAppMgrPath <>'' then
     begin
-          
-
       Prams:= ExpandConstant(' "{localappdata}\{#APP}\FDR_Install\{#FSCRUISER_INI}"');
-      ExecAsOriginalUser(CEAppMgrPath , Prams, '', SW_SHOW, ewNoWait, ErrorCode); 
-        
-    end
 
-    if IsTaskSelected('netcf') then
-    begin
-        ExecAsOriginalUser(CEAppMgrPath 
-      , ExpandConstant(' "{localappdata}\{#APP}\FDR_Install\{#DOTNET_INI}"')
-      , '', SW_SHOW, ewNoWait, ErrorCode);
+      if IsTaskSelected('netcf') then
+      begin
+        Prams:=Prams+ ExpandConstant(' "{localappdata}\{#APP}\FDR_Install\{#DOTNET_INI}"')
+      end
+
+      ExecAsOriginalUser(CEAppMgrPath , Prams, '', SW_SHOW, ewNoWait, ErrorCode);  
     end
   end;   
 end;

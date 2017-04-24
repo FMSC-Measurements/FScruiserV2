@@ -86,7 +86,7 @@
             this._initialsTB.Name = "_initialsTB";
             this._initialsTB.Size = new System.Drawing.Size(48, 23);
             this._initialsTB.TabIndex = 0;
-            this._initialsTB.KeyDown += new System.Windows.Forms.KeyEventHandler(this._initialsTB_KeyDown);
+            this._initialsTB.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this._initialsTB_KeyPress);
             // 
             // _cruiserListContainer
             // 

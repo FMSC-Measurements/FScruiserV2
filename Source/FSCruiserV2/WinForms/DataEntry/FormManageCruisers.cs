@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
@@ -25,17 +26,14 @@ namespace FSCruiser.WinForms
 #endif
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected void AddCruiser()
         {
-            this.UpdateCruiserList();
-            this._enableCruiserPopupCB.Checked = Settings.EnableCruiserPopup;
-            base.OnLoad(e);
-        }
-
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-            Settings.NotifyCruisersChanged();
+            if (!String.IsNullOrEmpty(this._initialsTB.Text))
+            {
+                Settings.AddCruiser(this._initialsTB.Text);
+                this.UpdateCruiserList();
+                this._initialsTB.Text = String.Empty;
+            }
         }
 
         private void UpdateCruiserList()
@@ -98,19 +96,35 @@ namespace FSCruiser.WinForms
             panel.ResumeLayout(false);
         }
 
-        private void _addBTN_Click(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
-            OnAddCruiser();
+            this.UpdateCruiserList();
+            this._enableCruiserPopupCB.Checked = Settings.EnableCruiserPopup;
+            base.OnLoad(e);
         }
 
-        protected void OnAddCruiser()
+        protected override void OnClosing(CancelEventArgs e)
         {
-            if (!String.IsNullOrEmpty(this._initialsTB.Text))
+            base.OnClosing(e);
+            try
             {
-                Settings.AddCruiser(this._initialsTB.Text);
-                this.UpdateCruiserList();
-                this._initialsTB.Text = String.Empty;
+                Settings.Save();
             }
+            catch (Exception)
+            {
+                MessageBox.Show("Unable to save settings");
+            }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            Settings.NotifyCruisersChanged();
+        }
+
+        private void _addBTN_Click(object sender, EventArgs e)
+        {
+            AddCruiser();
         }
 
         private void _removeItemBTN_Click(object sender, EventArgs e)
@@ -130,7 +144,7 @@ namespace FSCruiser.WinForms
         {
             if (e.KeyCode == Keys.Enter)
             {
-                this.OnAddCruiser();
+                this.AddCruiser();
             }
         }
     }

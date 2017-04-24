@@ -101,6 +101,7 @@ namespace FSCruiser.WinForms.DataEntry
             var tb = sender as TextBox;
             if (tb == null) { return; }
             tb.BeginInvoke(new Action(tb.SelectAll));
+            _sip.Enabled = true;
         }
 
         void UpdateLimitingDistance()

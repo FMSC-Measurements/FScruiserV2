@@ -75,14 +75,6 @@ namespace FSCruiser.WinForms.Common
 
         public abstract void BeginShowSplash();
 
-        public void HandleFileStateChanged()
-        {
-            if (this.MainView != null)
-            {
-                this.MainView.HandleFileStateChanged();
-            }
-        }
-
         public void ShowMain()
         {
             this.MainView.Show();

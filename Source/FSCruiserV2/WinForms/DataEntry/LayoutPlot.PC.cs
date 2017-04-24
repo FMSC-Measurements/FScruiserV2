@@ -89,26 +89,59 @@ namespace FSCruiser.WinForms.DataEntry
 
         #endregion DataService
 
+        #region AppSettings
+
+        ApplicationSettings _appSettings;
+
+        public ApplicationSettings AppSettings
+        {
+            get { return _appSettings; }
+            set
+            {
+                OnAppSettingsChanging();
+                _appSettings = value;
+                OnAppSettingsChanged();
+            }
+        }
+
+        private void OnAppSettingsChanged()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.CruisersChanged += Settings_CruisersChanged;
+            }
+        }
+
+        private void OnAppSettingsChanging()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.CruisersChanged -= Settings_CruisersChanged;
+            }
+        }
+
+        #endregion AppSettings
+
         public LayoutPlot(FormDataEntryLogic dataEntryController
             , IDataEntryDataService dataService
+            , ApplicationSettings appSettings
             , ISoundService soundService
             , PlotStratum stratum)
         {
             Stratum = stratum;
             DataService = dataService;
+            AppSettings = appSettings;
             this.ViewLogicController = new LayoutPlotLogic(stratum
                 , this
                 , dataEntryController
                 , dataService
                 , soundService
                 , DialogService.Instance
-                , ApplicationSettings.Instance
+                , AppSettings
                 , dataEntryController.ViewController);
 
             this.Dock = DockStyle.Fill;
             InitializeComponent();
-
-            ApplicationSettings.Instance.CruisersChanged += new EventHandler(Settings_CruisersChanged);
 
             WireSplitter(stratum);
 
@@ -838,11 +871,8 @@ namespace FSCruiser.WinForms.DataEntry
                 {
                     components.Dispose();
                 }
-                try
-                {
-                    ApplicationSettings.Instance.CruisersChanged -= Settings_CruisersChanged;
-                }
-                catch (NullReferenceException) { }
+                DataService = null;
+                AppSettings = null;
             }
             LayoutPlot.SplitterMoved -= LayoutPlot_SplitterMoved;
 

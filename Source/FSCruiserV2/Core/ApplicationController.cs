@@ -13,16 +13,15 @@ namespace FSCruiser.Core
     {
         FileLoadWorker _fileLoadWorker;
 
-        public ApplicationSettings Settings
-        {
-            get { return ApplicationSettings.Instance; }
-        }
-
         public IExceptionHandler ExceptionHandler { get; set; }
 
         public DAL DataStore { get; protected set; }
 
         public IViewController ViewController { get; protected set; }
+
+        public ApplicationSettings Settings { get; set; }
+
+        public event Action FileStateChanged;
 
         public ApplicationController(IViewController viewController)
         {
@@ -41,6 +40,7 @@ namespace FSCruiser.Core
                 DialogService.Instance.ShowMessage("Unable to load applications settings");
                 ApplicationSettings.Instance = new ApplicationSettings();
             }
+            Settings = ApplicationSettings.Instance;
         }
 
         #region exception handleing
@@ -103,6 +103,15 @@ namespace FSCruiser.Core
             this._fileLoadWorker = worker;
         }
 
+        protected void OnFileStateChanged()
+        {
+            var fileStateChanged = FileStateChanged;
+            if (fileStateChanged != null)
+            {
+                fileStateChanged();
+            }
+        }
+
         void HandleFileLoadError(object sender, WorkerExceptionThrownEventArgs e)
         {
             var ex = e.Exception;
@@ -122,7 +131,7 @@ namespace FSCruiser.Core
                 e.Handled = true;
             }
 
-            ViewController.HandleFileStateChanged();
+            OnFileStateChanged();
         }
 
         void HandleFileLoadStart(object sender
@@ -149,14 +158,16 @@ namespace FSCruiser.Core
                 var filePath = dataStore.Path;
                 var fileName = System.IO.Path.GetFileName(dataStore.Path);
 
-                ApplicationSettings.Instance.AddRecentProject(new RecentProject(fileName, filePath));
+                var appSettings = ApplicationSettings.Instance;
+
+                appSettings.AddRecentProject(new RecentProject(fileName, filePath));
                 try
                 {
-                    ApplicationSettings.Save();
+                    Settings.Save();
                 }
                 catch { /* do nothing */ } //TODO Nbug
             }
-            ViewController.HandleFileStateChanged();
+            OnFileStateChanged();
         }
 
         #endregion File
@@ -208,14 +219,14 @@ namespace FSCruiser.Core
         {
             string backupDir;
 
-            if (ApplicationSettings.Instance.BackUpToCurrentDir
-                || String.IsNullOrEmpty(ApplicationSettings.Instance.BackupDir))
+            if (Settings.BackUpToCurrentDir
+                || String.IsNullOrEmpty(Settings.BackupDir))
             {
                 backupDir = System.IO.Path.GetDirectoryName(this.DataStore.Path);
             }
             else
             {
-                backupDir = ApplicationSettings.Instance.BackupDir;
+                backupDir = Settings.BackupDir;
             }
 
             this.PerformBackup(this.GetBackupFileName(backupDir, useTS));
@@ -265,7 +276,7 @@ namespace FSCruiser.Core
         {
             try
             {
-                ApplicationSettings.Save();
+                Settings.Save();
             }
             catch { /* do nothing */ }
             if (this.DataStore != null)
@@ -276,9 +287,9 @@ namespace FSCruiser.Core
 
         public void OnLeavingCurrentUnit(System.ComponentModel.CancelEventArgs e)
         {
-            if (!e.Cancel && ApplicationSettings.Instance.BackUpMethod == BackUpMethod.LeaveUnit)
+            if (!e.Cancel && Settings.BackUpMethod == BackUpMethod.LeaveUnit)
             {
-                this.PerformBackup(false);
+                this.PerformBackup(true);
             }
         }
 
