@@ -30,8 +30,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region Properties
 
-        public IApplicationController Controller { get; protected set; }
-
         public FormDataEntryLogic DataEntryController { get; set; }
 
         public bool ViewLoading { get { return _viewLoading; } }
@@ -318,7 +316,7 @@ namespace FSCruiser.WinForms.DataEntry
             else if (_speciesColumn != null && e.ColumnIndex == _speciesColumn.Index)
             {
                 TreeDefaultValueDO tdv = cellValue as TreeDefaultValueDO;
-                e.Cancel = !DataEntryController.HandleSpeciesChanged(curTree, tdv);
+                e.Cancel = !curTree.HandleSpeciesChanged(tdv);
             }
             else if (_stratumColumn != null && e.ColumnIndex == _stratumColumn.Index)
             {

@@ -293,6 +293,13 @@ namespace FSCruiser.Core.Models
 
         #endregion validation
 
+        public bool HandleSpeciesChanged(TreeDefaultValueDO tdv)
+        {
+            //if (tree.TreeDefaultValue == tdv) { return true; }
+            SetTreeTDV(tdv);
+            return TrySave();
+        }
+
         public bool HandleSampleGroupChanging(SampleGroupDO newSG)
         {
             if (newSG == null) { return false; }
