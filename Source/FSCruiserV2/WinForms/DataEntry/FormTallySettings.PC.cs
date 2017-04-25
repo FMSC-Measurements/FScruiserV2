@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using FMSC.Sampling;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -16,7 +17,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         private CountTree _count;
 
-        IApplicationController Controller { get; set; }
+        IDataEntryDataService DataService { get; set; }
 
         public bool EnableTallyCount
         {
@@ -82,10 +83,10 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public FormTallySettings(IApplicationController controller)
+        public FormTallySettings(IDataEntryDataService dataService)
         {
             this.InitializeComponent();
-            this.Controller = controller;
+            this.DataService = dataService;
         }
 
         public DialogResult ShowDialog(CountTree count)
@@ -187,13 +188,13 @@ namespace FSCruiser.WinForms.DataEntry
 
                 if (this._count.TreeCount != newTreeCount)
                 {
-                    this.Controller.LogTreeCountEdit(this._count, this._count.TreeCount, newTreeCount);
+                    this.DataService.LogTreeCountEdit(this._count, this._count.TreeCount, newTreeCount);
                     this._count.TreeCount = newTreeCount;
                 }
 
                 if (this._count.SumKPI != newSumKPI)
                 {
-                    this.Controller.LogSumKPIEdit(this._count, this._count.SumKPI, newSumKPI);
+                    this.DataService.LogSumKPIEdit(this._count, this._count.SumKPI, newSumKPI);
                     this._count.SumKPI = newSumKPI;
                 }
             }

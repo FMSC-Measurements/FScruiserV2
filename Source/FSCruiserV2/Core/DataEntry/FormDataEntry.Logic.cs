@@ -299,14 +299,6 @@ namespace FSCruiser.Core.DataEntry
             cancel = false;
         }
 
-        public bool HandleSpeciesChanged(Tree tree, TreeDefaultValueDO tdv)
-        {
-            if (tree == null) { return true; }
-            //if (tree.TreeDefaultValue == tdv) { return true; }
-            tree.SetTreeTDV(tdv);
-            return tree.TrySave();
-        }
-
         public void HandleViewClosing(CancelEventArgs e)
         {
             ViewController.ShowWait();
