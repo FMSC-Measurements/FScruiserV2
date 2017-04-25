@@ -25,6 +25,11 @@ namespace FSCruiser.WinForms.DataEntry
     /// </summary>
     public partial class FormDataEntry : FMSC.Controls.CustomForm, IDataEntryView
     {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
         private IDataEntryPage _previousLayout;
         protected List<IDataEntryPage> _layouts = new List<IDataEntryPage>();
 
@@ -34,7 +39,7 @@ namespace FSCruiser.WinForms.DataEntry
         protected ControlTreeDataGrid _treeView;
 
 #if NetCF
-
+        System.Threading.Timer preventSleepTimer;
         public InputPanel SIP { get; set; }
 
 #endif
@@ -140,6 +145,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             _tallyLayout = new LayoutTreeBased(Controller
                 , DataService
+                , AppSettings
                 , LogicController);
 
             _tallyLayout.Dock = DockStyle.Fill;
@@ -222,15 +228,39 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         KeysConverter keyConverter = new KeysConverter();
+
+        #region appSettings
+
         private ApplicationSettings _appSettings;
+
         public ApplicationSettings AppSettings
         {
             get { return _appSettings; }
-            set { _appSettings = value; }
-
+            set
+            {
+                OnAppSettingChanging();
+                _appSettings = value;
+                OnAppSettingChanged();
+            }
         }
 
+        private void OnAppSettingChanged()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.HotKeysChanged += _appSettings_HotKeysChanged;
+            }
+        }
 
+        private void OnAppSettingChanging()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.HotKeysChanged -= _appSettings_HotKeysChanged;
+            }
+        }
+
+        #endregion appSettings
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -268,7 +298,6 @@ namespace FSCruiser.WinForms.DataEntry
 #else
                 view.ShowDialog(this);
 #endif
-
             }
         }
 
@@ -399,5 +428,25 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         #endregion IDataEntryView
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+                AppSettings = null;
+#if NetCF
+                if (preventSleepTimer != null)
+                {
+                    preventSleepTimer.Dispose();
+                    preventSleepTimer = null;
+                }
+#endif
+            }
+            base.Dispose(disposing);
+        }
     }
 }

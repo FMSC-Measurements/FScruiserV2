@@ -22,23 +22,61 @@ namespace FSCruiser.WinForms
 
         #region properties
 
+        public FormDataEntryLogic DataEntryController { get; protected set; }
+
         public IApplicationController Controller { get; protected set; }
 
         protected IDataEntryDataService DataService { get; set; }
 
-        public IDataEntryView DataEntryForm
+        #region AppSettings
+
+        ApplicationSettings _appSettings;
+
+        public ApplicationSettings AppSettings
         {
-            get
+            get { return _appSettings; }
+            set
             {
-                return (FSCruiser.WinForms.DataEntry.FormDataEntry)this.TopLevelControl;
+                OnAppSettingsChanging();
+                _appSettings = value;
+                OnAppSettingsChanged();
             }
         }
+
+        protected void OnAppSettingsChanged()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.HotKeysChanged += _appSettings_HotKeysChanged;
+            }
+        }
+
+        protected void OnAppSettingsChanging()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.HotKeysChanged -= _appSettings_HotKeysChanged;
+            }
+        }
+
+        protected void _appSettings_HotKeysChanged()
+        {
+            UpdateUntallyButton();
+        }
+
+        #endregion AppSettings
+
+        //public IDataEntryView DataEntryForm
+        //{
+        //    get
+        //    {
+        //        return (FSCruiser.WinForms.DataEntry.FormDataEntry)this.TopLevelControl;
+        //    }
+        //}
 
         public Dictionary<char, Stratum> StrataHotKeyLookup { get; protected set; }
 
         public Dictionary<Stratum, Panel> StrataViews { get; protected set; }
-
-        public IEnumerable<Stratum> Strata { get; protected set; }
 
         public Stratum SelectedStratum { get; protected set; }
 
@@ -56,14 +94,15 @@ namespace FSCruiser.WinForms
 
         protected void Initialize(IApplicationController controller
             , IDataEntryDataService dataService
+            , ApplicationSettings appSettings
             , FormDataEntryLogic dataEntryController
             , Panel strataViewContainer)
         {
+            AppSettings = appSettings;
             StrataViewContainer = strataViewContainer;
             DataEntryController = dataEntryController;
             Controller = controller;
             DataService = dataService;
-            Strata = DataService.TreeStrata;
         }
 
         protected void InitializeStrataViews()
@@ -74,18 +113,19 @@ namespace FSCruiser.WinForms
 
             //if there is only one strata in the unit
             //display the counts for that stratum
-            if (Strata.Count() == 1)
+            var strata = DataService.TreeStrata;
+            if (strata.Count() == 1)
             {
-                var singleStratum = Strata.First();
+                var singleStratum = strata.First();
                 this.DisplayTallyPanel(singleStratum);
             }
 
             this.ResumeLayout(false);
         }
 
-        private void PopulateStrata()
+        void PopulateStrata()
         {
-            foreach (Stratum stratum in this.Strata)
+            foreach (Stratum stratum in DataService.TreeStrata)
             {
                 if (stratum.Method == CruiseDAL.Schema.CruiseMethods.H_PCT) { continue; }
                 //if ((Controller.GetStrataDataEntryMode(stratum) & DataEntryMode.Plot)
@@ -136,16 +176,79 @@ namespace FSCruiser.WinForms
             }
         }
 
-        #region overrid methods
+        Control MakeTallyRow(Control container, CountTree count)
+        {
+            var row = new TallyRow(count);
+            row.SuspendLayout();
 
-        //protected override void OnKeyUp(KeyEventArgs e)
-        //{
-        //    base.OnKeyUp(e);
-        //    char key = (char)e.KeyValue;
-        //    e.Handled = this.DataEntryController.ProcessHotKey(key, this);
-        //}
+            row.TallyButtonClicked += new EventHandler(this.OnTallyButtonClicked);
+            row.SettingsButtonClicked += new EventHandler(this.OnTallySettingsClicked);
 
-        #endregion overrid methods
+            row.Parent = container;
+            row.AdjustHeight();
+
+            row.Dock = DockStyle.Top;
+            row.ResumeLayout(false);
+            return row;
+        }
+
+        protected void AdjustPanelHeight(Panel panel)
+        {
+            int totalChildHeight = 0;
+            foreach (Control c in panel.Controls)
+            {
+                totalChildHeight += c.Height;
+            }
+            panel.Height = totalChildHeight;
+        }
+
+        protected void DisplayTallyPanel(Stratum stratumInfo)
+        {
+            DisplayTallyPanel(stratumInfo, false);
+        }
+
+        protected void DisplayTallyPanel(Stratum stratumInfo, bool leaveOpen)
+        {
+            System.Diagnostics.Debug.Assert(StrataViews.ContainsKey(stratumInfo));
+            if (!StrataViews.ContainsKey(stratumInfo)) { return; }
+
+            Panel tallyContainer = StrataViews[stratumInfo];
+
+            // if strata is already displayed
+            if (_visableTallyPanel != null
+                && _visableTallyPanel == tallyContainer
+                && tallyContainer.Visible == true)
+            {
+                if (!leaveOpen)
+                {
+                    // toggle off visibility
+                    _visableTallyPanel.Visible = false;
+                    this.SelectedStratum = null;
+                    _visableTallyPanel = null;
+                }
+                return;
+            }
+            else if (_visableTallyPanel != null
+                && _visableTallyPanel != tallyContainer)
+            {
+                // hide current stratum
+                _visableTallyPanel.Visible = false;
+            }
+
+            this.SelectedStratum = stratumInfo;
+            _visableTallyPanel = tallyContainer;
+            if (_visableTallyPanel != null)
+            {
+                _visableTallyPanel.Visible = true;
+            }
+        }
+
+        #region virtual methods
+
+        protected virtual void UpdateUntallyButton()
+        { }
+
+        #endregion virtual methods
 
         protected void OnSgButtonClick(object sender, EventArgs e)
         {
@@ -154,20 +257,20 @@ namespace FSCruiser.WinForms
             spContainer.Visible = !spContainer.Visible;
         }
 
-        protected void OnSpeciesButtonClick(object sender, EventArgs e)
-        {
-            if (_viewLoading) { return; }
-            Button button = (Button)sender;
-            SubPop subPop = (SubPop)button.Tag;
+        //protected void OnSpeciesButtonClick(object sender, EventArgs e)
+        //{
+        //    if (_viewLoading) { return; }
+        //    Button button = (Button)sender;
+        //    SubPop subPop = (SubPop)button.Tag;
 
-            var tree = DataService.CreateNewTreeEntry(subPop.SG.Stratum, subPop.SG, subPop.TDV, true);
-            tree.TreeCount = 1;
+        //    var tree = DataService.CreateNewTreeEntry(subPop.SG.Stratum, subPop.SG, subPop.TDV, true);
+        //    tree.TreeCount = 1;
 
-            DialogService.AskCruiser(tree);
+        //    DialogService.AskCruiser(tree);
 
-            DataService.AddNonPlotTree(tree);
-            DataEntryForm.GotoTreePage();
-        }
+        //    DataService.AddNonPlotTree(tree);
+        //    DataEntryForm.GotoTreePage();
+        //}
 
         protected void OnTallySettingsClicked(object sender, EventArgs e)
         {
@@ -205,52 +308,7 @@ namespace FSCruiser.WinForms
             DataService.CuttingUnit.TallyHistoryBuffer.Remove(selectedAction);
         }
 
-        protected void AdjustPanelHeight(Panel panel)
-        {
-            int totalChildHeight = 0;
-            foreach (Control c in panel.Controls)
-            {
-                totalChildHeight += c.Height;
-            }
-            panel.Height = totalChildHeight;
-        }
-
-        protected void DisplayTallyPanel(Stratum stratumInfo)
-        {
-            System.Diagnostics.Debug.Assert(StrataViews.ContainsKey(stratumInfo));
-            if (!StrataViews.ContainsKey(stratumInfo)) { return; }
-
-            Panel tallyContainer = StrataViews[stratumInfo];
-
-            // if strata is already displayed
-            if (_visableTallyPanel != null
-                && _visableTallyPanel == tallyContainer
-                && tallyContainer.Visible == true)
-            {
-                // toggle off visability
-                _visableTallyPanel.Visible = false;
-                this.SelectedStratum = null;
-                _visableTallyPanel = null;
-                return;
-            }
-            else if (_visableTallyPanel != null
-                && _visableTallyPanel != tallyContainer)
-            {
-                // hide current stratum
-                _visableTallyPanel.Visible = false;
-            }
-
-            this.SelectedStratum = stratumInfo;
-            _visableTallyPanel = tallyContainer;
-            if (_visableTallyPanel != null)
-            {
-                _visableTallyPanel.Visible = true;
-            }
-        }
-
         #region ITallyView members
-
-        public FormDataEntryLogic DataEntryController { get; protected set; }
 
         public Dictionary<char, CountTree> HotKeyLookup
         {
@@ -269,56 +327,6 @@ namespace FSCruiser.WinForms
             get { return true; }
         }
 
-        //public bool HandleHotKeyFirst(char key)
-        //{
-        //    key = char.ToUpper(key);
-        //    if (StrataHotKeyLookup.ContainsKey(key))
-        //    {
-        //        DisplayTallyPanel(StrataHotKeyLookup[key]);
-        //        return true;
-        //    }
-        //    return false;
-
-        //    //return Controller.ProcessHotKey(key, this);
-        //}
-
-        public virtual void MakeSGList(IEnumerable<SampleGroup> sampleGroups, Panel container)
-        {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch (NotImplementedException)
-            { }
-        }
-
-        public Control MakeTallyRow(Control container, CountTree count)
-        {
-            var row = new TallyRow(count);
-            row.SuspendLayout();
-
-            row.TallyButtonClicked += new EventHandler(this.OnTallyButtonClicked);
-            row.SettingsButtonClicked += new EventHandler(this.OnTallySettingsClicked);
-
-            row.Parent = container;
-            row.AdjustHeight();
-
-            row.Dock = DockStyle.Top;
-            row.ResumeLayout(false);
-            return row;
-        }
-
-        public virtual Control MakeTallyRow(Control container, FSCruiser.Core.Models.SubPop subPop)
-        {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch (NotImplementedException)
-            { }
-            return null;
-        }
-
         public void OnTally(FSCruiser.Core.Models.CountTree count)
         {
             if (_viewLoading) { return; }
@@ -326,18 +334,10 @@ namespace FSCruiser.WinForms
             this._BS_tallyHistory.MoveLast();
         }
 
-        public void SaveCounts()
-        {
-            foreach (Stratum stratum in Strata)
-            {
-                stratum.SaveCounts();
-            }
-        }
-
         public bool TrySaveCounts()
         {
             bool success = true;
-            foreach (Stratum stratum in Strata)
+            foreach (Stratum stratum in DataService.TreeStrata)
             {
                 if (!stratum.TrySaveCounts())
                 {
@@ -384,7 +384,7 @@ namespace FSCruiser.WinForms
                 var keyChar = keyStr.First();
                 if (StrataHotKeyLookup.ContainsKey(keyChar))
                 {
-                    DisplayTallyPanel(StrataHotKeyLookup[keyChar]);
+                    DisplayTallyPanel(StrataHotKeyLookup[keyChar], true);
                     return true;
                 }
             }
@@ -395,5 +395,22 @@ namespace FSCruiser.WinForms
         { /*do nothing */}
 
         #endregion IDataEntryPage Members
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+                AppSettings = null;
+            }
+            base.Dispose(disposing);
+        }
     }
 }

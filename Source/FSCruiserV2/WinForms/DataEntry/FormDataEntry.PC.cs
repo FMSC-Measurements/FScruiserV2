@@ -22,11 +22,7 @@ namespace FSCruiser.WinForms.DataEntry
             InitializeComponent();
             InitializeCommon(controller, appSettings, dataService);
 
-            var addTreeKey = ApplicationSettings.Instance.AddTreeKeyStr;
-            if (!string.IsNullOrWhiteSpace(addTreeKey))
-            {
-                _addTreeBTN.Text = _addTreeBTN.Text + "(" + addTreeKey + ")";
-            }
+            UpdateAddTreeButton();
         }
 
         //protected override void OnKeyUp(KeyEventArgs e)
@@ -41,6 +37,19 @@ namespace FSCruiser.WinForms.DataEntry
         //        OnKeyUpInternal(e);
         //    }
         //}
+
+        protected void UpdateAddTreeButton()
+        {
+            var addTreeKey = AppSettings.AddTreeKeyStr;
+            if (!string.IsNullOrWhiteSpace(addTreeKey))
+            {
+                _addTreeBTN.Text = "Add Tree" + "(" + addTreeKey + ")";
+            }
+            else
+            {
+                _addTreeBTN.Text = "Add Tree";
+            }
+        }
 
         protected void OnFocusedLayoutChanged(object sender, EventArgs e)
         {
@@ -58,6 +67,11 @@ namespace FSCruiser.WinForms.DataEntry
         {
             var point = button1.PointToScreen(new System.Drawing.Point(0, button1.Height));
             contextMenuStrip1.Show(point);
+        }
+
+        private void _appSettings_HotKeysChanged()
+        {
+            UpdateAddTreeButton();
         }
     }
 }

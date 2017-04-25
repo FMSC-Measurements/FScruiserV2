@@ -7,8 +7,6 @@ using FSCruiser.Core.Models;
 
 namespace FSCruiser.Core
 {
-    
-
     public enum BackUpMethod { None = 0, LeaveUnit = 1, TimeInterval = 2 }
 
     public enum HotKeyAction { None = 0, AddTree, AddPlot, JumpTreeTally, ResequencePlotTrees, UnTally }
@@ -337,6 +335,8 @@ namespace FSCruiser.Core
 
         public event EventHandler CruisersChanged;
 
+        public event Action HotKeysChanged;
+
         public void AddCruiser(string initials)
         {
             if (this.Cruisers == null)
@@ -356,6 +356,13 @@ namespace FSCruiser.Core
             var cruisersChanged = CruisersChanged;
             if (cruisersChanged != null)
             { cruisersChanged(this, null); }
+        }
+
+        public void NotifyHotKeysChanged()
+        {
+            var hotKeyChanged = HotKeysChanged;
+            if (hotKeyChanged != null)
+            { hotKeyChanged(); }
         }
 
         #endregion Cruisers

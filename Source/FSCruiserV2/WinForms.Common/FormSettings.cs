@@ -64,6 +64,7 @@ namespace FSCruiser.WinForms
                 {
                     MessageBox.Show("Unable to save settings", ex.GetType().Name);
                 }
+                settings.NotifyHotKeysChanged();
             }
         }
 

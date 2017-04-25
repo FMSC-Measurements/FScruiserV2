@@ -12,8 +12,6 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormDataEntry : FMSC.Controls.CustomForm, IDataEntryView
     {
-        System.Threading.Timer preventSleepTimer;
-
         public FormDataEntry(IApplicationController controller
             , ApplicationSettings appSettings
             , IDataEntryDataService dataService)
@@ -55,34 +53,18 @@ namespace FSCruiser.WinForms.DataEntry
 
         }
 
+        private void _appSettings_HotKeysChanged()
+        {
+            //do nothing
+        }
+
+
         private void menuItem1_Popup(object sender, EventArgs e)
         {
             this._limitingDistanceMI.Enabled = this.FocusedLayout is LayoutPlot;
             this._showHideErrorColMI.Enabled = this.FocusedLayout is ITreeView;
             this._deleteRowButton.Enabled = this.FocusedLayout is ITreeView;
             this._showHideLogColMI.Enabled = this.FocusedLayout is ITreeView;
-        }
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-                if (preventSleepTimer != null)
-                {
-                    preventSleepTimer.Dispose();
-                    preventSleepTimer = null;
-                }
-
-            }
-            base.Dispose(disposing);
         }
     }
 }

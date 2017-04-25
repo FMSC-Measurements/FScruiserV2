@@ -661,11 +661,6 @@ namespace FSCruiser.WinForms.DataEntry
             this.ViewLogicController.OnTally(count);
         }
 
-        public void SaveCounts()
-        {
-            this.ViewLogicController.SaveCounts();
-        }
-
         public bool TrySaveCounts()
         {
             if (!this.ViewLogicController.TrySaveCounts())

@@ -27,70 +27,27 @@ namespace FSCruiser.WinForms.DataEntry
 
         public LayoutTreeBased(IApplicationController controller
             , IDataEntryDataService dataService
+            , ApplicationSettings appSettings
             , FormDataEntryLogic dataEntryController)
             : this()
         {
             base.Initialize(controller
                 , dataService
+                , appSettings
                 , dataEntryController
                 , _leftContentPanel);
         }
 
-        public override Control MakeTallyRow(Control container, SubPop subPop)
+        protected override void UpdateUntallyButton()
         {
-            Button tallyButton = new Button();
-            tallyButton.SuspendLayout();
-            tallyButton.Text = subPop.TDV.Species;
-            tallyButton.Click += new EventHandler(base.OnSpeciesButtonClick);
-            tallyButton.Tag = subPop;
-            tallyButton.Parent = container;
-            tallyButton.Dock = DockStyle.Top;
-            tallyButton.ResumeLayout(false);
-            return tallyButton;
-        }
-
-        public override void MakeSGList(IEnumerable<SampleGroup> sampleGroups, Panel container)
-        {
-            var list = sampleGroups.ToList();
-            if (list.Count == 1)
+            var untallyKey = AppSettings.UntallyKeyStr;
+            if (!string.IsNullOrEmpty(untallyKey))
             {
-                SampleGroup sg = list[0];
-
-                if (sg.TreeDefaultValues.IsPopulated == false)
-                {
-                    sg.TreeDefaultValues.Populate();
-                }
-                foreach (TreeDefaultValueDO tdv in sg.TreeDefaultValues)
-                {
-                    SubPop subPop = new SubPop(sg, tdv);
-                    MakeTallyRow(container, subPop);
-                }
+                _untallyButton.Text = "Untally" + "(" + untallyKey + ")";
             }
             else
             {
-                foreach (SampleGroup sg in list)
-                {
-                    Button sgButton = new Button();
-                    Panel spContainer = new Panel();
-
-                    if (sg.TreeDefaultValues.IsPopulated == false)
-                    {
-                        sg.TreeDefaultValues.Populate();
-                    }
-                    foreach (TreeDefaultValueDO tdv in sg.TreeDefaultValues)
-                    {
-                        SubPop subPop = new SubPop(sg, tdv);
-                        MakeTallyRow(spContainer, subPop);
-                    }
-
-                    spContainer.Parent = container;
-                    spContainer.Dock = DockStyle.Top;
-                    spContainer.Visible = false;
-
-                    sgButton.Parent = container;
-                    sgButton.Dock = DockStyle.Top;
-                    sgButton.Click += new EventHandler(base.OnSgButtonClick);
-                }
+                _untallyButton.Text = "Untally";
             }
         }
     }
