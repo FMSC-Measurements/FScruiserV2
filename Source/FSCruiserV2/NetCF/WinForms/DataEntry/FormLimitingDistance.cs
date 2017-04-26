@@ -31,6 +31,33 @@ namespace FSCruiser.WinForms.DataEntry
                 this._sip = new Microsoft.WindowsCE.Forms.InputPanel();
                 this.components.Add(_sip);
                 this._sip.EnabledChanged += new EventHandler(_sip_EnabledChanged);
+                _ceControlPanel.Visible = false;
+
+                var mainMenu1 = new System.Windows.Forms.MainMenu();
+                var _cancel_MI = new System.Windows.Forms.MenuItem();
+                var _calculate_MI = new System.Windows.Forms.MenuItem();
+
+                // 
+                // mainMenu1
+                // 
+                mainMenu1.MenuItems.Add(_cancel_MI);
+                mainMenu1.MenuItems.Add(_calculate_MI);
+                // 
+                // _cancel_MI
+                // 
+                _cancel_MI.Text = "Cancel";
+                _cancel_MI.Click += new System.EventHandler(this._cancel_MI_Click);
+                // 
+                // _calculate_MI
+                // 
+                _calculate_MI.Text = "Calculate";
+                _calculate_MI.Click += new System.EventHandler(this._calculateBTN_Click);
+
+                Menu = mainMenu1;
+            }
+            else
+            {
+                this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             }
 #endif
         }
@@ -85,7 +112,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        private void _cancelMI_Click(object sender, EventArgs e)
+        private void _cancel_MI_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
@@ -101,7 +128,6 @@ namespace FSCruiser.WinForms.DataEntry
             var tb = sender as TextBox;
             if (tb == null) { return; }
             tb.BeginInvoke(new Action(tb.SelectAll));
-            _sip.Enabled = true;
         }
 
         void UpdateLimitingDistance()

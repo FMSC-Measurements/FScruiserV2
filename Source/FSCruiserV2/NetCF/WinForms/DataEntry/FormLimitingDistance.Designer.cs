@@ -38,25 +38,26 @@
             System.Windows.Forms.Label label5;
             System.Windows.Forms.Label label2;
             System.Windows.Forms.Label label1;
+            this._BS_calculator = new System.Windows.Forms.BindingSource(this.components);
             this._limitingDistanceLBL = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this._treeIsLBL = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.SlopeDistance = new System.Windows.Forms.TextBox();
             this._measureToCB = new System.Windows.Forms.ComboBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this._treeIsLBL = new System.Windows.Forms.Label();
-            this._sipPlaceholder = new System.Windows.Forms.Panel();
-            this._okBTN = new System.Windows.Forms.Button();
-            this._ceControlPanel = new System.Windows.Forms.Panel();
-            this._cancelBTN = new System.Windows.Forms.Button();
-            this._calculateBTN = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
             this.BAForFPS = new System.Windows.Forms.TextBox();
             this._bafOrfpsLBL = new System.Windows.Forms.Label();
             this.SlopePCT = new System.Windows.Forms.TextBox();
             this.BAF = new System.Windows.Forms.TextBox();
-            this._BS_calculator = new System.Windows.Forms.BindingSource(this.components);
+            this._sipPlaceholder = new System.Windows.Forms.Panel();
+            this._okBTN = new System.Windows.Forms.Button();
+            this._ceControlPanel = new System.Windows.Forms.Panel();
+            this._cancelBTN = new System.Windows.Forms.Button();
+            this._calculateBTN = new System.Windows.Forms.Button();
+            
             label7 = new System.Windows.Forms.Label();
             label4 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -64,13 +65,13 @@
             label5 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
-            this.panel1.SuspendLayout();
-            this.panel4.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this._ceControlPanel.SuspendLayout();
-            this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._BS_calculator)).BeginInit();
+            this.panel1.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.panel5.SuspendLayout();
+            this._ceControlPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // label7
@@ -94,6 +95,41 @@
             label3.Size = new System.Drawing.Size(99, 20);
             label3.Text = "Slope Distance:";
             // 
+            // _azimuthTB
+            // 
+            _azimuthTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "Azimuth", true));
+            _azimuthTB.Location = new System.Drawing.Point(65, 87);
+            _azimuthTB.MaxLength = 4;
+            _azimuthTB.Name = "_azimuthTB";
+            _azimuthTB.Size = new System.Drawing.Size(39, 23);
+            _azimuthTB.TabIndex = 18;
+            _azimuthTB.GotFocus += new System.EventHandler(this._TB_GotFocus);
+            // 
+            // _BS_calculator
+            // 
+            this._BS_calculator.DataSource = typeof(FSCruiser.Core.DataEntry.LimitingDistanceCalculator);
+            // 
+            // label5
+            // 
+            label5.Location = new System.Drawing.Point(3, 87);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(56, 20);
+            label5.Text = "Azimuth";
+            // 
+            // label2
+            // 
+            label2.Location = new System.Drawing.Point(3, 35);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(67, 20);
+            label2.Text = "Slope %:";
+            // 
+            // label1
+            // 
+            label1.Location = new System.Drawing.Point(26, 6);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(33, 20);
+            label1.Text = "DBH:";
+            // 
             // _limitingDistanceLBL
             // 
             this._limitingDistanceLBL.Dock = System.Windows.Forms.DockStyle.Top;
@@ -113,6 +149,30 @@
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(638, 421);
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(label7);
+            this.panel3.Controls.Add(this._treeIsLBL);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(0, 181);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(638, 34);
+            // 
+            // _treeIsLBL
+            // 
+            this._treeIsLBL.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "TreeStatus", true));
+            this._treeIsLBL.Location = new System.Drawing.Point(83, 0);
+            this._treeIsLBL.Name = "_treeIsLBL";
+            this._treeIsLBL.Size = new System.Drawing.Size(64, 20);
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this._limitingDistanceLBL);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 146);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(638, 35);
             // 
             // panel4
             // 
@@ -142,29 +202,54 @@
             this._measureToCB.Size = new System.Drawing.Size(53, 23);
             this._measureToCB.TabIndex = 1;
             // 
-            // panel2
+            // panel5
             // 
-            this.panel2.Controls.Add(this._limitingDistanceLBL);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(0, 146);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(638, 35);
+            this.panel5.Controls.Add(_azimuthTB);
+            this.panel5.Controls.Add(label5);
+            this.panel5.Controls.Add(this.BAForFPS);
+            this.panel5.Controls.Add(this._bafOrfpsLBL);
+            this.panel5.Controls.Add(this.SlopePCT);
+            this.panel5.Controls.Add(label2);
+            this.panel5.Controls.Add(this.BAF);
+            this.panel5.Controls.Add(label1);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(638, 115);
             // 
-            // panel3
+            // BAForFPS
             // 
-            this.panel3.Controls.Add(label7);
-            this.panel3.Controls.Add(this._treeIsLBL);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 181);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(638, 34);
+            this.BAForFPS.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "BAForFPSize", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
+            this.BAForFPS.Location = new System.Drawing.Point(65, 61);
+            this.BAForFPS.Name = "BAForFPS";
+            this.BAForFPS.Size = new System.Drawing.Size(39, 23);
+            this.BAForFPS.TabIndex = 17;
+            this.BAForFPS.GotFocus += new System.EventHandler(this._TB_GotFocus);
             // 
-            // _treeIsLBL
+            // _bafOrfpsLBL
             // 
-            this._treeIsLBL.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "TreeStatus", true));
-            this._treeIsLBL.Location = new System.Drawing.Point(83, 0);
-            this._treeIsLBL.Name = "_treeIsLBL";
-            this._treeIsLBL.Size = new System.Drawing.Size(64, 20);
+            this._bafOrfpsLBL.Location = new System.Drawing.Point(27, 63);
+            this._bafOrfpsLBL.Name = "_bafOrfpsLBL";
+            this._bafOrfpsLBL.Size = new System.Drawing.Size(32, 20);
+            this._bafOrfpsLBL.Text = "BAF:";
+            // 
+            // SlopePCT
+            // 
+            this.SlopePCT.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "SlopePCT", true));
+            this.SlopePCT.Location = new System.Drawing.Point(65, 32);
+            this.SlopePCT.Name = "SlopePCT";
+            this.SlopePCT.Size = new System.Drawing.Size(39, 23);
+            this.SlopePCT.TabIndex = 16;
+            this.SlopePCT.GotFocus += new System.EventHandler(this._TB_GotFocus);
+            // 
+            // BAF
+            // 
+            this.BAF.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "DBH", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
+            this.BAF.Location = new System.Drawing.Point(65, 5);
+            this.BAF.Name = "BAF";
+            this.BAF.Size = new System.Drawing.Size(39, 23);
+            this.BAF.TabIndex = 15;
+            this.BAF.GotFocus += new System.EventHandler(this._TB_GotFocus);
             // 
             // _sipPlaceholder
             // 
@@ -213,86 +298,6 @@
             this._calculateBTN.Text = "Calculate";
             this._calculateBTN.Click += new System.EventHandler(this._calculateBTN_Click);
             // 
-            // panel5
-            // 
-            this.panel5.Controls.Add(_azimuthTB);
-            this.panel5.Controls.Add(label5);
-            this.panel5.Controls.Add(this.BAForFPS);
-            this.panel5.Controls.Add(this._bafOrfpsLBL);
-            this.panel5.Controls.Add(this.SlopePCT);
-            this.panel5.Controls.Add(label2);
-            this.panel5.Controls.Add(this.BAF);
-            this.panel5.Controls.Add(label1);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel5.Location = new System.Drawing.Point(0, 0);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(638, 115);
-            // 
-            // _azimuthTB
-            // 
-            _azimuthTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "Azimuth", true));
-            _azimuthTB.Location = new System.Drawing.Point(65, 87);
-            _azimuthTB.MaxLength = 4;
-            _azimuthTB.Name = "_azimuthTB";
-            _azimuthTB.Size = new System.Drawing.Size(39, 23);
-            _azimuthTB.TabIndex = 18;
-            // 
-            // label5
-            // 
-            label5.Location = new System.Drawing.Point(3, 87);
-            label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(56, 20);
-            label5.Text = "Azimuth";
-            // 
-            // BAForFPS
-            // 
-            this.BAForFPS.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "BAForFPSize", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
-            this.BAForFPS.Location = new System.Drawing.Point(65, 61);
-            this.BAForFPS.Name = "BAForFPS";
-            this.BAForFPS.Size = new System.Drawing.Size(39, 23);
-            this.BAForFPS.TabIndex = 17;
-            // 
-            // _bafOrfpsLBL
-            // 
-            this._bafOrfpsLBL.Location = new System.Drawing.Point(27, 63);
-            this._bafOrfpsLBL.Name = "_bafOrfpsLBL";
-            this._bafOrfpsLBL.Size = new System.Drawing.Size(32, 20);
-            this._bafOrfpsLBL.Text = "BAF:";
-            // 
-            // SlopePCT
-            // 
-            this.SlopePCT.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "SlopePCT", true));
-            this.SlopePCT.Location = new System.Drawing.Point(65, 32);
-            this.SlopePCT.Name = "SlopePCT";
-            this.SlopePCT.Size = new System.Drawing.Size(39, 23);
-            this.SlopePCT.TabIndex = 16;
-            // 
-            // label2
-            // 
-            label2.Location = new System.Drawing.Point(3, 35);
-            label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(67, 20);
-            label2.Text = "Slope %:";
-            // 
-            // BAF
-            // 
-            this.BAF.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "DBH", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
-            this.BAF.Location = new System.Drawing.Point(65, 5);
-            this.BAF.Name = "BAF";
-            this.BAF.Size = new System.Drawing.Size(39, 23);
-            this.BAF.TabIndex = 15;
-            // 
-            // label1
-            // 
-            label1.Location = new System.Drawing.Point(26, 6);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(33, 20);
-            label1.Text = "DBH:";
-            // 
-            // _BS_calculator
-            // 
-            this._BS_calculator.DataSource = typeof(FSCruiser.Core.DataEntry.LimitingDistanceCalculator);
-            // 
             // FormLimitingDistance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -305,14 +310,13 @@
             this.MinimizeBox = false;
             this.Name = "FormLimitingDistance";
             this.Text = "Limiting Distance";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.panel1.ResumeLayout(false);
-            this.panel4.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this._ceControlPanel.ResumeLayout(false);
-            this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this._BS_calculator)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
+            this._ceControlPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -341,5 +345,6 @@
         private System.Windows.Forms.Label _bafOrfpsLBL;
         private System.Windows.Forms.TextBox SlopePCT;
         private System.Windows.Forms.TextBox BAF;
+        
     }
 }
