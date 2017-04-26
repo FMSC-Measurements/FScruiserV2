@@ -476,8 +476,6 @@ namespace FSCruiser.Core.DataEntry
         {
             Tree tree = DataService.CreateNewTreeEntry(CurrentPlot, subPop);
 
-            _dialogService.AskCruiser(tree);
-
             tree.TrySave();
             CurrentPlot.AddTree(tree);
 

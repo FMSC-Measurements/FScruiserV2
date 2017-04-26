@@ -253,8 +253,6 @@ namespace FScruiser.Core.Services
 
             newTree = this.CreateNewTreeEntry(plot, assumedSG, assumedTDV, true);
 
-            DialogService.AskCruiser(newTree);
-
             //if a 3P plot method set Count Measure to empty.
             if (Array.IndexOf(CruiseDAL.Schema.CruiseMethods.THREE_P_METHODS,
                 plot.Stratum.Method) >= 0)
