@@ -92,8 +92,7 @@ namespace FSCruiser.WinForms
             InitializeComponent();
         }
 
-        protected void Initialize(IApplicationController controller
-            , IDataEntryDataService dataService
+        protected void Initialize(IDataEntryDataService dataService
             , ApplicationSettings appSettings
             , FormDataEntryLogic dataEntryController
             , Panel strataViewContainer)
@@ -101,7 +100,6 @@ namespace FSCruiser.WinForms
             AppSettings = appSettings;
             StrataViewContainer = strataViewContainer;
             DataEntryController = dataEntryController;
-            Controller = controller;
             DataService = dataService;
         }
 
@@ -276,7 +274,20 @@ namespace FSCruiser.WinForms
         {
             var row = (ITallyButton)sender;
             CountTree count = row.Count;
-            Controller.ViewController.ShowTallySettings(count);
+            try
+            {
+                count.Save();
+                using (FormTallySettings view = new FormTallySettings(DataService))
+                {
+                    view.ShowDialog(count);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+                return;
+            }
+
             //row.DiscriptionLabel.Text = count.Tally.Description;
         }
 
@@ -402,7 +413,7 @@ namespace FSCruiser.WinForms
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
                 if (components != null)
                 {

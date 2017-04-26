@@ -291,10 +291,6 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public IApplicationController AppController { get { return this.ViewLogicController.Controller; } }
-
-        public FormDataEntryLogic DataEntryController { get { return this.ViewLogicController.DataEntryController; } }
-
         #region DataService
 
         IDataEntryDataService _dataService;
@@ -328,16 +324,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         void HandleEnableLogGradingChanged(object sender, EventArgs e)
         {
-            if (_logsColumn == null) { return; }
-            if ((_logsColumn.Width > 0) == DataService.EnableLogGrading) { return; }
-            if (DataService.EnableLogGrading)
-            {
-                _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
-            }
-            else
-            {
-                _logsColumn.Width = -1;
-            }
+            LogColumnVisable = DataService.EnableLogGrading;
         }
 
         #endregion DataService
@@ -391,24 +378,8 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public LayoutPlot(FormDataEntryLogic dataEntryController
-            , IDataEntryDataService dataService
-            , ApplicationSettings appSettings
-            , ISoundService soundService
-            , PlotStratum stratum)
+        public LayoutPlot()
         {
-            DataService = dataService;
-            AppSettings = appSettings;
-
-            this.ViewLogicController = new LayoutPlotLogic(stratum
-                , this
-                , dataEntryController
-                , dataService
-                , soundService
-                , DialogService.Instance
-                , AppSettings
-                , dataEntryController.ViewController);
-
             InitializeComponent();
             InitializePlotNavIcons();
 
@@ -432,9 +403,8 @@ namespace FSCruiser.WinForms.DataEntry
                 this._prevPlotButton.Font = new System.Drawing.Font("Arial", this._prevPlotButton.Font.Size, this._prevPlotButton.Font.Style);
             }
 
-            //Setup DataGrid
             DataGridAdjuster.InitializeGrid(this._dataGrid);
-            _tableStyle = stratum.InitializeTreeColumns(_dataGrid);
+
             this._dataGrid.CellValidating += new EditableDataGridCellValidatingEventHandler(_dataGrid_CellValidating);
             this._dataGrid.CellValueChanged += new EditableDataGridCellValueChangedEventHandler(this._dataGrid_CellValueChanged);
             //this._dataGrid.DataSource = typeof(FSCruiserV2.Logic.TreeVM);//_BS_Trees;
@@ -442,6 +412,29 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.ReadOnly = true;
             this._dataGrid.AllowUserToAddRows = false;
 
+            this.Dock = DockStyle.Fill;
+        }
+
+        public LayoutPlot(IDataEntryDataService dataService
+            , ApplicationSettings appSettings
+            , ISoundService soundService
+            , IViewController viewController
+            , PlotStratum stratum) : this()
+        {
+            DataService = dataService;
+            AppSettings = appSettings;
+
+            this.ViewLogicController = new LayoutPlotLogic(stratum
+                , this
+                , dataService
+                , soundService
+                , DialogService.Instance
+                , AppSettings
+                , viewController);
+
+            //Setup DataGrid
+            _tableStyle = stratum.InitializeTreeColumns(_dataGrid);
+            
             _speciesColumn = _tableStyle.GridColumnStyles["TreeDefaultValue"] as EditableComboBoxColumn;
             _sgColumn = _tableStyle.GridColumnStyles["SampleGroup"] as EditableComboBoxColumn;
             _treeNumberColumn = _tableStyle.GridColumnStyles["TreeNumber"] as EditableTextBoxColumn;
@@ -458,8 +451,6 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 this._initialsColoumn.DataSource = AppSettings.Cruisers.ToArray();
             }
-
-            this.Dock = DockStyle.Fill;
 
             InitializeTallyPanel();
 
@@ -512,7 +503,86 @@ namespace FSCruiser.WinForms.DataEntry
             this._tallyListPanel.ResumeLayout();
         }
 
-        private void InitializePlotNavIcons()
+        void MakeSGList(IEnumerable<SampleGroup> sampleGroups, Panel container)
+        {
+            var list = sampleGroups.ToList();
+            if (list.Count == 1)
+            {
+                SampleGroup sg = list[0];
+
+                if (sg.TreeDefaultValues.IsPopulated == false)
+                {
+                    sg.TreeDefaultValues.Populate();
+                }
+
+                foreach (TreeDefaultValueDO tdv in sg.TreeDefaultValues)
+                {
+                    SubPop subPop = new SubPop(sg, tdv);
+                    MakeTallyRow(container, subPop);
+                }
+            }
+            else
+            {
+                foreach (SampleGroup sg in list)
+                {
+                    Button sgButton = new Button();
+                    Panel spContainer = new Panel();
+
+                    if (sg.TreeDefaultValues.IsPopulated == false)
+                    {
+                        sg.TreeDefaultValues.Populate();
+                    }
+                    foreach (TreeDefaultValueDO tdv in sg.TreeDefaultValues)
+                    {
+                        SubPop subPop = new SubPop(sg, tdv);
+                        MakeTallyRow(spContainer, subPop);
+                    }
+
+                    spContainer.Parent = container;
+                    spContainer.Dock = DockStyle.Left;
+                    spContainer.Width = (SUB_POP_BUTTON_WIDTH * sg.TreeDefaultValues.Count) + 10;
+                    spContainer.Visible = false;
+
+                    sgButton.Text = sg.Code;
+                    sgButton.Tag = spContainer;
+                    sgButton.Parent = container;
+                    sgButton.BackColor = System.Drawing.SystemColors.ControlDark;
+                    sgButton.Dock = DockStyle.Left;
+                    sgButton.Click += new EventHandler(sgButton_Click);
+                }
+            }
+        }
+
+        Control MakeTallyRow(Control container, SubPop subPop)
+        {
+            var tallyButton = new SpeciesRow();
+            tallyButton.SubPopulation = subPop;
+
+            tallyButton.Click += new EventHandler(SpeciesButton_Click);
+            tallyButton.Parent = container;
+            tallyButton.Dock = DockStyle.Left;
+            tallyButton.Width = SUB_POP_BUTTON_WIDTH;
+
+            return tallyButton;
+        }
+
+        Control MakeTallyRow(Control container, CountTree count)
+        {
+            var row = new PlotTallyButton(count);
+            row.SuspendLayout();
+
+            row.TallyButtonClicked += new EventHandler(this.TallyButton_Click);
+            row.SettingsButtonClicked += new EventHandler(this.SettingsButton_Click);
+
+            //row.Width = 90;
+            row.Parent = container;
+
+            row.Dock = DockStyle.Left;
+            row.ResumeLayout(false);
+            return row;
+        }
+
+        void InitializePlotNavIcons()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutPlot));
             this._imageList = new System.Windows.Forms.ImageList();
@@ -643,13 +713,13 @@ namespace FSCruiser.WinForms.DataEntry
                     e.Cancel = true;
                 }
             }
-            else if (e.Column == _kpiColumn)
-            {
-                bool cancel = false;
-                this.ViewLogicController.DataEntryController.HandleKPIChanging(tree, (float)e.Value, true, out cancel);
-                //this.HandleKPIChanging(tree, (float)e.Value, out cancel);
-                e.Cancel = cancel;
-            }
+            //else if (e.Column == _kpiColumn)
+            //{
+            //    bool cancel = false;
+            //    this.ViewLogicController.DataEntryController.HandleKPIChanging(tree, (float)e.Value, true, out cancel);
+            //    //this.HandleKPIChanging(tree, (float)e.Value, out cancel);
+            //    e.Cancel = cancel;
+            //}
         }
 
         void _dataGrid_CellValueChanged(object sender, EditableDataGridCellEventArgs e)
@@ -664,7 +734,7 @@ namespace FSCruiser.WinForms.DataEntry
             else if (e.Column == _speciesColumn)
             {
                 var newTDV = _speciesColumn.EditComboBox.SelectedItem as TreeDefaultValueDO;
-                this.ViewLogicController.DataEntryController.HandleSpeciesChanged(tree, newTDV);
+                tree.HandleSpeciesChanged(newTDV);
             }
         }
 
@@ -687,11 +757,31 @@ namespace FSCruiser.WinForms.DataEntry
 
         void SettingsButton_Click(object sender, EventArgs e)
         {
-            var row = (ITallyButton)sender;
+            ITallyButton row = (ITallyButton)sender;
             var count = row.Count;
-            this.ViewLogicController.SavePlotTrees();
-            this.ViewLogicController.ViewController.ShowTallySettings(count);
+            ShowTallySettings(count);
+            //row.DiscriptionLabel.Text = count.Tally.Description;
         }
+
+        void ShowTallySettings(CountTree count)
+        {
+            this.ViewLogicController.SavePlotTrees();
+            try
+            {
+                count.Save();
+                using (FormTallySettings view = new FormTallySettings(DataService))
+                {
+                    view.ShowDialog(count);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+                return;
+            }
+        }
+
+        
 
         void SpeciesButton_Click(object sender, EventArgs e)
         {
@@ -748,7 +838,52 @@ namespace FSCruiser.WinForms.DataEntry
 
         void _plotInfoButton_Click(object sender, EventArgs e)
         {
-            this.ViewLogicController.ShowCurrentPlotInfo();
+            ShowCurrentPlotInfo();
+        }
+
+        public void ShowCurrentPlotInfo()
+        {
+            var currentPlot = ViewLogicController.CurrentPlot;
+            if (currentPlot == null)
+            {
+                ShowNoPlotSelectedMessage();
+                return;
+            }
+
+            if (ShowPlotInfo(DataService, currentPlot, Stratum, false))
+            {
+                currentPlot.Save();
+                ViewLogicController.UpdateCurrentPlot();
+            }
+        }
+
+        public bool ShowPlotInfo(IDataEntryDataService dataService, Plot plot, PlotStratum stratum, bool isNewPlot)
+        {
+            System.Diagnostics.Debug.Assert(plot != null);
+            System.Diagnostics.Debug.Assert(stratum != null);
+
+            if (stratum.Is3PPNT && isNewPlot)
+            {
+                using (var view = new Form3PPNTPlotInfo(dataService))
+                {
+#if !NetCF
+                    view.Owner = this.TopLevelControl as Form;
+                    view.StartPosition = FormStartPosition.CenterParent;
+#endif
+                    return view.ShowDialog(plot, stratum, isNewPlot) == DialogResult.OK;
+                }
+            }
+            else
+            {
+                using (var view = new FormPlotInfo())
+                {
+#if !NetCF
+                    view.Owner = this.TopLevelControl as Form;
+                    view.StartPosition = FormStartPosition.CenterParent;
+#endif
+                    return view.ShowDialog(plot, stratum, isNewPlot) == DialogResult.OK;
+                }
+            }
         }
 
         #endregion plot nav events
@@ -991,99 +1126,9 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void HandleStratumLoaded(Control container)
-        {
-            //do nothing
-            return;
-        }
-
-        public void MakeSGList(IEnumerable<SampleGroup> sampleGroups, Panel container)
-        {
-            var list = sampleGroups.ToList();
-            if (list.Count == 1)
-            {
-                SampleGroup sg = list[0];
-
-                if (sg.TreeDefaultValues.IsPopulated == false)
-                {
-                    sg.TreeDefaultValues.Populate();
-                }
-
-                foreach (TreeDefaultValueDO tdv in sg.TreeDefaultValues)
-                {
-                    SubPop subPop = new SubPop(sg, tdv);
-                    MakeTallyRow(container, subPop);
-                }
-            }
-            else
-            {
-                foreach (SampleGroup sg in list)
-                {
-                    Button sgButton = new Button();
-                    Panel spContainer = new Panel();
-
-                    if (sg.TreeDefaultValues.IsPopulated == false)
-                    {
-                        sg.TreeDefaultValues.Populate();
-                    }
-                    foreach (TreeDefaultValueDO tdv in sg.TreeDefaultValues)
-                    {
-                        SubPop subPop = new SubPop(sg, tdv);
-                        MakeTallyRow(spContainer, subPop);
-                    }
-
-                    spContainer.Parent = container;
-                    spContainer.Dock = DockStyle.Left;
-                    spContainer.Width = (SUB_POP_BUTTON_WIDTH * sg.TreeDefaultValues.Count) + 10;
-                    spContainer.Visible = false;
-
-                    sgButton.Text = sg.Code;
-                    sgButton.Tag = spContainer;
-                    sgButton.Parent = container;
-                    sgButton.BackColor = System.Drawing.SystemColors.ControlDark;
-                    sgButton.Dock = DockStyle.Left;
-                    sgButton.Click += new EventHandler(sgButton_Click);
-                }
-            }
-        }
-
-        public Control MakeTallyRow(Control container, SubPop subPop)
-        {
-            var tallyButton = new SpeciesRow();
-            tallyButton.SubPopulation = subPop;
-
-            tallyButton.Click += new EventHandler(SpeciesButton_Click);
-            tallyButton.Parent = container;
-            tallyButton.Dock = DockStyle.Left;
-            tallyButton.Width = SUB_POP_BUTTON_WIDTH;
-
-            return tallyButton;
-        }
-
-        public Control MakeTallyRow(Control container, CountTree count)
-        {
-            var row = new PlotTallyButton(count);
-            row.SuspendLayout();
-
-            row.TallyButtonClicked += new EventHandler(this.TallyButton_Click);
-            row.SettingsButtonClicked += new EventHandler(this.SettingsButton_Click);
-
-            //row.Width = 90;
-            row.Parent = container;
-
-            row.Dock = DockStyle.Left;
-            row.ResumeLayout(false);
-            return row;
-        }
-
         public void OnTally(CountTree count)
         {
             this.ViewLogicController.OnTally(count);
-        }
-
-        public void SaveCounts()
-        {
-            this.ViewLogicController.SaveCounts();
         }
 
         public bool TrySaveCounts()

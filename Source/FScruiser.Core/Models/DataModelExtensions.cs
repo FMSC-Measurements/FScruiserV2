@@ -77,7 +77,7 @@ namespace FSCruiser.Core.Models
 
     public static class TreeExtensions
     {
-        public static CountTree FindCountRecord(this TreeDO tree)
+        public static CountTree FindCountRecord(this Tree tree)
         {
             return tree.DAL.From<CountTree>()
                 .Where("SampleGroup_CN = ? AND CuttingUnit_CN = ? AND (TreeDefaultValue_CN = ? OR ifnull(TreeDefaultValue_CN, 0) = 0)")
@@ -86,7 +86,7 @@ namespace FSCruiser.Core.Models
                 , tree.TreeDefaultValue_CN).FirstOrDefault();
         }
 
-        public static int ReadHighestLogNumber(this TreeDO tree)
+        public static int ReadHighestLogNumber(this Tree tree)
         {
             long? value = (long?)tree.DAL.ExecuteScalar(
                 String.Format("SELECT MAX(CAST(LogNumber AS NUMERIC)) FROM Log WHERE Tree_CN = {0};"

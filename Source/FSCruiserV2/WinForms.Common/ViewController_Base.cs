@@ -159,24 +159,6 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-        public void ShowTallySettings(CountTree count)
-        {
-            try
-            {
-                count.Save();
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e);
-                return;
-            }
-
-            using (FormTallySettings view = new FormTallySettings(this.ApplicationController))
-            {
-                view.ShowDialog(count);
-            }
-        }
-
         /// <summary>
         /// </summary>
         /// <returns>KPI, value is -1 if STM</returns>

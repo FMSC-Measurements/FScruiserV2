@@ -224,20 +224,22 @@ namespace FSCruiser.WinForms.DataEntry
                     e.Cancel = true;
                 }
             }
-            else if (e.Column == _kpiColumn)
-            {
-                bool cancel = false;
+            //else if (e.Column == _kpiColumn)
+            //{
+            //    bool cancel = false;
 
-                this.DataEntryController.HandleKPIChanging(tree, (float)e.Value, false, out cancel);
-                //this.HandleKPIChanging(currTree, (float)e.Value, out cancel);
-            }
+            //    this.DataEntryController.HandleKPIChanging(tree, (float)e.Value, false, out cancel);
+            //    //this.HandleKPIChanging(currTree, (float)e.Value, out cancel);
+            //}
         }
 
         protected override void OnCellValueChanged(EditableDataGridCellEventArgs e)
         {
             base.OnCellValueChanged(e);
 
-            Tree tree = (Tree)this._BS_trees[e.RowIndex];
+            Tree tree = _BS_trees[e.RowIndex] as Tree;
+            if (tree == null) { return; }
+
             if (e.Column == _sgColumn)
             {
                 tree.HandleSampleGroupChanged();
@@ -250,7 +252,7 @@ namespace FSCruiser.WinForms.DataEntry
                 EditableComboBoxColumn col = e.Column as EditableComboBoxColumn;
                 if (col == null) { return; }
 
-                this.DataEntryController.HandleSpeciesChanged(tree, col.EditComboBox.SelectedItem as TreeDefaultValueDO);
+                tree.HandleSpeciesChanged(col.EditComboBox.SelectedItem as TreeDefaultValueDO);
             }
             else if (e.Column == _stratumColumn)
             {

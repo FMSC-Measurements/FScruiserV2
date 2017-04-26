@@ -22,17 +22,15 @@ namespace FSCruiser.WinForms.DataEntry
             this._tallyHistoryLB.DataSource = this._BS_tallyHistory;
             ((System.ComponentModel.ISupportInitialize)(this._BS_tallyHistory)).EndInit();
 
-            this._untallyButton.Click += new System.EventHandler(this.OnUntallyButtonClicked);
+            this._untallyBTN.Click += new System.EventHandler(this.OnUntallyButtonClicked);
         }
 
-        public LayoutTreeBased(IApplicationController controller
-            , IDataEntryDataService dataService
+        public LayoutTreeBased( IDataEntryDataService dataService
             , ApplicationSettings appSettings
             , FormDataEntryLogic dataEntryController)
             : this()
         {
-            base.Initialize(controller
-                , dataService
+            base.Initialize( dataService
                 , appSettings
                 , dataEntryController
                 , _leftContentPanel);
@@ -43,11 +41,11 @@ namespace FSCruiser.WinForms.DataEntry
             var untallyKey = AppSettings.UntallyKeyStr;
             if (!string.IsNullOrEmpty(untallyKey))
             {
-                _untallyButton.Text = "Untally" + "(" + untallyKey + ")";
+                _untallyBTN.Text = "Untally" + "(" + untallyKey + ")";
             }
             else
             {
-                _untallyButton.Text = "Untally";
+                _untallyBTN.Text = "Untally";
             }
         }
     }

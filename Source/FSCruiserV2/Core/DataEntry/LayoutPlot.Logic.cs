@@ -22,13 +22,9 @@ namespace FSCruiser.Core.DataEntry
 
         public IPlotLayout View { get; set; }
 
-        public IApplicationController Controller { get { return this.DataEntryController.Controller; } }
-
         public IDataEntryDataService DataService { get; protected set; }
 
         public IViewController ViewController { get; protected set; }
-
-        public FormDataEntryLogic DataEntryController { get; protected set; }
 
         public bool UserCanAddTrees { get; set; }
 
@@ -65,7 +61,6 @@ namespace FSCruiser.Core.DataEntry
 
         public LayoutPlotLogic(PlotStratum stratum
             , LayoutPlot view
-            , FormDataEntryLogic dataEntryController
             , IDataEntryDataService dataService
             , ISoundService soundService
             , IDialogService dialogService
@@ -74,7 +69,6 @@ namespace FSCruiser.Core.DataEntry
         {
             this.Stratum = stratum;
             this.View = view;
-            this.DataEntryController = dataEntryController;
             DataService = dataService;
             _soundService = soundService;
             _dialogService = dialogService;
@@ -196,6 +190,7 @@ namespace FSCruiser.Core.DataEntry
         {
             if (View.ViewLoading) { return; }
             this.EndEdit();
+            _BS_Plots.ResetCurrentItem();
             if (CurrentPlot != null)
             {
                 CurrentPlot.PopulateTrees();
@@ -238,14 +233,14 @@ namespace FSCruiser.Core.DataEntry
         /// <returns>reference to newly created plot</returns>
         protected Plot AddPlot()
         {
-            Plot newPlot = Stratum.MakePlot(DataService.CuttingUnit);
+            var newPlot = Stratum.MakePlot(DataService.CuttingUnit);
 
-            if (this.ViewController.ShowPlotInfo(DataService, newPlot, Stratum, true))
+            if (View.ShowPlotInfo(DataService, newPlot, Stratum, true))
             {
                 newPlot.Save();
                 this.Stratum.Plots.Add(newPlot);
 
-                if (!String.IsNullOrEmpty(newPlot.IsEmpty) && String.Compare(newPlot.IsEmpty.Trim(), "True", true) == 0)
+                if (newPlot.IsNull)
                 {
                     return this.AddPlot() ?? newPlot;//add plot may return null, in that case return most recently created plot
                 }
@@ -550,22 +545,6 @@ namespace FSCruiser.Core.DataEntry
         {
             this._BS_Trees.MoveLast();
             this.View.MoveHomeField();
-        }
-
-        public void ShowCurrentPlotInfo()
-        {
-            if (CurrentPlot == null)
-            {
-                this.View.ShowNoPlotSelectedMessage();
-                return;
-            }
-
-            if (Controller.ViewController.ShowPlotInfo(DataService, CurrentPlot, Stratum, false))
-            {
-                CurrentPlot.Save();
-                _BS_Plots.ResetCurrentItem();
-                UpdateCurrentPlot();
-            }
         }
 
         public void Save()

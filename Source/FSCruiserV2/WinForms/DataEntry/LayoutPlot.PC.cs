@@ -25,10 +25,6 @@ namespace FSCruiser.WinForms.DataEntry
         private DataGridViewButtonColumn _logsColumn;
         private DataGridViewTextBoxColumn _treeNumberColumn;
 
-        public IApplicationController AppController { get { return this.ViewLogicController.Controller; } }
-
-        public FormDataEntryLogic DataEntryController { get { return this.ViewLogicController.DataEntryController; } }
-
         public LayoutPlotLogic ViewLogicController { get; set; }
 
         public bool ViewLoading { get { return _viewLoading; } }
@@ -122,32 +118,41 @@ namespace FSCruiser.WinForms.DataEntry
 
         #endregion AppSettings
 
-        public LayoutPlot(FormDataEntryLogic dataEntryController
-            , IDataEntryDataService dataService
+        public LayoutPlot()
+        {
+            this.Dock = DockStyle.Fill;
+            InitializeComponent();
+
+            this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this._addPlotButton_Click);
+            this.bindingNavigatorDeleteItem.Click += new System.EventHandler(this._deletePlotButton_Click);
+            this._plotInfoBTN.Click += new System.EventHandler(this._plotInfoBTN_Click);
+
+            this._dataGrid.CellClick += new DataGridViewCellEventHandler(_dataGrid_CellClick);
+            this._dataGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this._dataGrid_CellValidating);
+            this._dataGrid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this._dataGrid_DataError);
+            this._dataGrid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this._datagrid_CellEnter);
+
+            this._dataGrid.AutoGenerateColumns = false;
+        }
+
+        public LayoutPlot(IDataEntryDataService dataService
             , ApplicationSettings appSettings
             , ISoundService soundService
-            , PlotStratum stratum)
+            , IViewController viewController
+            , PlotStratum stratum) : this()
         {
             Stratum = stratum;
             DataService = dataService;
             AppSettings = appSettings;
             this.ViewLogicController = new LayoutPlotLogic(stratum
                 , this
-                , dataEntryController
                 , dataService
                 , soundService
                 , DialogService.Instance
                 , AppSettings
-                , dataEntryController.ViewController);
-
-            this.Dock = DockStyle.Fill;
-            InitializeComponent();
+                , viewController);
 
             WireSplitter(stratum);
-
-            this.bindingNavigatorAddNewItem.Click += new System.EventHandler(this._addPlotButton_Click);
-            this.bindingNavigatorDeleteItem.Click += new System.EventHandler(this._deletePlotButton_Click);
-            this._plotInfoBTN.Click += new System.EventHandler(this._plotInfoBTN_Click);
 
             InitializeDataGrid(stratum);
 
@@ -157,13 +162,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         void InitializeDataGrid(PlotStratum stratum)
         {
-            this._dataGrid.CellClick += new DataGridViewCellEventHandler(_dataGrid_CellClick);
-            this._dataGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this._dataGrid_CellValidating);
-            this._dataGrid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this._dataGrid_DataError);
-            this._dataGrid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this._datagrid_CellEnter);
-
-            this._dataGrid.AutoGenerateColumns = false;
-
             this._dataGrid.SuspendLayout();
 
             var fontWidth = (int)Math.Ceiling(CreateGraphics().MeasureString("_", Font).Width);
@@ -182,7 +180,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             if (_speciesColumn != null)
             {
-                _speciesColumn.DataSource = AppController.DataStore.From<TreeDefaultValueDO>().Read().ToList();
+                _speciesColumn.DataSource = DataService.GetTreeDefaultValuesAll().ToList();
             }
             if (_sgColumn != null)
             {
@@ -493,8 +491,52 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void _plotInfoBTN_Click(object sender, EventArgs e)
         {
-            this.ViewLogicController.ShowCurrentPlotInfo();
-            //this.AppController.ViewController.ShowPlotInfo(this.ViewLogicController.CurrentPlotInfo, false);
+            ShowCurrentPlotInfo();
+        }
+
+        public void ShowCurrentPlotInfo()
+        {
+            var currentPlot = ViewLogicController.CurrentPlot;
+            if (currentPlot == null)
+            {
+                ShowNoPlotSelectedMessage();
+                return;
+            }
+
+            if (ShowPlotInfo(DataService, currentPlot, Stratum, false))
+            {
+                currentPlot.Save();
+                ViewLogicController.UpdateCurrentPlot();
+            }
+        }
+
+        public bool ShowPlotInfo(IDataEntryDataService dataService, Plot plot, PlotStratum stratum, bool isNewPlot)
+        {
+            System.Diagnostics.Debug.Assert(plot != null);
+            System.Diagnostics.Debug.Assert(stratum != null);
+
+            if (stratum.Is3PPNT && isNewPlot)
+            {
+                using (var view = new Form3PPNTPlotInfo(dataService))
+                {
+#if !NetCF
+                    view.Owner = this.TopLevelControl as Form;
+                    view.StartPosition = FormStartPosition.CenterParent;
+#endif
+                    return view.ShowDialog(plot, stratum, isNewPlot) == DialogResult.OK;
+                }
+            }
+            else
+            {
+                using (var view = new FormPlotInfo())
+                {
+#if !NetCF
+                    view.Owner = this.TopLevelControl as Form;
+                    view.StartPosition = FormStartPosition.CenterParent;
+#endif
+                    return view.ShowDialog(plot, stratum, isNewPlot) == DialogResult.OK;
+                }
+            }
         }
 
         private void _addPlotButton_Click(object sender, EventArgs e)
@@ -649,11 +691,28 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void tallyRow_InfoButtonClicked(object sender, EventArgs e)
         {
-            PlotTallyRow row = (PlotTallyRow)sender;
+            ITallyButton row = (ITallyButton)sender;
             var count = row.Count;
-            this.ViewLogicController.SavePlotTrees();
-            this.ViewLogicController.ViewController.ShowTallySettings(count);
+            ShowTallySettings(count);
             //row.DiscriptionLabel.Text = count.Tally.Description;
+        }
+
+        void ShowTallySettings(CountTree count)
+        {
+            this.ViewLogicController.SavePlotTrees();
+            try
+            {
+                count.Save();
+                using (FormTallySettings view = new FormTallySettings(DataService))
+                {
+                    view.ShowDialog(count);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+                return;
+            }
         }
 
         public void OnTally(CountTree count)

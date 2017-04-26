@@ -72,9 +72,6 @@ namespace FSCruiser.WinForms.DataEntry
                 , AppSettings
                 , this);
 
-            // Set the form title (Text) with current cutting unit and description.
-            this.Text = this.LogicController.GetViewTitle();
-
             InitializePageContainer();
         }
 
@@ -143,8 +140,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void InitializeTallyTab()
         {
-            _tallyLayout = new LayoutTreeBased(Controller
-                , DataService
+            _tallyLayout = new LayoutTreeBased(DataService
                 , AppSettings
                 , LogicController);
 
@@ -177,10 +173,10 @@ namespace FSCruiser.WinForms.DataEntry
                 page.Text = String.Format("{0}-{1}[{2}]", st.Code, st.Method, st.Hotkey);
                 PageContainer.TabPages.Add(page);
 
-                LayoutPlot view = new LayoutPlot(LogicController
-                    , DataService
+                LayoutPlot view = new LayoutPlot(DataService
                     , AppSettings
                     , SoundService.Instance
+                    , Controller.ViewController
                     , st);
                 view.Parent = page;
 #if NetCF
@@ -389,7 +385,26 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region IDataEntryView
 
-        public FormDataEntryLogic LogicController { get; protected set; }
+        FormDataEntryLogic _presenter;
+
+        public FormDataEntryLogic LogicController
+        {
+            get { return _presenter; }
+            protected set
+            {
+                _presenter = value;
+                OnLogicControllerChanged();
+            }
+        }
+
+        private void OnLogicControllerChanged()
+        {
+            if (_presenter != null)
+            {
+                // Set the form title (Text) with current cutting unit and description.
+                this.Text = this.LogicController.GetViewTitle();
+            }
+        }
 
         public IDataEntryPage FocusedLayout
         {

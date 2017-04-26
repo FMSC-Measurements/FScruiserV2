@@ -262,16 +262,6 @@ namespace FSCruiser.Core
 
         #endregion backup
 
-        public void LogTreeCountEdit(CountTreeDO countTree, long oldValue, long newValue)
-        {
-            this.DataStore.LogMessage(String.Format("Tree Count Edit: CT_CN={0}; PrevVal={1}; NewVal={2}", countTree.CountTree_CN, oldValue, newValue), "I");
-        }
-
-        public void LogSumKPIEdit(CountTreeDO countTree, long oldValue, long newValue)
-        {
-            this.DataStore.LogMessage(String.Format("SumKPI Edit: CT_CN={0}; PrevVal={1}; NewVal={2}", countTree.CountTree_CN, oldValue, newValue), "I");
-        }
-
         private void OnApplicationClosing(object sender, CancelEventArgs e)
         {
             try

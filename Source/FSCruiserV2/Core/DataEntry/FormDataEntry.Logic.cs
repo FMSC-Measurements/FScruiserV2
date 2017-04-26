@@ -256,48 +256,48 @@ namespace FSCruiser.Core.DataEntry
             return Array.IndexOf(Constants.HOTKEY_KEYS, c) != -1;
         }
 
-        public void HandleKPIChanging(Tree tree, float newKPI, bool doSample, out bool cancel)
-        {
-            if (tree == null)
-            {
-                cancel = true;
-                return;
-            }
-            if (tree.SampleGroup == null)
-            {
-                _dialogService.ShowMessage("Select Sample Group before entering KPI");
-                cancel = true;
-                return;
-            }
-            if (!tree.KPI.EqualsEx(0.0F))
-            {
-                string message = string.Format("Tree RecID:{0} KPI changed from {1} to {2}"
-                    , tree.Tree_CN
-                    , tree.KPI
-                    , newKPI);
-                DataService.LogMessage(message, "I");
-            }
-            else if (doSample)
-            {
-                CountTree count = tree.FindCountRecord();
-                if (count != null && count.SampleGroup.Sampler is ThreePSelecter)
-                {
-                    ThreePItem item = (ThreePItem)count.SampleGroup.Sampler.NextItem();
-                    if (item.KPI < newKPI)
-                    {
-                        tree.CountOrMeasure = "M";
-                        _soundService.SignalMeasureTree();
-                        _dialogService.ShowMessage("Measure Tree");
-                    }
-                    else
-                    {
-                        tree.CountOrMeasure = "C";
-                    }
-                    //count.SumKPI += (long)newKPI;
-                }
-            }
-            cancel = false;
-        }
+        //public void HandleKPIChanging(Tree tree, float newKPI, bool doSample, out bool cancel)
+        //{
+        //    if (tree == null)
+        //    {
+        //        cancel = true;
+        //        return;
+        //    }
+        //    if (tree.SampleGroup == null)
+        //    {
+        //        _dialogService.ShowMessage("Select Sample Group before entering KPI");
+        //        cancel = true;
+        //        return;
+        //    }
+        //    if (!tree.KPI.EqualsEx(0.0F))
+        //    {
+        //        string message = string.Format("Tree RecID:{0} KPI changed from {1} to {2}"
+        //            , tree.Tree_CN
+        //            , tree.KPI
+        //            , newKPI);
+        //        DataService.LogMessage(message, "I");
+        //    }
+        //    else if (doSample)
+        //    {
+        //        CountTree count = tree.FindCountRecord();
+        //        if (count != null && count.SampleGroup.Sampler is ThreePSelecter)
+        //        {
+        //            ThreePItem item = (ThreePItem)count.SampleGroup.Sampler.NextItem();
+        //            if (item.KPI < newKPI)
+        //            {
+        //                tree.CountOrMeasure = "M";
+        //                _soundService.SignalMeasureTree();
+        //                _dialogService.ShowMessage("Measure Tree");
+        //            }
+        //            else
+        //            {
+        //                tree.CountOrMeasure = "C";
+        //            }
+        //            //count.SumKPI += (long)newKPI;
+        //        }
+        //    }
+        //    cancel = false;
+        //}
 
         public void HandleViewClosing(CancelEventArgs e)
         {

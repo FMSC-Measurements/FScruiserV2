@@ -23,13 +23,12 @@ namespace FSCruiser.WinForms.DataEntry
             this._untallyBTN.Click += new System.EventHandler(this.OnUntallyButtonClicked);
         }
 
-        public LayoutTreeBased(IApplicationController controller
-            , IDataEntryDataService dataService
+        public LayoutTreeBased(IDataEntryDataService dataService
             , ApplicationSettings appSettings
             , FormDataEntryLogic dataEntryController)
             : this()
         {
-            base.Initialize(controller, dataService, appSettings, dataEntryController, _leftContentPanel);
+            base.Initialize(dataService, appSettings, dataEntryController, _leftContentPanel);
         }
 
         protected override void UpdateUntallyButton()
