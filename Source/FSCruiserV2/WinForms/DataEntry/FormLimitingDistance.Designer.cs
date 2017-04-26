@@ -36,6 +36,8 @@
             System.Windows.Forms.Label label3;
             System.Windows.Forms.Label label2;
             System.Windows.Forms.Label label1;
+            System.Windows.Forms.Label label5;
+            System.Windows.Forms.TextBox _azimuthTB;
             this._limitingDistanceLBL = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.BAForFPS = new System.Windows.Forms.TextBox();
@@ -53,17 +55,21 @@
             this._ceControlPanel = new System.Windows.Forms.Panel();
             this._cancelBTN = new System.Windows.Forms.Button();
             this._calculateBTN = new System.Windows.Forms.Button();
+            this.panel5 = new System.Windows.Forms.Panel();
             label7 = new System.Windows.Forms.Label();
             label4 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
+            label5 = new System.Windows.Forms.Label();
+            _azimuthTB = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._BS_calculator)).BeginInit();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this._ceControlPanel.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // label7
@@ -92,7 +98,7 @@
             // 
             // label2
             // 
-            label2.Location = new System.Drawing.Point(32, 33);
+            label2.Location = new System.Drawing.Point(8, 39);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(67, 20);
             label2.TabIndex = 4;
@@ -100,7 +106,7 @@
             // 
             // label1
             // 
-            label1.Location = new System.Drawing.Point(55, 4);
+            label1.Location = new System.Drawing.Point(31, 10);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(33, 20);
             label1.TabIndex = 5;
@@ -118,25 +124,20 @@
             // panel1
             // 
             this.panel1.AutoScroll = true;
-            this.panel1.Controls.Add(this.BAForFPS);
-            this.panel1.Controls.Add(this._bafOrfpsLBL);
-            this.panel1.Controls.Add(this.SlopePCT);
-            this.panel1.Controls.Add(label2);
-            this.panel1.Controls.Add(this.BAF);
-            this.panel1.Controls.Add(label1);
-            this.panel1.Controls.Add(this.panel4);
-            this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.panel3);
+            this.panel1.Controls.Add(this.panel2);
+            this.panel1.Controls.Add(this.panel4);
+            this.panel1.Controls.Add(this.panel5);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(228, 197);
+            this.panel1.Size = new System.Drawing.Size(228, 237);
             this.panel1.TabIndex = 0;
             // 
             // BAForFPS
             // 
             this.BAForFPS.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "BAForFPSize", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
-            this.BAForFPS.Location = new System.Drawing.Point(94, 59);
+            this.BAForFPS.Location = new System.Drawing.Point(70, 65);
             this.BAForFPS.Name = "BAForFPS";
             this.BAForFPS.Size = new System.Drawing.Size(39, 20);
             this.BAForFPS.TabIndex = 2;
@@ -148,7 +149,7 @@
             // 
             // _bafOrfpsLBL
             // 
-            this._bafOrfpsLBL.Location = new System.Drawing.Point(56, 61);
+            this._bafOrfpsLBL.Location = new System.Drawing.Point(32, 67);
             this._bafOrfpsLBL.Name = "_bafOrfpsLBL";
             this._bafOrfpsLBL.Size = new System.Drawing.Size(32, 20);
             this._bafOrfpsLBL.TabIndex = 3;
@@ -157,7 +158,7 @@
             // SlopePCT
             // 
             this.SlopePCT.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "SlopePCT", true));
-            this.SlopePCT.Location = new System.Drawing.Point(94, 30);
+            this.SlopePCT.Location = new System.Drawing.Point(70, 36);
             this.SlopePCT.Name = "SlopePCT";
             this.SlopePCT.Size = new System.Drawing.Size(39, 20);
             this.SlopePCT.TabIndex = 1;
@@ -166,7 +167,7 @@
             // BAF
             // 
             this.BAF.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "DBH", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
-            this.BAF.Location = new System.Drawing.Point(94, 3);
+            this.BAF.Location = new System.Drawing.Point(70, 9);
             this.BAF.Name = "BAF";
             this.BAF.Size = new System.Drawing.Size(39, 20);
             this.BAF.TabIndex = 0;
@@ -178,8 +179,8 @@
             this.panel4.Controls.Add(this._measureToCB);
             this.panel4.Controls.Add(label3);
             this.panel4.Controls.Add(label4);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(0, 97);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel4.Location = new System.Drawing.Point(0, 114);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(228, 31);
             this.panel4.TabIndex = 6;
@@ -204,8 +205,8 @@
             // panel2
             // 
             this.panel2.Controls.Add(this._limitingDistanceLBL);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 128);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 145);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(228, 35);
             this.panel2.TabIndex = 7;
@@ -214,8 +215,8 @@
             // 
             this.panel3.Controls.Add(label7);
             this.panel3.Controls.Add(this._treeIsLBL);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 163);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(0, 180);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(228, 34);
             this.panel3.TabIndex = 8;
@@ -244,7 +245,7 @@
             this._ceControlPanel.Controls.Add(this._cancelBTN);
             this._ceControlPanel.Controls.Add(this._calculateBTN);
             this._ceControlPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._ceControlPanel.Location = new System.Drawing.Point(0, 197);
+            this._ceControlPanel.Location = new System.Drawing.Point(0, 237);
             this._ceControlPanel.Name = "_ceControlPanel";
             this._ceControlPanel.Size = new System.Drawing.Size(228, 34);
             this._ceControlPanel.TabIndex = 1;
@@ -269,12 +270,46 @@
             this._calculateBTN.Text = "Calculate";
             this._calculateBTN.Click += new System.EventHandler(this._calculateBTN_Click);
             // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.SlopePCT);
+            this.panel5.Controls.Add(_azimuthTB);
+            this.panel5.Controls.Add(label5);
+            this.panel5.Controls.Add(label1);
+            this.panel5.Controls.Add(this.BAForFPS);
+            this.panel5.Controls.Add(this.BAF);
+            this.panel5.Controls.Add(this._bafOrfpsLBL);
+            this.panel5.Controls.Add(label2);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(228, 114);
+            this.panel5.TabIndex = 9;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(17, 90);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(47, 13);
+            label5.TabIndex = 6;
+            label5.Text = "Azimuth:";
+            // 
+            // _azimuthTB
+            // 
+            _azimuthTB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this._BS_calculator, "Azimuth", true));
+            _azimuthTB.Location = new System.Drawing.Point(70, 87);
+            _azimuthTB.MaxLength = 5;
+            _azimuthTB.Name = "_azimuthTB";
+            _azimuthTB.Size = new System.Drawing.Size(39, 20);
+            _azimuthTB.TabIndex = 7;
+            // 
             // FormLimitingDistance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(228, 231);
+            this.ClientSize = new System.Drawing.Size(228, 271);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this._ceControlPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -282,13 +317,14 @@
             this.Name = "FormLimitingDistance";
             this.Text = "Limiting Distance";
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this._BS_calculator)).EndInit();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this._ceControlPanel.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -314,5 +350,6 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label _limitingDistanceLBL;
+        private System.Windows.Forms.Panel panel5;
     }
 }
