@@ -1,4 +1,6 @@
-﻿using CruiseDAL.Schema;
+﻿using CruiseDAL;
+using CruiseDAL.DataObjects;
+using CruiseDAL.Schema;
 using FluentAssertions;
 using FSCruiser.Core.Models;
 using System;
@@ -123,6 +125,44 @@ namespace FScruiser.Core.Test.Models
                 st.Plots.Should().NotBeNullOrEmpty();
                 st.Plots.Should().OnlyContain(x => x is Plot3PPNT);
             }
+        }
+
+        [Fact]
+        public void TreeFieldsTest()
+        {
+            foreach (var method in CruiseMethods.PLOT_METHODS)
+            {
+                using (var dataStore = CreateDataStore(method))
+                {
+                    var stratum = dataStore.From<PlotStratum>().Query().FirstOrDefault();
+
+                    stratum.TreeFields.Should().NotBeNullOrEmpty();
+                    if (!stratum.IsSingleStage)
+                    {
+                        stratum.TreeFields.Should().Contain(f => f.Field == "CountOrMeasure");
+                    }
+                    if (stratum.Is3P)
+                    {
+                        stratum.TreeFields.Should().Contain(f => f.Field == "STM");
+                    }
+                }
+            }
+        }
+
+        DAL CreateDataStore(string method)
+        {
+            var dataStore = new DAL();
+
+            var stratum = new StratumDO()
+            {
+                DAL = dataStore,
+                Code = "01",
+                Method = method
+            };
+
+            stratum.Save();
+
+            return dataStore;
         }
     }
 }

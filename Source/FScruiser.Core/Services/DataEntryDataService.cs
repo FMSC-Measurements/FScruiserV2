@@ -611,6 +611,12 @@ namespace FScruiser.Core.Services
                 fields.Insert(indexOfTreeNum + 1, tfs);
             }
 
+            if (TreeStrata.Any(st => st.Is3P)
+                && !fields.Any(f => f.Field == "STM"))
+            {
+                fields.Add(new TreeFieldSetupDO() { Field = "STM", Heading = "STM" });
+            }
+
             return fields;
         }
 

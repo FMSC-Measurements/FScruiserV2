@@ -148,8 +148,7 @@ namespace FSCruiser.Core.Models
             {
                 var cmField = new TreeFieldSetupDO()
                 {
-                    Field = CruiseDAL.Schema.TREE.COUNTORMEASURE
-                        ,
+                    Field = CruiseDAL.Schema.TREE.COUNTORMEASURE,
                     Heading = "C/M"
                 };
                 if (fields.Count > 5)

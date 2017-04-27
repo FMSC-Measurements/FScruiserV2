@@ -182,6 +182,11 @@ namespace FSCruiser.Core.Models
                 fields.AddRange(Constants.DEFAULT_TREE_FIELDS);
             }
 
+            if (Is3P && !fields.Any(f => f.Field == "STM"))
+            {
+                fields.Add(new TreeFieldSetupDO() { Field = "STM", Heading = "STM" });
+            }
+
             return fields;
         }
 
