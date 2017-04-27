@@ -279,6 +279,9 @@ namespace FSCruiser.WinForms
                 count.Save();
                 using (FormTallySettings view = new FormTallySettings(DataService))
                 {
+#if !NetCF
+                    view.Owner = this.TopLevelControl as Form;
+#endif
                     view.ShowDialog(count);
                 }
             }

@@ -10,11 +10,6 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormTallySettings : Form
     {
-        public FormTallySettings()
-        {
-            InitializeComponent();
-        }
-
         private CountTree _count;
 
         IDataEntryDataService DataService { get; set; }
@@ -83,9 +78,17 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public FormTallySettings(IDataEntryDataService dataService)
+        public FormTallySettings()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+
+#if !NetCF
+            StartPosition = FormStartPosition.CenterParent;
+#endif
+        }
+
+        public FormTallySettings(IDataEntryDataService dataService) : this()
+        {
             this.DataService = dataService;
         }
 
