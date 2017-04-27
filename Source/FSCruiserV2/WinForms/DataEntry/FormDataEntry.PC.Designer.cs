@@ -2,7 +2,10 @@
 {
     partial class FormDataEntry
     {
-
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
         #region Windows Form Designer generated code
 
@@ -19,7 +22,7 @@
             this._mainContenPanel = new System.Windows.Forms.Panel();
             this._pageContainer = new System.Windows.Forms.TabControl();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.button1 = new System.Windows.Forms.Button();
+            this._menuBTN = new System.Windows.Forms.Button();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this._limitingDistanceMI = new System.Windows.Forms.ToolStripMenuItem();
             this._manageCruisersMI = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,7 +88,7 @@
             this.tableLayoutPanel1.Controls.Add(this._deleteTreeBTN, 3, 1);
             this.tableLayoutPanel1.Controls.Add(this._mainContenPanel, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this._addTreeBTN, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.button1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this._menuBTN, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -95,15 +98,15 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(752, 466);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
-            // button1
+            // _menuBTN
             // 
-            this.button1.Location = new System.Drawing.Point(3, 429);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(44, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Menu";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this._menuBTN.Location = new System.Drawing.Point(3, 429);
+            this._menuBTN.Name = "_menuBTN";
+            this._menuBTN.Size = new System.Drawing.Size(44, 23);
+            this._menuBTN.TabIndex = 2;
+            this._menuBTN.Text = "Menu";
+            this._menuBTN.UseVisualStyleBackColor = true;
+            this._menuBTN.Click += new System.EventHandler(this._menuBTN_Click);
             // 
             // contextMenuStrip1
             // 
@@ -125,7 +128,7 @@
             // 
             this._manageCruisersMI.Name = "_manageCruisersMI";
             this._manageCruisersMI.Size = new System.Drawing.Size(166, 22);
-            this._manageCruisersMI.Text = "Manage Cruisers";
+            this._manageCruisersMI.Text = "Edit Cruisers";
             this._manageCruisersMI.Click += new System.EventHandler(this._editCruisersMI_Click);
             // 
             // _settingsMI
@@ -160,7 +163,7 @@
         System.Windows.Forms.TabControl _pageContainer;
         private System.Windows.Forms.Panel _mainContenPanel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button _menuBTN;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem _limitingDistanceMI;
         private System.Windows.Forms.ToolStripMenuItem _manageCruisersMI;

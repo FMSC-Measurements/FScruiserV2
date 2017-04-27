@@ -25,10 +25,7 @@ namespace FSCruiser.WinForms.DataEntry
     /// </summary>
     public partial class FormDataEntry : FMSC.Controls.CustomForm, IDataEntryView
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        
 
         private IDataEntryPage _previousLayout;
         protected List<IDataEntryPage> _layouts = new List<IDataEntryPage>();

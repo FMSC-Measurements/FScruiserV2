@@ -63,9 +63,9 @@ namespace FSCruiser.WinForms.DataEntry
             _limitingDistanceMI.Enabled = (plotView != null);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void _menuBTN_Click(object sender, EventArgs e)
         {
-            var point = button1.PointToScreen(new System.Drawing.Point(0, button1.Height));
+            var point = _menuBTN.PointToScreen(new System.Drawing.Point(0, _menuBTN.Height));
             contextMenuStrip1.Show(point);
         }
 

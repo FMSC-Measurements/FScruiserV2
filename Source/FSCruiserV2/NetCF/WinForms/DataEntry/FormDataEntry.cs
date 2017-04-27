@@ -12,9 +12,7 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormDataEntry : FMSC.Controls.CustomForm, IDataEntryView
     {
-        public FormDataEntry(IApplicationController controller
-            , ApplicationSettings appSettings
-            , IDataEntryDataService dataService)
+        public FormDataEntry() : base()
         {
             InitializeComponent();
 
@@ -29,6 +27,13 @@ namespace FSCruiser.WinForms.DataEntry
             }
 
             preventSleepTimer = new System.Threading.Timer(CallSystemIdleTimerReset, null, 0, 30 * 1000);
+        }
+
+        public FormDataEntry(IApplicationController controller
+            , ApplicationSettings appSettings
+            , IDataEntryDataService dataService) : this()
+        {
+            
 
             InitializeCommon(controller, appSettings, dataService);
         }
@@ -36,12 +41,6 @@ namespace FSCruiser.WinForms.DataEntry
         void CallSystemIdleTimerReset(object obj)
         {
             Win32.SystemIdleTimerReset();
-        }
-
-        protected FormDataEntry()
-            : base()
-        {
-            InitializeComponent();
         }
 
         protected void OnFocusedLayoutChanged(object sender, EventArgs e)
