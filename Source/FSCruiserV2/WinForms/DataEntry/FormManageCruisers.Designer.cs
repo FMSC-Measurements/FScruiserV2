@@ -53,7 +53,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(240, 51);
+            this.panel1.Size = new System.Drawing.Size(237, 51);
             this.panel1.TabIndex = 1;
             // 
             // _enableCruiserPopupCB
@@ -99,7 +99,7 @@
             this._cruiserListContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this._cruiserListContainer.Location = new System.Drawing.Point(0, 51);
             this._cruiserListContainer.Name = "_cruiserListContainer";
-            this._cruiserListContainer.Size = new System.Drawing.Size(240, 217);
+            this._cruiserListContainer.Size = new System.Drawing.Size(237, 193);
             this._cruiserListContainer.TabIndex = 0;
             // 
             // panel3
@@ -110,14 +110,14 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(240, 25);
+            this.panel3.Size = new System.Drawing.Size(237, 25);
             this.panel3.TabIndex = 0;
             // 
             // _removeItemBTN
             // 
             this._removeItemBTN.BackColor = System.Drawing.Color.Crimson;
             this._removeItemBTN.Dock = System.Windows.Forms.DockStyle.Right;
-            this._removeItemBTN.Location = new System.Drawing.Point(213, 0);
+            this._removeItemBTN.Location = new System.Drawing.Point(210, 0);
             this._removeItemBTN.Name = "_removeItemBTN";
             this._removeItemBTN.Size = new System.Drawing.Size(27, 25);
             this._removeItemBTN.TabIndex = 1;
@@ -138,7 +138,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(240, 268);
+            this.ClientSize = new System.Drawing.Size(237, 244);
             this.Controls.Add(this._cruiserListContainer);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;

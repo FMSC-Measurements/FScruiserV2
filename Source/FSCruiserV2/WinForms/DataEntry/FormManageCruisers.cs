@@ -10,9 +10,8 @@ namespace FSCruiser.WinForms
     {
         public ApplicationSettings Settings { get; set; }
 
-        public FormManageCruisers(ApplicationSettings settings)
+        protected FormManageCruisers()
         {
-            Settings = settings;
             InitializeComponent();
 
 #if NetCF
@@ -23,7 +22,14 @@ namespace FSCruiser.WinForms
                 this.mainMenu1.Dispose();
                 this.mainMenu1 = null;
             }
+#else
+            StartPosition = FormStartPosition.CenterParent;
 #endif
+        }
+
+        public FormManageCruisers(ApplicationSettings settings) : this()
+        {
+            Settings = settings;
         }
 
         protected void AddCruiser()
@@ -93,7 +99,7 @@ namespace FSCruiser.WinForms
             FMSC.Controls.DpiHelper.AdjustControl(btn);
 #endif
 
-            panel.ResumeLayout(false);
+            panel.ResumeLayout(true);
         }
 
         protected override void OnLoad(EventArgs e)
