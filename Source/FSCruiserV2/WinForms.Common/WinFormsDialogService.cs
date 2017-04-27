@@ -26,7 +26,9 @@ namespace FSCruiser.WinForms
 
         public void AskCruiser(FSCruiser.Core.Models.Tree tree)
         {
-            if (ApplicationSettings.Instance.EnableCruiserPopup)
+            var appSettings = ApplicationSettings.Instance;
+            if (appSettings.EnableCruiserPopup
+                && appSettings.Cruisers.Count > 0)
             {
                 if (_cruiserSelectionView == null)
                 {
