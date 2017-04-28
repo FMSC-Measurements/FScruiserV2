@@ -9,11 +9,11 @@ namespace FSCruiser.Core
 {
     public enum BackUpMethod { None = 0, LeaveUnit = 1, TimeInterval = 2 }
 
-    public enum HotKeyAction { None = 0, AddTree, AddPlot, JumpTreeTally, ResequencePlotTrees, UnTally }
-
     [Serializable]
     public class ApplicationSettings
     {
+        enum HotKeyAction { None = 0, AddTree, AddPlot, JumpTreeTally, ResequencePlotTrees, UnTally }
+
         protected const string APP_SETTINGS_PATH = "Settings.xml";
 
         #region static properties
@@ -26,7 +26,7 @@ namespace FSCruiser.Core
             {
                 if (_instance == null)
                 {
-                    Initialize();
+                    Initialize();//TODO remove auto initialization
                 }
                 return _instance;
             }

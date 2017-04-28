@@ -359,7 +359,7 @@ namespace FSCruiser.Core.DataEntry
                     if (tree.CountOrMeasure == "M")
                     {
                         _soundService.SignalMeasureTree();
-                        _dialogService.ShowMessage("Measure Tree");
+                        _dialogService.ShowMessage("Measure Tree# " + tree.TreeNumber);
                     }
                     else if (tree.CountOrMeasure == "I")
                     {
