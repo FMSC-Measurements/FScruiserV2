@@ -324,6 +324,8 @@ namespace FSCruiser.Core.DataEntry
         {
             if (plot == null) { throw new ArgumentNullException("plot"); }
             if (count == null) { throw new ArgumentNullException("count"); }
+
+            bool isSingleStage = Stratum.IsSingleStage;//i.e. FIX or PNT
             Tree tree = null;
 
             var sg = count.SampleGroup;
@@ -333,9 +335,9 @@ namespace FSCruiser.Core.DataEntry
             //    tree.TreeCount = sg.SamplingFrequency;
             //}
             //else
-            if (Stratum.Method == CruiseMethods.FIX
-            || Stratum.Method == CruiseMethods.PNT)
+            if (isSingleStage)
             {
+                //FIX and PNT should always generate a measure tree
                 tree = DataService.CreateNewTreeEntry(plot, count, true);
                 tree.TreeCount = 1;
             }
@@ -351,7 +353,7 @@ namespace FSCruiser.Core.DataEntry
             _soundService.SignalTally();
 
             //tree may be null if user didn't enter kpi
-            if (tree != null)
+            if (tree != null && !isSingleStage)
             {
                 if (tree.CountOrMeasure == "M"
                     || tree.CountOrMeasure == "I")
@@ -365,17 +367,6 @@ namespace FSCruiser.Core.DataEntry
                     {
                         _soundService.SignalInsuranceTree();
                     }
-
-                    //if (_appSettings.EnableCruiserPopup)
-                    //{
-                    //    _dialogService.AskCruiser(tree);
-                    //}
-                    //else
-                    //{
-                    //    var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
-                    //             (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
-                    //    _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
-                    //}
                 }
 
                 tree.TrySave();
@@ -410,20 +401,10 @@ namespace FSCruiser.Core.DataEntry
                 {
                     //because the three p sample selector doesn't select insurance trees for us
                     //we need to select them our selves
-                    if (sampler.IsSelectingITrees)
-                    {
-                        item.IsInsuranceItem = sampler.InsuranceCounter.Next();
-                    }
-                    if (item.IsInsuranceItem)
-                    {
-                        tree = DataService.CreateNewTreeEntry(plot, count, true);
-                        tree.CountOrMeasure = "I";
-                    }
-                    else
-                    {
-                        tree = DataService.CreateNewTreeEntry(plot, count, true);
-                        //tree.CountOrMeasure = "M";
-                    }
+                    bool isInsuranceTree = sampler.IsSelectingITrees && sampler.InsuranceCounter.Next();
+
+                    tree = DataService.CreateNewTreeEntry(plot, count, true);
+                    tree.CountOrMeasure = (isInsuranceTree) ? "I" : "M";
                 }
                 else
                 {
@@ -449,15 +430,10 @@ namespace FSCruiser.Core.DataEntry
             Tree tree;
 
             boolItem item = (sampler != null) ? (boolItem)sampler.NextItem() : (boolItem)null;
-            if (item != null && !item.IsInsuranceItem)
+            if (item != null)
             {
                 tree = DataService.CreateNewTreeEntry(plot, count, true);
-                //tree.CountOrMeasure = "M";
-            }
-            else if (item != null && item.IsInsuranceItem)
-            {
-                tree = DataService.CreateNewTreeEntry(plot, count, true);
-                tree.CountOrMeasure = "I";
+                tree.CountOrMeasure = (item.IsInsuranceItem) ? "I" : "M";
             }
             else
             {
