@@ -359,6 +359,7 @@ namespace FSCruiser.Core.DataEntry
                     if (tree.CountOrMeasure == "M")
                     {
                         _soundService.SignalMeasureTree();
+                        _dialogService.ShowMessage("Measure Tree");
                     }
                     else if (tree.CountOrMeasure == "I")
                     {
@@ -415,26 +416,23 @@ namespace FSCruiser.Core.DataEntry
                     }
                     if (item.IsInsuranceItem)
                     {
-                        _soundService.SignalInsuranceTree();
                         tree = DataService.CreateNewTreeEntry(plot, count, true);
                         tree.CountOrMeasure = "I";
                     }
                     else
                     {
-                        _soundService.SignalMeasureTree();
-                        _dialogService.ShowMessage("Measure Tree");
                         tree = DataService.CreateNewTreeEntry(plot, count, true);
                         //tree.CountOrMeasure = "M";
                     }
                 }
                 else
                 {
-                    tree = DataService.CreateNewTreeEntry(plot, count, true);
-                    //tree.CountOrMeasure = "C";
+                    tree = DataService.CreateNewTreeEntry(plot, count, false);
+                    tree.CountOrMeasure = "C";
                 }
                 tree.KPI = kpi;
             }
-            else
+            else//tree is sure to measure
             {
                 tree = DataService.CreateNewTreeEntry(plot, count, true);
                 tree.STM = "Y";
