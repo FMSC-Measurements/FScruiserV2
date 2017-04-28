@@ -156,13 +156,11 @@ namespace FSCruiser.Core.DataEntry
                 ThreePItem item = (ThreePItem)((ThreePSelecter)sampler).NextItem();
                 if (item != null && kpi > item.KPI)
                 {
-                    if (sampler.IsSelectingITrees)
-                    {
-                        item.IsInsuranceItem = sampler.InsuranceCounter.Next();
-                    }
+                    bool isInsuranceTree = sampler.IsSelectingITrees && sampler.InsuranceCounter.Next();
+
                     tree = DataService.CreateNewTreeEntry(count);
                     tree.KPI = kpi;
-                    tree.CountOrMeasure = (item.IsInsuranceItem) ? "I" : "M";
+                    tree.CountOrMeasure = (isInsuranceTree) ? "I" : "M";
                 }
             }
 
