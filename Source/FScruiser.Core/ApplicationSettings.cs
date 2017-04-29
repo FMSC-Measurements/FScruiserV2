@@ -4,17 +4,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using FSCruiser.Core.Models;
+using System.ComponentModel;
 
 namespace FSCruiser.Core
 {
     public enum BackUpMethod { None = 0, LeaveUnit = 1, TimeInterval = 2 }
 
     [Serializable]
-    public class ApplicationSettings
+    public class ApplicationSettings : INotifyPropertyChanged
     {
-        enum HotKeyAction { None = 0, AddTree, AddPlot, JumpTreeTally, ResequencePlotTrees, UnTally }
+        private enum HotKeyAction
+        { None = 0, AddTree, AddPlot, JumpTreeTally, ResequencePlotTrees, UnTally }
 
         protected const string APP_SETTINGS_PATH = "Settings.xml";
+
+        public event EventHandler CruisersChanged;
+
+        public event Action HotKeysChanged;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #region static properties
 
@@ -108,6 +116,19 @@ namespace FSCruiser.Core
         public BackUpMethod BackUpMethod { get; set; }
 
         #endregion backup settings
+
+        bool _keepDeviceAwake = true;
+
+        [XmlAttribute]
+        public bool KeepDeviceAwake
+        {
+            get { return _keepDeviceAwake; }
+            set
+            {
+                _keepDeviceAwake = value;
+                NotifyPropertyChanged("KeepDeviceAwake");
+            }
+        }
 
         [XmlAttribute]
         public bool EnableCruiserPopup { get; set; }
@@ -333,10 +354,6 @@ namespace FSCruiser.Core
 
         //}
 
-        public event EventHandler CruisersChanged;
-
-        public event Action HotKeysChanged;
-
         public void AddCruiser(string initials)
         {
             if (this.Cruisers == null)
@@ -363,6 +380,16 @@ namespace FSCruiser.Core
             var hotKeyChanged = HotKeysChanged;
             if (hotKeyChanged != null)
             { hotKeyChanged(); }
+        }
+
+        private void NotifyPropertyChanged(string propName)
+        {
+            var propertyChanged = PropertyChanged;
+            if (propertyChanged != null)
+            {
+                var eArgs = new PropertyChangedEventArgs(propName);
+                propertyChanged(this, eArgs);
+            }
         }
 
         #endregion Cruisers
