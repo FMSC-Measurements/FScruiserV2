@@ -39,7 +39,6 @@
             this._bucketValue_LBL.Location = new System.Drawing.Point(0, 0);
             this._bucketValue_LBL.Name = "_bucketValue_LBL";
             this._bucketValue_LBL.Size = new System.Drawing.Size(77, 23);
-            this._bucketValue_LBL.TabIndex = 1;
             this._bucketValue_LBL.Text = "<int>\"";
             this._bucketValue_LBL.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
@@ -49,7 +48,6 @@
             this._tallyCount_LBL.Location = new System.Drawing.Point(0, 23);
             this._tallyCount_LBL.Name = "_tallyCount_LBL";
             this._tallyCount_LBL.Size = new System.Drawing.Size(68, 13);
-            this._tallyCount_LBL.TabIndex = 0;
             this._tallyCount_LBL.Text = "Count: <cnt>";
             this._tallyCount_LBL.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
