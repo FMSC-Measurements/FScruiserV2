@@ -6,11 +6,14 @@ using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
 using FMSC.ORM.EntityModel.Attributes;
 using FMSC.Sampling;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace FSCruiser.Core.Models
 {
     public class PlotStratum : Stratum
     {
+        [XmlIgnore]
         [IgnoreField]
         public bool Is3PPNT
         {
@@ -23,8 +26,10 @@ namespace FSCruiser.Core.Models
         /// <summary>
         /// for 3ppnt
         /// </summary>
+        [XmlIgnore]
         public ThreePSelecter SampleSelecter { get; set; }
 
+        [XmlIgnore]
         [IgnoreField]
         public bool IsSingleStage
         {
@@ -35,7 +40,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        [IgnoreField]
+        [XmlArray]
         public IList<Plot> Plots { get; protected set; }
 
         public virtual Plot MakePlot(CuttingUnit cuttingUnit)

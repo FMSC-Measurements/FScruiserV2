@@ -7,6 +7,7 @@ using FMSC.ORM.Core;
 using FMSC.ORM.EntityModel.Attributes;
 using FScruiser.Core.Services;
 using FMSC.ORM.SQLite;
+using System.Xml.Serialization;
 
 namespace FSCruiser.Core.Models
 {
@@ -46,6 +47,7 @@ namespace FSCruiser.Core.Models
         {
         }
 
+        [XmlIgnore]
         [IgnoreField]
         public new CuttingUnit CuttingUnit
         {
@@ -59,6 +61,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        [XmlIgnore]
         [IgnoreField]
         public new SampleGroup SampleGroup
         {
@@ -73,6 +76,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        [XmlIgnore]
         [IgnoreField]
         public new Stratum Stratum
         {
@@ -100,6 +104,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        [XmlIgnore]
         [IgnoreField]
         public int LogCountActual
         {
@@ -114,6 +119,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        [XmlIgnore]
         [IgnoreField]
         public double LogCountDesired
         {
@@ -123,6 +129,7 @@ namespace FSCruiser.Core.Models
 
         bool _logCountDirty;
 
+        [XmlIgnore]
         [IgnoreField]
         public bool LogCountDirty
         {
@@ -137,6 +144,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        [XmlIgnore]
         [IgnoreField]
         public string LogLevelDiscription
         {

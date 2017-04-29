@@ -8,6 +8,7 @@ using CruiseDAL.DataObjects;
 using FMSC.ORM.SQLite;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using System.Xml.Serialization;
 
 namespace FScruiser.Core.Services
 {
@@ -650,5 +651,22 @@ namespace FScruiser.Core.Services
         }
 
         #endregion utility
+
+        public void Dump(string path)
+        {
+            using (var writer = new System.IO.StreamWriter(path))
+            {
+                if (_nonPlotTrees != null)
+                {
+                    var treeSerializer = new XmlSerializer(typeof(Tree));
+                    treeSerializer.Serialize(writer, _nonPlotTrees);
+                }
+                if (PlotStrata != null)
+                {
+                    var plotStrataSerializer = new XmlSerializer(typeof(PlotStratum), new Type[]{typeof(Plot), typeof(Tree)});
+                    plotStrataSerializer.Serialize(writer, PlotStrata);
+                }
+            }
+        }
     }
 }
