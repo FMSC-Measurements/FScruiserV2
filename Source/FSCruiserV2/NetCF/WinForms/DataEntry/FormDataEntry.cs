@@ -25,17 +25,31 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 this.WindowState = FormWindowState.Maximized;
             }
-
-            preventSleepTimer = new System.Threading.Timer(CallSystemIdleTimerReset, null, 0, 30 * 1000);
         }
 
         public FormDataEntry(IApplicationController controller
             , ApplicationSettings appSettings
             , IDataEntryDataService dataService) : this()
         {
-            
-
             InitializeCommon(controller, appSettings, dataService);
+        }
+
+        void RefreshPreventSleepTimer()
+        {
+            if (AppSettings != null 
+                && AppSettings.KeepDeviceAwake 
+                && preventSleepTimer == null)
+            {
+                preventSleepTimer = new System.Threading.Timer(CallSystemIdleTimerReset, null, 0, 30 * 1000);
+            }
+            else
+            {
+                if (preventSleepTimer != null)
+                {
+                    preventSleepTimer.Dispose();
+                    preventSleepTimer = null;
+                }
+            }
         }
 
         void CallSystemIdleTimerReset(object obj)

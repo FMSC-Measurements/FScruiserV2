@@ -242,7 +242,11 @@ namespace FSCruiser.WinForms.DataEntry
             if (_appSettings != null)
             {
                 _appSettings.HotKeysChanged += _appSettings_HotKeysChanged;
+                _appSettings.PropertyChanged += _appSettings_PropertyChanged;
             }
+#if NetCF
+            RefreshPreventSleepTimer();
+#endif 
         }
 
         private void OnAppSettingChanging()
@@ -251,6 +255,16 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _appSettings.HotKeysChanged -= _appSettings_HotKeysChanged;
             }
+        }
+
+        void _appSettings_PropertyChanged(object sender, PropertyChangedEventArgs ea)
+        {
+#if NetCF
+            if (ea.PropertyName == "KeepDeviceAwake")
+            {
+                RefreshPreventSleepTimer();
+            }
+#endif
         }
 
         #endregion appSettings
