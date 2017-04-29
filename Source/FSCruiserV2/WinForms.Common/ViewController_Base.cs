@@ -18,7 +18,6 @@ namespace FSCruiser.WinForms.Common
         protected object _dataEntrySyncLock = new object();
         private FormMain _main;
         private Form3PNumPad _threePNumPad;
-        protected FormDataEntry _dataEntryView;
 
         private int _showWait = 0;
         private bool _enableLogGrading = true;
@@ -92,37 +91,78 @@ namespace FSCruiser.WinForms.Common
 
         public abstract bool ShowOpenCruiseFileDialog(out string fileName);
 
+        protected void ShowDataEntry(IDataEntryDataService dataService)
+        {
+            try
+            {
+                using (var dataEntryView = new FormDataEntry(this.ApplicationController
+                    , ApplicationSettings.Instance
+                    , dataService))
+                {
+#if !NetCF
+                        _dataEntryView.Owner = MainView;
+#endif
+                    dataEntryView.ShowDialog();
+                }
+            }
+            catch (UserFacingException e)
+            {
+                var exType = e.GetType();
+
+                MessageBox.Show(e.Message, exType.Name);
+            }
+        }
+
         public void ShowDataEntry(CuttingUnit unit)
         {
             lock (_dataEntrySyncLock)
             {
+                IDataEntryDataService dataService;
                 try
                 {
-                    var dataService = new IDataEntryDataService(unit.Code, ApplicationController.DataStore);
-                    using (_dataEntryView = new FormDataEntry(this.ApplicationController
-                        , ApplicationSettings.Instance
-                        , dataService))
-                    {
-#if !NetCF
-                        _dataEntryView.Owner = MainView;
-#endif
-                        _dataEntryView.ShowDialog();
-                    }
+                    dataService = new IDataEntryDataService(unit.Code, ApplicationController.DataStore);
+                }
+                catch (CruiseConfigurationException e)
+                {
+                    MessageBox.Show(e.Message, e.GetType().Name);
+                    return;
                 }
                 catch (UserFacingException e)
                 {
                     var exType = e.GetType();
-
                     MessageBox.Show(e.Message, exType.Name);
+                    return;
                 }
-                catch (Exception e)
+
+                try
                 {
-                    ApplicationController.DataStore.LogMessage(e.Message, "E");
+                    ShowDataEntry(dataService);
                 }
-                finally
+                catch
                 {
-                    _dataEntryView = null;
+                    dataService.TrySaveCounts();
+                    dataService.SaveFieldData();
+                    if (dataService.PlotStrata != null)
+                    {
+                        foreach (var st in dataService.PlotStrata)
+                        {
+                            st.TrySaveCounts();
+                            if (st.Plots == null) { continue; }
+                            foreach(var plot in st.Plots)
+                            {
+                                dataService.TrySaveTrees(plot);
+                            }
+                        }
+                    }
                 }
+                //catch
+                //{
+                //    var timeStamp = DateTime.Now.ToString("HH_mm");
+                //    var dumFilePath = System.IO.Path.GetFullPath("%localAppData%\\FScruiserDump" + timeStamp + ".xml");
+                //    MessageBox.Show("FScruiser encountered a unexpected problem\r\n"
+                //        + "Dumping tree data to " + dumFilePath);
+                //    dataService.Dump(dumFilePath);
+                //}
             }
         }
 
