@@ -127,6 +127,9 @@
     <Compile Include="WinForms.Common\Controls\HotKeySelectControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="WinForms.Common\DataEntry\FormLimitingDistance.common.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="WinForms.Common\FixCNTForm.cs">
       <SubType>Form</SubType>
     </Compile>
