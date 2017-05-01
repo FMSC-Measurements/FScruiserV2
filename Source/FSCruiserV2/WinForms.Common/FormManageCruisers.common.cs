@@ -1,18 +1,20 @@
-﻿using System;
-using System.Windows.Forms;
-using FSCruiser.Core;
+﻿using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
 
 namespace FSCruiser.WinForms
 {
-    public partial class FormManageCruisers : Form
+    public partial class FormManageCruisers
     {
         public ApplicationSettings Settings { get; set; }
 
-        public FormManageCruisers(ApplicationSettings appSettings)
+        protected FormManageCruisers()
         {
-            Settings = appSettings;
             InitializeComponent();
 
 #if NetCF
@@ -23,33 +25,24 @@ namespace FSCruiser.WinForms
                 this.mainMenu1.Dispose();
                 this.mainMenu1 = null;
             }
+#else
+            StartPosition = FormStartPosition.CenterParent;
 #endif
         }
 
-        protected override void OnLoad(EventArgs e)
+        public FormManageCruisers(ApplicationSettings settings) : this()
         {
-            this.UpdateCruiserList();
-            this._enableCruiserPopupCB.Checked = Settings.EnableCruiserPopup;
-            base.OnLoad(e);
+            Settings = settings;
         }
 
-        protected override void  OnClosing(CancelEventArgs e)
+        protected void AddCruiser()
         {
-            base.OnClosing(e);
-            try
+            if (!String.IsNullOrEmpty(this._initialsTB.Text))
             {
-                Settings.Save();
+                Settings.AddCruiser(this._initialsTB.Text);
+                this.UpdateCruiserList();
+                this._initialsTB.Text = String.Empty;
             }
-            catch (Exception)
-            {
-                MessageBox.Show("Unable to save settings");
-            }
-        }
-
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-            Settings.NotifyCruisersChanged();
         }
 
         private void UpdateCruiserList()
@@ -107,24 +100,42 @@ namespace FSCruiser.WinForms
             FMSC.Controls.DpiHelper.AdjustControl(panel);
             FMSC.Controls.DpiHelper.AdjustControl(lbl);
             FMSC.Controls.DpiHelper.AdjustControl(btn);
-#endif
 
             panel.ResumeLayout(false);
+#else
+            panel.ResumeLayout(true);
+#endif
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            this.UpdateCruiserList();
+            this._enableCruiserPopupCB.Checked = Settings.EnableCruiserPopup;
+            base.OnLoad(e);
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            try
+            {
+                Settings.Save();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Unable to save settings");
+            }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            Settings.NotifyCruisersChanged();
         }
 
         private void _addBTN_Click(object sender, EventArgs e)
         {
             AddCruiser();
-        }
-
-        protected void AddCruiser()
-        {
-            if (!String.IsNullOrEmpty(this._initialsTB.Text))
-            {
-                Settings.AddCruiser(this._initialsTB.Text);
-                this.UpdateCruiserList();
-                this._initialsTB.Text = String.Empty;
-            }
         }
 
         private void _removeItemBTN_Click(object sender, EventArgs e)
@@ -138,15 +149,6 @@ namespace FSCruiser.WinForms
         private void _enableCruiserPopupCB_CheckStateChanged(object sender, EventArgs e)
         {
             Settings.EnableCruiserPopup = this._enableCruiserPopupCB.Checked;
-        }
-
-        private void _initialsTB_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == '\r')
-            {
-                this.AddCruiser();
-                e.Handled = true;
-            }
         }
     }
 }
