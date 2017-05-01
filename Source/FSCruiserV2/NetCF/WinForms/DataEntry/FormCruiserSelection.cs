@@ -9,5 +9,6 @@ namespace FSCruiser.WinForms
 {
     public partial class FormCruiserSelection : Form, ICruiserSelectionView
     {
+
     }
 }

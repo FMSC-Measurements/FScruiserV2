@@ -34,10 +34,11 @@ namespace FSCruiser.WinForms
                 {
                     _cruiserSelectionView = new FormCruiserSelection();
                 }
+                _cruiserSelectionView.Tree = tree;
 #if NetCF
-                _cruiserSelectionView.ShowDialog(tree);
+                _cruiserSelectionView.ShowDialog();
 #else
-                _cruiserSelectionView.ShowDialog(Form.ActiveForm, tree);
+                _cruiserSelectionView.ShowDialog(Form.ActiveForm);
 #endif
             }
         }

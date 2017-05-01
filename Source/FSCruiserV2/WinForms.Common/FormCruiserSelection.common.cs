@@ -1,28 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using FSCruiser.Core;
+﻿using FSCruiser.Core;
 using FSCruiser.Core.Models;
-using FSCruiser.Core.ViewInterfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace FSCruiser.WinForms
 {
-    public partial class FormCruiserSelection : Form, ICruiserSelectionView
+    public partial class FormCruiserSelection
     {
-        private FormCruiserSelectionLogic _logicController;
         KeysConverter _keyConverter = new KeysConverter();
 
-        public FormCruiserSelection()
-        {
-            _logicController = new FormCruiserSelectionLogic(ApplicationSettings.Instance, this);
-            _logicController.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(_logicController_PropertyChanged);
+        #region ViewModel
 
-            this.KeyPreview = true;
-            InitializeComponent();
-            UpdateCruiserList();
+        private FormCruiserSelectionLogic _viewModel;
+
+        public FormCruiserSelectionLogic ViewModel
+        {
+            get
+            {
+                return _viewModel;
+            }
+            set
+            {
+                OnViewModelChanging();
+                _viewModel = value;
+                OnViewModelChanged();
+            }
         }
 
-        void _logicController_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void OnViewModelChanging()
+        {
+            var vm = ViewModel;
+            if (vm != null)
+            {
+                vm.PropertyChanged -= ViewModel_PropertyChanged;
+            }
+        }
+
+        private void OnViewModelChanged()
+        {
+            var vm = ViewModel;
+            if (vm != null)
+            {
+                vm.PropertyChanged += ViewModel_PropertyChanged;
+            }
+        }
+
+        void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -39,9 +66,30 @@ namespace FSCruiser.WinForms
             }
         }
 
+        #endregion ViewModel
+
+        public Tree Tree
+        {
+            get { return ViewModel.Tree; }
+            set { ViewModel.Tree = value; }
+        }
+
+        public FormCruiserSelection()
+        {
+            ViewModel = new FormCruiserSelectionLogic(ApplicationSettings.Instance, this);
+
+            InitializeComponent();
+
+#if !NetCF
+            StartPosition = FormStartPosition.CenterParent;
+#endif
+            KeyPreview = true;
+            UpdateCruiserList();
+        }
+
         void UpdateTree()
         {
-            var tree = _logicController.Tree;
+            var tree = ViewModel.Tree;
             if (tree != null)
             {
                 _treeNumLBL.Text = "Tree #:" + tree.TreeNumber;
@@ -55,7 +103,7 @@ namespace FSCruiser.WinForms
                 _sampleGroupLBL.Text = String.Empty;
             }
 
-            _cmLBL.Text = _logicController.TreeCountMeasure;
+            _cmLBL.Text = ViewModel.TreeCountMeasure;
             _cmLBL.Visible = !string.IsNullOrEmpty(_cmLBL.Text);
         }
 
@@ -63,7 +111,7 @@ namespace FSCruiser.WinForms
         {
             this._crusierSelectPanel.Controls.Clear();
 
-            foreach (var c in _logicController.Cruisers)
+            foreach (var c in ViewModel.Cruisers)
             {
                 Button b = new Button();
                 b.Dock = DockStyle.Top;
@@ -89,28 +137,14 @@ namespace FSCruiser.WinForms
         {
             Button b = (Button)sender;
             Cruiser cruiser = (Cruiser)b.Tag;
-            _logicController.HandleCruiserSelected(cruiser);
-        }
-
-        public void ShowDialog(Tree tree)
-        {
-            _logicController.Tree = tree;
-
-            ShowDialog();
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
+            ViewModel.HandleCruiserSelected(cruiser);
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
             var key = _keyConverter.ConvertToString(e.KeyCode);
-            _logicController.HandleKeyDown(key);
+            ViewModel.HandleKeyDown(key);
         }
-
-        
     }
 }

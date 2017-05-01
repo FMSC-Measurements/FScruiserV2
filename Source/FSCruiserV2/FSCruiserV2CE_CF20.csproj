@@ -131,6 +131,9 @@
     <Compile Include="WinForms.Common\DataEntry\ControlTreeDataGrid.common.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="WinForms.Common\FormCruiserSelection.common.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="WinForms.Common\DataEntry\FormLimitingDistance.common.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -165,10 +168,10 @@
     <Compile Include="WinForms.Common\FixCntTallyRow.Designer.cs">
       <DependentUpon>FixCntTallyRow.cs</DependentUpon>
     </Compile>
-    <Compile Include="WinForms.Common\FormCruiserSelection.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormCruiserSelection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WinForms.Common\FormCruiserSelection.Designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormCruiserSelection.Designer.cs">
       <DependentUpon>FormCruiserSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms.Common\FormDataEntryBase.cs">
@@ -351,7 +354,7 @@
       <DependentUpon>FormTallySetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\FormCruiserSelection.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormCruiserSelection.resx">
       <DependentUpon>FormCruiserSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
