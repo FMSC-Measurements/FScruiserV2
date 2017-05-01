@@ -22,6 +22,8 @@ namespace FSCruiser.Core.ViewInterfaces
         void MoveLastTree();
 
         Tree UserAddTree();
+
+        void ShowLogs(Tree tree);
     }
 
     public static class ITreeViewExtentions
