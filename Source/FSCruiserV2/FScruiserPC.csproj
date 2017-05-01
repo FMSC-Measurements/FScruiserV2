@@ -130,9 +130,6 @@
     <Compile Include="WinForms.Common\DataEntry\ControlTreeDataGrid.common.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="WinForms.Common\DataEntry\FormCruiserSelection.common.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="WinForms.Common\DataEntry\FormLimitingDistance.common.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,6 +156,9 @@
     </Compile>
     <Compile Include="WinForms.Common\FixCntTallyRow.Designer.cs">
       <DependentUpon>FixCntTallyRow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms.Common\FormCruiserSelection.common.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinForms.Common\FormDataEntryBase.cs">
       <SubType>Form</SubType>
