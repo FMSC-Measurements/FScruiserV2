@@ -233,13 +233,13 @@
     <Compile Include="WinForms\FormManageCruisers.Designer.cs">
       <DependentUpon>FormManageCruisers.cs</DependentUpon>
     </Compile>
-    <Compile Include="WinForms\DataEntry\SampleGroupRow.cs">
+    <Compile Include="WinForms\Controls\SampleGroupRow.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="WinForms\DataEntry\SampleGroupRow.Designer.cs">
+    <Compile Include="WinForms\Controls\SampleGroupRow.Designer.cs">
       <DependentUpon>SampleGroupRow.cs</DependentUpon>
     </Compile>
-    <Compile Include="WinForms\DataEntry\PlotTallyRow.cs">
+    <Compile Include="WinForms\Controls\PlotTallyRow.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="WinForms\DataGridExtentions.cs" />
@@ -343,11 +343,11 @@
     <EmbeddedResource Include="WinForms\FormManageCruisers.resx">
       <DependentUpon>FormManageCruisers.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\SampleGroupRow.resx">
+    <EmbeddedResource Include="WinForms\Controls\SampleGroupRow.resx">
       <DependentUpon>SampleGroupRow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\PlotTallyRow.resx">
+    <EmbeddedResource Include="WinForms\Controls\PlotTallyRow.resx">
       <DependentUpon>PlotTallyRow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
