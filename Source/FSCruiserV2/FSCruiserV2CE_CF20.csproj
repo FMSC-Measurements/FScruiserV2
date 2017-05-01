@@ -128,6 +128,9 @@
     <Compile Include="NetCF\WinForms\DataEntry\FormDataEntry.Designer.cs">
       <DependentUpon>FormDataEntry.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinForms.Common\DataEntry\ControlTreeDataGrid.common.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WinForms.Common\DataEntry\FormLimitingDistance.common.cs">
       <SubType>Form</SubType>
     </Compile>

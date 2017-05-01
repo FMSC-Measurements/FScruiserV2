@@ -12,11 +12,10 @@ using FSCruiser.WinForms.Controls;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public class ControlTreeDataGrid : CustomDataGridView, ITreeView
+    public partial class ControlTreeDataGrid : CustomDataGridView, ITreeView
     {
-        bool _userCanAddTrees;
-        bool _viewLoading = true;
         BindingSource _BS_trees;
+
         DataGridViewComboBoxColumn _speciesColumn;
         DataGridViewComboBoxColumn _sgColumn;
         DataGridViewComboBoxColumn _stratumColumn;
@@ -28,99 +27,99 @@ namespace FSCruiser.WinForms.DataEntry
         ContextMenuStrip _contexMenu;
         ToolStripMenuItem _logToolStripMenuItem;
 
-        #region Properties
+        //#region Properties
 
-        public FormDataEntryLogic DataEntryController { get; set; }
+        //public FormDataEntryLogic DataEntryController { get; set; }
 
-        public bool ViewLoading { get { return _viewLoading; } }
+        //public bool ViewLoading { get { return _viewLoading; } }
 
-        public ICollection<Tree> Trees
-        {
-            get
-            {
-                return DataService.NonPlotTrees;
-            }
-        }
+        //public ICollection<Tree> Trees
+        //{
+        //    get
+        //    {
+        //        return DataService.NonPlotTrees;
+        //    }
+        //}
 
-        #region DataService
+        //#region DataService
 
-        IDataEntryDataService _dataService;
+        //IDataEntryDataService _dataService;
 
-        IDataEntryDataService DataService
-        {
-            get { return _dataService; }
-            set
-            {
-                OnDataServiceChanging();
-                _dataService = value;
-                OnDataServiceChanged();
-            }
-        }
+        //IDataEntryDataService DataService
+        //{
+        //    get { return _dataService; }
+        //    set
+        //    {
+        //        OnDataServiceChanging();
+        //        _dataService = value;
+        //        OnDataServiceChanged();
+        //    }
+        //}
 
-        void OnDataServiceChanged()
-        {
-            if (_dataService != null)
-            {
-                _dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
-            }
-        }
+        //void OnDataServiceChanged()
+        //{
+        //    if (_dataService != null)
+        //    {
+        //        _dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
+        //    }
+        //}
 
-        void OnDataServiceChanging()
-        {
-            if (_dataService != null)
-            {
-                _dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
-            }
-        }
+        //void OnDataServiceChanging()
+        //{
+        //    if (_dataService != null)
+        //    {
+        //        _dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
+        //    }
+        //}
 
-        void HandleEnableLogGradingChanged(object sender, EventArgs e)
-        {
-            if (_logsColumn != null)
-            {
-                var logGradingEnabled = DataService.EnableLogGrading;
-                _logsColumn.Visible = logGradingEnabled;
+        //void HandleEnableLogGradingChanged(object sender, EventArgs e)
+        //{
+        //    if (_logsColumn != null)
+        //    {
+        //        var logGradingEnabled = DataService.EnableLogGrading;
+        //        _logsColumn.Visible = logGradingEnabled;
 
-                _logToolStripMenuItem.Text = logGradingEnabled ?
-                "Disable Log Grading" : "Enable Log Grading";
-            }
-        }
+        //        _logToolStripMenuItem.Text = logGradingEnabled ?
+        //        "Disable Log Grading" : "Enable Log Grading";
+        //    }
+        //}
 
-        #endregion DataService
+        //#endregion DataService
 
-        #region AppSettings
+        //#region AppSettings
 
-        private ApplicationSettings _appSettings;
+        //private ApplicationSettings _appSettings;
 
-        public ApplicationSettings AppSettings
-        {
-            get { return _appSettings; }
-            set
-            {
-                OnAppSettingsChanging();
-                _appSettings = value;
-                OnAppSettingsChanged();
-            }
-        }
+        //public ApplicationSettings AppSettings
+        //{
+        //    get { return _appSettings; }
+        //    set
+        //    {
+        //        OnAppSettingsChanging();
+        //        _appSettings = value;
+        //        OnAppSettingsChanged();
+        //    }
+        //}
 
-        private void OnAppSettingsChanging()
-        {
-            if (_appSettings != null)
-            {
-                _appSettings.CruisersChanged -= Settings_CruisersChanged;
-            }
-        }
+        //private void OnAppSettingsChanging()
+        //{
+        //    if (_appSettings != null)
+        //    {
+        //        _appSettings.CruisersChanged -= Settings_CruisersChanged;
+        //    }
+        //}
 
-        private void OnAppSettingsChanged()
-        {
-            if (_appSettings != null)
-            {
-                _appSettings.CruisersChanged += Settings_CruisersChanged;
-            }
-        }
+        //private void OnAppSettingsChanged()
+        //{
+        //    if (_appSettings != null)
+        //    {
+        //        _appSettings.CruisersChanged += Settings_CruisersChanged;
+        //    }
+        //}
 
-        #endregion AppSettings
+        //#endregion AppSettings
 
-        #endregion Properties
+        //#endregion Properties
 
         ControlTreeDataGrid()
         {
@@ -220,19 +219,7 @@ namespace FSCruiser.WinForms.DataEntry
                 var curTree = Trees.ElementAt(e.RowIndex) as Tree;
                 if (curTree != null)
                 {
-                    if (curTree.TrySave())
-                    {
-                        var dataService = DataService.MakeLogDataService(curTree);
-                        using (var view = new FormLogs(dataService))
-                        {
-                            view.ShowDialog(this);
-                        }
-                    }
-                    else
-                    {
-                        DialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
-                            , null);
-                    }
+                    ShowLogs(curTree);
                 }
             }
         }
@@ -398,108 +385,6 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public bool UserCanAddTrees
-        {
-            get
-            {
-                return _userCanAddTrees;
-                //return this.AllowUserToAddRows;
-            }
-            set
-            {
-                _userCanAddTrees = value;
-                //this.AllowUserToAddRows = value;
-            }
-        }
-
-        public bool PreviewKeypress(string keyStr)
-        {
-            if (string.IsNullOrWhiteSpace(keyStr)) { return false; }
-
-            var settings = ApplicationSettings.Instance;
-
-            if (keyStr == settings.JumpTreeTallyKeyStr)
-            {
-                DataEntryController.View.GoToTallyPage();
-                return true;
-            }
-            else if (keyStr == settings.AddTreeKeyStr)
-            {
-                return UserAddTree() != null;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public void HandleLoad()
-        {
-            _BS_trees.DataSource = DataService.NonPlotTrees;
-
-            _viewLoading = false;
-        }
-
-        void Settings_CruisersChanged(object sender, EventArgs e)
-        {
-            if (_initialsColoumn != null)
-            {
-                _initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
-            }
-        }
-
-        public void DeleteSelectedTree()
-        {
-            var curTree = _BS_trees.Current as Tree;
-            if (curTree == null)
-            {
-                MessageBox.Show("No Tree Selected");
-            }
-            else
-            {
-                if (DialogResult.Yes == MessageBox.Show("Delete Tree #" + curTree.TreeNumber.ToString() + "?",
-                    "Delete Tree?",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button2))
-                {
-                    DataService.DeleteTree(curTree);
-                }
-            }
-        }
-
-        public new void EndEdit()
-        {
-            base.EndEdit();
-        }
-
-        public void MoveLastTree()
-        {
-            _BS_trees.MoveLast();
-        }
-
-        public void MoveHomeField()
-        {
-            MoveFirstEmptyCell();
-        }
-
-        public Tree UserAddTree()
-        {
-            if (_viewLoading) { return null; }
-            EndEdit();
-            var newTree = DataService.UserAddTree();
-            if (newTree != null)
-            {
-                MoveLastTree();
-                MoveHomeField();
-            }
-            return newTree;
-        }
-
-        public void NotifyEnter()
-        {
-        }
-
         #endregion ITreeView Members
 
         void logToolStripMenuItem_Click(object sender, EventArgs e)
@@ -521,6 +406,7 @@ namespace FSCruiser.WinForms.DataEntry
                 }
 
                 AppSettings = null;
+                DataService = null;
             }
             base.Dispose(disposing);
         }
