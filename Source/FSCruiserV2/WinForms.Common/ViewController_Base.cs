@@ -100,7 +100,7 @@ namespace FSCruiser.WinForms.Common
                     , dataService))
                 {
 #if !NetCF
-                        _dataEntryView.Owner = MainView;
+                    dataEntryView.Owner = MainView;
 #endif
                     dataEntryView.ShowDialog();
                 }
@@ -148,7 +148,7 @@ namespace FSCruiser.WinForms.Common
                         {
                             st.TrySaveCounts();
                             if (st.Plots == null) { continue; }
-                            foreach(var plot in st.Plots)
+                            foreach (var plot in st.Plots)
                             {
                                 dataService.TrySaveTrees(plot);
                             }
@@ -171,33 +171,6 @@ namespace FSCruiser.WinForms.Common
         //    this.NumPadDialog.ShowDialog(min, max, initialValue, acceptNullInput);
         //    return this.NumPadDialog.UserEnteredValue;
         //}
-
-        public bool ShowPlotInfo(IDataEntryDataService dataService, Plot plot, PlotStratum stratum, bool isNewPlot)
-        {
-            System.Diagnostics.Debug.Assert(plot != null);
-            System.Diagnostics.Debug.Assert(stratum != null);
-
-            if (stratum.Is3PPNT && isNewPlot)
-            {
-                using (var view = new Form3PPNTPlotInfo(dataService))
-                {
-#if !NetCF
-                    view.Owner = this._dataEntryView;
-#endif
-                    return view.ShowDialog(plot, stratum, isNewPlot) == DialogResult.OK;
-                }
-            }
-            else
-            {
-                using (var view = new FormPlotInfo())
-                {
-#if !NetCF
-                    view.Owner = this._dataEntryView;
-#endif
-                    return view.ShowDialog(plot, stratum, isNewPlot) == DialogResult.OK;
-                }
-            }
-        }
 
         /// <summary>
         /// </summary>

@@ -161,6 +161,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinForms.Common\ITallyButton.cs" />
+    <Compile Include="WinForms.Common\DataEntry\LayoutPlot.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="WinForms.Common\SpeciesRow.cs">
       <SubType>Component</SubType>
     </Compile>

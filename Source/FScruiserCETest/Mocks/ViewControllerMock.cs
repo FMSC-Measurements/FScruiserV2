@@ -86,11 +86,6 @@ namespace FSCruiserV2.Test.Mocks
             throw new NotImplementedException();
         }
 
-        public bool ShowPlotInfo(IDataEntryDataService dataService, Plot plotInfo, PlotStratum stratum, bool allowEdit)
-        {
-            throw new NotImplementedException();
-        }
-
         public void ShowTallySettings(CountTree count)
         {
             throw new NotImplementedException();

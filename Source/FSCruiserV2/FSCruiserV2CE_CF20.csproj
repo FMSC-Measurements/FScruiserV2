@@ -128,6 +128,9 @@
     <Compile Include="NetCF\WinForms\DataEntry\FormDataEntry.Designer.cs">
       <DependentUpon>FormDataEntry.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinForms.Common\DataEntry\LayoutPlot.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="WinForms.Common\FormSettings.cs">
       <SubType>Form</SubType>
     </Compile>

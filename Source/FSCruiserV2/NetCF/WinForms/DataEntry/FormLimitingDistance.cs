@@ -69,6 +69,29 @@ namespace FSCruiser.WinForms.DataEntry
             _calculator.BAForFPSize = bafOrFPS;
         }
 
+        Plot _plot;
+
+        public Plot Plot
+        {
+            get { return _plot; }
+            set
+            {
+                _plot = value;
+                OnPlotChanged();
+            }
+        }
+
+        private void OnPlotChanged()
+        {
+            if (_plot != null)
+            {
+                var stratum = _plot.Stratum;
+
+                _calculator.IsVariableRadius = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS, stratum.Method) > -1;
+                _calculator.BAForFPSize = (_calculator.IsVariableRadius) ? stratum.BasalAreaFactor : stratum.FixedPlotSize;
+            }
+        }
+
         public string Report
         {
             get

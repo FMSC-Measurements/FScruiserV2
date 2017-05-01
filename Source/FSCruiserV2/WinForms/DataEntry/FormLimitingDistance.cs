@@ -9,6 +9,29 @@ namespace FSCruiser.WinForms.DataEntry
     {
         LimitingDistanceCalculator _calculator;
 
+        Plot _plot;
+
+        public Plot Plot
+        {
+            get { return _plot; }
+            set
+            {
+                _plot = value;
+                OnPlotChanged();
+            }
+        }
+
+        private void OnPlotChanged()
+        {
+            if (_plot != null)
+            {
+                var stratum = _plot.Stratum;
+
+                _calculator.IsVariableRadius = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS, stratum.Method) > -1;
+                _calculator.BAForFPSize = (_calculator.IsVariableRadius) ? stratum.BasalAreaFactor : stratum.FixedPlotSize;
+            }
+        }
+
         public FormLimitingDistance()
         {
             InitializeComponent();
@@ -48,16 +71,6 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 return _calculator.GenerateReport();
             }
-        }
-
-        public DialogResult ShowDialog(IWin32Window owner, Plot plot)
-        {
-            var stratum = plot.Stratum;
-
-            _calculator.IsVariableRadius = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.VARIABLE_RADIUS_METHODS, stratum.Method) > -1;
-            _calculator.BAForFPSize = (_calculator.IsVariableRadius) ? stratum.BasalAreaFactor : stratum.FixedPlotSize;
-
-            return ShowDialog(owner);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
