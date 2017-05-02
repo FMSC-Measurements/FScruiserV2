@@ -157,6 +157,9 @@
     <Compile Include="WinForms.Common\DataEntry\Controls\FixCntTallyRow.Designer.cs">
       <DependentUpon>FixCntTallyRow.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinForms.Common\DataEntry\LayoutTreeBased.common.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="WinForms.Common\DataEntry\TreeBasedTallyView_Base.cs">
       <SubType>UserControl</SubType>
     </Compile>

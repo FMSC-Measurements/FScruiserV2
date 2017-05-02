@@ -6,6 +6,7 @@ using CruiseDAL.DataObjects;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.Workers;
 using FScruiser.Core.Services;
+using System.Diagnostics;
 
 namespace FSCruiser.Core
 {
@@ -35,8 +36,9 @@ namespace FSCruiser.Core
             {
                 ApplicationSettings.Initialize();
             }
-            catch
+            catch(Exception e)
             {
+                Debug.WriteLine(e.Message);
                 DialogService.Instance.ShowMessage("Unable to load applications settings");
                 ApplicationSettings.Instance = new ApplicationSettings();
             }
@@ -275,9 +277,9 @@ namespace FSCruiser.Core
             }
         }
 
-        public void OnLeavingCurrentUnit(System.ComponentModel.CancelEventArgs e)
+        public void OnLeavingCurrentUnit()
         {
-            if (!e.Cancel && Settings.BackUpMethod == BackUpMethod.LeaveUnit)
+            if (Settings.BackUpMethod == BackUpMethod.LeaveUnit)
             {
                 this.PerformBackup(true);
             }

@@ -313,31 +313,11 @@ namespace FSCruiser.Core.DataEntry
                     this.View.GoToPageIndex(viewIndex);
                     return;
                 }
-
-                //save all the plot views, this will save all trees and plots in them
-                foreach (var view in View.Layouts.OfType<IPlotLayout>())
-                {
-                    view.ViewLogicController.Save();
-                }
-
-                if (!DataService.TrySaveCounts())
-                {
-                    e.Cancel = true;
-                    _dialogService.ShowMessage("Something went wrong while saving the tally count for this unit", null);
-                }
-
-                if (!DataService.SaveFieldData())
-                {
-                    e.Cancel = true;
-                    _dialogService.ShowMessage("Something went wrong saving the data for this unit, check trees for errors and try again", null);
-                }
             }
             finally
             {
                 ViewController.HideWait();
             }
-
-            this.Controller.OnLeavingCurrentUnit(e);
         }
 
         /// <summary>

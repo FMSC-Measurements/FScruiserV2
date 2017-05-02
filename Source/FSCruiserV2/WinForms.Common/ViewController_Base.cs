@@ -114,10 +114,32 @@ namespace FSCruiser.WinForms.Common
             }
             finally
             {
-                dataService.SaveNonPlotData();
-                dataService.SavePlotData();
+                SaveData(dataService);
+            }
+        }
 
-                ApplicationController.OnLeavingCurrentUnit(null);
+        void SaveData(IDataEntryDataService dataService)
+        {
+            try
+            {
+                Exception ex;
+
+                ex = dataService.SaveNonPlotData();
+                ex = dataService.SavePlotData() ?? ex;
+                if (ex != null)
+                {
+                    throw ex;
+                }
+
+                ApplicationController.OnLeavingCurrentUnit();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.GetType().Name + " " + ex.Message, "");
+                if (DialogService.AskYesNo("Relaunch data entry?", string.Empty))
+                {
+                    ShowDataEntry(dataService);
+                }
             }
         }
 
@@ -148,11 +170,12 @@ namespace FSCruiser.WinForms.Common
                 }
                 catch
                 {
-                    var timeStamp = DateTime.Now.ToString("HH_mm");
-                    var dumFilePath = System.IO.Path.GetFullPath("%localAppData%\\FScruiserDump" + timeStamp + ".xml");
-                    MessageBox.Show("FScruiser encountered a unexpected problem\r\n"
-                        + "Dumping tree data to " + dumFilePath);
-                    dataService.Dump(dumFilePath);
+                    //var timeStamp = DateTime.Now.ToString("HH_mm");
+
+                    //var dumFilePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "FScruiserDump" + timeStamp + ".xml");
+                    //MessageBox.Show("FScruiser encountered a unexpected problem\r\n"
+                    //    + "Dumping tree data to " + dumFilePath);
+                    //dataService.Dump(dumFilePath);
                 }
             }
         }

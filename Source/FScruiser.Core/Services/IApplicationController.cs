@@ -31,7 +31,7 @@ namespace FSCruiser.Core
 
         void HandleNonCriticalException(Exception ex, string optMessage);
 
-        void OnLeavingCurrentUnit(System.ComponentModel.CancelEventArgs e);
+        void OnLeavingCurrentUnit();
 
         void PerformBackup(string path);
 

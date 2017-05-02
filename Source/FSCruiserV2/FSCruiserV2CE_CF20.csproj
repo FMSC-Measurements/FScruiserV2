@@ -170,6 +170,9 @@
     <Compile Include="WinForms.Common\DataEntry\LayoutPlot.commn.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="WinForms.Common\DataEntry\LayoutTreeBased.common.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="WinForms.Common\FormCruiserSelection.common.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -59,8 +59,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void OnFocusedLayoutChanged(object sender, EventArgs e)
         {
-            
-            OnFocusedLayoutChangedInternal(sender, e);
+
+            OnFocusedLayoutChangedCommon(sender, e);
             var view = FocusedLayout as ITreeView;
             _addTreeMI.Enabled = view != null && view.UserCanAddTrees;
 

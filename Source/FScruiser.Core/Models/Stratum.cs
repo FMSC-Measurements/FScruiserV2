@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
+using System.Xml.Serialization;
 
 namespace FSCruiser.Core.Models
 {
@@ -10,6 +11,7 @@ namespace FSCruiser.Core.Models
     {
         Dictionary<char, CountTree> _hotKeyLookup;
 
+        [XmlIgnore]
         public bool Is3P
         {
             get
@@ -18,8 +20,10 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        [XmlIgnore]
         public List<SampleGroup> SampleGroups { get; set; }
 
+        [XmlIgnore]
         public IEnumerable<CountTree> Counts
         {
             get
@@ -40,6 +44,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        [XmlIgnore]
         public Dictionary<char, CountTree> HotKeyLookup
         {
             get
@@ -104,6 +109,27 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public Exception TrySaveSampleGroups()
+        {
+            Exception ex = null;
+            foreach (var sg in SampleGroups)
+            {
+                try
+                {
+                    sg.SerializeSamplerState();
+                    sg.Save();
+                }
+                catch (Exception e)
+                {
+                    if (ex == null)
+                    {
+                        ex = e;
+                    }
+                }
+            }
+            return ex;
+        }
+
         public void SaveSampleGroups()
         {
             foreach (SampleGroup sg in SampleGroups)
@@ -155,6 +181,7 @@ namespace FSCruiser.Core.Models
         object _treeFieldsReadLock = new object();
         IEnumerable<TreeFieldSetupDO> _treeFields;
 
+        [XmlIgnore]
         public IEnumerable<TreeFieldSetupDO> TreeFields
         {
             get

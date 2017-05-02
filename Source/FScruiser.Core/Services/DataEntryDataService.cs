@@ -55,6 +55,20 @@ namespace FScruiser.Core.Services
 
         #endregion CuttingUnit
 
+        public IEnumerable<CountTree> AllCounts
+        {
+            get
+            {
+                foreach (var st in AllStrata)
+                {
+                    foreach (var cnt in st.Counts)
+                    {
+                        yield return cnt;
+                    }
+                }
+            }
+        }
+
         #region NonPlotTrees
 
         object _nonPlotTreesSyncLock = new object();
@@ -107,7 +121,7 @@ namespace FScruiser.Core.Services
 
         public IEnumerable<PlotStratum> PlotStrata { get; protected set; }
 
-        public IEnumerable<Stratum> Strata
+        public IEnumerable<Stratum> AllStrata
         {
             get
             {
@@ -331,23 +345,17 @@ namespace FScruiser.Core.Services
 
         public void SaveTrees(Plot plot)
         {
-            if (plot.Trees == null) { return; }
-            var worker = new SaveTreesWorker(DataStore, plot.Trees);
-            worker.SaveAll();
+            SaveTrees(plot.Trees);
         }
 
         public void TrySaveTrees(Plot plot)
         {
-            if (plot.Trees == null) { return; }
-            var worker = new SaveTreesWorker(DataStore, plot.Trees);
-            worker.TrySaveAll();
+            TrySaveTrees(plot.Trees);
         }
 
         public void TrySaveTreesAsync(Plot plot)
         {
-            if (plot.Trees == null) { return; }
-            var worker = new SaveTreesWorker(DataStore, plot.Trees);
-            worker.TrySaveAllAsync();
+            TrySaveTreesAsync(plot.Trees);
         }
 
         #endregion plot variations
@@ -511,15 +519,26 @@ namespace FScruiser.Core.Services
             return ex;
         }
 
+        public void SaveTrees()
+        {
+            SaveTrees(NonPlotTrees);
+        }
+
+        public bool TrySaveTrees()
+        {
+            return TrySaveTrees(NonPlotTrees);
+        }
+
         public void TrySaveTreesAsync()
         {
             TrySaveTreesAsync(NonPlotTrees);
             _treesAddedSinceLastSave = 0;
         }
 
-        public bool TrySaveTrees()
+        public void SaveTrees(IEnumerable<Tree> trees)
         {
-            return TrySaveTrees(NonPlotTrees);
+            var worker = new SaveTreesWorker(DataStore, trees);
+            worker.SaveAll();
         }
 
         public bool TrySaveTrees(IEnumerable<Tree> trees)
@@ -705,53 +724,65 @@ namespace FScruiser.Core.Services
 
         #endregion utility
 
-        public void SavePlotData()
+        public Exception SavePlotData()
         {
+            Exception ex = null;
             if (PlotStrata != null)
             {
                 foreach (var st in PlotStrata)
                 {
-                    st.TrySaveCounts();
-                    st.SaveSampleGroups();
+                    ex = st.TrySaveCounts() ?? ex;
+                    ex = st.TrySaveSampleGroups() ?? ex;
                     if (st.Plots == null) { continue; }
                     foreach (var plot in st.Plots)
                     {
-                        plot.Save();
-
-                        TrySaveTrees(plot);
+                        try
+                        {
+                            plot.Save();
+                            if (plot.Trees != null)
+                            {
+                                SaveTrees(plot);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            ex = e;
+                        }
                     }
                 }
             }
+            return ex;
         }
 
-        public bool SaveNonPlotData()
+        public Exception SaveNonPlotData()
         {
-            bool success = true;
+            Exception ex;
+
+            ex = TrySaveCounts();
             try
             {
-                success = TrySaveCounts() != null;
-
-                success = TrySaveTrees() && success;
+                SaveTrees();
 
                 CuttingUnit.TallyHistoryBuffer.Save();
-
-                foreach (var st in TreeStrata)
-                {
-                    st.SaveSampleGroups();
-                }
-
-                return success;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return false;
+                ex = e;
             }
+
+            foreach (var st in TreeStrata)
+            {
+                st.SaveSampleGroups();
+            }
+
+            return ex;
         }
 
         public void Dump(string path)
         {
             using (var writer = new System.IO.StreamWriter(path))
             {
+                //DumpCounts(writer);
                 DumpNonPlotTrees(writer);
                 DumpPlotStrata(writer);
             }
@@ -773,6 +804,12 @@ namespace FScruiser.Core.Services
                 var plotStrataSerializer = new XmlSerializer(typeof(PlotStratum), new Type[] { typeof(Plot), typeof(Tree) });
                 plotStrataSerializer.Serialize(writer, PlotStrata);
             }
+        }
+
+        public void DumpCounts(System.IO.TextWriter writer)
+        {
+            var countTreeSerializer = new XmlSerializer(typeof(CountTree));
+            countTreeSerializer.Serialize(writer, AllCounts.ToList());
         }
     }
 }

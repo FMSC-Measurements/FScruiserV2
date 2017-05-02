@@ -29,8 +29,12 @@ namespace FSCruiser.WinForms.DataEntry
         protected List<IDataEntryPage> _layouts = new List<IDataEntryPage>();
 
         protected LayoutTreeBased _tallyLayout;
-        protected TabPage _tallyPage;
-        protected TabPage _treePage;
+
+        //protected TabPage _tallyPage;
+        //protected TabPage _treePage;
+        int _treePageIndex;
+
+        int _tallyPageIndex;
         protected ControlTreeDataGrid _treeView;
 
 #if NetCF
@@ -122,7 +126,7 @@ namespace FSCruiser.WinForms.DataEntry
 #endif
             _treeView.UserCanAddTrees = true;
 
-            AddLayout(_treeView);
+            _treePageIndex = AddLayout(_treeView);
         }
 
         int AddLayout(IDataEntryPage page)
@@ -148,7 +152,7 @@ namespace FSCruiser.WinForms.DataEntry
                 , AppSettings
                 , LogicController);
 
-            AddLayout(_tallyLayout);
+            _tallyPageIndex = AddLayout(_tallyLayout);
         }
 
         protected void InitializePlotTabs()
@@ -198,7 +202,7 @@ namespace FSCruiser.WinForms.DataEntry
                 }
             }
 
-            if (this._tallyPage != null)
+            if (this._tallyLayout != null)
             {
                 this._tallyLayout.HandleLoad();
             }
@@ -344,7 +348,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        protected void OnFocusedLayoutChangedInternal(object sender, EventArgs e)
+        protected void OnFocusedLayoutChangedCommon(object sender, EventArgs e)
         {
             SoundService.SignalPageChanged();
             if (_previousLayout != null)
@@ -427,15 +431,15 @@ namespace FSCruiser.WinForms.DataEntry
         public void GotoTreePage()
         {
             if (this.PageContainer == null) { return; }
-            int pageIndex = this.PageContainer.TabPages.IndexOf(_treePage);
-            this.GoToPageIndex(pageIndex);
+            //int pageIndex = this.PageContainer.TabPages.IndexOf(_treePage);
+            this.GoToPageIndex(_treePageIndex);
         }
 
         public void GoToTallyPage()
         {
             if (this.PageContainer == null) { return; }
-            int pageIndex = PageContainer.TabPages.IndexOf(_tallyPage);
-            this.GoToPageIndex(pageIndex);
+            //int pageIndex = PageContainer.TabPages.IndexOf(_tallyPage);
+            this.GoToPageIndex(_tallyPageIndex);
         }
 
         public void GoToPageIndex(int i)
