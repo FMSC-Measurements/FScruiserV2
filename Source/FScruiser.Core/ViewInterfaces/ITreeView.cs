@@ -24,6 +24,8 @@ namespace FSCruiser.Core.ViewInterfaces
         Tree UserAddTree();
 
         void ShowLogs(Tree tree);
+
+        bool HasBadSaveState { get; set; }
     }
 
     public static class ITreeViewExtentions

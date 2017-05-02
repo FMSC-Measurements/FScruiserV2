@@ -348,19 +348,9 @@ namespace FSCruiser.WinForms
             this._BS_tallyHistory.MoveLast();
         }
 
-        public bool TrySaveCounts()
+        public Exception TrySaveCounts()
         {
-            bool success = true;
-            foreach (Stratum stratum in DataService.TreeStrata)
-            {
-                if (!stratum.TrySaveCounts())
-                {
-                    System.Diagnostics.Debug.Fail("unable to save St:"
-                        + stratum.Code + " counts");
-                    success = false;
-                }
-            }
-            return success;
+            return DataService.TrySaveCounts();
         }
 
         #endregion ITallyView members

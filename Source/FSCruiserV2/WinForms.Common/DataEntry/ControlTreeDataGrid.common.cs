@@ -161,6 +161,23 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region ITreeView Members
 
+        bool _hasBadSaveState;
+
+        public bool HasBadSaveState
+        {
+            get { return _hasBadSaveState; }
+            set
+            {
+                _hasBadSaveState = value;
+                UpdatePageText();
+            }
+        }
+
+        void UpdatePageText()
+        {
+            this.Text = ((HasBadSaveState) ? "!" : "") + "Trees";
+        }
+
         bool _userCanAddTrees;
 
         public bool UserCanAddTrees

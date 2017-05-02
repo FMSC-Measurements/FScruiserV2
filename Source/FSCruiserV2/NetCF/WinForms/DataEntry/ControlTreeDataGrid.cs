@@ -26,6 +26,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         public ControlTreeDataGrid()
         {
+            UpdatePageText();
+
             DataGridAdjuster.InitializeGrid(this);
 
             this.AllowUserToAddRows = false;//don't allow down arrow to add tree

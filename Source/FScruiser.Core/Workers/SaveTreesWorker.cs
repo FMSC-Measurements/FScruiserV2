@@ -5,10 +5,11 @@ using System.Linq;
 using CruiseDAL;
 using FSCruiser.Core.Models;
 using FMSC.ORM.SQLite;
+using System;
 
 namespace FSCruiser.Core
 {
-    public class SaveTreesWorker
+    public class SaveTreesWorker : IDisposable
     {
         IEnumerable<Tree> _treesLocal;
         Thread _saveTreesWorkerThread;
@@ -54,7 +55,7 @@ namespace FSCruiser.Core
             }
             try
             {
-                this._saveTreesWorkerThread = new Thread(this.TrySaveAll);
+                this._saveTreesWorkerThread = new Thread(() => TrySaveAll());
                 this._saveTreesWorkerThread.IsBackground = true;
                 this._saveTreesWorkerThread.Priority = System.Threading.ThreadPriority.BelowNormal;
                 this._saveTreesWorkerThread.Start();
@@ -65,7 +66,7 @@ namespace FSCruiser.Core
             }
         }
 
-        public void TrySaveAll()
+        public bool TrySaveAll()
         {
             bool success = true;
 
@@ -74,10 +75,7 @@ namespace FSCruiser.Core
                 success = t.TrySave() && success;
             }
 
-            if (!success)
-            {
-                throw new FMSC.ORM.SQLException("not all trees were able to be saved", null);
-            }
+            return success;
         }
 
         public void SaveAll()
@@ -98,6 +96,20 @@ namespace FSCruiser.Core
                     _datastore.RollbackTransaction();
                     throw;
                 }
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this._saveTreesWorkerThread = null;
             }
         }
     }

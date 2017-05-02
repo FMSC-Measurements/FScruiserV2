@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
+using System;
 
 namespace FSCruiser.Core.ViewInterfaces
 {
@@ -12,6 +13,6 @@ namespace FSCruiser.Core.ViewInterfaces
 
         void OnTally(CountTree count);
 
-        bool TrySaveCounts();
+        Exception TrySaveCounts();
     }
 }

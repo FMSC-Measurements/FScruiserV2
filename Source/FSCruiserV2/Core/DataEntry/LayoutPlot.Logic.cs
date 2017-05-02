@@ -542,9 +542,9 @@ namespace FSCruiser.Core.DataEntry
             this.Stratum.SaveCounts();
         }
 
-        public bool TrySaveCounts()
+        public Exception TrySaveCounts()
         {
-            return this.Stratum.TrySaveCounts();
+            return Stratum.TrySaveCounts();
         }
 
         #region event handlers

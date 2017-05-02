@@ -15,6 +15,7 @@ namespace FSCruiser.WinForms.DataEntry
             : base()
         {
             InitializeComponent();
+            Text = "Tally";
 
             ((System.ComponentModel.ISupportInitialize)(this._BS_tallyHistory)).BeginInit();
             this._tallyHistoryLB.DataSource = this._BS_tallyHistory;

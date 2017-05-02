@@ -123,6 +123,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         ControlTreeDataGrid()
         {
+            UpdatePageText();
+
             EditMode = DataGridViewEditMode.EditOnEnter;
             AutoGenerateColumns = false;
             AllowUserToDeleteRows = false;

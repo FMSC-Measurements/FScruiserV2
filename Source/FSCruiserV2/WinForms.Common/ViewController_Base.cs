@@ -100,9 +100,10 @@ namespace FSCruiser.WinForms.Common
                     , dataService))
                 {
 #if !NetCF
-                    dataEntryView.Owner = MainView;
-#endif
+                    dataEntryView.ShowDialog(MainView);
+#else
                     dataEntryView.ShowDialog();
+#endif
                 }
             }
             catch (UserFacingException e)
@@ -110,6 +111,13 @@ namespace FSCruiser.WinForms.Common
                 var exType = e.GetType();
 
                 MessageBox.Show(e.Message, exType.Name);
+            }
+            finally
+            {
+                dataService.SaveNonPlotData();
+                dataService.SavePlotData();
+
+                ApplicationController.OnLeavingCurrentUnit(null);
             }
         }
 
@@ -140,29 +148,12 @@ namespace FSCruiser.WinForms.Common
                 }
                 catch
                 {
-                    dataService.TrySaveCounts();
-                    dataService.SaveFieldData();
-                    if (dataService.PlotStrata != null)
-                    {
-                        foreach (var st in dataService.PlotStrata)
-                        {
-                            st.TrySaveCounts();
-                            if (st.Plots == null) { continue; }
-                            foreach (var plot in st.Plots)
-                            {
-                                dataService.TrySaveTrees(plot);
-                            }
-                        }
-                    }
+                    var timeStamp = DateTime.Now.ToString("HH_mm");
+                    var dumFilePath = System.IO.Path.GetFullPath("%localAppData%\\FScruiserDump" + timeStamp + ".xml");
+                    MessageBox.Show("FScruiser encountered a unexpected problem\r\n"
+                        + "Dumping tree data to " + dumFilePath);
+                    dataService.Dump(dumFilePath);
                 }
-                //catch
-                //{
-                //    var timeStamp = DateTime.Now.ToString("HH_mm");
-                //    var dumFilePath = System.IO.Path.GetFullPath("%localAppData%\\FScruiserDump" + timeStamp + ".xml");
-                //    MessageBox.Show("FScruiser encountered a unexpected problem\r\n"
-                //        + "Dumping tree data to " + dumFilePath);
-                //    dataService.Dump(dumFilePath);
-                //}
             }
         }
 

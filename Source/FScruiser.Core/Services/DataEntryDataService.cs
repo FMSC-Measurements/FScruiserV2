@@ -161,7 +161,7 @@ namespace FScruiser.Core.Services
             {
                 if (value > 0)
                 {
-                    _logRuleDataService = new IRegionalLogRuleDataService(value)
+                    _logRuleDataService = new IRegionalLogRuleDataService(value);
                 }
                 else
                 { _logRuleDataService = null; }
@@ -477,63 +477,61 @@ namespace FScruiser.Core.Services
 
         #region save methods
 
-        public bool SaveFieldData()
+        public void SaveCounts()
         {
-            try
+            if (TreeStrata != null)
             {
-                //this.DataStore.BeginTransaction();//not doing transactions right now, need to do http://fmsc-projects.herokuapp.com/issues/526 first
-
-                TrySaveTrees();
-
-                CuttingUnit.TallyHistoryBuffer.Save();
-                SaveSampleGroups(); // save sampler states
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
+                try
+                {
+                    DataStore.BeginTransaction();
+                    foreach (var stratum in TreeStrata)
+                    {
+                        stratum.SaveCounts();
+                    }
+                    DataStore.CommitTransaction();
+                }
+                catch
+                {
+                    DataStore.RollbackTransaction();
+                    throw;
+                }
             }
         }
 
-        protected void SaveSampleGroups()
+        public Exception TrySaveCounts()
         {
-            foreach (var st in TreeStrata)
+            Exception ex = null;
+            if (TreeStrata != null)
             {
-                st.SaveSampleGroups();
+                foreach (Stratum stratum in TreeStrata)
+                {
+                    ex = stratum.TrySaveCounts() ?? ex;
+                }
             }
-
-            foreach (var st in PlotStrata)
-            {
-                st.SaveSampleGroups();
-            }
-        }
-
-        public bool TrySaveCounts()
-        {
-            bool success = true;
-            foreach (Stratum stratum in TreeStrata)
-            {
-                success = stratum.TrySaveCounts() && success;
-            }
-            foreach (Stratum stratum in PlotStrata)
-            {
-                success = stratum.TrySaveCounts() && success;
-            }
-            return success;
+            return ex;
         }
 
         public void TrySaveTreesAsync()
         {
-            var worker = new SaveTreesWorker(DataStore, NonPlotTrees);
-            worker.TrySaveAllAsync();
+            TrySaveTreesAsync(NonPlotTrees);
             _treesAddedSinceLastSave = 0;
         }
 
-        public void TrySaveTrees()
+        public bool TrySaveTrees()
         {
-            var worker = new SaveTreesWorker(DataStore, NonPlotTrees);
-            worker.TrySaveAll();
+            return TrySaveTrees(NonPlotTrees);
+        }
+
+        public bool TrySaveTrees(IEnumerable<Tree> trees)
+        {
+            var worker = new SaveTreesWorker(DataStore, trees);
+            return worker.TrySaveAll();
+        }
+
+        public void TrySaveTreesAsync(IEnumerable<Tree> trees)
+        {
+            var worker = new SaveTreesWorker(DataStore, trees);
+            worker.TrySaveAllAsync();
         }
 
         #endregion save methods
@@ -706,6 +704,49 @@ namespace FScruiser.Core.Services
         }
 
         #endregion utility
+
+        public void SavePlotData()
+        {
+            if (PlotStrata != null)
+            {
+                foreach (var st in PlotStrata)
+                {
+                    st.TrySaveCounts();
+                    st.SaveSampleGroups();
+                    if (st.Plots == null) { continue; }
+                    foreach (var plot in st.Plots)
+                    {
+                        plot.Save();
+
+                        TrySaveTrees(plot);
+                    }
+                }
+            }
+        }
+
+        public bool SaveNonPlotData()
+        {
+            bool success = true;
+            try
+            {
+                success = TrySaveCounts() != null;
+
+                success = TrySaveTrees() && success;
+
+                CuttingUnit.TallyHistoryBuffer.Save();
+
+                foreach (var st in TreeStrata)
+                {
+                    st.SaveSampleGroups();
+                }
+
+                return success;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
         public void Dump(string path)
         {

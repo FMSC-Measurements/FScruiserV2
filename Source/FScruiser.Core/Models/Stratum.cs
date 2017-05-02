@@ -122,16 +122,21 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public bool TrySaveCounts()
+        public Exception TrySaveCounts()
         {
-            bool success = true;
-            if (SampleGroups == null) { return true; }
+            Exception ex = null;
+
+            if (SampleGroups == null) { return null; }
             foreach (var sg in SampleGroups)
             {
-                success = sg.TrySaveCounts() && success;
+                Exception ex1;
+                if (!sg.TrySaveCounts(out ex1))
+                {
+                    ex = ex1;
+                }
             }
 
-            return success;
+            return ex;
         }
 
         new IEnumerable<SampleGroup> ReadSampleGroups()

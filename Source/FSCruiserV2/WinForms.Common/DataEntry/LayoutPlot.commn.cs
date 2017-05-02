@@ -13,7 +13,33 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class LayoutPlot
     {
-        public LayoutPlotLogic ViewLogicController { get; set; }
+        #region ViewLogicController
+
+        LayoutPlotLogic _viewLogicController;
+
+        public LayoutPlotLogic ViewLogicController
+        {
+            get
+            {
+                return _viewLogicController;
+            }
+            set
+            {
+                _viewLogicController = value;
+                OnViewLogicControllerChanged();
+            }
+        }
+
+        private void OnViewLogicControllerChanged()
+        {
+            var viewModel = ViewLogicController;
+            if (viewModel != null)
+            {
+                UpdatePageText(viewModel);
+            }
+        }
+
+        #endregion ViewLogicController
 
         public PlotStratum Stratum
         {
@@ -31,6 +57,18 @@ namespace FSCruiser.WinForms.DataEntry
                 }
                 return null;
             }
+        }
+
+        void UpdatePageText(LayoutPlotLogic viewModel)
+        {
+            if (viewModel == null) { return; }
+            var st = viewModel.Stratum;
+            var pageText = String.Format("{3}{0}-{1}[{2}]",
+                st.Code,
+                st.Method,
+                st.Hotkey,
+                (HasBadSaveState) ? "!" : "");
+            Text = pageText;
         }
 
         #region DataService
@@ -247,20 +285,31 @@ namespace FSCruiser.WinForms.DataEntry
             this.ViewLogicController.OnTally(count);
         }
 
-        public bool TrySaveCounts()
+        public Exception TrySaveCounts()
         {
-            if (!this.ViewLogicController.TrySaveCounts())
-            {
-                MessageBox.Show("Stratum:" + this.ViewLogicController.Stratum.Code
-                    + " Unable to save Counts");
-                return false;
-            }
-            return true;
+            return ViewLogicController.TrySaveCounts();
         }
 
         #endregion ITallyView Members
 
         #region ITreeView Members
+
+        bool _hasBadSaveState;
+
+        public bool HasBadSaveState
+        {
+            get { return _hasBadSaveState; }
+            set
+            {
+                _hasBadSaveState = value;
+                OnHasBadSaveStateChanged();
+            }
+        }
+
+        private void OnHasBadSaveStateChanged()
+        {
+            UpdatePageText(ViewLogicController);
+        }
 
         public bool UserCanAddTrees
         {
