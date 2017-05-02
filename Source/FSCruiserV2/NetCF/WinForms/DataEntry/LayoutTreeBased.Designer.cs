@@ -32,7 +32,7 @@ namespace FSCruiser.WinForms.DataEntry
             System.Windows.Forms.Panel panel1;
             System.Windows.Forms.Label label1;
             this._tallyHistoryLB = new System.Windows.Forms.ListBox();
-            this._untallyButton = new System.Windows.Forms.Button();
+            this._untallyBTN = new System.Windows.Forms.Button();
             this._leftContentPanel = new System.Windows.Forms.Panel();
             panel1 = new System.Windows.Forms.Panel();
             label1 = new System.Windows.Forms.Label();
@@ -44,7 +44,7 @@ namespace FSCruiser.WinForms.DataEntry
             // 
             panel1.Controls.Add(this._tallyHistoryLB);
             panel1.Controls.Add(label1);
-            panel1.Controls.Add(this._untallyButton);
+            panel1.Controls.Add(this._untallyBTN);
             panel1.Dock = System.Windows.Forms.DockStyle.Right;
             panel1.Location = new System.Drawing.Point(140, 0);
             panel1.Name = "panel1";
@@ -71,12 +71,12 @@ namespace FSCruiser.WinForms.DataEntry
             // 
             // _untallyButton
             // 
-            this._untallyButton.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._untallyButton.Location = new System.Drawing.Point(0, 212);
-            this._untallyButton.Name = "_untallyButton";
-            this._untallyButton.Size = new System.Drawing.Size(100, 33);
-            this._untallyButton.TabIndex = 1;
-            this._untallyButton.Text = "Untally";            
+            this._untallyBTN.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this._untallyBTN.Location = new System.Drawing.Point(0, 212);
+            this._untallyBTN.Name = "_untallyButton";
+            this._untallyBTN.Size = new System.Drawing.Size(100, 33);
+            this._untallyBTN.TabIndex = 1;
+            this._untallyBTN.Text = "Untally";            
             // 
             // _leftContentPanel
             // 
@@ -104,6 +104,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         public System.Windows.Forms.Panel _leftContentPanel;
         private System.Windows.Forms.ListBox _tallyHistoryLB;
-        private System.Windows.Forms.Button _untallyButton;
+        private System.Windows.Forms.Button _untallyBTN;
     }
 }

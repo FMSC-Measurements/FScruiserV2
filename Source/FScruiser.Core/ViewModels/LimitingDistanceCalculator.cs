@@ -10,11 +10,22 @@ namespace FSCruiser.Core.DataEntry
         public static readonly String MEASURE_TO_CENTER = "Center";
         public static readonly String[] MEASURE_TO_OPTIONS = new String[] { MEASURE_TO_FACE, MEASURE_TO_CENTER };
 
+        float _azimuth;
         double _bafOrFPS;
         double _dbh;
         int _slopePCT;
         double _slopeDistance;
         bool _isVariableRadious;
+
+        public float Azimuth
+        {
+            get { return _azimuth; }
+            set
+            {
+                _azimuth = value;
+                NotifyPropertyChanged("Azimuth");
+            }
+        }
 
         public double BAForFPSize
         {
@@ -155,7 +166,9 @@ namespace FSCruiser.Core.DataEntry
             if (String.IsNullOrEmpty(TreeStatus))
             { return string.Empty; }
 
-            return String.Format("Tree was {0} (DBH:{1}, slope:{2}%, slope distance:{3:F3}', limiting distance:{4:F3}' to {5} of tree, {6}:{7}) \r\n",
+            var azimuth = (Azimuth > 0) ? "Azimuth:" + Azimuth.ToString() : String.Empty;
+
+            return String.Format("Tree was {0} (DBH:{1}, slope:{2}%, slope distance:{3:F3}', limiting distance:{4:F3}' to {5} of tree, {6}:{7}) {8}\r\n",
                     TreeStatus,
                     DBH,
                     SlopePCT,
@@ -163,7 +176,8 @@ namespace FSCruiser.Core.DataEntry
                     LimitingDistance,
                     MeasureTo.ToString(),
                     (IsVariableRadius) ? "BAF" : "FPS",
-                    BAForFPSize);
+                    BAForFPSize,
+                    azimuth);
         }
 
         public void Reset()

@@ -55,9 +55,8 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public FormMain(IApplicationController controller)
+        protected FormMain()
         {
-            this.Controller = controller;
             InitializeComponent();
 
             this.Text = FSCruiser.Constants.APP_TITLE;
@@ -68,7 +67,11 @@ namespace FSCruiser.WinForms
             this._dataEntryButton.Enabled = false;
 
             this.AddNavButton("Open Cruise File", this.HandleOpenCruiseFileClick);
+        }
 
+        public FormMain(IApplicationController controller) : this()
+        {
+            this.Controller = controller;
             this._cuttingUnitSelectView.Controller = controller;
         }
 
@@ -177,6 +180,14 @@ namespace FSCruiser.WinForms
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var view = new FormSettings())
+            {
+                view.ShowDialog(this);
+            }
+        }
+
+        private void editCruisersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var view = new FormManageCruisers(ApplicationSettings.Instance))
             {
                 view.ShowDialog(this);
             }

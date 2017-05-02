@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.Core.ViewInterfaces
 {
@@ -19,6 +20,10 @@ namespace FSCruiser.Core.ViewInterfaces
         void ShowNullPlotMessage();
 
         void ShowLimitingDistanceDialog();
+
+        void ShowCurrentPlotInfo();
+
+        bool ShowPlotInfo(IDataEntryDataService dataService, Plot plot, PlotStratum stratum, bool isNewPlot);
 
         void RefreshTreeView(Plot currentPlot);
 

@@ -22,11 +22,7 @@ namespace FSCruiser.WinForms.DataEntry
             InitializeComponent();
             InitializeCommon(controller, appSettings, dataService);
 
-            var addTreeKey = ApplicationSettings.Instance.AddTreeKeyStr;
-            if (!string.IsNullOrWhiteSpace(addTreeKey))
-            {
-                _addTreeBTN.Text = _addTreeBTN.Text + "(" + addTreeKey + ")";
-            }
+            UpdateAddTreeButton();
         }
 
         //protected override void OnKeyUp(KeyEventArgs e)
@@ -42,9 +38,22 @@ namespace FSCruiser.WinForms.DataEntry
         //    }
         //}
 
+        protected void UpdateAddTreeButton()
+        {
+            var addTreeKey = AppSettings.AddTreeKeyStr;
+            if (!string.IsNullOrWhiteSpace(addTreeKey))
+            {
+                _addTreeBTN.Text = "Add Tree" + "(" + addTreeKey + ")";
+            }
+            else
+            {
+                _addTreeBTN.Text = "Add Tree";
+            }
+        }
+
         protected void OnFocusedLayoutChanged(object sender, EventArgs e)
         {
-            OnFocusedLayoutChangedInternal(sender, e);
+            OnFocusedLayoutChangedCommon(sender, e);
 
             var treeView = FocusedLayout as ITreeView;
             _addTreeBTN.Enabled = (treeView != null && treeView.UserCanAddTrees);
@@ -54,10 +63,15 @@ namespace FSCruiser.WinForms.DataEntry
             _limitingDistanceMI.Enabled = (plotView != null);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void _menuBTN_Click(object sender, EventArgs e)
         {
-            var point = button1.PointToScreen(new System.Drawing.Point(0, button1.Height));
+            var point = _menuBTN.PointToScreen(new System.Drawing.Point(0, _menuBTN.Height));
             contextMenuStrip1.Show(point);
+        }
+
+        private void _appSettings_HotKeysChanged()
+        {
+            UpdateAddTreeButton();
         }
     }
 }

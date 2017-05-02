@@ -156,13 +156,11 @@ namespace FSCruiser.Core.DataEntry
                 ThreePItem item = (ThreePItem)((ThreePSelecter)sampler).NextItem();
                 if (item != null && kpi > item.KPI)
                 {
-                    if (sampler.IsSelectingITrees)
-                    {
-                        item.IsInsuranceItem = sampler.InsuranceCounter.Next();
-                    }
+                    bool isInsuranceTree = sampler.IsSelectingITrees && sampler.InsuranceCounter.Next();
+
                     tree = DataService.CreateNewTreeEntry(count);
                     tree.KPI = kpi;
-                    tree.CountOrMeasure = (item.IsInsuranceItem) ? "I" : "M";
+                    tree.CountOrMeasure = (isInsuranceTree) ? "I" : "M";
                 }
             }
 
@@ -256,56 +254,48 @@ namespace FSCruiser.Core.DataEntry
             return Array.IndexOf(Constants.HOTKEY_KEYS, c) != -1;
         }
 
-        public void HandleKPIChanging(Tree tree, float newKPI, bool doSample, out bool cancel)
-        {
-            if (tree == null)
-            {
-                cancel = true;
-                return;
-            }
-            if (tree.SampleGroup == null)
-            {
-                _dialogService.ShowMessage("Select Sample Group before entering KPI");
-                cancel = true;
-                return;
-            }
-            if (!tree.KPI.EqualsEx(0.0F))
-            {
-                string message = string.Format("Tree RecID:{0} KPI changed from {1} to {2}"
-                    , tree.Tree_CN
-                    , tree.KPI
-                    , newKPI);
-                DataService.LogMessage(message, "I");
-            }
-            else if (doSample)
-            {
-                CountTree count = tree.FindCountRecord();
-                if (count != null && count.SampleGroup.Sampler is ThreePSelecter)
-                {
-                    ThreePItem item = (ThreePItem)count.SampleGroup.Sampler.NextItem();
-                    if (item.KPI < newKPI)
-                    {
-                        tree.CountOrMeasure = "M";
-                        _soundService.SignalMeasureTree();
-                        _dialogService.ShowMessage("Measure Tree");
-                    }
-                    else
-                    {
-                        tree.CountOrMeasure = "C";
-                    }
-                    //count.SumKPI += (long)newKPI;
-                }
-            }
-            cancel = false;
-        }
-
-        public bool HandleSpeciesChanged(Tree tree, TreeDefaultValueDO tdv)
-        {
-            if (tree == null) { return true; }
-            //if (tree.TreeDefaultValue == tdv) { return true; }
-            tree.SetTreeTDV(tdv);
-            return tree.TrySave();
-        }
+        //public void HandleKPIChanging(Tree tree, float newKPI, bool doSample, out bool cancel)
+        //{
+        //    if (tree == null)
+        //    {
+        //        cancel = true;
+        //        return;
+        //    }
+        //    if (tree.SampleGroup == null)
+        //    {
+        //        _dialogService.ShowMessage("Select Sample Group before entering KPI");
+        //        cancel = true;
+        //        return;
+        //    }
+        //    if (!tree.KPI.EqualsEx(0.0F))
+        //    {
+        //        string message = string.Format("Tree RecID:{0} KPI changed from {1} to {2}"
+        //            , tree.Tree_CN
+        //            , tree.KPI
+        //            , newKPI);
+        //        DataService.LogMessage(message, "I");
+        //    }
+        //    else if (doSample)
+        //    {
+        //        CountTree count = tree.FindCountRecord();
+        //        if (count != null && count.SampleGroup.Sampler is ThreePSelecter)
+        //        {
+        //            ThreePItem item = (ThreePItem)count.SampleGroup.Sampler.NextItem();
+        //            if (item.KPI < newKPI)
+        //            {
+        //                tree.CountOrMeasure = "M";
+        //                _soundService.SignalMeasureTree();
+        //                _dialogService.ShowMessage("Measure Tree");
+        //            }
+        //            else
+        //            {
+        //                tree.CountOrMeasure = "C";
+        //            }
+        //            //count.SumKPI += (long)newKPI;
+        //        }
+        //    }
+        //    cancel = false;
+        //}
 
         public void HandleViewClosing(CancelEventArgs e)
         {
@@ -323,31 +313,11 @@ namespace FSCruiser.Core.DataEntry
                     this.View.GoToPageIndex(viewIndex);
                     return;
                 }
-
-                //save all the plot views, this will save all trees and plots in them
-                foreach (var view in View.Layouts.OfType<IPlotLayout>())
-                {
-                    view.ViewLogicController.Save();
-                }
-
-                if (!DataService.TrySaveCounts())
-                {
-                    e.Cancel = true;
-                    _dialogService.ShowMessage("Something went wrong while saving the tally count for this unit", null);
-                }
-
-                if (!DataService.SaveFieldData())
-                {
-                    e.Cancel = true;
-                    _dialogService.ShowMessage("Something went wrong saving the data for this unit, check trees for errors and try again", null);
-                }
             }
             finally
             {
                 ViewController.HideWait();
             }
-
-            this.Controller.OnLeavingCurrentUnit(e);
         }
 
         /// <summary>

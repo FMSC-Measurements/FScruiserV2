@@ -84,9 +84,10 @@ namespace FSCruiser.WinForms
                         }
                     case "Initials":
                         {
-                            col = new DataGridViewTextBoxColumn()
+                            col = new DataGridViewComboBoxColumn()
                             {
-                                MaxInputLength = 3
+                                DisplayMember = nameof(Cruiser.Initials),
+                                ValueMember = nameof(Cruiser.Initials)
                             };
                             break;
                         }

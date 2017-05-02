@@ -128,42 +128,69 @@
     <Compile Include="NetCF\WinForms\DataEntry\FormDataEntry.Designer.cs">
       <DependentUpon>FormDataEntry.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinForms.Common\DataEntry\Controls\FixCNTTallyButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\Controls\FixCNTTallyButton.Designer.cs">
+      <DependentUpon>FixCNTTallyButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\Controls\FixCntTallyControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\Controls\FixCntTallyControl.Designer.cs">
+      <DependentUpon>FixCntTallyControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\Controls\FixCntTallyRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\Controls\FixCntTallyRow.Designer.cs">
+      <DependentUpon>FixCntTallyRow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\Controls\SpeciesRow.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\Controls\TallyRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\ControlTreeDataGrid.common.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\FixCNTForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\FixCNTForm.Designer.cs">
+      <DependentUpon>FixCNTForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\FormDataEntry.common.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\FormPlotInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\LayoutPlot.commn.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\LayoutTreeBased.common.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FormCruiserSelection.common.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\DataEntry\FormLimitingDistance.common.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms.Common\FormManageCruisers.common.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="WinForms.Common\FormSettings.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinForms.Common\WinFormsDialogService.cs" />
-    <Compile Include="WinForms.Common\FixCNTForm.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormCruiserSelection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WinForms.Common\FixCNTForm.Designer.cs">
-      <DependentUpon>FixCNTForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms.Common\FixCNTTallyButton.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\FixCNTTallyButton.Designer.cs">
-      <DependentUpon>FixCNTTallyButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms.Common\FixCntTallyControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\FixCntTallyControl.Designer.cs">
-      <DependentUpon>FixCntTallyControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms.Common\FixCntTallyRow.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\FixCntTallyRow.Designer.cs">
-      <DependentUpon>FixCntTallyRow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms.Common\FormCruiserSelection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\FormCruiserSelection.Designer.cs">
+    <Compile Include="NetCF\WinForms\DataEntry\FormCruiserSelection.Designer.cs">
       <DependentUpon>FormCruiserSelection.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms.Common\FormDataEntryBase.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="NetCF\WinForms\FormDeviceInfo.cs">
       <SubType>Form</SubType>
@@ -229,26 +256,17 @@
     <Compile Include="NetCF\DataGridAdjuster.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="NetCF\WinForms\ViewController.cs" />
-    <Compile Include="WinForms.Common\FormManageCruisers.cs">
+    <Compile Include="NetCF\WinForms\FormManageCruisers.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WinForms.Common\FormManageCruisers.Designer.cs">
+    <Compile Include="NetCF\WinForms\FormManageCruisers.Designer.cs">
       <DependentUpon>FormManageCruisers.cs</DependentUpon>
     </Compile>
-    <Compile Include="WinForms.Common\FormPlotInfo.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="WinForms.Common\ITallyButton.cs" />
-    <Compile Include="WinForms.Common\SpeciesRow.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\TallyRow.cs">
+    <Compile Include="WinForms.Common\DataEntry\TreeBasedTallyView_Base.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="WinForms.Common\TreeBasedTallyView_Base.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\TreeBasedTallyView_Base.Designer.cs">
+    <Compile Include="WinForms.Common\DataEntry\TreeBasedTallyView_Base.Designer.cs">
       <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms.Common\ViewController_Base.cs" />
@@ -310,17 +328,23 @@
       <DependentUpon>FormBackupUtility.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\FixCNTForm.resx">
-      <DependentUpon>FixCNTForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\FixCNTTallyButton.resx">
+    <EmbeddedResource Include="WinForms.Common\DataEntry\Controls\FixCNTTallyButton.resx">
       <DependentUpon>FixCNTTallyButton.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\FixCntTallyControl.resx">
+    <EmbeddedResource Include="WinForms.Common\DataEntry\Controls\FixCNTTallyControl.resx">
       <DependentUpon>FixCntTallyControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\FixCntTallyRow.resx">
+    <EmbeddedResource Include="WinForms.Common\DataEntry\Controls\FixCntTallyRow.resx">
       <DependentUpon>FixCntTallyRow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\DataEntry\Controls\TallyRow.resx">
+      <DependentUpon>TallyRow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\DataEntry\FixCNTForm.resx">
+      <DependentUpon>FixCNTForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms.Common\DataEntry\FormPlotInfo.resx">
+      <DependentUpon>FormPlotInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NetCF\WinForms\FormEditSampleGroup.resx">
       <DependentUpon>FormEditSampleGroup.cs</DependentUpon>
@@ -342,24 +366,18 @@
       <DependentUpon>FormTallySetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\FormCruiserSelection.resx">
+    <EmbeddedResource Include="NetCF\WinForms\DataEntry\FormCruiserSelection.resx">
       <DependentUpon>FormCruiserSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\FormManageCruisers.resx">
+    <EmbeddedResource Include="NetCF\WinForms\FormManageCruisers.resx">
       <DependentUpon>FormManageCruisers.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\FormPlotInfo.resx">
-      <DependentUpon>FormPlotInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms.Common\FormSettings.resx">
       <DependentUpon>FormSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\TallyRow.resx">
-      <DependentUpon>TallyRow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\TreeBasedTallyView_Base.resx">
+    <EmbeddedResource Include="WinForms.Common\DataEntry\TreeBasedTallyView_Base.resx">
       <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

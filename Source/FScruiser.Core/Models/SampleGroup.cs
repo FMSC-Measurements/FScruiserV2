@@ -96,9 +96,9 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public bool TrySaveCounts()
+        public bool TrySaveCounts(out Exception ex)
         {
-            bool success = true;
+            ex = null;
             foreach (var count in Counts)
             {
                 try
@@ -108,11 +108,11 @@ namespace FSCruiser.Core.Models
                 catch (Exception e)
                 {
                     System.Diagnostics.Debug.WriteLine(e, "Exception");
-                    success = false;
+                    ex = e;
                 }
             }
 
-            return success;
+            return ex == null;
         }
 
         public bool HasTreeDefault(TreeDefaultValueDO tdv)

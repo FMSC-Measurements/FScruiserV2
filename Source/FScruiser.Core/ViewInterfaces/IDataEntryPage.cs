@@ -2,6 +2,8 @@
 {
     public interface IDataEntryPage
     {
+        string Text { get; set; }
+
         bool ViewLoading { get; }
 
         void HandleLoad();

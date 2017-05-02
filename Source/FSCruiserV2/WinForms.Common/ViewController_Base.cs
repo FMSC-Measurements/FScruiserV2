@@ -18,7 +18,6 @@ namespace FSCruiser.WinForms.Common
         protected object _dataEntrySyncLock = new object();
         private FormMain _main;
         private Form3PNumPad _threePNumPad;
-        protected FormDataEntry _dataEntryView;
 
         private int _showWait = 0;
         private bool _enableLogGrading = true;
@@ -92,36 +91,91 @@ namespace FSCruiser.WinForms.Common
 
         public abstract bool ShowOpenCruiseFileDialog(out string fileName);
 
+        protected void ShowDataEntry(IDataEntryDataService dataService)
+        {
+            try
+            {
+                using (var dataEntryView = new FormDataEntry(this.ApplicationController
+                    , ApplicationSettings.Instance
+                    , dataService))
+                {
+#if !NetCF
+                    dataEntryView.ShowDialog(MainView);
+#else
+                    dataEntryView.ShowDialog();
+#endif
+                }
+            }
+            catch (UserFacingException e)
+            {
+                var exType = e.GetType();
+
+                MessageBox.Show(e.Message, exType.Name);
+            }
+            finally
+            {
+                SaveData(dataService);
+            }
+        }
+
+        void SaveData(IDataEntryDataService dataService)
+        {
+            try
+            {
+                Exception ex;
+
+                ex = dataService.SaveNonPlotData();
+                ex = dataService.SavePlotData() ?? ex;
+                if (ex != null)
+                {
+                    throw ex;
+                }
+
+                ApplicationController.OnLeavingCurrentUnit();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.GetType().Name + " " + ex.Message, "");
+                if (DialogService.AskYesNo("Relaunch data entry?", string.Empty))
+                {
+                    ShowDataEntry(dataService);
+                }
+            }
+        }
+
         public void ShowDataEntry(CuttingUnit unit)
         {
             lock (_dataEntrySyncLock)
             {
+                IDataEntryDataService dataService;
                 try
                 {
-                    var dataService = new IDataEntryDataService(unit.Code, ApplicationController.DataStore);
-                    using (_dataEntryView = new FormDataEntry(this.ApplicationController
-                        , ApplicationSettings.Instance
-                        , dataService))
-                    {
-#if !NetCF
-                        _dataEntryView.Owner = MainView;
-#endif
-                        _dataEntryView.ShowDialog();
-                    }
+                    dataService = new IDataEntryDataService(unit.Code, ApplicationController.DataStore);
+                }
+                catch (CruiseConfigurationException e)
+                {
+                    MessageBox.Show(e.Message, e.GetType().Name);
+                    return;
                 }
                 catch (UserFacingException e)
                 {
                     var exType = e.GetType();
-
                     MessageBox.Show(e.Message, exType.Name);
+                    return;
                 }
-                catch (Exception e)
+
+                try
                 {
-                    ApplicationController.DataStore.LogMessage(e.Message, "E");
+                    ShowDataEntry(dataService);
                 }
-                finally
+                catch
                 {
-                    _dataEntryView = null;
+                    //var timeStamp = DateTime.Now.ToString("HH_mm");
+
+                    //var dumFilePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "FScruiserDump" + timeStamp + ".xml");
+                    //MessageBox.Show("FScruiser encountered a unexpected problem\r\n"
+                    //    + "Dumping tree data to " + dumFilePath);
+                    //dataService.Dump(dumFilePath);
                 }
             }
         }
@@ -131,51 +185,6 @@ namespace FSCruiser.WinForms.Common
         //    this.NumPadDialog.ShowDialog(min, max, initialValue, acceptNullInput);
         //    return this.NumPadDialog.UserEnteredValue;
         //}
-
-        public bool ShowPlotInfo(IDataEntryDataService dataService, Plot plot, PlotStratum stratum, bool isNewPlot)
-        {
-            System.Diagnostics.Debug.Assert(plot != null);
-            System.Diagnostics.Debug.Assert(stratum != null);
-
-            if (stratum.Is3PPNT && isNewPlot)
-            {
-                using (var view = new Form3PPNTPlotInfo(dataService))
-                {
-#if !NetCF
-                    view.Owner = this._dataEntryView;
-#endif
-                    return view.ShowDialog(plot, stratum, isNewPlot) == DialogResult.OK;
-                }
-            }
-            else
-            {
-                using (var view = new FormPlotInfo())
-                {
-#if !NetCF
-                    view.Owner = this._dataEntryView;
-#endif
-                    return view.ShowDialog(plot, stratum, isNewPlot) == DialogResult.OK;
-                }
-            }
-        }
-
-        public void ShowTallySettings(CountTree count)
-        {
-            try
-            {
-                count.Save();
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e);
-                return;
-            }
-
-            using (FormTallySettings view = new FormTallySettings(this.ApplicationController))
-            {
-                view.ShowDialog(count);
-            }
-        }
 
         /// <summary>
         /// </summary>

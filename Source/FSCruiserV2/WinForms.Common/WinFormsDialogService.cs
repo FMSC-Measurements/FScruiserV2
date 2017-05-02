@@ -26,16 +26,19 @@ namespace FSCruiser.WinForms
 
         public void AskCruiser(FSCruiser.Core.Models.Tree tree)
         {
-            if (ApplicationSettings.Instance.EnableCruiserPopup)
+            var appSettings = ApplicationSettings.Instance;
+            if (appSettings.EnableCruiserPopup
+                && appSettings.Cruisers.Count > 0)
             {
                 if (_cruiserSelectionView == null)
                 {
                     _cruiserSelectionView = new FormCruiserSelection();
                 }
+                _cruiserSelectionView.Tree = tree;
 #if NetCF
-                _cruiserSelectionView.ShowDialog(tree);
+                _cruiserSelectionView.ShowDialog();
 #else
-                _cruiserSelectionView.ShowDialog(Form.ActiveForm, tree);
+                _cruiserSelectionView.ShowDialog(Form.ActiveForm);
 #endif
             }
         }

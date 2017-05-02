@@ -10,7 +10,7 @@ SET parent=%~dp0
 
 ECHO %me%
 
-SET msbuildPath=C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe
+SET msbuildPath="C:\Program Files (x86)\MSBuild\14.0\bin\amd64\MSBuild.exe"
 
 %msbuildPath%  %parent%\FSCruiserV2\FScruiserPC.csproj /target:Rebuild /property:Configuration=Release;Platform=AnyCPU;SolutionDir=%parent%\
 

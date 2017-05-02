@@ -5,6 +5,7 @@ using CruiseDAL.DataObjects;
 using FMSC.Sampling;
 using FSCruiser.Core;
 using FSCruiser.Core.Models;
+using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -12,13 +13,13 @@ namespace FSCruiser.WinForms.DataEntry
     {
         private enum TallyMode { SRS, Block, Systematic }
 
-        private CountTreeDO _count;
+        private CountTree _count;
 
-        public IApplicationController Controller { get; set; }
+        public IDataEntryDataService DataService { get; set; }
 
-        public FormTallySettings(IApplicationController controller)
+        public FormTallySettings(IDataEntryDataService dataService)
         {
-            this.Controller = controller;
+            this.DataService = dataService;
             InitializeComponent();
 
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
@@ -92,58 +93,73 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
+        public CountTree Count
+        {
+            get { return _count; }
+            set
+            {
+                _count = value;
+                OnCountChanged();
+            }
+        }
+
+        private void OnCountChanged()
+        {
+            var count = Count;
+            if (count != null)
+            {
+                var method = count.SampleGroup.Stratum.Method;
+                bool isPlot = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.PLOT_METHODS, method) >= 0;
+                bool isThreep = count.SampleGroup.Stratum.Is3P;
+
+                this.EnableTallyCount = !isPlot;
+                this.EnableBigBAF = isPlot;
+                this.EnableIFrequency = !isPlot;
+                this.EnableTotalTreeCount = !isPlot;
+
+                this.EnableFrequency = !isThreep;
+                this.EnableKZ = isThreep;
+                this.EnableSumKPI = (isThreep && !isPlot);
+
+                //this.comboBox1.SelectedItem = (count.Tag is BlockSelecter) ? TallyMode.Block.ToString() : (count.Tag is SRSSelecter) ? TallyMode.SRS.ToString() : (count.Tag is SystematicSelecter) ? TallyMode.Systematic.ToString() : "???";
+                this._tallyDescription_TB.Text = count.Tally.Description;
+                this._SGDescription_TB.Text = count.SampleGroup.Description;
+                this._frequencyTB.Text = count.SampleGroup.ToString("1 in [SamplingFrequency]", null);
+                this._kzTB.Text = count.SampleGroup.KZ.ToString();
+                this._SumKPI_TB.Text = count.SumKPI.ToString();
+                this._bigBAFTB.Text = count.SampleGroup.BigBAF.ToString();
+                this._iFreqTB.Text = count.SampleGroup.InsuranceFrequency.ToString();
+                this._tallyCount_TB.Text = count.TreeCount.ToString();
+                long countsFromTrees = count.GetCountsFromTrees();
+                this._countsFromTrees_TB.Text = countsFromTrees.ToString();
+                this._totalTreeCount_TB.Text = (countsFromTrees + count.TreeCount).ToString();
+                this._measureTrees_TB.Text = count.GetMeasureTreeCount().ToString();
+
+                String samplingMethod = "Manual";
+                SampleSelecter sampler = count.SampleGroup.Sampler;
+                if (sampler != null)
+                {
+                    if (sampler is SystematicSelecter)
+                    {
+                        samplingMethod = "Systematic with random start";
+                    }
+                    else if (sampler is BlockSelecter)
+                    {
+                        samplingMethod = "Blocked";
+                    }
+                    else if (sampler is ThreePSelecter)
+                    {
+                        samplingMethod = "Three P";
+                    }
+                }
+                this._samplingMethod_TB.Text = samplingMethod;
+            }
+        }
+
         public DialogResult ShowDialog(CountTree count)
         {
-            var method = count.SampleGroup.Stratum.Method;
-            bool isPlot = Array.IndexOf(CruiseDAL.Schema.CruiseMethods.PLOT_METHODS, method) >= 0;
-            bool isThreep = count.SampleGroup.Stratum.Is3P;
-
-            this.EnableTallyCount = !isPlot;
-            this.EnableBigBAF = isPlot;
-            this.EnableIFrequency = !isPlot;
-            this.EnableTotalTreeCount = !isPlot;
-
-            this.EnableFrequency = !isThreep;
-            this.EnableKZ = isThreep;
-            this.EnableSumKPI = (isThreep && !isPlot);
-
-            //this.comboBox1.SelectedItem = (count.Tag is BlockSelecter) ? TallyMode.Block.ToString() : (count.Tag is SRSSelecter) ? TallyMode.SRS.ToString() : (count.Tag is SystematicSelecter) ? TallyMode.Systematic.ToString() : "???";
-            this._tallyDescription_TB.Text = count.Tally.Description;
-            this._SGDescription_TB.Text = count.SampleGroup.Description;
-            this._frequencyTB.Text = count.SampleGroup.ToString("1 in [SamplingFrequency]", null);
-            this._kzTB.Text = count.SampleGroup.KZ.ToString();
-            this._SumKPI_TB.Text = count.SumKPI.ToString();
-            this._bigBAFTB.Text = count.SampleGroup.BigBAF.ToString();
-            this._iFreqTB.Text = count.SampleGroup.InsuranceFrequency.ToString();
-            this._tallyCount_TB.Text = count.TreeCount.ToString();
-            long countsFromTrees = count.GetCountsFromTrees();
-            this._countsFromTrees_TB.Text = countsFromTrees.ToString();
-            this._totalTreeCount_TB.Text = (countsFromTrees + count.TreeCount).ToString();
-            this._measureTrees_TB.Text = count.GetMeasureTreeCount().ToString();
-
-            String samplingMethod = "Manual";
-            SampleSelecter sampler = count.SampleGroup.Sampler;
-            if (sampler != null)
-            {
-                if (sampler is SystematicSelecter)
-                {
-                    samplingMethod = "Systematic with random start";
-                }
-                else if (sampler is BlockSelecter)
-                {
-                    samplingMethod = "Blocked";
-                }
-                else if (sampler is ThreePSelecter)
-                {
-                    samplingMethod = "Three P";
-                }
-            }
-            this._samplingMethod_TB.Text = samplingMethod;
-
-            _count = count;
-            DialogResult result = this.ShowDialog();
-            _count = null;
-            return result;
+            Count = count;
+            return this.ShowDialog();
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -177,13 +193,13 @@ namespace FSCruiser.WinForms.DataEntry
 
                 if (this._count.TreeCount != newTreeCount)
                 {
-                    this.Controller.LogTreeCountEdit(this._count, this._count.TreeCount, newTreeCount);
+                    this.DataService.LogTreeCountEdit(this._count, this._count.TreeCount, newTreeCount);
                     this._count.TreeCount = newTreeCount;
                 }
 
                 if (this._count.SumKPI != newSumKPI)
                 {
-                    this.Controller.LogSumKPIEdit(this._count, this._count.SumKPI, newSumKPI);
+                    this.DataService.LogSumKPIEdit(this._count, this._count.SumKPI, newSumKPI);
                     this._count.SumKPI = newSumKPI;
                 }
             }

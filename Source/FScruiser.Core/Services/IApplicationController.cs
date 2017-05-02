@@ -31,11 +31,7 @@ namespace FSCruiser.Core
 
         void HandleNonCriticalException(Exception ex, string optMessage);
 
-        void LogTreeCountEdit(CountTreeDO countTree, long oldValue, long newValue);
-
-        void LogSumKPIEdit(CountTreeDO countTree, long oldValue, long newValue);
-
-        void OnLeavingCurrentUnit(System.ComponentModel.CancelEventArgs e);
+        void OnLeavingCurrentUnit();
 
         void PerformBackup(string path);
 

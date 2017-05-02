@@ -8,7 +8,7 @@ Senario: Unit has multiple tree strata but none of them have stratum selected, a
 
 
 
-Senario: unit has tree based strata but none have any columns selected, automaticly add default columns
+Senario: unit contains a three p stratum but STM is not selected, automaticly add STM column
 
-Senario: unit has plot based strata but none have any columns selected, automaticly add default columns
+Senario: unit has plot based strata but count measure column is not selected, automaticly add C/m column
 

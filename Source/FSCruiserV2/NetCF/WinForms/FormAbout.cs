@@ -10,8 +10,7 @@ namespace FSCruiser.WinForms
 {
     public partial class FormAbout : Form
     {
-        //on windows mobile 6.5 we need to have a menu 
-        //because without it the OK button doesn't get displayed
+        
         private System.Windows.Forms.MainMenu _dontDeleteMe;
 
         public FormAbout()
@@ -22,6 +21,13 @@ namespace FSCruiser.WinForms
             {
                 this.WindowState = FormWindowState.Maximized;
             }
+            else if (ViewController.PlatformType == FMSC.Controls.PlatformType.WM)
+            {
+                //on windows mobile 6.5 we need to have a menu 
+                //because without it the OK button doesn't get displayed
+                this.Menu = new System.Windows.Forms.MainMenu();
+            }
+
 
             this.TopMost = true;
         }

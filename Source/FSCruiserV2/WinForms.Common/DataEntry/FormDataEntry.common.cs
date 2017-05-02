@@ -29,12 +29,16 @@ namespace FSCruiser.WinForms.DataEntry
         protected List<IDataEntryPage> _layouts = new List<IDataEntryPage>();
 
         protected LayoutTreeBased _tallyLayout;
-        protected TabPage _tallyPage;
-        protected TabPage _treePage;
+
+        //protected TabPage _tallyPage;
+        //protected TabPage _treePage;
+        int _treePageIndex;
+
+        int _tallyPageIndex;
         protected ControlTreeDataGrid _treeView;
 
 #if NetCF
-
+        System.Threading.Timer preventSleepTimer;
         public InputPanel SIP { get; set; }
 
 #endif
@@ -66,9 +70,6 @@ namespace FSCruiser.WinForms.DataEntry
                 , DataService
                 , AppSettings
                 , this);
-
-            // Set the form title (Text) with current cutting unit and description.
-            this.Text = this.LogicController.GetViewTitle();
 
             InitializePageContainer();
         }
@@ -109,10 +110,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void InitializeTreesTab()
         {
-            _treePage = new TabPage();
-            //this._treePage.SuspendLayout();
-            _treePage.Text = "Trees";
-
 #if NetCF
             _treeView = new ControlTreeDataGrid(DataService
                 , AppSettings
@@ -127,28 +124,35 @@ namespace FSCruiser.WinForms.DataEntry
                 , ApplicationSettings.Instance
                 , this.LogicController);
 #endif
-            _treeView.Dock = DockStyle.Fill;
-
             _treeView.UserCanAddTrees = true;
 
-            _treePage.Controls.Add(_treeView);
-            this.PageContainer.TabPages.Add(_treePage);
-            this._layouts.Add(_treeView);
+            _treePageIndex = AddLayout(_treeView);
+        }
+
+        int AddLayout(IDataEntryPage page)
+        {
+            var pageControl = (Control)page;
+            var tabPage = new TabPage();
+
+            tabPage.Text = page.Text;
+            pageControl.TextChanged += new EventHandler(
+                (object sender, EventArgs ea) => tabPage.Text = page.Text);
+
+            ((Control)page).Dock = DockStyle.Fill;
+            tabPage.Controls.Add(pageControl);
+            PageContainer.TabPages.Add(tabPage);
+            _layouts.Add(page);
+
+            return PageContainer.TabPages.IndexOf(tabPage);
         }
 
         protected void InitializeTallyTab()
         {
-            _tallyLayout = new LayoutTreeBased(Controller
-                , DataService
+            _tallyLayout = new LayoutTreeBased(DataService
+                , AppSettings
                 , LogicController);
 
-            _tallyLayout.Dock = DockStyle.Fill;
-
-            this._tallyPage = new TabPage();
-            this._tallyPage.Text = "Tally";
-            this.PageContainer.TabPages.Add(this._tallyPage);
-            this._tallyPage.Controls.Add(_tallyLayout);
-            this._layouts.Add(_tallyLayout);
+            _tallyPageIndex = AddLayout(_tallyLayout);
         }
 
         protected void InitializePlotTabs()
@@ -167,24 +171,17 @@ namespace FSCruiser.WinForms.DataEntry
 
                 st.PopulatePlots(DataService.CuttingUnit.CuttingUnit_CN.GetValueOrDefault());
 
-                TabPage page = new TabPage();
-                page.Text = String.Format("{0}-{1}[{2}]", st.Code, st.Method, st.Hotkey);
-                PageContainer.TabPages.Add(page);
-
-                LayoutPlot view = new LayoutPlot(LogicController
-                    , DataService
+                LayoutPlot view = new LayoutPlot(DataService
                     , AppSettings
                     , SoundService.Instance
+                    , Controller.ViewController
                     , st);
-                view.Parent = page;
+                view.UserCanAddTrees = true;
+
 #if NetCF
                 view.Sip = SIP;
 #endif
-
-                view.UserCanAddTrees = true;
-                _layouts.Add(view);
-
-                int pageIndex = PageContainer.TabPages.IndexOf(page);
+                var pageIndex = AddLayout(view);
                 this.LogicController.RegisterStratumHotKey(st.Hotkey, pageIndex);
             }
         }
@@ -205,7 +202,7 @@ namespace FSCruiser.WinForms.DataEntry
                 }
             }
 
-            if (this._tallyPage != null)
+            if (this._tallyLayout != null)
             {
                 this._tallyLayout.HandleLoad();
             }
@@ -222,15 +219,53 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         KeysConverter keyConverter = new KeysConverter();
+
+        #region appSettings
+
         private ApplicationSettings _appSettings;
+
         public ApplicationSettings AppSettings
         {
             get { return _appSettings; }
-            set { _appSettings = value; }
-
+            set
+            {
+                OnAppSettingChanging();
+                _appSettings = value;
+                OnAppSettingChanged();
+            }
         }
 
+        private void OnAppSettingChanged()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.HotKeysChanged += _appSettings_HotKeysChanged;
+                _appSettings.PropertyChanged += _appSettings_PropertyChanged;
+            }
+#if NetCF
+            RefreshPreventSleepTimer();
+#endif
+        }
 
+        private void OnAppSettingChanging()
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.HotKeysChanged -= _appSettings_HotKeysChanged;
+            }
+        }
+
+        void _appSettings_PropertyChanged(object sender, PropertyChangedEventArgs ea)
+        {
+#if NetCF
+            if (ea.PropertyName == "KeepDeviceAwake")
+            {
+                RefreshPreventSleepTimer();
+            }
+#endif
+        }
+
+        #endregion appSettings
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -268,7 +303,6 @@ namespace FSCruiser.WinForms.DataEntry
 #else
                 view.ShowDialog(this);
 #endif
-
             }
         }
 
@@ -314,7 +348,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        protected void OnFocusedLayoutChangedInternal(object sender, EventArgs e)
+        protected void OnFocusedLayoutChangedCommon(object sender, EventArgs e)
         {
             SoundService.SignalPageChanged();
             if (_previousLayout != null)
@@ -328,15 +362,11 @@ namespace FSCruiser.WinForms.DataEntry
                     oldTreeView.EndEdit();
                     if (oldTreeView.Trees != null)
                     {
-                        try
+                        var hasBadSaveState = !DataService.TrySaveTrees(oldTreeView.Trees);
+                        oldTreeView.HasBadSaveState = hasBadSaveState;
+                        if (hasBadSaveState)
                         {
-                            var worker = new SaveTreesWorker(DataService.DataStore, oldTreeView.Trees);
-                            worker.SaveAll();
-                            //this.Controller.SaveTrees(((ITreeView)_previousLayout).Trees);
-                        }
-                        catch (Exception ex)
-                        {
-                            this.Controller.HandleNonCriticalException(ex, "Unable to complete last tree save");
+                            MessageBox.Show("Some trees could not be saved\r\n" + "Check for invalid values");
                         }
                     }
                 }
@@ -344,7 +374,11 @@ namespace FSCruiser.WinForms.DataEntry
                 var tallyView = _previousLayout as ITallyView;
                 if (tallyView != null)
                 {
-                    tallyView.TrySaveCounts();
+                    var ex = tallyView.TrySaveCounts();
+                    if (ex != null)
+                    {
+                        MessageBox.Show(ex.GetType().Name + " " + ex.Message, "Counts");
+                    }
                 }
             }
 
@@ -360,7 +394,26 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region IDataEntryView
 
-        public FormDataEntryLogic LogicController { get; protected set; }
+        FormDataEntryLogic _presenter;
+
+        public FormDataEntryLogic LogicController
+        {
+            get { return _presenter; }
+            protected set
+            {
+                _presenter = value;
+                OnLogicControllerChanged();
+            }
+        }
+
+        private void OnLogicControllerChanged()
+        {
+            if (_presenter != null)
+            {
+                // Set the form title (Text) with current cutting unit and description.
+                this.Text = this.LogicController.GetViewTitle();
+            }
+        }
 
         public IDataEntryPage FocusedLayout
         {
@@ -378,15 +431,15 @@ namespace FSCruiser.WinForms.DataEntry
         public void GotoTreePage()
         {
             if (this.PageContainer == null) { return; }
-            int pageIndex = this.PageContainer.TabPages.IndexOf(_treePage);
-            this.GoToPageIndex(pageIndex);
+            //int pageIndex = this.PageContainer.TabPages.IndexOf(_treePage);
+            this.GoToPageIndex(_treePageIndex);
         }
 
         public void GoToTallyPage()
         {
             if (this.PageContainer == null) { return; }
-            int pageIndex = PageContainer.TabPages.IndexOf(_tallyPage);
-            this.GoToPageIndex(pageIndex);
+            //int pageIndex = PageContainer.TabPages.IndexOf(_tallyPage);
+            this.GoToPageIndex(_tallyPageIndex);
         }
 
         public void GoToPageIndex(int i)
@@ -399,5 +452,25 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         #endregion IDataEntryView
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+                AppSettings = null;
+#if NetCF
+                if (preventSleepTimer != null)
+                {
+                    preventSleepTimer.Dispose();
+                    preventSleepTimer = null;
+                }
+#endif
+            }
+            base.Dispose(disposing);
+        }
     }
 }

@@ -21,9 +21,6 @@ namespace FSCruiser.Core
 
         void ShowDataEntry(CuttingUnit unit);
 
-        bool ShowPlotInfo(IDataEntryDataService dataService, Plot plotInfo, PlotStratum stratum, bool allowEdit);
-
-        void ShowTallySettings(CountTree count);
 
         int? AskKPI(int min, int max);
 

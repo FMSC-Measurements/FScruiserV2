@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using CruiseDAL.DataObjects;
 using FMSC.Controls;
+using FScruiser.Core.Services;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
-using Microsoft.WindowsCE.Forms;
-using FScruiser.Core.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public class ControlTreeDataGrid : FMSC.Controls.EditableDataGrid, ITreeView
+    public partial class ControlTreeDataGrid : FMSC.Controls.EditableDataGrid, ITreeView
     {
-        private bool _viewLoading = true;
-
         //private bool _changingTree = false;
         private EditableComboBoxColumn _speciesColumn; //handle to the species column in the datagrid, if displayed otherwise null
 
@@ -28,117 +24,11 @@ namespace FSCruiser.WinForms.DataEntry
         private DataGridTextBoxColumn _errorsColumn;
         private System.Windows.Forms.BindingSource _BS_trees;
 
-        private bool _userCanAddTrees;
-
-        public bool UserCanAddTrees
+        public ControlTreeDataGrid()
         {
-            get { return _userCanAddTrees; }
-            set { _userCanAddTrees = value; }
-        }
-
-
-
-        #region DataService
-
-        IDataEntryDataService _dataService;
-
-        IDataEntryDataService DataService
-        {
-            get { return _dataService; }
-            set
-            {
-                OnDataServiceChanging();
-                _dataService = value;
-                OnDataServiceChanged();
-            }
-        }
-
-        private void OnDataServiceChanged()
-        {
-            if (_dataService != null)
-            {
-                _dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
-            }
-        }
-
-        private void OnDataServiceChanging()
-        {
-            if (_dataService != null)
-            {
-                _dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
-            }
-        }
-
-        void HandleEnableLogGradingChanged(object sender, EventArgs e)
-        {
-            if (_logsColumn == null) { return; }
-            if ((_logsColumn.Width > 0) == DataService.EnableLogGrading) { return; }
-            if (DataService.EnableLogGrading)
-            {
-                _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
-            }
-            else
-            {
-                _logsColumn.Width = -1;
-            }
-        }
-
-        #endregion DataService
-
-        public FormDataEntryLogic DataEntryController { get; set; }
-
-        public ICollection<Tree> Trees
-        {
-            get
-            {
-                return DataService.NonPlotTrees;
-            }
-        }
-
-        #region AppSettings
-        ApplicationSettings _appSettings;
-        public ApplicationSettings AppSettings
-        {
-            get { return _appSettings; }
-            set
-            {
-                OnAppSettingsChanging();
-                _appSettings = value;
-                OnAppSettingsChanged();
-            }
-        }
-
-        private void OnAppSettingsChanging()
-        {
-            if (_appSettings != null)
-            {
-                _appSettings.CruisersChanged -= Settings_CruisersChanged;
-            }
-        }
-
-        private void OnAppSettingsChanged()
-        {
-            if (_appSettings != null)
-            {
-                _appSettings.CruisersChanged += Settings_CruisersChanged;
-                Settings_CruisersChanged(null, null);
-            }
-        }
-        #endregion
-
-
-        public ControlTreeDataGrid(IDataEntryDataService dataService
-            , ApplicationSettings appSettings
-            , FormDataEntryLogic dataEntryController)
-        {
-            DataService = dataService;
-            DataEntryController = dataEntryController;
-            AppSettings = appSettings;
+            UpdatePageText();
 
             DataGridAdjuster.InitializeGrid(this);
-            DataGridTableStyle tableStyle = dataService.InitializeTreeColumns(this);
-
-            
 
             this.AllowUserToAddRows = false;//don't allow down arrow to add tree
             //this.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Bold);
@@ -150,6 +40,18 @@ namespace FSCruiser.WinForms.DataEntry
             this._BS_trees.CurrentChanged += new EventHandler(_BS_trees_CurrentChanged);
             this.DataSource = this._BS_trees;
             ((System.ComponentModel.ISupportInitialize)(this._BS_trees)).EndInit();
+        }
+
+        public ControlTreeDataGrid(IDataEntryDataService dataService
+            , ApplicationSettings appSettings
+            , FormDataEntryLogic dataEntryController)
+            : this()
+        {
+            DataService = dataService;
+            DataEntryController = dataEntryController;
+            AppSettings = appSettings;
+
+            DataGridTableStyle tableStyle = dataService.InitializeTreeColumns(this);
 
             _speciesColumn = tableStyle.GridColumnStyles["TreeDefaultValue"] as EditableComboBoxColumn;
             _sgColumn = tableStyle.GridColumnStyles["SampleGroup"] as EditableComboBoxColumn;
@@ -166,21 +68,11 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _logsColumn.Click += this.LogsClicked;
             }
-
-            LoadData();
-        }
-
-        void LoadData()
-        {
             if (_stratumColumn != null)
             {
-                _stratumColumn.DataSource = DataService.TreeStrata;
+                _stratumColumn.DataSource = dataService.TreeStrata;
             }
-
-            _BS_trees.DataSource = DataService.NonPlotTrees;
         }
-
-        
 
         protected override void OnCellValidating(EditableDataGridCellValidatingEventArgs e)
         {
@@ -224,20 +116,22 @@ namespace FSCruiser.WinForms.DataEntry
                     e.Cancel = true;
                 }
             }
-            else if (e.Column == _kpiColumn)
-            {
-                bool cancel = false;
+            //else if (e.Column == _kpiColumn)
+            //{
+            //    bool cancel = false;
 
-                this.DataEntryController.HandleKPIChanging(tree, (float)e.Value, false, out cancel);
-                //this.HandleKPIChanging(currTree, (float)e.Value, out cancel);
-            }
+            //    this.DataEntryController.HandleKPIChanging(tree, (float)e.Value, false, out cancel);
+            //    //this.HandleKPIChanging(currTree, (float)e.Value, out cancel);
+            //}
         }
 
         protected override void OnCellValueChanged(EditableDataGridCellEventArgs e)
         {
             base.OnCellValueChanged(e);
 
-            Tree tree = (Tree)this._BS_trees[e.RowIndex];
+            Tree tree = _BS_trees[e.RowIndex] as Tree;
+            if (tree == null) { return; }
+
             if (e.Column == _sgColumn)
             {
                 tree.HandleSampleGroupChanged();
@@ -250,7 +144,7 @@ namespace FSCruiser.WinForms.DataEntry
                 EditableComboBoxColumn col = e.Column as EditableComboBoxColumn;
                 if (col == null) { return; }
 
-                this.DataEntryController.HandleSpeciesChanged(tree, col.EditComboBox.SelectedItem as TreeDefaultValueDO);
+                tree.HandleSpeciesChanged(col.EditComboBox.SelectedItem as TreeDefaultValueDO);
             }
             else if (e.Column == _stratumColumn)
             {
@@ -267,19 +161,7 @@ namespace FSCruiser.WinForms.DataEntry
             Tree tree = this._BS_trees[e.RowNumber] as Tree;
             if (tree == null) { return; }
 
-            if (tree.TrySave())
-            {
-                var dataService = DataService.MakeLogDataService(tree);
-                using(var view = new FormLogs(dataService))
-                {
-                    view.ShowDialog();
-                }
-            }
-            else
-            {
-                DialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
-                    , null);
-            }
+            ShowLogs(tree);
         }
 
         void _BS_trees_CurrentChanged(object sender, EventArgs e)
@@ -311,21 +193,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region ITreeView Members
 
-        public Tree UserAddTree()
-        {
-            if (_viewLoading
-                || this.UserCanAddTrees == false) { return null; }
-
-            var newTree = DataService.UserAddTree();
-
-            if (newTree != null)
-            {
-                this._BS_trees.MoveLast();
-                this.MoveFirstEmptyCell();
-            }
-            return newTree;
-        }
-
         public bool ErrorColumnVisable
         {
             get
@@ -344,6 +211,7 @@ namespace FSCruiser.WinForms.DataEntry
                 }
             }
         }
+
         public bool LogColumnVisable
         {
             get
@@ -363,88 +231,11 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void MoveLastTree()
-        {
-            this._BS_trees.MoveLast();
-            this.MoveHomeField();
-        }
-
-        public void MoveHomeField()
-        {
-            this.MoveFirstEmptyCell();
-        }
-
-        public void HandleLoad()
-        {
-            _viewLoading = false;
-        }
-
-        public void DeleteSelectedTree()
-        {
-            Tree curTree = this._BS_trees.Current as Tree;
-            if (curTree == null)
-            {
-                MessageBox.Show("No Tree Selected");
-            }
-            else
-            {
-                if (DialogResult.Yes == MessageBox.Show("Delete Tree #" + curTree.TreeNumber.ToString() + "?",
-                    "Delete Tree?",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button2))
-                {
-                    DataService.DeleteTree(curTree);
-                    //curTree.Delete();
-                    //Controller.DeleteTree(curTree);
-                }
-            }
-        }
-
         #endregion ITreeView Members
 
         #region IDataEntryPage
 
-        public bool ViewLoading { get { return _viewLoading; } }
-
-        public bool PreviewKeypress(string keyStr)
-        {
-            if (string.IsNullOrEmpty(keyStr)) { return false; }
-
-            var settings = AppSettings;
-            if (settings == null) { return false; }
-
-            if (keyStr == settings.JumpTreeTallyKeyStr)
-            {
-                this.DataEntryController.View.GoToTallyPage();
-                return true;
-            }
-            else if (keyStr == settings.AddTreeKeyStr)
-            {
-                return UserAddTree() != null;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        void Settings_CruisersChanged(object sender, EventArgs e)
-        {
-            if (this._initialsColoumn != null)
-            {
-                this._initialsColoumn.DataSource = AppSettings.Cruisers.ToArray();
-            }
-        }
-
-        public void NotifyEnter()
-        {
-            
-            MoveLastTree();
-            MoveHomeField();
-            Edit();
-        }
-        #endregion
+        #endregion IDataEntryPage
 
         protected override void Dispose(bool disposing)
         {

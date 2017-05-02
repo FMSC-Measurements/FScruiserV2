@@ -153,7 +153,8 @@ namespace FSCruiserV2.Test
                     CountOrMeasure = "C"
                 };
 
-                view.ShowDialog(tree);
+                view.Tree = tree;
+                view.ShowDialog();
 
                 tree = new Tree()
                 {
@@ -163,7 +164,8 @@ namespace FSCruiserV2.Test
                     CountOrMeasure = "M"
                 };
 
-                view.ShowDialog(tree);
+                view.Tree = tree;
+                view.ShowDialog();
 
                 tree = new Tree()
                 {
@@ -173,7 +175,8 @@ namespace FSCruiserV2.Test
                     CountOrMeasure = "I"
                 };
 
-                view.ShowDialog(tree);
+                view.Tree = tree;
+                view.ShowDialog();
 
                 tree = new Tree()
                 {
@@ -182,7 +185,8 @@ namespace FSCruiserV2.Test
                     SampleGroup = sg,
                 };
 
-                view.ShowDialog(tree);
+                view.Tree = tree;
+                view.ShowDialog();
             }
         }
 

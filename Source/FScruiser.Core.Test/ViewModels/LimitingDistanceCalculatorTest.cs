@@ -46,5 +46,29 @@ namespace FScruiser.Core.Test.ViewModels
             expected = Math.Round(expected, 3);
             ld.ShouldBeEquivalentTo(expected);
         }
+
+        [Fact]
+        public void GenerateReportTest()
+        {
+            var calculator = new LimitingDistanceCalculator();
+
+            calculator.GenerateReport().Should().BeNullOrEmpty("Because calculator with default values should generate a empty report");
+
+            calculator.SlopeDistance = 1;
+            calculator.DBH = 1;
+            calculator.BAForFPSize = 1;
+            calculator.MeasureTo = LimitingDistanceCalculator.MEASURE_TO_FACE;
+
+            calculator.Recalculate();
+            calculator.LimitingDistance.Should().BeGreaterThan(0, "Because we need to confirm that the calculator is setup to generate a positive limiting distance");
+
+            var report = calculator.GenerateReport();
+            report.Should().NotBeNullOrWhiteSpace();
+            report.Should().NotContain("Azimuth", "Because azimuth should not be included if not greater than 0");
+
+            calculator.Azimuth = 1;
+            report = calculator.GenerateReport();
+            report.Should().Contain("Azimuth");
+        }
     }
 }

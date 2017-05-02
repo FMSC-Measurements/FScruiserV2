@@ -93,7 +93,7 @@ Senario Outline: user tallys a measure tree tree with cruiser selection enabled
         |30 |
         |10 |
 
-Senario: check for sample when the user set the kpi on a tree 
+Senario: check for sample when the user set the kpi on a tree //no longer supported 
     GIVEN the user has added a tree using the Add Tree button 
     AND given it the sample group value of 01 
     AND given it the species value of 204
@@ -103,7 +103,7 @@ Senario: check for sample when the user set the kpi on a tree
     AND the Count or Measure value on the tree is M         //fail
     AND the sum kpi of of the 204 tally is increased by 50  //fail
 
-Senario: user changes the kpi of a tree
+Senario: user changes the kpi of a tree 		    //no longer supported 
     GIVEN a tree exist with a tree_cn of 1 and kpi of 100
     WHEN the kpi of tree_cn 1 is changed to 80 
     THEN a record is added to the messageLog table with the message "Tree RecID:1 KPI changed from 100 to 80"

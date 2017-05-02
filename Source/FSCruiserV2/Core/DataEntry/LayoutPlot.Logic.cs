@@ -22,13 +22,9 @@ namespace FSCruiser.Core.DataEntry
 
         public IPlotLayout View { get; set; }
 
-        public IApplicationController Controller { get { return this.DataEntryController.Controller; } }
-
         public IDataEntryDataService DataService { get; protected set; }
 
         public IViewController ViewController { get; protected set; }
-
-        public FormDataEntryLogic DataEntryController { get; protected set; }
 
         public bool UserCanAddTrees { get; set; }
 
@@ -65,7 +61,6 @@ namespace FSCruiser.Core.DataEntry
 
         public LayoutPlotLogic(PlotStratum stratum
             , LayoutPlot view
-            , FormDataEntryLogic dataEntryController
             , IDataEntryDataService dataService
             , ISoundService soundService
             , IDialogService dialogService
@@ -74,7 +69,6 @@ namespace FSCruiser.Core.DataEntry
         {
             this.Stratum = stratum;
             this.View = view;
-            this.DataEntryController = dataEntryController;
             DataService = dataService;
             _soundService = soundService;
             _dialogService = dialogService;
@@ -196,6 +190,7 @@ namespace FSCruiser.Core.DataEntry
         {
             if (View.ViewLoading) { return; }
             this.EndEdit();
+            _BS_Plots.ResetCurrentItem();
             if (CurrentPlot != null)
             {
                 CurrentPlot.PopulateTrees();
@@ -238,14 +233,14 @@ namespace FSCruiser.Core.DataEntry
         /// <returns>reference to newly created plot</returns>
         protected Plot AddPlot()
         {
-            Plot newPlot = Stratum.MakePlot(DataService.CuttingUnit);
+            var newPlot = Stratum.MakePlot(DataService.CuttingUnit);
 
-            if (this.ViewController.ShowPlotInfo(DataService, newPlot, Stratum, true))
+            if (View.ShowPlotInfo(DataService, newPlot, Stratum, true))
             {
                 newPlot.Save();
                 this.Stratum.Plots.Add(newPlot);
 
-                if (!String.IsNullOrEmpty(newPlot.IsEmpty) && String.Compare(newPlot.IsEmpty.Trim(), "True", true) == 0)
+                if (newPlot.IsNull)
                 {
                     return this.AddPlot() ?? newPlot;//add plot may return null, in that case return most recently created plot
                 }
@@ -329,6 +324,8 @@ namespace FSCruiser.Core.DataEntry
         {
             if (plot == null) { throw new ArgumentNullException("plot"); }
             if (count == null) { throw new ArgumentNullException("count"); }
+
+            bool isSingleStage = Stratum.IsSingleStage;//i.e. FIX or PNT
             Tree tree = null;
 
             var sg = count.SampleGroup;
@@ -338,9 +335,9 @@ namespace FSCruiser.Core.DataEntry
             //    tree.TreeCount = sg.SamplingFrequency;
             //}
             //else
-            if (Stratum.Method == CruiseMethods.FIX
-            || Stratum.Method == CruiseMethods.PNT)
+            if (isSingleStage)
             {
+                //FIX and PNT should always generate a measure tree
                 tree = DataService.CreateNewTreeEntry(plot, count, true);
                 tree.TreeCount = 1;
             }
@@ -356,7 +353,7 @@ namespace FSCruiser.Core.DataEntry
             _soundService.SignalTally();
 
             //tree may be null if user didn't enter kpi
-            if (tree != null)
+            if (tree != null && !isSingleStage)
             {
                 if (tree.CountOrMeasure == "M"
                     || tree.CountOrMeasure == "I")
@@ -364,22 +361,12 @@ namespace FSCruiser.Core.DataEntry
                     if (tree.CountOrMeasure == "M")
                     {
                         _soundService.SignalMeasureTree();
+                        _dialogService.ShowMessage("Measure Tree# " + tree.TreeNumber);
                     }
                     else if (tree.CountOrMeasure == "I")
                     {
                         _soundService.SignalInsuranceTree();
                     }
-
-                    //if (_appSettings.EnableCruiserPopup)
-                    //{
-                    //    _dialogService.AskCruiser(tree);
-                    //}
-                    //else
-                    //{
-                    //    var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
-                    //             (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
-                    //    _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
-                    //}
                 }
 
                 tree.TrySave();
@@ -414,32 +401,19 @@ namespace FSCruiser.Core.DataEntry
                 {
                     //because the three p sample selector doesn't select insurance trees for us
                     //we need to select them our selves
-                    if (sampler.IsSelectingITrees)
-                    {
-                        item.IsInsuranceItem = sampler.InsuranceCounter.Next();
-                    }
-                    if (item.IsInsuranceItem)
-                    {
-                        _soundService.SignalInsuranceTree();
-                        tree = DataService.CreateNewTreeEntry(plot, count, true);
-                        tree.CountOrMeasure = "I";
-                    }
-                    else
-                    {
-                        _soundService.SignalMeasureTree();
-                        _dialogService.ShowMessage("Measure Tree");
-                        tree = DataService.CreateNewTreeEntry(plot, count, true);
-                        //tree.CountOrMeasure = "M";
-                    }
+                    bool isInsuranceTree = sampler.IsSelectingITrees && sampler.InsuranceCounter.Next();
+
+                    tree = DataService.CreateNewTreeEntry(plot, count, true);
+                    tree.CountOrMeasure = (isInsuranceTree) ? "I" : "M";
                 }
                 else
                 {
-                    tree = DataService.CreateNewTreeEntry(plot, count, true);
-                    //tree.CountOrMeasure = "C";
+                    tree = DataService.CreateNewTreeEntry(plot, count, false);
+                    tree.CountOrMeasure = "C";
                 }
                 tree.KPI = kpi;
             }
-            else
+            else//tree is sure to measure
             {
                 tree = DataService.CreateNewTreeEntry(plot, count, true);
                 tree.STM = "Y";
@@ -456,15 +430,10 @@ namespace FSCruiser.Core.DataEntry
             Tree tree;
 
             boolItem item = (sampler != null) ? (boolItem)sampler.NextItem() : (boolItem)null;
-            if (item != null && !item.IsInsuranceItem)
+            if (item != null)
             {
                 tree = DataService.CreateNewTreeEntry(plot, count, true);
-                //tree.CountOrMeasure = "M";
-            }
-            else if (item != null && item.IsInsuranceItem)
-            {
-                tree = DataService.CreateNewTreeEntry(plot, count, true);
-                tree.CountOrMeasure = "I";
+                tree.CountOrMeasure = (item.IsInsuranceItem) ? "I" : "M";
             }
             else
             {
@@ -480,8 +449,6 @@ namespace FSCruiser.Core.DataEntry
         public void AddTree(SubPop subPop)
         {
             Tree tree = DataService.CreateNewTreeEntry(CurrentPlot, subPop);
-
-            _dialogService.AskCruiser(tree);
 
             tree.TrySave();
             CurrentPlot.AddTree(tree);
@@ -552,22 +519,6 @@ namespace FSCruiser.Core.DataEntry
             this.View.MoveHomeField();
         }
 
-        public void ShowCurrentPlotInfo()
-        {
-            if (CurrentPlot == null)
-            {
-                this.View.ShowNoPlotSelectedMessage();
-                return;
-            }
-
-            if (Controller.ViewController.ShowPlotInfo(DataService, CurrentPlot, Stratum, false))
-            {
-                CurrentPlot.Save();
-                _BS_Plots.ResetCurrentItem();
-                UpdateCurrentPlot();
-            }
-        }
-
         public void Save()
         {
             foreach (Plot p in Stratum.Plots)
@@ -591,9 +542,9 @@ namespace FSCruiser.Core.DataEntry
             this.Stratum.SaveCounts();
         }
 
-        public bool TrySaveCounts()
+        public Exception TrySaveCounts()
         {
-            return this.Stratum.TrySaveCounts();
+            return Stratum.TrySaveCounts();
         }
 
         #region event handlers

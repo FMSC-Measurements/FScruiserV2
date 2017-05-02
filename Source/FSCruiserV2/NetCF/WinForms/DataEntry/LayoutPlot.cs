@@ -237,7 +237,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         #endregion Designer code
 
-        bool _viewLoading = true;
         //private bool _disableCheckPlot = false;
         const int SUB_POP_BUTTON_WIDTH = 48;
 
@@ -251,12 +250,6 @@ namespace FSCruiser.WinForms.DataEntry
         DataGridTextBoxColumn _errorsColumn;
         DataGridTableStyle _tableStyle;
         //private String[] _visableFields;
-
-        //public static int DATAGRID_INFLATED_SIZE = 186;
-        //public static int DATAGRID_DEFLATED_SIZE = 86;
-        //public static readonly string INFLATE_GRID_BUTTON_TEXT = "";//"<5><5><5>";//"▼ ▼ ▼";
-        //public static readonly string DEFLATE_GRID_BUTTON_TEXT = "";//"<6><6><6>";//"▲ ▲ ▲";
-        //public static readonly TreeDefaultValueDO[] EMPTY_SPECIES_LIST = new TreeDefaultValueDO[] { };
 
         bool _isGridExpanded = false;
 
@@ -291,93 +284,80 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public IApplicationController AppController { get { return this.ViewLogicController.Controller; } }
+        //#region DataService
 
-        public FormDataEntryLogic DataEntryController { get { return this.ViewLogicController.DataEntryController; } }
+        //IDataEntryDataService _dataService;
 
-        #region DataService
+        //IDataEntryDataService DataService
+        //{
+        //    get { return _dataService; }
+        //    set
+        //    {
+        //        OnDataServiceChanging();
+        //        _dataService = value;
+        //        OnDataServiceChanged();
+        //    }
+        //}
 
-        IDataEntryDataService _dataService;
+        //private void OnDataServiceChanged()
+        //{
+        //    if (_dataService != null)
+        //    {
+        //        _dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
+        //    }
+        //}
 
-        IDataEntryDataService DataService
-        {
-            get { return _dataService; }
-            set
-            {
-                OnDataServiceChanging();
-                _dataService = value;
-                OnDataServiceChanged();
-            }
-        }
+        //private void OnDataServiceChanging()
+        //{
+        //    if (_dataService != null)
+        //    {
+        //        _dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
+        //    }
+        //}
 
-        private void OnDataServiceChanged()
-        {
-            if (_dataService != null)
-            {
-                _dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
-            }
-        }
+        //void HandleEnableLogGradingChanged(object sender, EventArgs e)
+        //{
+        //    LogColumnVisable = DataService.EnableLogGrading;
+        //}
 
-        private void OnDataServiceChanging()
-        {
-            if (_dataService != null)
-            {
-                _dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
-            }
-        }
+        //#endregion DataService
 
-        void HandleEnableLogGradingChanged(object sender, EventArgs e)
-        {
-            if (_logsColumn == null) { return; }
-            if ((_logsColumn.Width > 0) == DataService.EnableLogGrading) { return; }
-            if (DataService.EnableLogGrading)
-            {
-                _logsColumn.Width = Constants.LOG_COLUMN_WIDTH;
-            }
-            else
-            {
-                _logsColumn.Width = -1;
-            }
-        }
+        //#region AppSettings
 
-        #endregion DataService
+        //ApplicationSettings _appSettings;
 
-        #region AppSettings
+        //public ApplicationSettings AppSettings
+        //{
+        //    get { return _appSettings; }
+        //    set
+        //    {
+        //        OnAppSettingsChanging();
+        //        _appSettings = value;
+        //        OnAppSettingsChanged();
+        //    }
+        //}
 
-        ApplicationSettings _appSettings;
+        //private void OnAppSettingsChanged()
+        //{
+        //    if (_appSettings != null)
+        //    {
+        //        _appSettings.CruisersChanged += Settings_CruisersChanged;
+        //    }
+        //}
 
-        public ApplicationSettings AppSettings
-        {
-            get { return _appSettings; }
-            set
-            {
-                OnAppSettingsChanging();
-                _appSettings = value;
-                OnAppSettingsChanged();
-            }
-        }
+        //private void OnAppSettingsChanging()
+        //{
+        //    if (_appSettings != null)
+        //    {
+        //        _appSettings.CruisersChanged -= Settings_CruisersChanged;
+        //    }
+        //}
 
-        private void OnAppSettingsChanged()
-        {
-            if (_appSettings != null)
-            {
-                _appSettings.CruisersChanged += Settings_CruisersChanged;
-            }
-        }
+        //#endregion AppSettings
 
-        private void OnAppSettingsChanging()
-        {
-            if (_appSettings != null)
-            {
-                _appSettings.CruisersChanged -= Settings_CruisersChanged;
-            }
-        }
+        //public LayoutPlotLogic ViewLogicController { get; set; }
 
-        #endregion AppSettings
-
-        public LayoutPlotLogic ViewLogicController { get; set; }
-
-        public PlotStratum Stratum { get { return ViewLogicController.Stratum; } }
+        //public PlotStratum Stratum { get { return ViewLogicController.Stratum; } }
 
         public InputPanel Sip
         {
@@ -391,24 +371,8 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public LayoutPlot(FormDataEntryLogic dataEntryController
-            , IDataEntryDataService dataService
-            , ApplicationSettings appSettings
-            , ISoundService soundService
-            , PlotStratum stratum)
+        public LayoutPlot()
         {
-            DataService = dataService;
-            AppSettings = appSettings;
-
-            this.ViewLogicController = new LayoutPlotLogic(stratum
-                , this
-                , dataEntryController
-                , dataService
-                , soundService
-                , DialogService.Instance
-                , AppSettings
-                , dataEntryController.ViewController);
-
             InitializeComponent();
             InitializePlotNavIcons();
 
@@ -432,9 +396,8 @@ namespace FSCruiser.WinForms.DataEntry
                 this._prevPlotButton.Font = new System.Drawing.Font("Arial", this._prevPlotButton.Font.Size, this._prevPlotButton.Font.Style);
             }
 
-            //Setup DataGrid
             DataGridAdjuster.InitializeGrid(this._dataGrid);
-            _tableStyle = stratum.InitializeTreeColumns(_dataGrid);
+
             this._dataGrid.CellValidating += new EditableDataGridCellValidatingEventHandler(_dataGrid_CellValidating);
             this._dataGrid.CellValueChanged += new EditableDataGridCellValueChangedEventHandler(this._dataGrid_CellValueChanged);
             //this._dataGrid.DataSource = typeof(FSCruiserV2.Logic.TreeVM);//_BS_Trees;
@@ -442,6 +405,29 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.ReadOnly = true;
             this._dataGrid.AllowUserToAddRows = false;
 
+            this.Dock = DockStyle.Fill;
+        }
+
+        public LayoutPlot(IDataEntryDataService dataService
+            , ApplicationSettings appSettings
+            , ISoundService soundService
+            , IViewController viewController
+            , PlotStratum stratum) : this()
+        {
+            DataService = dataService;
+            AppSettings = appSettings;
+
+            this.ViewLogicController = new LayoutPlotLogic(stratum
+                , this
+                , dataService
+                , soundService
+                , DialogService.Instance
+                , AppSettings
+                , viewController);
+
+            //Setup DataGrid
+            _tableStyle = stratum.InitializeTreeColumns(_dataGrid);
+            
             _speciesColumn = _tableStyle.GridColumnStyles["TreeDefaultValue"] as EditableComboBoxColumn;
             _sgColumn = _tableStyle.GridColumnStyles["SampleGroup"] as EditableComboBoxColumn;
             _treeNumberColumn = _tableStyle.GridColumnStyles["TreeNumber"] as EditableTextBoxColumn;
@@ -458,8 +444,6 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 this._initialsColoumn.DataSource = AppSettings.Cruisers.ToArray();
             }
-
-            this.Dock = DockStyle.Fill;
 
             InitializeTallyPanel();
 
@@ -512,492 +496,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._tallyListPanel.ResumeLayout();
         }
 
-        private void InitializePlotNavIcons()
-        {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutPlot));
-            this._imageList = new System.Windows.Forms.ImageList();
-
-            this._imageList.Images.Clear();
-            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource"))));
-            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource1"))));
-            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource2"))));
-            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource3"))));
-            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource4"))));
-            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource5"))));
-
-            this._gotoLastPlotButton.ImageIndex = 4;
-            this._gotoLastPlotButton.ImageList = this._imageList;
-
-            this._prevPlotButton.ImageIndex = 1;
-            this._prevPlotButton.ImageList = this._imageList;
-
-            this._nextPlotButton.ImageIndex = 2;
-            this._nextPlotButton.ImageList = this._imageList;
-
-            this._gotoFirstPlotButton.ImageIndex = 5;
-            this._gotoFirstPlotButton.ImageList = this._imageList;
-
-            this._expandGridButton.ImageIndex = -1;
-            this._expandGridButton.ImageList = this._imageList;
-        }
-
-        void UpdateSpeciesColumn(Tree tree)
-        {
-            if (_speciesColumn != null)
-            {
-                _speciesColumn.DataSource = tree.ReadValidTDVs();
-            }
-        }
-
-        void UpdateSampleGroupColumn(Tree tree)
-        {
-            if (_sgColumn != null)
-            {
-                _sgColumn.DataSource = tree.ReadValidSampleGroups();
-            }
-        }
-
-        #region event handlers
-
-        void openFixCNTTallyButton_Click(object sender, EventArgs e)
-        {
-            var stratum = Stratum as FixCNTStratum;
-            var currentPlot = ViewLogicController.CurrentPlot as FixCNTPlot;
-            if (stratum == null || currentPlot == null) { return; }
-            using (var view = new FSCruiser.WinForms.Common.FixCNTForm(stratum, DataService))
-            {
-                view.ShowDialog(currentPlot);
-            }
-        }
-
-        void _expandGridButton_Click(object sender, EventArgs e)
-        {
-            IsGridExpanded = !IsGridExpanded;
-        }
-
-        protected void LogsClicked(ButtonCellClickEventArgs e)
-        {
-            Tree tree;
-
-            try
-            {
-                tree = this.ViewLogicController.CurrentTree;
-            }
-            catch { return; }
-            if (tree == null) { return; }
-
-            if (tree.TrySave())
-            {
-                var dataService = DataService.MakeLogDataService(tree);
-                using (var view = new FormLogs(dataService))
-                {
-                    view.ShowDialog();
-                }
-            }
-            else
-            {
-                DialogService.ShowMessage("Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid"
-                    , null);
-            }
-        }
-
-        void _dataGrid_CellValidating(object sender, EditableDataGridCellValidatingEventArgs e)
-        {
-            Tree tree = null;
-            try
-            {
-                tree = this.ViewLogicController.CurrentTree;
-            }
-            catch
-            {
-                e.Cancel = true;
-                return;
-            }
-
-            if (e.Column == _sgColumn)
-            {
-                var newSG = e.Value as SampleGroupDO;
-                tree.HandleSampleGroupChanging(newSG);
-
-                //this.HandleSampleGroupChanging(tree, e.Value as SampleGroupDO, out cancel);
-            }
-            else if (e.Column == _speciesColumn)
-            {
-                //no action required
-                return;
-            }
-            else if (e.Column == _treeNumberColumn)
-            {
-                try
-                {
-                    long newTreeNum = (long)e.Value;
-                    if (tree.TreeNumber != newTreeNum
-                    && !this.ViewLogicController.CurrentPlot.IsTreeNumberAvalible(newTreeNum))
-                    {
-                        DialogService.ShowMessage("Tree Number already exists");
-                        e.Cancel = true;
-                    }
-                }
-                catch
-                {
-                    e.Cancel = true;
-                }
-            }
-            else if (e.Column == _kpiColumn)
-            {
-                bool cancel = false;
-                this.ViewLogicController.DataEntryController.HandleKPIChanging(tree, (float)e.Value, true, out cancel);
-                //this.HandleKPIChanging(tree, (float)e.Value, out cancel);
-                e.Cancel = cancel;
-            }
-        }
-
-        void _dataGrid_CellValueChanged(object sender, EditableDataGridCellEventArgs e)
-        {
-            Tree tree = this.ViewLogicController.CurrentTree;
-            if (tree == null || e.Column == null) { return; }
-            if (e.Column == _sgColumn)
-            {
-                tree.HandleSampleGroupChanged();
-                this.UpdateSpeciesColumn(tree);
-            }
-            else if (e.Column == _speciesColumn)
-            {
-                var newTDV = _speciesColumn.EditComboBox.SelectedItem as TreeDefaultValueDO;
-                this.ViewLogicController.DataEntryController.HandleSpeciesChanged(tree, newTDV);
-            }
-        }
-
-        void _dataGrid_Click(object sender, EventArgs e)
-        {
-            if (IsGridExpanded == false)
-            {
-                IsGridExpanded = true;
-            }
-        }
-
-        //ocures during a FIX or PNT cruise, when user clicks a Sample Group.
-        //Expands a list of species in the sample group
-        void sgButton_Click(object sender, EventArgs e)
-        {
-            Button sgButton = (Button)sender;
-            Panel spContainer = (Panel)sgButton.Tag;
-            spContainer.Visible = !spContainer.Visible;
-        }
-
-        void SettingsButton_Click(object sender, EventArgs e)
-        {
-            var row = (ITallyButton)sender;
-            var count = row.Count;
-            this.ViewLogicController.SavePlotTrees();
-            this.ViewLogicController.ViewController.ShowTallySettings(count);
-        }
-
-        void SpeciesButton_Click(object sender, EventArgs e)
-        {
-            if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
-
-            var button = sender as SpeciesRow;
-            if (button == null) { return; }
-
-            var subPop = button.SubPopulation;
-            ViewLogicController.AddTree(subPop);
-        }
-
-        void TallyButton_Click(object sender, EventArgs e)
-        {
-            if (!ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
-
-            var row = (ITallyButton)sender;
-            var count = row.Count;
-            OnTally(count);
-        }
-
-        #region plot nav events
-
-        void _gotoFirstPlotButton_Click(object sender, EventArgs e)
-        {
-            this.ViewLogicController.SelectFirstPlot();
-        }
-
-        void _prevPlotButton_Click(object sender, EventArgs e)
-        {
-            this.ViewLogicController.SelectPreviousPlot();
-        }
-
-        void _nextPlotButton_Click(object sender, EventArgs e)
-        {
-            this.ViewLogicController.SelectNextPlot();
-        }
-
-        void _gotoLastPlotButton_Click(object sender, EventArgs e)
-        {
-            this.ViewLogicController.SelectLastPlot();
-        }
-
-        void _addPlotButton_Click(object sender, EventArgs e)
-        {
-            this.ViewLogicController.HandleAddPlot();
-            this.IsGridExpanded = false;
-        }
-
-        private void _deletePlotButton_Click(object sender, EventArgs e)
-        {
-            this.ViewLogicController.HandleDeletePlot();
-        }
-
-        void _plotInfoButton_Click(object sender, EventArgs e)
-        {
-            this.ViewLogicController.ShowCurrentPlotInfo();
-        }
-
-        #endregion plot nav events
-
-        #endregion event handlers
-
-        #region IPlotLayout
-
-        public void BindPlotData(BindingSource plotBS)
-        {
-            this._plotSelectCB.DataSource = plotBS;
-        }
-
-        public void BindTreeData(BindingSource treeBS)
-        {
-            this._dataGrid.DataSource = treeBS;
-        }
-
-        public void HandleCurrentTreeChanged(Tree tree)
-        {
-            UpdateSampleGroupColumn(tree);
-            UpdateSpeciesColumn(tree);
-        }
-
-        public void RefreshTreeView(Plot currentPlot)
-        {
-            if (currentPlot != null)
-            {
-                this._dataGrid.ReadOnly = !this._isGridExpanded;
-                this._dataGrid.Enabled = true;
-                //if (this.StratumInfo.Method != "3PPNT")
-                //{
-                //    this._dataGrid.AllowUserToAddRows = !this.CurrentPlotInfo.IsNull;
-                //}
-                //else
-                //{
-                //    this._dataGrid.AllowUserToAddRows = this.CurrentPlotInfo.Trees.Count > 0;
-                //}
-
-                this._dataGrid.Focus();
-            }
-            else //no plot is selected
-            {
-                this._dataGrid.Enabled = false;     //disable data grid
-            }
-        }
-
-        public void ShowNoPlotSelectedMessage()
-        {
-            MessageBox.Show("No Plot Selected");
-        }
-
-        public void ShowNullPlotMessage()
-        {
-            MessageBox.Show("Can't perform action on null plot");
-        }
-
-        public void ShowLimitingDistanceDialog()
-        {
-            var plot = ViewLogicController.CurrentPlot;
-            if (plot == null)
-            {
-                ShowNoPlotSelectedMessage();
-                return;
-            }
-
-            using (var view = new FormLimitingDistance())
-            {
-                if (view.ShowDialog(plot) == DialogResult.OK)
-                {
-                    plot.Remarks += view.Report;
-                }
-            }
-        }
-
-        public void ViewEndEdit()
-        {
-            this._dataGrid.EndEdit();
-        }
-
-        #endregion IPlotLayout
-
-        #region IDataEntryPage
-
-        public bool ViewLoading { get { return this._viewLoading; } }
-
-        public void HandleLoad()
-        {
-            _viewLoading = false;
-            this.ViewLogicController.HandleViewLoad();
-            //this.RefreshColumnReferences();
-            //_BS_Plots.DataSource = this.StratumInfo.Plots;
-        }
-
-        public bool PreviewKeypress(string keyStr)
-        {
-            if (_viewLoading) { return false; }
-            if (string.IsNullOrEmpty(keyStr)) { return false; }
-
-            var settings = AppSettings;
-
-            if (keyStr == settings.AddPlotKeyStr)
-            {
-                this._addPlotButton_Click(null, null);
-                return true;
-            }
-            else if (keyStr == settings.AddTreeKeyStr)
-            {
-                return ViewLogicController.UserAddTree() != null;
-            }
-            else if (keyStr == settings.ResequencePlotTreesKeyStr)
-            {
-                return ViewLogicController.ResequenceTreeNumbers();
-            }
-            else if (keyStr.StartsWith("ESC", StringComparison.InvariantCultureIgnoreCase))
-            {
-                IsGridExpanded = !IsGridExpanded;
-                return true;
-            }
-            else { return false; }
-        }
-
-        public void NotifyEnter()
-        {
-            MoveLastTree();
-            if (IsGridExpanded)
-            {
-                _dataGrid.Edit();
-            }
-        }
-
-        #endregion IDataEntryPage
-
-        #region ITreeView
-
-        public bool UserCanAddTrees
-        {
-            get { return this.ViewLogicController.UserCanAddTrees; }
-            set { this.ViewLogicController.UserCanAddTrees = value; }
-        }
-
-        public bool ErrorColumnVisable
-        {
-            get
-            {
-                return _errorsColumn != null
-                    && _errorsColumn.Width > 0;
-            }
-            set
-            {
-                if (_errorsColumn != null)
-                {
-                    _errorsColumn.Width = (value) ? Screen.PrimaryScreen.WorkingArea.Width : -1;
-                }
-            }
-        }
-
-        public bool LogColumnVisable
-        {
-            get
-            {
-                return _logsColumn != null
-                    && _logsColumn.Width > 0;
-            }
-            set
-            {
-                if (_logsColumn != null)
-                {
-                    _logsColumn.Width = (value) ? Constants.LOG_COLUMN_WIDTH : -1;
-                }
-            }
-        }
-
-        public ICollection<Tree> Trees
-        {
-            get
-            {
-                var curPlot = this.ViewLogicController.CurrentPlot;
-                if (curPlot != null)
-                {
-                    return curPlot.Trees;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        public void DeleteSelectedTree()
-        {
-            this.ViewLogicController.HandleDeleteCurrentTree();
-        }
-
-        public void EndEdit()
-        {
-            this.ViewLogicController.EndEdit();
-        }
-
-        void Settings_CruisersChanged(object sender, EventArgs e)
-        {
-            if (this._initialsColoumn != null)
-            {
-                this._initialsColoumn.DataSource = AppSettings.Cruisers.ToArray();
-            }
-        }
-
-        public void MoveLastTree()
-        {
-            this.ViewLogicController.SelectLastTree();
-        }
-
-        public void MoveHomeField()
-        {
-            this._dataGrid.MoveFirstEmptyCell();
-        }
-
-        public Tree UserAddTree()
-        {
-            return this.ViewLogicController.UserAddTree();
-        }
-
-        #endregion ITreeView
-
-        #region ITallyView
-
-        public Dictionary<char, CountTree> HotKeyLookup
-        {
-            get
-            {
-                return this.ViewLogicController.Stratum.HotKeyLookup;
-            }
-        }
-
-        public bool HotKeyEnabled
-        {
-            get
-            {
-                return !this._isGridExpanded;
-            }
-        }
-
-        public void HandleStratumLoaded(Control container)
-        {
-            //do nothing
-            return;
-        }
-
-        public void MakeSGList(IEnumerable<SampleGroup> sampleGroups, Panel container)
+        void MakeSGList(IEnumerable<SampleGroup> sampleGroups, Panel container)
         {
             var list = sampleGroups.ToList();
             if (list.Count == 1)
@@ -1047,7 +546,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public Control MakeTallyRow(Control container, SubPop subPop)
+        Control MakeTallyRow(Control container, SubPop subPop)
         {
             var tallyButton = new SpeciesRow();
             tallyButton.SubPopulation = subPop;
@@ -1060,13 +559,13 @@ namespace FSCruiser.WinForms.DataEntry
             return tallyButton;
         }
 
-        public Control MakeTallyRow(Control container, CountTree count)
+        Control MakeTallyRow(Control container, CountTree count)
         {
             var row = new PlotTallyButton(count);
             row.SuspendLayout();
 
-            row.TallyButtonClicked += new EventHandler(this.TallyButton_Click);
-            row.SettingsButtonClicked += new EventHandler(this.SettingsButton_Click);
+            row.TallyButtonClicked += new EventHandler(this.tallyRow_TallyButtonClicked);
+            row.SettingsButtonClicked += new EventHandler(this.tallyRow_InfoButtonClicked);
 
             //row.Width = 90;
             row.Parent = container;
@@ -1076,27 +575,299 @@ namespace FSCruiser.WinForms.DataEntry
             return row;
         }
 
-        public void OnTally(CountTree count)
+        void InitializePlotNavIcons()
         {
-            this.ViewLogicController.OnTally(count);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutPlot));
+            this._imageList = new System.Windows.Forms.ImageList();
+
+            this._imageList.Images.Clear();
+            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource"))));
+            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource1"))));
+            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource2"))));
+            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource3"))));
+            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource4"))));
+            this._imageList.Images.Add(((System.Drawing.Image)(resources.GetObject("resource5"))));
+
+            this._gotoLastPlotButton.ImageIndex = 4;
+            this._gotoLastPlotButton.ImageList = this._imageList;
+
+            this._prevPlotButton.ImageIndex = 1;
+            this._prevPlotButton.ImageList = this._imageList;
+
+            this._nextPlotButton.ImageIndex = 2;
+            this._nextPlotButton.ImageList = this._imageList;
+
+            this._gotoFirstPlotButton.ImageIndex = 5;
+            this._gotoFirstPlotButton.ImageList = this._imageList;
+
+            this._expandGridButton.ImageIndex = -1;
+            this._expandGridButton.ImageList = this._imageList;
         }
 
-        public void SaveCounts()
+        void UpdateSpeciesColumn(Tree tree)
         {
-            this.ViewLogicController.SaveCounts();
-        }
-
-        public bool TrySaveCounts()
-        {
-            if (!this.ViewLogicController.TrySaveCounts())
+            if (_speciesColumn != null)
             {
-                MessageBox.Show("Stratum:" + this.ViewLogicController.Stratum.Code
-                    + " Unable to save Counts");
-                return false;
+                _speciesColumn.DataSource = tree.ReadValidTDVs();
             }
-            return true;
         }
 
+        void UpdateSampleGroupColumn(Tree tree)
+        {
+            if (_sgColumn != null)
+            {
+                _sgColumn.DataSource = tree.ReadValidSampleGroups();
+            }
+        }
+
+        #region event handlers
+
+        void _expandGridButton_Click(object sender, EventArgs e)
+        {
+            IsGridExpanded = !IsGridExpanded;
+        }
+
+        protected void LogsClicked(ButtonCellClickEventArgs e)
+        {
+            Tree tree;
+
+            try
+            {
+                tree = this.ViewLogicController.CurrentTree;
+            }
+            catch { return; }
+            if (tree == null) { return; }
+
+            ShowLogs(tree);
+        }
+
+        void _dataGrid_CellValidating(object sender, EditableDataGridCellValidatingEventArgs e)
+        {
+            Tree tree = null;
+            try
+            {
+                tree = this.ViewLogicController.CurrentTree;
+            }
+            catch
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            if (e.Column == _sgColumn)
+            {
+                var newSG = e.Value as SampleGroupDO;
+                tree.HandleSampleGroupChanging(newSG);
+
+                //this.HandleSampleGroupChanging(tree, e.Value as SampleGroupDO, out cancel);
+            }
+            else if (e.Column == _speciesColumn)
+            {
+                //no action required
+                return;
+            }
+            else if (e.Column == _treeNumberColumn)
+            {
+                try
+                {
+                    long newTreeNum = (long)e.Value;
+                    if (tree.TreeNumber != newTreeNum
+                    && !this.ViewLogicController.CurrentPlot.IsTreeNumberAvalible(newTreeNum))
+                    {
+                        DialogService.ShowMessage("Tree Number already exists");
+                        e.Cancel = true;
+                    }
+                }
+                catch
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        void _dataGrid_CellValueChanged(object sender, EditableDataGridCellEventArgs e)
+        {
+            Tree tree = this.ViewLogicController.CurrentTree;
+            if (tree == null || e.Column == null) { return; }
+            if (e.Column == _sgColumn)
+            {
+                tree.HandleSampleGroupChanged();
+                this.UpdateSpeciesColumn(tree);
+            }
+            else if (e.Column == _speciesColumn)
+            {
+                var newTDV = _speciesColumn.EditComboBox.SelectedItem as TreeDefaultValueDO;
+                tree.HandleSpeciesChanged(newTDV);
+            }
+        }
+
+        void _dataGrid_Click(object sender, EventArgs e)
+        {
+            if (IsGridExpanded == false)
+            {
+                IsGridExpanded = true;
+            }
+        }
+
+        //ocures during a FIX or PNT cruise, when user clicks a Sample Group.
+        //Expands a list of species in the sample group
+        void sgButton_Click(object sender, EventArgs e)
+        {
+            Button sgButton = (Button)sender;
+            Panel spContainer = (Panel)sgButton.Tag;
+            spContainer.Visible = !spContainer.Visible;
+        }
+
+        void SpeciesButton_Click(object sender, EventArgs e)
+        {
+            if (!this.ViewLogicController.EnsureCurrentPlotWorkable()) { return; }
+
+            var button = sender as SpeciesRow;
+            if (button == null) { return; }
+
+            var subPop = button.SubPopulation;
+            ViewLogicController.AddTree(subPop);
+        }
+
+        #region plot nav events
+
+        void _gotoFirstPlotButton_Click(object sender, EventArgs e)
+        {
+            this.ViewLogicController.SelectFirstPlot();
+        }
+
+        void _prevPlotButton_Click(object sender, EventArgs e)
+        {
+            this.ViewLogicController.SelectPreviousPlot();
+        }
+
+        void _nextPlotButton_Click(object sender, EventArgs e)
+        {
+            this.ViewLogicController.SelectNextPlot();
+        }
+
+        void _gotoLastPlotButton_Click(object sender, EventArgs e)
+        {
+            this.ViewLogicController.SelectLastPlot();
+        }
+
+        void _addPlotButton_Click(object sender, EventArgs e)
+        {
+            this.ViewLogicController.HandleAddPlot();
+            this.IsGridExpanded = false;
+        }
+
+        private void _deletePlotButton_Click(object sender, EventArgs e)
+        {
+            this.ViewLogicController.HandleDeletePlot();
+        }
+
+        void _plotInfoButton_Click(object sender, EventArgs e)
+        {
+            ShowCurrentPlotInfo();
+        }
+
+        #endregion plot nav events
+
+        #endregion event handlers
+
+        #region IPlotLayout
+
+        public void BindPlotData(BindingSource plotBS)
+        {
+            this._plotSelectCB.DataSource = plotBS;
+        }
+
+        public void BindTreeData(BindingSource treeBS)
+        {
+            this._dataGrid.DataSource = treeBS;
+        }
+
+        public void HandleCurrentTreeChanged(Tree tree)
+        {
+            UpdateSampleGroupColumn(tree);
+            UpdateSpeciesColumn(tree);
+        }
+
+        public void RefreshTreeView(Plot currentPlot)
+        {
+            if (currentPlot != null)
+            {
+                this._dataGrid.ReadOnly = !this._isGridExpanded;
+                this._dataGrid.Enabled = true;
+                //if (this.StratumInfo.Method != "3PPNT")
+                //{
+                //    this._dataGrid.AllowUserToAddRows = !this.CurrentPlotInfo.IsNull;
+                //}
+                //else
+                //{
+                //    this._dataGrid.AllowUserToAddRows = this.CurrentPlotInfo.Trees.Count > 0;
+                //}
+
+                this._dataGrid.Focus();
+            }
+            else //no plot is selected
+            {
+                this._dataGrid.Enabled = false;     //disable data grid
+            }
+        }
+
+        public void ViewEndEdit()
+        {
+            this._dataGrid.EndEdit();
+        }
+
+        #endregion IPlotLayout
+
+        #region ITreeView
+
+        public bool ErrorColumnVisable
+        {
+            get
+            {
+                return _errorsColumn != null
+                    && _errorsColumn.Width > 0;
+            }
+            set
+            {
+                if (_errorsColumn != null)
+                {
+                    _errorsColumn.Width = (value) ? Screen.PrimaryScreen.WorkingArea.Width : -1;
+                }
+            }
+        }
+
+        public bool LogColumnVisable
+        {
+            get
+            {
+                return _logsColumn != null
+                    && _logsColumn.Width > 0;
+            }
+            set
+            {
+                if (_logsColumn != null)
+                {
+                    _logsColumn.Width = (value) ? Constants.LOG_COLUMN_WIDTH : -1;
+                }
+            }
+        }
+
+        public void MoveHomeField()
+        {
+            this._dataGrid.MoveFirstEmptyCell();
+        }
+
+        #endregion ITreeView
+
+        #region ITallyView
+        public bool HotKeyEnabled
+        {
+            get
+            {
+                return !this._isGridExpanded;
+            }
+        }
         #endregion ITallyView
     }
 }
