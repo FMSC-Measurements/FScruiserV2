@@ -141,7 +141,7 @@ namespace FSCruiser.WinForms.Common
             catch (Exception ex)
             {
                 ReportException(ex);
-                if (DialogService.AskYesNo("Relaunch data entry?", string.Empty))
+                if (DialogService.AskYesNo("Would you like to go back to data entry?", string.Empty))
                 {
                     ShowDataEntry(dataService);
                 }
@@ -157,12 +157,12 @@ namespace FSCruiser.WinForms.Common
                 report.MakeErrorReport();
                 MessageBox.Show(e.GetType().Name, "Error");
             }
-            catch(Exception ex) 
+            catch(Exception ex)
             {
                 Debug.Fail(ex.Message);
             }
 #else
-            NBug.Exceptions.Report(ex);
+            NBug.Exceptions.Report(e);
 #endif
         }
 
