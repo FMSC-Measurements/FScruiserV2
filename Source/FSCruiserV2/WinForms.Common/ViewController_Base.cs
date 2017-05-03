@@ -8,6 +8,7 @@ using FSCruiser.Core.Models;
 using FSCruiser.WinForms.DataEntry;
 using FScruiser.Core.Services;
 using CruiseDAL;
+using System.Diagnostics;
 
 namespace FSCruiser.WinForms.Common
 {
@@ -133,14 +134,36 @@ namespace FSCruiser.WinForms.Common
 
                 ApplicationController.OnLeavingCurrentUnit();
             }
+            catch (FMSC.ORM.ReadOnlyException ex)
+            {
+                MessageBox.Show("File Is Read Only \r\n" + dataService.DataStore.Path);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.GetType().Name + " " + ex.Message, "");
+                ReportException(ex);
                 if (DialogService.AskYesNo("Relaunch data entry?", string.Empty))
                 {
                     ShowDataEntry(dataService);
                 }
             }
+        }
+
+        void ReportException(Exception e)
+        {
+#if NetCF
+            try
+            {
+                var report = new FMSC.Utility.ErrorHandling.ErrorReport(e, System.Reflection.Assembly.GetExecutingAssembly());
+                report.MakeErrorReport();
+                MessageBox.Show(e.GetType().Name, "Error");
+            }
+            catch(Exception ex) 
+            {
+                Debug.Fail(ex.Message);
+            }
+#else
+            NBug.Exceptions.Report(ex);
+#endif
         }
 
         public void ShowDataEntry(CuttingUnit unit)
@@ -168,8 +191,9 @@ namespace FSCruiser.WinForms.Common
                 {
                     ShowDataEntry(dataService);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    ReportException(ex);
                     //var timeStamp = DateTime.Now.ToString("HH_mm");
 
                     //var dumFilePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "FScruiserDump" + timeStamp + ".xml");
