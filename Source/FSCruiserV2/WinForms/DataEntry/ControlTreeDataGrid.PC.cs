@@ -214,7 +214,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         void ControlTreeDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.RowIndex > Trees.Count) { return; }
+            if (e.RowIndex < 0 || e.RowIndex >= Trees.Count) { return; }
 
             if (_logsColumn != null && e.ColumnIndex == _logsColumn.Index)
             {

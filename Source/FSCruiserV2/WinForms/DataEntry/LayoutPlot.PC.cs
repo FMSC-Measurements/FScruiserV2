@@ -212,6 +212,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         void _dataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0 || e.RowIndex >= Trees.Count) { return; }
+
             if (_logsColumn != null && e.ColumnIndex == _logsColumn.Index)
             {
                 var curTree = this.Trees.ElementAt(e.RowIndex) as Tree;
@@ -286,6 +288,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void _datagrid_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0 || e.RowIndex >= Trees.Count) { return; }
+
             DataGridViewComboBoxCell cell = _dataGrid[e.ColumnIndex, e.RowIndex] as DataGridViewComboBoxCell;
             if (cell == null) { return; }
             var curTree = this.Trees.ElementAt(e.RowIndex) as Tree;

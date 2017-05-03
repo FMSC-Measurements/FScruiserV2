@@ -377,7 +377,14 @@ namespace FSCruiser.WinForms.DataEntry
                     var ex = tallyView.TrySaveCounts();
                     if (ex != null)
                     {
-                        MessageBox.Show(ex.GetType().Name + " " + ex.Message, "Counts");
+                        if (ex is FMSC.ORM.ReadOnlyException)
+                        {
+                            MessageBox.Show("File Is Read Only \r\n" + DataService.DataStore.Path);
+                        }
+                        else
+                        {
+                            MessageBox.Show(ex.GetType().Name + " " + ex.Message, "Counts");
+                        }
                     }
                 }
             }

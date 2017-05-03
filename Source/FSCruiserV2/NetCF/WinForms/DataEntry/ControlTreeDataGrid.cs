@@ -76,6 +76,9 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected override void OnCellValidating(EditableDataGridCellValidatingEventArgs e)
         {
+            if (e.RowIndex < 0 || e.RowIndex >= _BS_trees.Count) 
+            { e.Cancel = true; return; }
+
             base.OnCellValidating(e);
             Tree tree = (Tree)this._BS_trees[e.RowIndex];
             if (e.Column == _sgColumn)
@@ -127,6 +130,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected override void OnCellValueChanged(EditableDataGridCellEventArgs e)
         {
+            if (e.RowIndex < 0 || e.RowIndex >= _BS_trees.Count) { return; }
+
             base.OnCellValueChanged(e);
 
             Tree tree = _BS_trees[e.RowIndex] as Tree;
