@@ -30,9 +30,9 @@ namespace FSCruiser.WinForms
                         {
                             col = new DataGridViewComboBoxColumn()
                             {
-                                DataPropertyName = "TreeDefaultValue",
-                                DisplayMember = "Species",
-                                ValueMember = "Self",
+                                DataPropertyName = nameof(Tree.TreeDefaultValue),
+                                DisplayMember = nameof(TreeDefaultValueDO.Species),
+                                ValueMember = nameof(TreeDefaultValueDO.Self),
                                 FlatStyle = FlatStyle.Flat
                             };
                             break;
@@ -60,8 +60,9 @@ namespace FSCruiser.WinForms
                         {
                             col = new DataGridViewComboBoxColumn()
                             {
-                                DisplayMember = "Code",
-                                ValueMember = "Self",
+                                DataPropertyName = nameof(Tree.Stratum),
+                                DisplayMember = nameof(Stratum.Code),
+                                ValueMember = nameof(Stratum.Self),
                                 FlatStyle = FlatStyle.Flat
                             };
                             break;
@@ -70,8 +71,9 @@ namespace FSCruiser.WinForms
                         {
                             col = new DataGridViewComboBoxColumn()
                             {
-                                DisplayMember = "Code",
-                                ValueMember = "Self",
+                                DataPropertyName = nameof(Tree.SampleGroup),
+                                DisplayMember = nameof(SampleGroup.Code),
+                                ValueMember = nameof(SampleGroup.Self),
                                 FlatStyle = FlatStyle.Flat
                             };
                             break;
@@ -86,6 +88,7 @@ namespace FSCruiser.WinForms
                         {
                             col = new DataGridViewComboBoxColumn()
                             {
+                                DataPropertyName = nameof(Tree.Initials),
                                 DisplayMember = nameof(Cruiser.Initials),
                                 ValueMember = nameof(Cruiser.Initials)
                             };
@@ -131,34 +134,32 @@ namespace FSCruiser.WinForms
                     col.Resizable = DataGridViewTriState.True;
                 }
 
-                columns.Add(col);
+                yield return col;
             }
 
-            columns.Add(new DataGridViewButtonColumn()
+            yield return new DataGridViewButtonColumn()
             {
                 Name = "Logs",
                 HeaderText = "Logs",
-                DataPropertyName = "LogCountActual"
-            });
-
-            return columns.ToArray();
+                DataPropertyName = nameof(Tree.LogCountActual)
+            };
         }
 
         private static DataGridViewColumn MakeColumn(string columnType)
         {
             switch (columnType)
             {
-                case "Combo":
-                    {
-                        return new DataGridViewComboBoxColumn() { FlatStyle = FlatStyle.Flat };
-                    }
-                case "Button":
-                    {
-                        return new DataGridViewButtonColumn();
-                    }
+                //case "Combo":
+                //    {
+                //        return new DataGridViewComboBoxColumn() { FlatStyle = FlatStyle.Flat };
+                //    }
+                //case "Button":
+                //    {
+                //        return new DataGridViewButtonColumn();
+                //    }
                 case "Check":
                     {
-                        return new DataGridViewCheckBoxColumn();
+                        return new DataGridViewCheckBoxColumn() { FlatStyle = FlatStyle.Flat };
                     }
                 case "Text":
                 case "DateTime":
