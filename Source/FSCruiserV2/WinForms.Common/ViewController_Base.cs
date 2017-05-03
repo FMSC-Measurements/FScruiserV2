@@ -138,6 +138,14 @@ namespace FSCruiser.WinForms.Common
             {
                 MessageBox.Show("File Is Read Only \r\n" + dataService.DataStore.Path);
             }
+            catch (FMSC.ORM.ConstraintException ex)
+            {
+                MessageBox.Show("Data Constraint Failed\r\n" + ex.Message, "Error");
+                if (DialogService.AskYesNo("Would you like to go back to data entry?", string.Empty))
+                {
+                    ShowDataEntry(dataService);
+                }
+            }
             catch (Exception ex)
             {
                 ReportException(ex);
