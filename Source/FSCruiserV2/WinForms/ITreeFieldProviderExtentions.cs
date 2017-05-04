@@ -141,7 +141,8 @@ namespace FSCruiser.WinForms
             {
                 Name = "Logs",
                 HeaderText = "Logs",
-                DataPropertyName = nameof(Tree.LogCountActual)
+                DataPropertyName = nameof(Tree.LogCountActual),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader
             };
         }
 

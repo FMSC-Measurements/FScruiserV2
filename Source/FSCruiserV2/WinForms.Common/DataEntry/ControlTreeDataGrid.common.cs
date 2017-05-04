@@ -48,8 +48,6 @@ namespace FSCruiser.WinForms.DataEntry
             var dataService = DataService;
             if (dataService != null)
             {
-                dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
-
                 _BS_trees.DataSource = dataService.NonPlotTrees;
             }
         }
@@ -59,19 +57,7 @@ namespace FSCruiser.WinForms.DataEntry
             var dataService = DataService;
             if (dataService != null)
             {
-                dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
             }
-        }
-
-        void HandleEnableLogGradingChanged(object sender, EventArgs e)
-        {
-            var logGradingEnabled = DataService.EnableLogGrading;
-            LogColumnVisable = logGradingEnabled;
-
-#if !NetCF
-            _logToolStripMenuItem.Text = logGradingEnabled ?
-                "Disable Log Grading" : "Enable Log Grading";
-#endif
         }
 
         #endregion DataService
