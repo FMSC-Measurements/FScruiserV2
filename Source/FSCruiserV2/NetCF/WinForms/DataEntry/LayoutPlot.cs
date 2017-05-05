@@ -439,6 +439,7 @@ namespace FSCruiser.WinForms.DataEntry
             if (_logsColumn != null)
             {
                 _logsColumn.Click += this.LogsClicked;
+                LogColumnVisable = DataService.EnableLogGrading;
             }
             if (this._initialsColoumn != null)
             {

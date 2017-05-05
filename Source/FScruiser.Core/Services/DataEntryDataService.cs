@@ -14,12 +14,6 @@ namespace FScruiser.Core.Services
 {
     public class IDataEntryDataService : ITreeFieldProvider
     {
-        #region Events
-
-        public event EventHandler EnableLogGradingChanged;//TODO get rid of this event
-
-        #endregion Events
-
         public DAL DataStore { get; protected set; }
 
         #region CuttingUnit
@@ -149,12 +143,7 @@ namespace FScruiser.Core.Services
             set
             {
                 _enableLogGrading = value;
-                OnEnableLogGradingChanged();
             }
-        }
-
-        private void OnEnableLogGradingChanged()
-        {
         }
 
         #endregion EnableLogGrading

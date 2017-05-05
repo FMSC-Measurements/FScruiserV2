@@ -193,6 +193,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             if (_logsColumn != null)
             {
+                //cell click doesn't need to be hooked up here. see ControlTreeDataGrid_CellClick method
                 _logsColumn.Visible = DataService.EnableLogGrading;
             }
         }

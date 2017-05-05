@@ -90,7 +90,6 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_dataService != null)
             {
-                _dataService.EnableLogGradingChanged += HandleEnableLogGradingChanged;
             }
         }
 
@@ -98,7 +97,6 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (_dataService != null)
             {
-                _dataService.EnableLogGradingChanged -= HandleEnableLogGradingChanged;
             }
         }
 
