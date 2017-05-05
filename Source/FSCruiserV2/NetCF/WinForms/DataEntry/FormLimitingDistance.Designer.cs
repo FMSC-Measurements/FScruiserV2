@@ -57,7 +57,6 @@
             this._ceControlPanel = new System.Windows.Forms.Panel();
             this._cancelBTN = new System.Windows.Forms.Button();
             this._calculateBTN = new System.Windows.Forms.Button();
-            
             label7 = new System.Windows.Forms.Label();
             label4 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -135,7 +134,7 @@
             this._limitingDistanceLBL.Dock = System.Windows.Forms.DockStyle.Top;
             this._limitingDistanceLBL.Location = new System.Drawing.Point(0, 0);
             this._limitingDistanceLBL.Name = "_limitingDistanceLBL";
-            this._limitingDistanceLBL.Size = new System.Drawing.Size(638, 35);
+            this._limitingDistanceLBL.Size = new System.Drawing.Size(638, 26);
             this._limitingDistanceLBL.Text = "Limiting Distance:";
             // 
             // panel1
@@ -155,9 +154,9 @@
             this.panel3.Controls.Add(label7);
             this.panel3.Controls.Add(this._treeIsLBL);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 181);
+            this.panel3.Location = new System.Drawing.Point(0, 160);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(638, 34);
+            this.panel3.Size = new System.Drawing.Size(638, 20);
             // 
             // _treeIsLBL
             // 
@@ -170,9 +169,9 @@
             // 
             this.panel2.Controls.Add(this._limitingDistanceLBL);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(0, 146);
+            this.panel2.Location = new System.Drawing.Point(0, 140);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(638, 35);
+            this.panel2.Size = new System.Drawing.Size(638, 20);
             // 
             // panel4
             // 
@@ -183,7 +182,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 115);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(638, 31);
+            this.panel4.Size = new System.Drawing.Size(638, 25);
             // 
             // SlopeDistance
             // 
