@@ -133,7 +133,7 @@ namespace FSCruiser.WinForms.DataEntry
         private void _BTN_delete_Click(object sender, EventArgs e)
         {
             if (_dataGrid.CurrentRow == null) { return; }
-            Log log = _dataGrid.CurrentRow.DataBoundItem as Log;
+            var log = _dataGrid.CurrentRow.DataBoundItem as Log;
             if (log == null) { return; }
 
             DataService.DeleteLog(log);
@@ -142,8 +142,11 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void _BTN_add_Click(object sender, EventArgs e)
         {
+            _dataGrid.EndEdit();//because when we reset the binding we don't want to lose our current edits
             DataService.AddLogRec();
-            _BS_Logs.ResetBindings(false);
+            _BS_Logs.ResetBindings(false);//Raises ListChanged on the binding source with ListChangedType.Reset
+            _BS_Logs.MoveLast();
+            _dataGrid.MoveFirstEmptyCell();
         }
     }
 }
