@@ -95,13 +95,19 @@ namespace FScruiser.Core.Services
             return !Logs.Any(x => x.LogNumber == newLogNum);
         }
 
-        public Log AddLogRec()
+        public Log MakeLogRec()
         {
             var newLog = new Log();
             newLog.DAL = DataStore;
             newLog.Tree_CN = Tree.Tree_CN;
             newLog.LogNumber = GetNextLogNum();
 
+            return newLog;
+        }
+
+        public Log AddLogRec()
+        {
+            var newLog = MakeLogRec();
             Logs.Add(newLog);
             return newLog;
         }
