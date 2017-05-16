@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using FSCruiser.Core.Models;
 using CruiseDAL;
+using CruiseDAL.DataObjects;
 
 namespace FScruiser.Core.Services
 {
@@ -19,6 +20,8 @@ namespace FScruiser.Core.Services
 
         public ICollection<Log> Logs { get; protected set; }
 
+        public IEnumerable<LogGradeAuditRule> LogGradeAudits { get; protected set; }
+
         public double LogCountDesired
         {
             get
@@ -33,6 +36,7 @@ namespace FScruiser.Core.Services
             Stratum = stratum;
             RegionalLogRule = logRule;
             Tree = tree;
+            LogGradeAudits = LoadLogGradeAudits();
             Logs = LoadLogs();
         }
 
@@ -58,7 +62,20 @@ namespace FScruiser.Core.Services
                 }
             }
 
+            foreach (var log in logs)
+            {
+                log.PropertyChanged += Log_PropertyChanged;
+                ValidateLogGrade(log);
+            }
+
             return logs;
+        }
+
+        IEnumerable<LogGradeAuditRule> LoadLogGradeAudits()
+        {
+            return DataStore.From<LogGradeAuditRule>()
+                .Where("Species = ? OR Species = 'ANY'")
+                .Query(Tree.TreeDefaultValue.Species).ToArray();
         }
 
         double GetDefaultLogCount()
@@ -79,6 +96,50 @@ namespace FScruiser.Core.Services
             return 0;
         }
 
+        public Log AddLogRec()
+        {
+            var newLog = MakeLogRec();
+            Logs.Add(newLog);
+            return newLog;
+        }
+
+        public bool DeleteLog(Log log)
+        {
+            if (log.IsPersisted)
+            {
+                Tree.LogCountDirty = true;
+                log.Delete();
+            }
+            return Logs.Remove(log);
+        }
+
+        public Log MakeLogRec()
+        {
+            var newLog = new Log();
+            newLog.DAL = DataStore;
+            newLog.Tree_CN = Tree.Tree_CN;
+            newLog.LogNumber = GetNextLogNum();
+            newLog.PropertyChanged += Log_PropertyChanged;
+
+            return newLog;
+        }
+
+        private void Log_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            var log = sender as Log;
+            if (log == null) { return; }
+
+            switch (e.PropertyName)
+            {
+                case "Grade":
+                case "SeenDefect":
+                    {
+                        ValidateLogGrade(log);
+                        break;
+                    }
+            }
+        }
+
         int GetNextLogNum()
         {
             int highest = 0;
@@ -95,31 +156,17 @@ namespace FScruiser.Core.Services
             return !Logs.Any(x => x.LogNumber == newLogNum);
         }
 
-        public Log MakeLogRec()
+        public void ValidateLogGrade(Log log)
         {
-            var newLog = new Log();
-            newLog.DAL = DataStore;
-            newLog.Tree_CN = Tree.Tree_CN;
-            newLog.LogNumber = GetNextLogNum();
-
-            return newLog;
+            ValidateLogGrade(log, LogGradeAudits);
         }
 
-        public Log AddLogRec()
+        public static void ValidateLogGrade(Log log, IEnumerable<LogGradeAuditRule> logGradAudits)
         {
-            var newLog = MakeLogRec();
-            Logs.Add(newLog);
-            return newLog;
-        }
-
-        public bool DeleteLog(Log log)
-        {
-            if (log.IsPersisted)
+            foreach (var lga in logGradAudits)
             {
-                Tree.LogCountDirty = true;
-                log.Delete();
+                lga.ValidateLog(log);
             }
-            return Logs.Remove(log);
         }
 
         public void Save()

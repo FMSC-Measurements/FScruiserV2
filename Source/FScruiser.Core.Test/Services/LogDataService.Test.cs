@@ -217,6 +217,11 @@ namespace FScruiser.Core.Test.Services
             }
         }
 
+        [Fact]
+        public void ValidateLogGradeTest()
+        {
+        }
+
         void ValidateLog(Log log)
         {
             log.DAL.Should().NotBeNull();
