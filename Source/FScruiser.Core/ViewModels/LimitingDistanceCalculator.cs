@@ -6,6 +6,7 @@ namespace FSCruiser.Core.DataEntry
 {
     public class LimitingDistanceCalculator : ViewModelBase
     {
+        public static int DECIMALS = 2;
         public static readonly String MEASURE_TO_FACE = "Face";
         public static readonly String MEASURE_TO_CENTER = "Center";
         public static readonly String[] MEASURE_TO_OPTIONS = new String[] { MEASURE_TO_FACE, MEASURE_TO_CENTER };
@@ -156,7 +157,7 @@ namespace FSCruiser.Core.DataEntry
 
         public static bool DeterminTreeInOrOut(double slopeDistance, double limitingDistance)
         {
-            return Math.Round(slopeDistance, 3) <= Math.Round(limitingDistance, 3);
+            return Math.Round(slopeDistance, DECIMALS) <= Math.Round(limitingDistance, DECIMALS);
         }
 
         public string GenerateReport()
@@ -168,7 +169,7 @@ namespace FSCruiser.Core.DataEntry
 
             var azimuth = (Azimuth > 0) ? "Azimuth:" + Azimuth.ToString() : String.Empty;
 
-            return String.Format("Tree was {0} (DBH:{1}, slope:{2}%, slope distance:{3:F3}', limiting distance:{4:F3}' to {5} of tree, {6}:{7}) {8}\r\n",
+            return String.Format("Tree was {0} (DBH:{1}, slope:{2}%, slope distance:{3:F2}', limiting distance:{4:F2}' to {5} of tree, {6}:{7}) {8}\r\n",
                     TreeStatus,
                     DBH,
                     SlopePCT,

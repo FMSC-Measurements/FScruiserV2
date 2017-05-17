@@ -159,7 +159,7 @@ namespace FSCruiser.WinForms.DataEntry
                 && !double.IsNaN(limitingDistance);
 
             _limitingDistanceLBL.Text = String.Format("Limiting Distance: {0}"
-                , (isLimitingDistanceValid) ? string.Format("{0:F3}' to {1} of tree", limitingDistance, _calculator.MeasureTo)
+                , (isLimitingDistanceValid) ? string.Format("{0:F2}' to {1} of tree", limitingDistance, _calculator.MeasureTo)
                 : string.Empty);
 
             _calculateBTN.Enabled = _calculateBTN.Enabled = isLimitingDistanceValid;
