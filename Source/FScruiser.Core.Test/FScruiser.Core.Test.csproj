@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationSetting.Test.CS" />
+    <Compile Include="Models\LogGradeAuditRule.Test.cs" />
     <Compile Include="Models\LogHeightClass.Test.cs" />
     <Compile Include="Models\Plot.Test.cs" />
     <Compile Include="Models\PlotStratum.test.cs" />

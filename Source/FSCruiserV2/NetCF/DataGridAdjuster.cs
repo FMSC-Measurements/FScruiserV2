@@ -66,6 +66,8 @@ namespace FSCruiser.WinForms
                 tblStyle.GridColumnStyles.Add(col);
             }
 
+            tblStyle.GridColumnStyles.Add(MakeErrorColumn(Screen.PrimaryScreen.WorkingArea.Width));
+
             grid.TableStyles.Add(tblStyle);
 
             return tblStyle;
@@ -203,6 +205,7 @@ namespace FSCruiser.WinForms
             DataGridButtonColumn logsCol = new DataGridButtonColumn();
             logsCol.HeaderText = "Logs";
             logsCol.MappingName = "LogCountActual";
+            logsCol.Width = MeasureTextWidth(grid, logsCol.HeaderText) + 18;//plus 18 to allow for padding
             tblStyle.GridColumnStyles.Add(logsCol);
 
             tblStyle.GridColumnStyles.Add(MakeErrorColumn(screenWidth));

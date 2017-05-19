@@ -23,6 +23,28 @@ namespace System.Linq
             return false;
         }
 
+        public static IEnumerable<TSource> Distinct<TSource>(this IEnumerable<TSource> source)
+        {
+            if (source == null) { throw new ArgumentNullException("source"); }
+            return Enumerable.DistinctIterator<TSource>(source, (IEqualityComparer<TSource>)null);
+        }
+
+        public static IEnumerable<TSource> Distinct<TSource>(this IEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
+        {
+            if (source == null) { throw new ArgumentNullException("source"); }
+            return Enumerable.DistinctIterator<TSource>(source, comparer);
+        }
+
+        private static IEnumerable<TSource> DistinctIterator<TSource>(IEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
+        {
+            Set<TSource> set = new Set<TSource>(comparer);
+            foreach (TSource source1 in source)
+            {
+                if (set.Add(source1))
+                    yield return source1;
+            }
+        }
+
         public static TSource First<TSource>(this IEnumerable<TSource> source)
         {
             if (source == null) { throw new ArgumentNullException("source"); }
@@ -42,6 +64,83 @@ namespace System.Linq
                 }
             }
             throw new InvalidOperationException("No Elements");
+        }
+
+        /// <summary>
+        /// Projects each element of a sequence to an <see cref="IEnumerable{T}" /> 
+        /// and flattens the resulting sequences into one sequence.
+        /// </summary>
+
+        public static IEnumerable<TResult> SelectMany<TSource, TResult>(
+            this IEnumerable<TSource> source,
+            Func<TSource, IEnumerable<TResult>> selector)
+        {
+            if (selector == null) throw new ArgumentNullException("selector");
+
+            return source.SelectMany((item, i) => selector(item));
+        }
+
+        /// <summary>
+        /// Projects each element of a sequence to an <see cref="IEnumerable{T}" />, 
+        /// and flattens the resulting sequences into one sequence. The 
+        /// index of each source element is used in the projected form of 
+        /// that element.
+        /// </summary>
+
+        public static IEnumerable<TResult> SelectMany<TSource, TResult>(
+            this IEnumerable<TSource> source,
+            Func<TSource, int, IEnumerable<TResult>> selector)
+        {
+            if (selector == null) throw new ArgumentNullException("selector");
+
+            return source.SelectMany(selector, (item, subitem) => subitem);
+        }
+
+        /// <summary>
+        /// Projects each element of a sequence to an <see cref="IEnumerable{T}" />, 
+        /// flattens the resulting sequences into one sequence, and invokes 
+        /// a result selector function on each element therein.
+        /// </summary>
+
+        public static IEnumerable<TResult> SelectMany<TSource, TCollection, TResult>(
+            this IEnumerable<TSource> source,
+            Func<TSource, IEnumerable<TCollection>> collectionSelector,
+            Func<TSource, TCollection, TResult> resultSelector)
+        {
+            if (collectionSelector == null) throw new ArgumentNullException("collectionSelector");
+
+            return source.SelectMany((item, i) => collectionSelector(item), resultSelector);
+        }
+
+        /// <summary>
+        /// Projects each element of a sequence to an <see cref="IEnumerable{T}" />, 
+        /// flattens the resulting sequences into one sequence, and invokes 
+        /// a result selector function on each element therein. The index of 
+        /// each source element is used in the intermediate projected form 
+        /// of that element.
+        /// </summary>
+
+        public static IEnumerable<TResult> SelectMany<TSource, TCollection, TResult>(
+            this IEnumerable<TSource> source,
+            Func<TSource, int, IEnumerable<TCollection>> collectionSelector,
+            Func<TSource, TCollection, TResult> resultSelector)
+        {
+            if (source == null) throw new ArgumentNullException("source");
+            if (collectionSelector == null) throw new ArgumentNullException("collectionSelector");
+            if (resultSelector == null) throw new ArgumentNullException("resultSelector");
+
+            return SelectManyYield(source, collectionSelector, resultSelector);
+        }
+
+        private static IEnumerable<TResult> SelectManyYield<TSource, TCollection, TResult>(
+            this IEnumerable<TSource> source,
+            Func<TSource, int, IEnumerable<TCollection>> collectionSelector,
+            Func<TSource, TCollection, TResult> resultSelector)
+        {
+            var i = 0;
+            foreach (var item in source)
+                foreach (var subitem in collectionSelector(item, i++))
+                    yield return resultSelector(item, subitem);
         }
 
         public static TSource SingleOrDefault<TSource>(this IEnumerable<TSource> source)
@@ -416,5 +515,118 @@ namespace System.Linq
         //{
         //    return Enumerable.Max<TResult>(source.Select<TSource, TResult>(selector));
         //}
+    }
+
+    internal class Set<TElement>
+    {
+        private int[] buckets;
+        private Set<TElement>.Slot[] slots;
+        private int count;
+        private int freeList;
+        private IEqualityComparer<TElement> comparer;
+
+        public Set()
+            : this((IEqualityComparer<TElement>)null)
+        {
+        }
+
+        public Set(IEqualityComparer<TElement> comparer)
+        {
+            if (comparer == null)
+                comparer = (IEqualityComparer<TElement>)EqualityComparer<TElement>.Default;
+            this.comparer = comparer;
+            this.buckets = new int[7];
+            this.slots = new Set<TElement>.Slot[7];
+            this.freeList = -1;
+        }
+
+        public bool Add(TElement value)
+        {
+            return !this.Find(value, true);
+        }
+
+        public bool Contains(TElement value)
+        {
+            return this.Find(value, false);
+        }
+
+        public bool Remove(TElement value)
+        {
+            int num = this.comparer.GetHashCode(value) & int.MaxValue;
+            int index1 = num % this.buckets.Length;
+            int index2 = -1;
+            for (int index3 = this.buckets[index1] - 1; index3 >= 0; index3 = this.slots[index3].next)
+            {
+                if (this.slots[index3].hashCode == num && this.comparer.Equals(this.slots[index3].value, value))
+                {
+                    if (index2 < 0)
+                        this.buckets[index1] = this.slots[index3].next + 1;
+                    else
+                        this.slots[index2].next = this.slots[index3].next;
+                    this.slots[index3].hashCode = -1;
+                    this.slots[index3].value = default(TElement);
+                    this.slots[index3].next = this.freeList;
+                    this.freeList = index3;
+                    return true;
+                }
+                index2 = index3;
+            }
+            return false;
+        }
+
+        private bool Find(TElement value, bool add)
+        {
+            int num = this.comparer.GetHashCode(value) & int.MaxValue;
+            for (int index = this.buckets[num % this.buckets.Length] - 1; index >= 0; index = this.slots[index].next)
+            {
+                if (this.slots[index].hashCode == num && this.comparer.Equals(this.slots[index].value, value))
+                    return true;
+            }
+            if (add)
+            {
+                int index1;
+                if (this.freeList >= 0)
+                {
+                    index1 = this.freeList;
+                    this.freeList = this.slots[index1].next;
+                }
+                else
+                {
+                    if (this.count == this.slots.Length)
+                        this.Resize();
+                    index1 = this.count;
+                    ++this.count;
+                }
+                int index2 = num % this.buckets.Length;
+                this.slots[index1].hashCode = num;
+                this.slots[index1].value = value;
+                this.slots[index1].next = this.buckets[index2] - 1;
+                this.buckets[index2] = index1 + 1;
+            }
+            return false;
+        }
+
+        private void Resize()
+        {
+            int length = checked(this.count * 2 + 1);
+            int[] numArray = new int[length];
+            Set<TElement>.Slot[] slotArray = new Set<TElement>.Slot[length];
+            Array.Copy((Array)this.slots, 0, (Array)slotArray, 0, this.count);
+            for (int index1 = 0; index1 < this.count; ++index1)
+            {
+                int index2 = slotArray[index1].hashCode % length;
+                slotArray[index1].next = numArray[index2] - 1;
+                numArray[index2] = index1 + 1;
+            }
+            this.buckets = numArray;
+            this.slots = slotArray;
+        }
+
+        internal struct Slot
+        {
+            internal int hashCode;
+            internal TElement value;
+            internal int next;
+        }
     }
 }
