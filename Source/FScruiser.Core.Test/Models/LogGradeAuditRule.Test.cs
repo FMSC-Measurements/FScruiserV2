@@ -22,28 +22,28 @@ namespace FScruiser.Core.Test.Models
             lga.Grades.Should().Contain(new string[] { "0", "1", "2", "3" });
         }
 
-        [Theory]
-        [InlineData("0", .5f, "0, 1", 0.0f, true)]
-        [InlineData("2", .5f, "0, 1", 0.0f, false)]
-        [InlineData("0", .5f, "0, 1", .5f, true)]
-        [InlineData("2", .5f, "0, 1", .5f, false)]
-        [InlineData("0", .51f, "0, 1", .5f, false)]
-        [InlineData("2", .51f, "0, 1", .5f, false)]
-        public void ValidateLogTest(string grade, float defect, string auditGrades, float maxDefect, bool failPass)
-        {
-            var log = new Log()
-            {
-                Grade = grade,
-                SeenDefect = defect
-            };
+        //[Theory]
+        //[InlineData("0", .5f, "0, 1", 0.0f, true)]
+        //[InlineData("2", .5f, "0, 1", 0.0f, false)]
+        //[InlineData("0", .5f, "0, 1", .5f, true)]
+        //[InlineData("2", .5f, "0, 1", .5f, false)]
+        //[InlineData("0", .51f, "0, 1", .5f, false)]
+        //[InlineData("2", .51f, "0, 1", .5f, false)]
+        //public void ValidateLogTest(string grade, float defect, string auditGrades, float maxDefect, bool failPass)
+        //{
+        //    var log = new Log()
+        //    {
+        //        Grade = grade,
+        //        SeenDefect = defect
+        //    };
 
-            var lga = new LogGradeAuditRule()
-            {
-                ValidGrades = auditGrades,
-                DefectMax = maxDefect
-            };
+        //    var lga = new LogGradeAuditRule()
+        //    {
+        //        ValidGrades = auditGrades,
+        //        DefectMax = maxDefect
+        //    };
 
-            lga.ValidateLog(log).ShouldBeEquivalentTo(failPass, maxDefect.ToString());
-        }
+        //    lga.ValidateLog(log).ShouldBeEquivalentTo(failPass, maxDefect.ToString());
+        //}
     }
 }

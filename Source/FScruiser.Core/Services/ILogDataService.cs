@@ -161,12 +161,37 @@ namespace FScruiser.Core.Services
             ValidateLogGrade(log, LogGradeAudits);
         }
 
-        public static void ValidateLogGrade(Log log, IEnumerable<LogGradeAuditRule> logGradAudits)
+        public static bool ValidateLogGrade(Log log, IEnumerable<LogGradeAuditRule> logGradAudits)
         {
+            if (logGradAudits.Count() == 0) { return true; }
+
             foreach (var lga in logGradAudits)
             {
-                lga.ValidateLog(log);
+                if (lga.Grades.Contains(log.Grade))
+                {
+                    if (Math.Round(log.SeenDefect, 2) > Math.Round(lga.DefectMax, 2))
+                    {
+                        log["Grade"] = String.Format("Species {0}, log grade(s) {1} max log defect is {2}%"
+                        , lga.Species, String.Join(", ", lga.Grades.ToArray()), lga.DefectMax);
+                        return false;
+                    }
+                    else
+                    {
+                        log["Grade"] = null;
+                        return true;
+                    }
+                }
             }
+
+            //after going through all audits if no valid grade match found then validation fails
+            string[] allValidGrades = logGradAudits.SelectMany(x => x.Grades).Distinct().ToArray();
+            string[] species = logGradAudits.Select(x => x.Species).Distinct().ToArray();
+            Array.Sort(allValidGrades);
+            log["Grade"] = String.Format("Species {0} can only have log grades {1}"
+                        , String.Join(", ", species)
+                        , String.Join(", ", allValidGrades));
+
+            return false;
         }
 
         public void Save()

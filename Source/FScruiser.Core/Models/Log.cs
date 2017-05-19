@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.DataObjects;
@@ -357,12 +357,8 @@ namespace FSCruiser.Core.Models
 
         private void OnErrorChanged()
         {
-            var sb = new StringBuilder();
-            foreach (var val in _errors.Values)
-            {
-                sb.Append(val + " | ");
-            }
-            _error = sb.ToString();
+            _error = String.Join(" | ", _errors.Values.ToArray());
+
             NotifyPropertyChanged("Error");
         }
 

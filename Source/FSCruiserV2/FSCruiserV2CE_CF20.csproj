@@ -49,7 +49,7 @@
   <ItemGroup>
     <Reference Include="FMSC.Core_CF20, Version=1.3.0.26641, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\FMSC.Core\NetCF20\FMSC.Core_CF20.dll</HintPath>
+      <HintPath>..\..\CruiseDAL\libs\FMSC.Core\NetCF20\FMSC.Core_CF20.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsCE.Forms" />
     <Reference Include="mscorlib" />
@@ -382,10 +382,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\CruiseDAL\SQLite\Mobile_CF20\SQLite.Interop.094.dll">
-      <Link>SQLite.Interop.094.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="fscruiser.ico" />
     <Content Include="Sounds\insurance.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
