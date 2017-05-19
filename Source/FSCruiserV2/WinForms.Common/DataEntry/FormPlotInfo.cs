@@ -8,6 +8,8 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public class FormPlotInfo : Form, INotifyPropertyChanged
     {
+        static float EPSILON = .0001f;
+
         PlotStratum _stratum;
 
         uint? _editPlotNumber = null;
@@ -54,7 +56,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             set
             {
-                _editSlope = (value.EqualsEx(Plot.Slope)) ? (float?)null : value;
+                _editSlope = (Math.Abs(value - Plot.Slope) < EPSILON) ? (float?)null : value;
                 NotifyPropertyChanged("Slope");
             }
         }
@@ -68,7 +70,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             set
             {
-                _editAspect = (value.EqualsEx(Plot.Aspect)) ? (float?)null : value;
+                _editAspect = (Math.Abs(value - Plot.Aspect) < EPSILON) ? (float?)null : value;
                 NotifyPropertyChanged("Aspect");
             }
         }
