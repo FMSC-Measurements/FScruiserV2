@@ -353,26 +353,30 @@ namespace FSCruiser.Core.DataEntry
             _soundService.SignalTally();
 
             //tree may be null if user didn't enter kpi
-            if (tree != null && !isSingleStage)
+            if (tree != null)
             {
-                if (tree.CountOrMeasure == "M"
-                    || tree.CountOrMeasure == "I")
+                //single stage trees are always measure so no need to remind the user. 
+                if (!isSingleStage)
                 {
-                    if (tree.CountOrMeasure == "M")
+                    if (tree.CountOrMeasure == "M"
+                        || tree.CountOrMeasure == "I")
                     {
-                        _soundService.SignalMeasureTree();
-                        _dialogService.ShowMessage("Measure Tree# " + tree.TreeNumber);
-                    }
-                    else if (tree.CountOrMeasure == "I")
-                    {
-                        _soundService.SignalInsuranceTree();
+                        if (tree.CountOrMeasure == "M")
+                        {
+                            _soundService.SignalMeasureTree();
+                            _dialogService.ShowMessage("Measure Tree# " + tree.TreeNumber);
+                        }
+                        else if (tree.CountOrMeasure == "I")
+                        {
+                            _soundService.SignalInsuranceTree();
+                        }
                     }
                 }
 
                 tree.TrySave();
                 plot.AddTree(tree);
                 SelectLastTree();
-            }
+            }            
         }
 
         protected Tree TallyThreeP(Plot plot, CountTree count)

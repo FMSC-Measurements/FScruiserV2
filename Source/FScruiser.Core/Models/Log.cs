@@ -1,16 +1,17 @@
 ﻿using System;
-
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
 using CruiseDAL.Schema;
 using FMSC.ORM.EntityModel;
+using System.ComponentModel;
 
 namespace FSCruiser.Core.Models
 {
     [EntitySource("Log")]
-    public class Log : DataObject_Base
+    public class Log : DataObject_Base, IDataErrorInfo
     {
         [PrimaryKeyField(Name = "Log_CN")]
         public Int64? Log_CN { get; set; }
@@ -310,5 +311,57 @@ namespace FSCruiser.Core.Models
 
         [ModifiedByField()]
         public string ModifiedBy { get; set; }
+
+        #region IDataErrorInfo members
+
+        string _error;
+        IDictionary<string, string> _errors = new Dictionary<string, string>();
+
+        public string Error
+        {
+            get
+            {
+                return _error;
+            }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                if (_errors.ContainsKey(columnName))
+                { return _errors[columnName]; }
+                return null;
+            }
+            set
+            {
+                if (_errors.ContainsKey(columnName))
+                {
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        _errors[columnName] = value;
+                    }
+                    else
+                    {
+                        _errors.Remove(columnName);
+                    }
+                    OnErrorChanged();
+                }
+                else if (!string.IsNullOrEmpty(value))
+                {
+                    _errors.Add(columnName, value);
+                    OnErrorChanged();
+                }
+            }
+        }
+
+        private void OnErrorChanged()
+        {
+            _error = String.Join(" | ", _errors.Values.ToArray());
+
+            NotifyPropertyChanged("Error");
+        }
+
+        #endregion IDataErrorInfo members
     }
 }

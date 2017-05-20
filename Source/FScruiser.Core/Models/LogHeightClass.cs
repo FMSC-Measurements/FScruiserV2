@@ -43,8 +43,8 @@ namespace FSCruiser.Core.Models
 
         public bool IsInRange(float value)
         {
-            return value.GreaterThanOrEqualsEx(From)
-                    && value.LessThanOrEqualsEx(To);
+            return Math.Round(value, 2) >= Math.Round(From, 2)
+                    && Math.Round(value, 2) <= Math.Round(To, 2);
         }
 
         public double GetDefaultLogCount(float dbh)

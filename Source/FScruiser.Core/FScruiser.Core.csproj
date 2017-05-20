@@ -99,6 +99,7 @@
     <Compile Include="Models\Interfaces\ILogFieldProvider.cs" />
     <Compile Include="Models\Interfaces\ITreeFieldProvider.cs" />
     <Compile Include="Models\Log.cs" />
+    <Compile Include="Models\LogGradeAuditRule.cs" />
     <Compile Include="Models\LogHeightClass.cs" />
     <Compile Include="Models\LogRule.cs" />
     <Compile Include="Models\Plot.cs" />

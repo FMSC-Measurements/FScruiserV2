@@ -307,11 +307,30 @@ namespace FSCruiser.Core.DataEntry
                 //if a tree view has invalid trees lets ask the user if they want to continue
                 int viewIndex;
                 if (!this.ValidateTreeViews(out viewIndex)
-                    && _dialogService.AskYesNo("Error(s) found on tree records. Would you like to continue", "Continue?", true) == false)
+                    && !_dialogService.AskYesNo("Error(s) found on tree records. Would you like to continue", "Continue?", true))
                 {
                     e.Cancel = true;
                     this.View.GoToPageIndex(viewIndex);
                     return;
+                }
+
+                if (DataService.Region == 10)
+                {
+                    foreach (var treeView in View.Layouts.OfType<ITreeView>())
+                    {
+                        var treeNums = treeView.Trees
+                            .Where(t => t.LogCountActual == 0)
+                            .Select(t => t.TreeNumber.ToString()).ToArray();
+                        if (treeNums.Length > 0)
+                        {
+                            if (!_dialogService.AskYesNo("Tree(s) " + String.Join(", ", treeNums) + " have no logs", "Continue?", true))
+                            {
+                                e.Cancel = true;
+                                View.GoToPageIndex(View.Layouts.IndexOf(treeView));
+                                return;
+                            }
+                        }
+                    }
                 }
             }
             finally
