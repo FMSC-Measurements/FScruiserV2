@@ -88,9 +88,10 @@ namespace FSCruiser.WinForms
                         {
                             col = new DataGridViewComboBoxColumn()
                             {
-                                DataPropertyName = nameof(Tree.Initials),
-                                DisplayMember = nameof(Cruiser.Initials),
-                                ValueMember = nameof(Cruiser.Initials)
+                                //DataPropertyName = nameof(Tree.Initials),
+                                //DisplayMember = nameof(Cruiser.Initials),
+                                //ValueMember = nameof(Cruiser.Initials),
+                                FlatStyle = FlatStyle.Flat
                             };
                             break;
                         }

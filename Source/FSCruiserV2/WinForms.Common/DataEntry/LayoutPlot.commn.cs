@@ -145,7 +145,11 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (this._initialsColoumn != null)
             {
-                this._initialsColoumn.DataSource = AppSettings.Cruisers.ToArray();
+                _initialsColoumn.DataSource = AppSettings.Cruisers
+                    .OrEmpty().Select(x => x.Initials)
+                    .Union(Trees.OrEmpty().Select(x => x.Initials).Distinct())
+                    .Where(x => !string.IsNullOrEmpty(x))
+                    .ToArray();
             }
         }
 

@@ -318,7 +318,7 @@ namespace FSCruiser.Core.DataEntry
                 {
                     foreach (var treeView in View.Layouts.OfType<ITreeView>())
                     {
-                        var treeNums = treeView.Trees
+                        var treeNums = treeView.Trees.OrEmpty()
                             .Where(t => t.LogCountActual == 0)
                             .Select(t => t.TreeNumber.ToString()).ToArray();
                         if (treeNums.Length > 0)

@@ -91,10 +91,9 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _sgColumn.DataSource = stratum.SampleGroups;
             }
-            if (_initialsColoumn != null)
-            {
-                _initialsColoumn.DataSource = ApplicationSettings.Instance.Cruisers.ToArray();
-            }
+
+            Settings_CruisersChanged(null, null);//initialize initials column
+
             if (_logsColumn != null)
             {
                 _logsColumn.Visible = DataService.EnableLogGrading;

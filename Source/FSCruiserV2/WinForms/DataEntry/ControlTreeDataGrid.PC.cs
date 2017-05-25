@@ -187,15 +187,14 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _stratumColumn.DataSource = DataService.TreeStrata;
             }
-            if (_initialsColoumn != null)
-            {
-                _initialsColoumn.DataSource = AppSettings.Cruisers.ToArray();
-            }
+
             if (_logsColumn != null)
             {
                 //cell click doesn't need to be hooked up here. see ControlTreeDataGrid_CellClick method
                 _logsColumn.Visible = DataService.EnableLogGrading;
             }
+
+            Settings_CruisersChanged(null, null);//initialize initials column
         }
 
         #region event handlers

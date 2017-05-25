@@ -441,10 +441,7 @@ namespace FSCruiser.WinForms.DataEntry
                 _logsColumn.Click += this.LogsClicked;
                 LogColumnVisable = DataService.EnableLogGrading;
             }
-            if (this._initialsColoumn != null)
-            {
-                this._initialsColoumn.DataSource = AppSettings.Cruisers.ToArray();
-            }
+            Settings_CruisersChanged(null, null);//initialize initials column
 
             InitializeTallyPanel();
 
