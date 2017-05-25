@@ -13,7 +13,7 @@ namespace FSCruiser.Core
     [Serializable]
     public class ApplicationSettings : INotifyPropertyChanged
     {
-        private enum HotKeyAction
+        internal enum HotKeyAction
         { None = 0, AddTree, AddPlot, JumpTreeTally, ResequencePlotTrees, UnTally }
 
         protected const string APP_SETTINGS_PATH = "Settings.xml";
