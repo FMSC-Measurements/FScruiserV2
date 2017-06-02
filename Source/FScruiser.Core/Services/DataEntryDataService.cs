@@ -249,7 +249,7 @@ namespace FScruiser.Core.Services
             foreach (var st in PlotStrata.Where(x => x != plot.Stratum))
             {
                 var p = st.Plots.Where(x => x.PlotNumber == plot.PlotNumber).FirstOrDefault();
-                if (p != null && p.Trees.Any(x => x.TreeNumber == treeNumber))
+                if (p != null && p.Trees.OrEmpty().Any(x => x.TreeNumber == treeNumber))
                 {
                     return false;
                 }
