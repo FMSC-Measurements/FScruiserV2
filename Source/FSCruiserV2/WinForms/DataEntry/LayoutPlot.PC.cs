@@ -227,17 +227,19 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void _dataGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
+            if (e.RowIndex > _dataGrid.RowCount - 1 || e.RowIndex < 0) { return; }
+            if (e.ColumnIndex > _dataGrid.ColumnCount - 1 || e.ColumnIndex < 0) { return; }
+
             var cell = _dataGrid[e.ColumnIndex, e.RowIndex];
             if (cell == null) { return; }
             if (cell.FormattedValue == e.FormattedValue) { return; }//are there any changes
 
-            Tree curTree = null;
+            Tree curTree = this.ViewLogicController.CurrentTree;
+            if (curTree == null) { return; }
+
             object cellValue = null;
             try
             {
-                curTree = this.ViewLogicController.CurrentTree;
-                if (curTree == null) { return; }
-
                 cellValue = cell.ParseFormattedValue(e.FormattedValue, cell.InheritedStyle, null, null);
             }
             catch
@@ -248,6 +250,9 @@ namespace FSCruiser.WinForms.DataEntry
 
             if (_treeNumberColumn != null && e.ColumnIndex == _treeNumberColumn.Index)
             {
+                if (cellValue == null || !(cellValue is long))
+                { e.Cancel = true; return; }//if cell value is blank cellValue is an object
+
                 var newTreeNum = (long)cellValue;
                 var currPlot = ViewLogicController.CurrentPlot;
                 if (curTree.TreeNumber != newTreeNum)
