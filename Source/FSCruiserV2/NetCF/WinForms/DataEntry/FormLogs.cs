@@ -11,18 +11,11 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormLogs : FMSC.Controls.CustomForm
     {
+        private EditableTextBoxColumn _logNumColumn;
+
+        private Microsoft.WindowsCE.Forms.InputPanel _sip;
+
         #region DataService
-        ILogDataService _dataService;
-        public ILogDataService DataService 
-        {
-            get { return _dataService; }
-            set
-            {
-                OnDataServiceChanging();
-                _dataService = value;
-                OnDataServiceChanged();
-            }
-        }
 
         void OnDataServiceChanging()
         {
@@ -38,10 +31,6 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
         #endregion
-
-        private EditableTextBoxColumn _logNumColumn;
-
-        private Microsoft.WindowsCE.Forms.InputPanel _sip;
 
         public FormLogs() : base()
         {
@@ -67,12 +56,6 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.CellValidating += new EditableDataGridCellValidatingEventHandler(_dataGrid_CellValidating);
 
             DataGridAdjuster.InitializeGrid(this._dataGrid);
-        }
-
-        public FormLogs(ILogDataService dataService)
-            : this()
-        {
-            DataService = dataService;
         }
 
         //void _sip_EnabledChanged(object sender, EventArgs e)
@@ -118,22 +101,6 @@ namespace FSCruiser.WinForms.DataEntry
             if (e.KeyCode == Keys.Down)
             {
                 //this.AddLogRec();
-            }
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            base.OnClosing(e);
-            this._dataGrid.EndEdit();
-
-            try
-            {
-                DataService.Save();
-            }
-            catch (Exception)
-            {
-                e.Cancel = !DialogService.AskYesNo("Opps, logs weren't saved. Would you like to abort?"
-                    , String.Empty);
             }
         }
 

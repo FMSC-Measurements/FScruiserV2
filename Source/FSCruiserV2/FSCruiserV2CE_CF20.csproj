@@ -165,6 +165,9 @@
     <Compile Include="WinForms.Common\DataEntry\FormDataEntry.common.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="WinForms.Common\DataEntry\FormLogs.common.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="WinForms.Common\DataEntry\FormPlotInfo.cs">
       <SubType>Form</SubType>
     </Compile>

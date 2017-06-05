@@ -14,19 +14,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region DataService
 
-        ILogDataService _dataService;
-
-        public ILogDataService DataService
-        {
-            get { return _dataService; }
-            set
-            {
-                OnDataServiceChanging();
-                _dataService = value;
-                OnDataServiceChanged();
-            }
-        }
-
         void OnDataServiceChanging()
         {
         }
@@ -53,11 +40,6 @@ namespace FSCruiser.WinForms.DataEntry
             base.StartPosition = FormStartPosition.CenterParent;
         }
 
-        public FormLogs(ILogDataService dataService) : this()
-        {
-            DataService = dataService;
-        }
-
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -79,22 +61,6 @@ namespace FSCruiser.WinForms.DataEntry
                 {
                     break;
                 }
-            }
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            base.OnClosing(e);
-            this._dataGrid.EndEdit();
-
-            try
-            {
-                DataService.Save();
-            }
-            catch (Exception)
-            {
-                e.Cancel = !DialogService.AskYesNo("Opps, logs weren't saved. Would you like to abort?"
-                    , String.Empty);
             }
         }
 

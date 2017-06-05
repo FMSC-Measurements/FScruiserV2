@@ -156,9 +156,19 @@ namespace FScruiser.Core.Services
             return !Logs.Any(x => x.LogNumber == newLogNum);
         }
 
-        public void ValidateLogGrade(Log log)
+        public bool ValidateLogGrades()
         {
-            ValidateLogGrade(log, LogGradeAudits);
+            bool success = true;
+            foreach (var log in Logs)
+            {
+                success = ValidateLogGrade(log) && success;
+            }
+            return success;
+        }
+
+        public bool ValidateLogGrade(Log log)
+        {
+            return ValidateLogGrade(log, LogGradeAudits);
         }
 
         public static bool ValidateLogGrade(Log log, IEnumerable<LogGradeAuditRule> logGradAudits)
