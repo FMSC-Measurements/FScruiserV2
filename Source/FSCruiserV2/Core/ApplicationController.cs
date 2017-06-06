@@ -36,7 +36,7 @@ namespace FSCruiser.Core
             {
                 ApplicationSettings.Initialize();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
                 DialogService.Instance.ShowMessage("Unable to load applications settings");
@@ -117,6 +117,11 @@ namespace FSCruiser.Core
         void HandleFileLoadError(object sender, WorkerExceptionThrownEventArgs e)
         {
             var ex = e.Exception;
+            if (ex is FMSC.ORM.SchemaUpdateException)//file could not be updated. reason why is in innerException
+            {
+                ex = ex.InnerException;
+            }
+
             if (ex is FMSC.ORM.ReadOnlyException)
             {
                 HandleException(ex, "Unable to open file because it is read only", false, true);
@@ -132,8 +137,9 @@ namespace FSCruiser.Core
                 HandleException(ex, "Unable to open file : " + ex.GetType().Name, false, true);
                 e.Handled = true;
             }
+            else
 
-            OnFileStateChanged();
+                OnFileStateChanged();
         }
 
         void HandleFileLoadStart(object sender
