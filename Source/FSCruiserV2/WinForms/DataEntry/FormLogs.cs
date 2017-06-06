@@ -14,23 +14,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region DataService
 
-        void OnDataServiceChanging()
-        {
-        }
-
-        void OnDataServiceChanged()
-        {
-            if (DataService != null)
-            {
-                _dataGrid.SuspendLayout();
-                _dataGrid.Columns.AddRange(
-                    DataService.Stratum.MakeLogColumns().ToArray());
-                _dataGrid.ResumeLayout();
-
-                _logNumColumn = _dataGrid.Columns[CruiseDAL.Schema.LOG.LOGNUMBER] as DataGridViewTextBoxColumn;
-            }
-        }
-
         #endregion DataService
 
         public FormLogs()
@@ -38,16 +21,6 @@ namespace FSCruiser.WinForms.DataEntry
             InitializeComponent();
             _dataGrid.AutoGenerateColumns = false;
             base.StartPosition = FormStartPosition.CenterParent;
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            _BS_Logs.DataSource = DataService.Logs;
-            _treeDesLbl.Text = DataService.Tree.LogLevelDiscription;
-
-            _dataGrid.Focus();
         }
 
         protected override void OnActivated(EventArgs e)

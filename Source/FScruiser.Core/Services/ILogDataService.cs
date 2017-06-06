@@ -22,6 +22,24 @@ namespace FScruiser.Core.Services
 
         public IEnumerable<LogGradeAuditRule> LogGradeAudits { get; protected set; }
 
+        public string LogLevelDiscription
+        {
+            get
+            {
+                var tree = Tree;
+                var tdv = tree.TreeDefaultValue;
+                var expectedNumberOfLogs = GetDefaultLogCount();
+
+                return String.Format("Tree:{0}  Sp:{1}  DBH:{2} Ht:{3}  Log Length:{4}{5}",
+                tree.TreeNumber,
+                tree.Species,
+                tree.DBH,
+                tree.TotalHeight,
+                (tdv != null) ? tdv.MerchHeightLogLength.ToString() : string.Empty,
+                (expectedNumberOfLogs > 0) ? "Expected Logs:" + expectedNumberOfLogs.ToString() : string.Empty);
+            }
+        }
+
         public double LogCountDesired
         {
             get
@@ -73,9 +91,18 @@ namespace FScruiser.Core.Services
 
         IEnumerable<LogGradeAuditRule> LoadLogGradeAudits()
         {
-            return DataStore.From<LogGradeAuditRule>()
+            if (Tree.TreeDefaultValue != null)
+            {
+                var species = Tree.TreeDefaultValue.Species;
+
+                return DataStore.From<LogGradeAuditRule>()
                 .Where("Species = ? OR Species = 'ANY'")
                 .Query(Tree.TreeDefaultValue.Species).ToArray();
+            }
+            else
+            {
+                return Enumerable.Empty<LogGradeAuditRule>();
+            }
         }
 
         double GetDefaultLogCount()

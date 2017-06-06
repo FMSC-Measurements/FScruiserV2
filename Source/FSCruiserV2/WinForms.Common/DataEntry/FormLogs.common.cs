@@ -6,6 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
+#if NetCF
+using FMSC.Controls;
+#endif
+
 namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormLogs
@@ -25,11 +29,42 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
+        void OnDataServiceChanging()
+        {
+        }
+
+        void OnDataServiceChanged()
+        {
+            if (DataService != null)
+            {
+#if !NetCF
+                _dataGrid.SuspendLayout();
+                _dataGrid.Columns.AddRange(
+                    DataService.Stratum.MakeLogColumns().ToArray());
+                _dataGrid.ResumeLayout();
+
+                _logNumColumn = _dataGrid.Columns[CruiseDAL.Schema.LOG.LOGNUMBER] as DataGridViewTextBoxColumn;
+#else
+                DataGridTableStyle tableStyle = DataService.Stratum.InitializeLogColumns(_dataGrid);
+                _logNumColumn = tableStyle.GridColumnStyles[CruiseDAL.Schema.LOG.LOGNUMBER] as EditableTextBoxColumn;
+#endif
+
+                _BS_Logs.DataSource = DataService.Logs;
+                _treeDesLbl.Text = DataService.LogLevelDiscription;
+            }
+        }
+
         #endregion DataService
 
         public FormLogs(ILogDataService dataService) : this()
         {
             DataService = dataService;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            _dataGrid.Focus();
         }
 
         protected override void OnClosing(CancelEventArgs e)

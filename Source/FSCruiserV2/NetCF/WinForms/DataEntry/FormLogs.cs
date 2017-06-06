@@ -15,23 +15,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         private Microsoft.WindowsCE.Forms.InputPanel _sip;
 
-        #region DataService
-
-        void OnDataServiceChanging()
-        {
-            
-        }
-
-        void OnDataServiceChanged()
-        {
-            if (DataService != null)
-            {
-                DataGridTableStyle tableStyle = DataService.Stratum.InitializeLogColumns(_dataGrid);
-                _logNumColumn = tableStyle.GridColumnStyles[CruiseDAL.Schema.LOG.LOGNUMBER] as EditableTextBoxColumn;
-            }
-        }
-        #endregion
-
         public FormLogs() : base()
         {
             InitializeComponent();
@@ -65,15 +48,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region overridden methods
 
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
 
-            _BS_Logs.DataSource = DataService.Logs;
-            _treeDesLbl.Text = DataService.Tree.LogLevelDiscription;
-
-            _dataGrid.Focus();
-        }
 
         protected override void OnActivated(EventArgs e)
         {
