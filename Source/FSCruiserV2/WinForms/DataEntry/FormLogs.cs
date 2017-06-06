@@ -87,5 +87,10 @@ namespace FSCruiser.WinForms.DataEntry
             _BS_Logs.MoveLast();
             _dataGrid.MoveFirstEmptyCell();
         }
+
+        private void _dataGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.ThrowException = false;
+        }
     }
 }

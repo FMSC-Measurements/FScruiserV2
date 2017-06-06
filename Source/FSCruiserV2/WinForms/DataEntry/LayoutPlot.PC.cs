@@ -222,7 +222,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void _dataGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            //?do nothing
+            e.ThrowException = false;
         }
 
         private void _dataGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)

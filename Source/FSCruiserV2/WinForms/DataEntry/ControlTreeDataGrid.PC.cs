@@ -234,6 +234,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             displayErrorDialogIfNoHandler = false;
             base.OnDataError(displayErrorDialogIfNoHandler, e);
+            e.ThrowException = false;
         }
 
         protected override void OnCellEnter(DataGridViewCellEventArgs e)
