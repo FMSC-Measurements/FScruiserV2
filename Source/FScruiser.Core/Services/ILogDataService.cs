@@ -30,17 +30,17 @@ namespace FScruiser.Core.Services
                 var tdv = tree.TreeDefaultValue;
                 var expectedNumberOfLogs = GetDefaultLogCount();
 
-                return String.Format("Tree:{0}  Sp:{1}  DBH:{2} Ht:{3}  Log Length:{4}{5}",
+                return String.Format("Tree:{0} Sp:{1} DBH:{2} Ht:{3} Log Length:{4}{5}",
                 tree.TreeNumber,
                 tree.Species,
                 tree.DBH,
                 tree.TotalHeight,
                 (tdv != null) ? tdv.MerchHeightLogLength.ToString() : string.Empty,
-                (expectedNumberOfLogs > 0) ? "Expected Logs:" + expectedNumberOfLogs.ToString() : string.Empty);
+                (expectedNumberOfLogs > 0) ? " Calculated Logs:" + expectedNumberOfLogs.ToString() : string.Empty);
             }
         }
 
-        public double LogCountDesired
+        public double NumCaldulatedLogs
         {
             get
             {
@@ -67,8 +67,8 @@ namespace FScruiser.Core.Services
 
             if (logs.Count == 0)
             {
-                var defaultLogCnt = Math.Ceiling(LogCountDesired);
-                for (int i = 0; i < LogCountDesired; i++)
+                var defaultLogCnt = Math.Ceiling(NumCaldulatedLogs);
+                for (int i = 0; i < NumCaldulatedLogs; i++)
                 {
                     logs.Add(
                         new Log()
