@@ -48,22 +48,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region overridden methods
 
-
-
-        protected override void OnActivated(EventArgs e)
-        {
-            base.OnActivated(e);
-
-            for (int i = 0; i < _dataGrid.RowCount; i++)
-            {
-                _dataGrid.CurrentRowIndex = i;
-                if (_dataGrid.MoveFirstEmptyCell())
-                {
-                    break;
-                }
-            }
-        }
-
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);

@@ -64,7 +64,20 @@ namespace FSCruiser.WinForms.DataEntry
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
+#if NetCF
+            for (int i = 0; i < _dataGrid.RowCount; i++)
+            {
+                _dataGrid.CurrentRowIndex = i;
+                if (_dataGrid.MoveFirstEmptyCell())
+                {
+                    break;
+                }
+            }
+#else
+
             _dataGrid.Focus();
+#endif
         }
 
         protected override void OnClosing(CancelEventArgs e)
