@@ -5,9 +5,9 @@ namespace FSCruiser.Core
 {
     public static class DictionaryExtentions
     {
-        public static void RemoveByValue<K, V>(this Dictionary<K, V> dict, V value)
+        public static void RemoveByValue<TKey, TValue>(this IDictionary<TKey, TValue> dict, TValue value)
         {
-            foreach (var item in dict.Where(kvp => kvp.Value.Equals(value)).ToList())
+            foreach (var item in ((IEnumerable<KeyValuePair<TKey, TValue>>)dict).Where(kvp => kvp.Value.Equals(value)).ToArray())
             {
                 dict.Remove(item.Key);
             }

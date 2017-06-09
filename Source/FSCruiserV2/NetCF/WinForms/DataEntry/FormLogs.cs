@@ -11,34 +11,6 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormLogs : FMSC.Controls.CustomForm
     {
-        #region DataService
-        ILogDataService _dataService;
-        public ILogDataService DataService 
-        {
-            get { return _dataService; }
-            set
-            {
-                OnDataServiceChanging();
-                _dataService = value;
-                OnDataServiceChanged();
-            }
-        }
-
-        void OnDataServiceChanging()
-        {
-            
-        }
-
-        void OnDataServiceChanged()
-        {
-            if (DataService != null)
-            {
-                DataGridTableStyle tableStyle = DataService.Stratum.InitializeLogColumns(_dataGrid);
-                _logNumColumn = tableStyle.GridColumnStyles[CruiseDAL.Schema.LOG.LOGNUMBER] as EditableTextBoxColumn;
-            }
-        }
-        #endregion
-
         private EditableTextBoxColumn _logNumColumn;
 
         private Microsoft.WindowsCE.Forms.InputPanel _sip;
@@ -69,42 +41,12 @@ namespace FSCruiser.WinForms.DataEntry
             DataGridAdjuster.InitializeGrid(this._dataGrid);
         }
 
-        public FormLogs(ILogDataService dataService)
-            : this()
-        {
-            DataService = dataService;
-        }
-
         //void _sip_EnabledChanged(object sender, EventArgs e)
         //{
         //    this._sipPlaceHolder.Height = (this._sip.Enabled) ? this._sip.Bounds.Height : 0;
         //}
 
         #region overridden methods
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            _BS_Logs.DataSource = DataService.Logs;
-            _treeDesLbl.Text = DataService.Tree.LogLevelDiscription;
-
-            _dataGrid.Focus();
-        }
-
-        protected override void OnActivated(EventArgs e)
-        {
-            base.OnActivated(e);
-
-            for (int i = 0; i < _dataGrid.RowCount; i++)
-            {
-                _dataGrid.CurrentRowIndex = i;
-                if (_dataGrid.MoveFirstEmptyCell())
-                {
-                    break;
-                }
-            }
-        }
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -118,22 +60,6 @@ namespace FSCruiser.WinForms.DataEntry
             if (e.KeyCode == Keys.Down)
             {
                 //this.AddLogRec();
-            }
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            base.OnClosing(e);
-            this._dataGrid.EndEdit();
-
-            try
-            {
-                DataService.Save();
-            }
-            catch (Exception)
-            {
-                e.Cancel = !DialogService.AskYesNo("Opps, logs weren't saved. Would you like to abort?"
-                    , String.Empty);
             }
         }
 

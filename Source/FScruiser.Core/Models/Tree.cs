@@ -144,23 +144,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        [XmlIgnore]
-        [IgnoreField]
-        public string LogLevelDiscription
-        {
-            get
-            {
-                return String.Format("Tree:{0}  Sp:{1}  DBH:{2} Ht:{3}  Log Length:{4}",
-                TreeNumber,
-                Species,
-                DBH,
-                TotalHeight,
-                (TreeDefaultValue != null) ? TreeDefaultValue.MerchHeightLogLength.ToString() : String.Empty,
-                LogCountDesired);
-            }
-        }
-
-        //public override float HiddenPrimary
+        //public override float HiddenPrimarys
         //{
         //    get
         //    {

@@ -14,36 +14,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region DataService
 
-        ILogDataService _dataService;
-
-        public ILogDataService DataService
-        {
-            get { return _dataService; }
-            set
-            {
-                OnDataServiceChanging();
-                _dataService = value;
-                OnDataServiceChanged();
-            }
-        }
-
-        void OnDataServiceChanging()
-        {
-        }
-
-        void OnDataServiceChanged()
-        {
-            if (DataService != null)
-            {
-                _dataGrid.SuspendLayout();
-                _dataGrid.Columns.AddRange(
-                    DataService.Stratum.MakeLogColumns().ToArray());
-                _dataGrid.ResumeLayout();
-
-                _logNumColumn = _dataGrid.Columns[CruiseDAL.Schema.LOG.LOGNUMBER] as DataGridViewTextBoxColumn;
-            }
-        }
-
         #endregion DataService
 
         public FormLogs()
@@ -51,21 +21,6 @@ namespace FSCruiser.WinForms.DataEntry
             InitializeComponent();
             _dataGrid.AutoGenerateColumns = false;
             base.StartPosition = FormStartPosition.CenterParent;
-        }
-
-        public FormLogs(ILogDataService dataService) : this()
-        {
-            DataService = dataService;
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            _BS_Logs.DataSource = DataService.Logs;
-            _treeDesLbl.Text = DataService.Tree.LogLevelDiscription;
-
-            _dataGrid.Focus();
         }
 
         protected override void OnActivated(EventArgs e)
@@ -79,22 +34,6 @@ namespace FSCruiser.WinForms.DataEntry
                 {
                     break;
                 }
-            }
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            base.OnClosing(e);
-            this._dataGrid.EndEdit();
-
-            try
-            {
-                DataService.Save();
-            }
-            catch (Exception)
-            {
-                e.Cancel = !DialogService.AskYesNo("Opps, logs weren't saved. Would you like to abort?"
-                    , String.Empty);
             }
         }
 
@@ -147,6 +86,11 @@ namespace FSCruiser.WinForms.DataEntry
             _BS_Logs.ResetBindings(false);//Raises ListChanged on the binding source with ListChangedType.Reset
             _BS_Logs.MoveLast();
             _dataGrid.MoveFirstEmptyCell();
+        }
+
+        private void _dataGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.ThrowException = false;
         }
     }
 }

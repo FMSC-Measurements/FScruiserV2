@@ -445,7 +445,10 @@ namespace FSCruiser.WinForms
             _addPlotHotKeySelectControl.KeyStr = settings.AddPlotKeyStr;
 
 #if NetCF
-
+            if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
+            {
+                this.WindowState = FormWindowState.Maximized;
+            }
 #else
             StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;

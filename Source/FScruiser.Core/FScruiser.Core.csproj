@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="ApplicationSettings.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Util\EnumerableExtentions.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Models\ClickerSelecter.cs" />
     <Compile Include="Models\CountTree.cs" />

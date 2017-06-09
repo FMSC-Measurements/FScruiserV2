@@ -45,9 +45,9 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FMSC.Core_CF20, Version=1.3.0.26641, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="LINQBridge.CF, Version=1.0.6354.22636, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\CruiseDAL\libs\FMSC.Core\NetCF20\FMSC.Core_CF20.dll</HintPath>
+      <HintPath>..\..\CruiseDAL\libs\LINQBridge.CF.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
@@ -91,7 +91,8 @@
     <Compile Include="Models\TallyHistoryCollection.cs" />
     <Compile Include="Models\TallySettings.cs" />
     <Compile Include="Models\Tree.cs" />
-    <Compile Include="NetCF\EnumerableExtentions.cs" />
+    <Compile Include="NetCF\Action.cs" />
+    <Compile Include="NetCF\ExtensionAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DataEntryDataService.cs" />
     <Compile Include="Services\DialogService.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Services\IViewController.cs" />
     <Compile Include="Services\SoundService.cs" />
     <Compile Include="Util\DictionaryExtentions.cs" />
+    <Compile Include="Util\EnumerableExtentions.cs" />
     <Compile Include="ViewInterfaces\IDataEntryPage.cs" />
     <Compile Include="ViewInterfaces\IDataEntryView.cs" />
     <Compile Include="ViewInterfaces\ITallyView.cs" />

@@ -187,15 +187,14 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _stratumColumn.DataSource = DataService.TreeStrata;
             }
-            if (_initialsColoumn != null)
-            {
-                _initialsColoumn.DataSource = AppSettings.Cruisers.ToArray();
-            }
+
             if (_logsColumn != null)
             {
                 //cell click doesn't need to be hooked up here. see ControlTreeDataGrid_CellClick method
                 _logsColumn.Visible = DataService.EnableLogGrading;
             }
+
+            Settings_CruisersChanged(null, null);//initialize initials column
         }
 
         #region event handlers
@@ -235,6 +234,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             displayErrorDialogIfNoHandler = false;
             base.OnDataError(displayErrorDialogIfNoHandler, e);
+            e.ThrowException = false;
         }
 
         protected override void OnCellEnter(DataGridViewCellEventArgs e)
@@ -276,11 +276,22 @@ namespace FSCruiser.WinForms.DataEntry
             }
             catch (ArgumentOutOfRangeException) { return; }//ignore possible out of bound exceptions
 
-            object cellValue = e.FormattedValue;
-            cellValue = cell.ParseFormattedValue(cellValue, cell.InheritedStyle, null, null);
+            object cellValue = null;
+            try
+            {
+                cellValue = cell.ParseFormattedValue(e.FormattedValue, cell.InheritedStyle, null, null);
+            }
+            catch
+            {
+                e.Cancel = true;
+                return;
+            }
 
             if (_treeNumberColumn != null && e.ColumnIndex == _treeNumberColumn.Index)
             {
+                if (cellValue == null || !(cellValue is long))
+                { e.Cancel = true; return; }//if cell value is blank cellValue is an object
+
                 var newTreeNum = (long)cellValue;
                 if (curTree.TreeNumber != newTreeNum
                     && !DataService.IsTreeNumberAvalible(newTreeNum))
@@ -305,7 +316,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
             else if (_speciesColumn != null && e.ColumnIndex == _speciesColumn.Index)
             {
-                TreeDefaultValueDO tdv = cellValue as TreeDefaultValueDO;
+                var tdv = cellValue as TreeDefaultValueDO;
                 e.Cancel = !curTree.HandleSpeciesChanged(tdv);
             }
             else if (_stratumColumn != null && e.ColumnIndex == _stratumColumn.Index)

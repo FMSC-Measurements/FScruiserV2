@@ -101,11 +101,11 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public static object ReadValidSampleGroups(this Tree tree)
+        public static IEnumerable<SampleGroup> ReadValidSampleGroups(this Tree tree)
         {
             if (tree == null || tree.Stratum == null)
             {
-                return new SampleGroupDO[0];
+                return new SampleGroup[0];
             }
 
             return tree.DAL.From<SampleGroup>()

@@ -22,7 +22,25 @@ namespace FScruiser.Core.Services
 
         public IEnumerable<LogGradeAuditRule> LogGradeAudits { get; protected set; }
 
-        public double LogCountDesired
+        public string LogLevelDiscription
+        {
+            get
+            {
+                var tree = Tree;
+                var tdv = tree.TreeDefaultValue;
+                var expectedNumberOfLogs = GetDefaultLogCount();
+
+                return String.Format("Tree:{0} Sp:{1} DBH:{2} Ht:{3} Log Length:{4}{5}",
+                tree.TreeNumber,
+                tree.Species,
+                tree.DBH,
+                tree.TotalHeight,
+                (tdv != null) ? tdv.MerchHeightLogLength.ToString() : string.Empty,
+                (expectedNumberOfLogs > 0) ? " Calculated Logs:" + expectedNumberOfLogs.ToString() : string.Empty);
+            }
+        }
+
+        public double NumCaldulatedLogs
         {
             get
             {
@@ -49,8 +67,8 @@ namespace FScruiser.Core.Services
 
             if (logs.Count == 0)
             {
-                var defaultLogCnt = Math.Ceiling(LogCountDesired);
-                for (int i = 0; i < LogCountDesired; i++)
+                var defaultLogCnt = Math.Ceiling(NumCaldulatedLogs);
+                for (int i = 0; i < NumCaldulatedLogs; i++)
                 {
                     logs.Add(
                         new Log()
@@ -73,9 +91,18 @@ namespace FScruiser.Core.Services
 
         IEnumerable<LogGradeAuditRule> LoadLogGradeAudits()
         {
-            return DataStore.From<LogGradeAuditRule>()
+            if (Tree.TreeDefaultValue != null)
+            {
+                var species = Tree.TreeDefaultValue.Species;
+
+                return DataStore.From<LogGradeAuditRule>()
                 .Where("Species = ? OR Species = 'ANY'")
                 .Query(Tree.TreeDefaultValue.Species).ToArray();
+            }
+            else
+            {
+                return Enumerable.Empty<LogGradeAuditRule>();
+            }
         }
 
         double GetDefaultLogCount()
@@ -156,9 +183,19 @@ namespace FScruiser.Core.Services
             return !Logs.Any(x => x.LogNumber == newLogNum);
         }
 
-        public void ValidateLogGrade(Log log)
+        public bool ValidateLogGrades()
         {
-            ValidateLogGrade(log, LogGradeAudits);
+            bool success = true;
+            foreach (var log in Logs)
+            {
+                success = ValidateLogGrade(log) && success;
+            }
+            return success;
+        }
+
+        public bool ValidateLogGrade(Log log)
+        {
+            return ValidateLogGrade(log, LogGradeAudits);
         }
 
         public static bool ValidateLogGrade(Log log, IEnumerable<LogGradeAuditRule> logGradAudits)
