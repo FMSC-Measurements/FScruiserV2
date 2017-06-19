@@ -217,16 +217,41 @@ namespace FScruiser.Core.Test.Services
             }
         }
 
-        [Fact]
-        public void ValidateLogGradeTest()
-        {
-        }
-
         void ValidateLog(Log log)
         {
             log.DAL.Should().NotBeNull();
             log.LogNumber.Should().BeGreaterThan(0);
             log.Tree_CN.Should().BeGreaterThan(0);
+        }
+
+        [Fact]
+        public void ValidateLogGradeTest()
+        {
+            var log = new Log();
+
+            IEnumerable<LogGradeAuditRule> audits = null;
+
+            //Action callingValidateWithNullAuditCollection = () => ILogDataService.ValidateLogGrade(log, audits);
+            //callingValidateWithNullAuditCollection.ShouldNotThrow();
+            ILogDataService.ValidateLogGrade(log, audits).Should().BeTrue();
+
+            audits = new LogGradeAuditRule[] { };
+            ILogDataService.ValidateLogGrade(log, audits).Should().BeTrue();
+
+            audits = new LogGradeAuditRule[] { new LogGradeAuditRule() };
+            ILogDataService.ValidateLogGrade(log, audits).Should().BeTrue();
+
+            audits = new LogGradeAuditRule[] { new LogGradeAuditRule() { ValidGrades = "" } };
+            ILogDataService.ValidateLogGrade(log, audits).Should().BeTrue();
+
+            log.Grade = "0 ";
+            audits = new LogGradeAuditRule[] { new LogGradeAuditRule() { ValidGrades = "0" } };
+            ILogDataService.ValidateLogGrade(log, audits).Should().BeTrue();
+
+            log.Grade = "0 ";
+            audits = new LogGradeAuditRule[] { new LogGradeAuditRule() { ValidGrades = "1" } };
+            ILogDataService.ValidateLogGrade(log, audits).Should().BeFalse();
+            log[nameof(log.Grade)].Should().NotBeNullOrEmpty();
         }
     }
 }
