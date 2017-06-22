@@ -12,14 +12,9 @@ namespace FSCruiser.WinForms.DataEntry
     {
         DataGridViewTextBoxColumn _logNumColumn;
 
-        #region DataService
-
-        #endregion DataService
-
         public FormLogs()
         {
             InitializeComponent();
-            _dataGrid.AutoGenerateColumns = false;
             base.StartPosition = FormStartPosition.CenterParent;
         }
 

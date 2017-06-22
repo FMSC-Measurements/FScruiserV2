@@ -16,9 +16,12 @@ namespace FSCruiser.Core.Models
             {
                 if (_grades == null && ValidGrades != null)
                 {
-                    _grades = ValidGrades.Split(',').Select(x => x.Trim()).ToArray();
+                    _grades = ValidGrades.Split(',')
+                        .Select(x => x.Trim())
+                        .Where(x => !string.IsNullOrEmpty(x))
+                        .ToArray();
                 }
-                return _grades;
+                return _grades ?? Enumerable.Empty<string>();
             }
         }
 

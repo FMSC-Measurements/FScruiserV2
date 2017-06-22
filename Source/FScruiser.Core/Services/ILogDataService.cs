@@ -200,11 +200,18 @@ namespace FScruiser.Core.Services
 
         public static bool ValidateLogGrade(Log log, IEnumerable<LogGradeAuditRule> logGradAudits)
         {
-            if (logGradAudits.Count() == 0) { return true; }
+            if (log == null) { throw new ArgumentNullException("log"); }
+            if (logGradAudits == null || logGradAudits.Count() == 0)
+            {
+                log["Grade"] = null;
+                return true;
+            }
+
+            var logGrade = (log.Grade ?? string.Empty).Trim();
 
             foreach (var lga in logGradAudits)
             {
-                if (lga.Grades.Contains(log.Grade))
+                if (lga.Grades.Contains(logGrade))
                 {
                     if (Math.Round(log.SeenDefect, 2) > Math.Round(lga.DefectMax, 2))
                     {
@@ -221,14 +228,24 @@ namespace FScruiser.Core.Services
             }
 
             //after going through all audits if no valid grade match found then validation fails
-            string[] allValidGrades = logGradAudits.SelectMany(x => x.Grades).Distinct().ToArray();
-            string[] species = logGradAudits.Select(x => x.Species).Distinct().ToArray();
-            Array.Sort(allValidGrades);
-            log["Grade"] = String.Format("Species {0} can only have log grades {1}"
-                        , String.Join(", ", species)
-                        , String.Join(", ", allValidGrades));
+            string[] allValidGrades = logGradAudits.SelectMany(x => x.Grades)
+                .Distinct().ToArray();
 
-            return false;
+            if (allValidGrades.Count() == 0)
+            {
+                log["Grade"] = null;
+                return true;
+            }
+            else
+            {
+                string[] species = logGradAudits.Select(x => x.Species).Distinct().ToArray();
+                Array.Sort(allValidGrades);
+                log["Grade"] = String.Format("Species {0} can only have log grades {1}"
+                            , String.Join(", ", species)
+                            , String.Join(", ", allValidGrades));
+
+                return false;
+            }
         }
 
         public void Save()

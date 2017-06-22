@@ -321,7 +321,7 @@ namespace FSCruiser.Core.Models
         {
             get
             {
-                return _error;
+                return _error ?? string.Empty;
             }
         }
 
@@ -331,7 +331,7 @@ namespace FSCruiser.Core.Models
             {
                 if (_errors.ContainsKey(columnName))
                 { return _errors[columnName]; }
-                return null;
+                return String.Empty;
             }
             set
             {
