@@ -32,7 +32,6 @@ namespace FSCruiser.WinForms.DataEntry
             else if (ViewController.PlatformType == PlatformType.WM)
             {
                 this._sip = new Microsoft.WindowsCE.Forms.InputPanel();
-                this.components.Add(_sip);
                 this._dataGrid.SIP = this._sip;
             }
 
