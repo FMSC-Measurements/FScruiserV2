@@ -200,14 +200,13 @@ namespace FScruiser.Core.Services
 
         #region treeNumbering
 
-        private long GetNextNonPlotTreeNumber()
+        public long GetNextNonPlotTreeNumber()
         {
             if (this.NonPlotTrees == null || this.NonPlotTrees.Count == 0)
             { return 1; }
-            var lastTree = this.NonPlotTrees.LastOrDefault();
-            long lastTreeNum = lastTree.TreeNumber;
-            return lastTreeNum + 1;
-            //return ++UnitTreeNumIndex;
+
+            var highestTreeNum = NonPlotTrees.Max(x => x.TreeNumber);
+            return highestTreeNum + 1;
         }
 
         public long GetNextPlotTreeNumber(long plotNumber)
