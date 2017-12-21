@@ -449,7 +449,6 @@ namespace FSCruiser.Core.DataEntry
             return tree;
         }
 
-        //TODO rename method
         public void AddTree(SubPop subPop)
         {
             Tree tree = DataService.CreateNewTreeEntry(CurrentPlot, subPop);

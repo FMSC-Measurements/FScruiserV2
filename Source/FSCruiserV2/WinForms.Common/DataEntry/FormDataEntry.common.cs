@@ -1,16 +1,15 @@
-﻿using System;
+﻿using FMSC.Sampling;
+using FScruiser.Core.Services;
+using FSCruiser.Core;
+using FSCruiser.Core.DataEntry;
+using FSCruiser.Core.Models;
+using FSCruiser.Core.ViewInterfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
-using FMSC.Sampling;
-using FSCruiser.Core;
-using FSCruiser.Core.DataEntry;
-using FSCruiser.Core.Models;
-using FSCruiser.Core.ViewInterfaces;
-using FSCruiser.WinForms.DataEntry;
-using FScruiser.Core.Services;
 
 #if NetCF
 
@@ -26,16 +25,11 @@ namespace FSCruiser.WinForms.DataEntry
     public partial class FormDataEntry : FMSC.Controls.CustomForm, IDataEntryView
     {
         private IDataEntryPage _previousLayout;
-        protected List<IDataEntryPage> _layouts = new List<IDataEntryPage>();
-
-        protected LayoutTreeBased _tallyLayout;
-
-        //protected TabPage _tallyPage;
-        //protected TabPage _treePage;
-        int _treePageIndex;
-
-        int _tallyPageIndex;
-        protected ControlTreeDataGrid _treeView;
+        private List<IDataEntryPage> _layouts = new List<IDataEntryPage>();
+        private LayoutTreeBased _tallyLayout;
+        private int _treePageIndex;
+        private int _tallyPageIndex;
+        private ControlTreeDataGrid _treeView;
 
 #if NetCF
         System.Threading.Timer preventSleepTimer;
@@ -45,12 +39,12 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected IDataEntryDataService DataService { get; set; }
 
-        protected virtual TabControl PageContainer
-        {
-            get { return _pageContainer; }
-        }
-
         public IApplicationController Controller { get; protected set; }
+
+        protected TabControl PageContainer
+        {
+            get { return _pageContainer; }//initialized in Initialize Component
+        }
 
         #region Initialize Controls
 
@@ -129,7 +123,7 @@ namespace FSCruiser.WinForms.DataEntry
             _treePageIndex = AddLayout(_treeView);
         }
 
-        int AddLayout(IDataEntryPage page)
+        private int AddLayout(IDataEntryPage page)
         {
             var pageControl = (Control)page;
             var tabPage = new TabPage();
@@ -218,7 +212,7 @@ namespace FSCruiser.WinForms.DataEntry
             this.LogicController.HandleViewClosing(e);
         }
 
-        KeysConverter keyConverter = new KeysConverter();
+        private KeysConverter keyConverter = new KeysConverter();
 
         #region appSettings
 
@@ -255,7 +249,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        void _appSettings_PropertyChanged(object sender, PropertyChangedEventArgs ea)
+        private void _appSettings_PropertyChanged(object sender, PropertyChangedEventArgs ea)
         {
 #if NetCF
             if (ea.PropertyName == "KeepDeviceAwake")
@@ -401,7 +395,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region IDataEntryView
 
-        FormDataEntryLogic _presenter;
+        private FormDataEntryLogic _presenter;
 
         public FormDataEntryLogic LogicController
         {
