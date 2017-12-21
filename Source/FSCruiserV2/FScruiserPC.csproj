@@ -237,7 +237,6 @@
     <Compile Include="WinForms\DataEntry\LayoutTreeBased.PC.Designer.cs">
       <DependentUpon>LayoutTreeBased.PC.cs</DependentUpon>
     </Compile>
-    <Compile Include="WinForms\DataGridAjuster.PC.cs" />
     <Compile Include="WinForms\ILogFieldProviderExtentions.cs" />
     <Compile Include="WinForms\ITreeFieldProviderExtentions.cs" />
     <Compile Include="WinForms\ViewController.PC.cs" />
