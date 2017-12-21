@@ -88,40 +88,48 @@ namespace FSCruiser.Core.DataEntry
             //action may be null if cruising 3P and user doesn't enter a kpi
             if (action != null)
             {
-                _soundService.SignalTally();
-                var tree = action.TreeRecord;
-                if (tree != null)
+                try
                 {
-                    if (tree.CountOrMeasure == "M")
+                    count.Save();
+                    _soundService.SignalTally();
+                    var tree = action.TreeRecord;
+                    if (tree != null)
                     {
-                        _soundService.SignalMeasureTree();
-                    }
-                    else if (tree.CountOrMeasure == "I")
-                    {
-                        _soundService.SignalInsuranceTree();
-                    }
+                        if (tree.CountOrMeasure == "M")
+                        {
+                            _soundService.SignalMeasureTree();
+                        }
+                        else if (tree.CountOrMeasure == "I")
+                        {
+                            _soundService.SignalInsuranceTree();
+                        }
 
-                    if (_appSettings.EnableCruiserPopup)
-                    {
-                        _dialogService.AskCruiser(tree);
-                    }
-                    else
-                    {
-                        var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
-                                 (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
-                        _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
-                    }
+                        if (_appSettings.EnableCruiserPopup)
+                        {
+                            _dialogService.AskCruiser(tree);
+                        }
+                        else
+                        {
+                            var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
+                                     (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
+                            _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
+                        }
 
-                    tree.TrySave();
-                    DataService.AddNonPlotTree(tree);
+                        tree.TrySave();
+                        DataService.AddNonPlotTree(tree);
 
-                    if (tree.CountOrMeasure == "M" && AskEnterMeasureTreeData())
-                    {
-                        this.View.GotoTreePage();
-                        //this.View.TreeViewMoveLast();
+                        if (tree.CountOrMeasure == "M" && AskEnterMeasureTreeData())
+                        {
+                            this.View.GotoTreePage();
+                            //this.View.TreeViewMoveLast();
+                        }
                     }
+                    DataService.CuttingUnit.TallyHistoryBuffer.Add(action);
                 }
-                DataService.CuttingUnit.TallyHistoryBuffer.Add(action);
+                catch(FMSC.ORM.SQLException e) //count save fail
+                {
+                    _dialogService.ShowMessage("File error");
+                }
             }
         }
 
