@@ -59,7 +59,7 @@ namespace FSCruiser.WinForms
                 });
 
                 NBug.Settings.ReleaseMode = true;//only create error reports if debugger not attached
-                NBug.Settings.StopReportingAfter = 60;
+                NBug.Settings.StopReportingAfter = 120;
 
                 AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
                 Application.ThreadException += NBug.Handler.ThreadException;
