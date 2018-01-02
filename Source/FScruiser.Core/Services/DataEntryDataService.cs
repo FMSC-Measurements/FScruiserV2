@@ -12,7 +12,7 @@ using System.Xml.Serialization;
 
 namespace FScruiser.Core.Services
 {
-    public class IDataEntryDataService : ITreeFieldProvider
+    public class IDataEntryDataService : ITreeFieldProvider, ITreeDataService
     {
         public DAL DataStore { get; protected set; }
 
@@ -470,6 +470,18 @@ namespace FScruiser.Core.Services
         }
 
         #endregion Tree
+
+        public TreeEstimateDO LogTreeEstimate(CountTree count, int kpi)
+        {
+            if(count == null) { throw new ArgumentNullException("count"); }
+
+            var te = new TreeEstimateDO(DataStore);
+            te.KPI = kpi;
+            te.CountTree = count;
+            te.Save();
+
+            return te;
+        }
 
         #region save methods
 

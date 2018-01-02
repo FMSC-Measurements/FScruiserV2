@@ -69,14 +69,14 @@ namespace FSCruiser.Core.Models
             return GetCountsFromTrees() + this.TreeCount;
         }
 
-        public TreeEstimateDO LogTreeEstimate(int kpi)
-        {
-            var te = new TreeEstimateDO(DAL);
-            te.KPI = kpi;
-            te.CountTree = this;
-            te.Save();
+        //public TreeEstimateDO LogTreeEstimate(int kpi)
+        //{
+        //    var te = new TreeEstimateDO(DAL);
+        //    te.KPI = kpi;
+        //    te.CountTree = this;
+        //    te.Save();
 
-            return te;
-        }
+        //    return te;
+        //}
     }
 }

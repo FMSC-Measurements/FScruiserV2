@@ -11,7 +11,7 @@ namespace FSCruiser.Core
     public enum BackUpMethod { None = 0, LeaveUnit = 1, TimeInterval = 2 }
 
     [Serializable]
-    public class ApplicationSettings : INotifyPropertyChanged
+    public class ApplicationSettings : IApplicationSettings
     {
         public enum HotKeyAction
         { None = 0, AddTree, AddPlot, JumpTreeTally, ResequencePlotTrees, UnTally }
@@ -67,12 +67,15 @@ namespace FSCruiser.Core
 
         string _backupDir;
         List<Cruiser> _cruisers;
+        List<RecentProject> _recentProjects = new List<RecentProject>();
 
-        public List<RecentProject> RecentProjects { get; set; }
+        public IEnumerable<RecentProject> RecentProjects
+        {
+            get { return _recentProjects; }
+        }
 
         public ApplicationSettings()
         {
-            RecentProjects = new List<RecentProject>();
 
             EnablePageChangeSound = true;
             EnableTallySound = true;
@@ -398,23 +401,23 @@ namespace FSCruiser.Core
 
         public void AddRecentProject(RecentProject project)
         {
-            if (RecentProjects == null)
-                RecentProjects = new List<RecentProject>();
+            if (_recentProjects == null)
+                _recentProjects = new List<RecentProject>();
 
-            if (RecentProjects.Contains(project))
-                RecentProjects.Remove(project);
+            if (_recentProjects.Contains(project))
+                _recentProjects.Remove(project);
 
-            RecentProjects.Insert(0, project);
+            _recentProjects.Insert(0, project);
 
-            if (RecentProjects.Count > 5)
-                RecentProjects.RemoveAt(5);
+            if (_recentProjects.Count > 5)
+                _recentProjects.RemoveAt(5);
         }
 
         public void ClearRecentProjects()
         {
             if (RecentProjects != null)
             {
-                RecentProjects.Clear();
+                _recentProjects.Clear();
             }
         }
 

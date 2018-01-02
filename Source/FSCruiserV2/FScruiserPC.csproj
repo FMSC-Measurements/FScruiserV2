@@ -45,9 +45,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="NetCF\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Core\DataEntry\FormDataEntry.Logic.cs" />
+    <None Remove="Core\DataEntry\FormDataEntry.Logic.cs~" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Core\ApplicationController.cs" />
-    <Compile Include="Core\DataEntry\FormDataEntry.Logic.cs" />
     <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
     <Compile Include="Core\ExceptionHandler.cs" />
     <Compile Include="Core\IExceptionHandler.cs" />

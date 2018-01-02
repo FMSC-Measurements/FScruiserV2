@@ -175,8 +175,8 @@ namespace FSCruiser.WinForms.DataEntry
 #if NetCF
                 view.Sip = SIP;
 #endif
-                var pageIndex = AddLayout(view);
-                this.LogicController.RegisterStratumHotKey(st.Hotkey, pageIndex);
+                AddLayout(view);
+                this.LogicController.RegisterStratumHotKey(st.Hotkey, view);
             }
         }
 
@@ -434,6 +434,7 @@ namespace FSCruiser.WinForms.DataEntry
             if (this.PageContainer == null) { return; }
             //int pageIndex = this.PageContainer.TabPages.IndexOf(_treePage);
             this.GoToPageIndex(_treePageIndex);
+            
         }
 
         public void GoToTallyPage()
@@ -450,6 +451,15 @@ namespace FSCruiser.WinForms.DataEntry
             { return; }
 
             PageContainer.SelectedIndex = i;
+        }
+
+        public void GoToPage(IDataEntryPage page)
+        {
+            var pageIndex = Layouts.IndexOf(page);
+            if(pageIndex >= 0)
+            {
+                GoToPageIndex(pageIndex);
+            }
         }
 
         #endregion IDataEntryView

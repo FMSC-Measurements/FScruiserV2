@@ -5,11 +5,21 @@ using System.Text;
 using FScruiser.Core.Services;
 using System.Windows.Forms;
 using FSCruiser.Core;
+using FSCruiser.WinForms.DataEntry;
 
 namespace FSCruiser.WinForms
 {
     public class WinFormsDialogService : IDialogService
     {
+        Form3PNumPad _threePNumPad;
+        Form3PNumPad ThreePNumPad
+        {
+            get
+            {
+                return _threePNumPad ?? (_threePNumPad = new Form3PNumPad());
+            }
+        }
+
         #region IDialogService Members
 
         public bool AskCancel(string message, string caption, bool defaultCancel)
@@ -23,6 +33,7 @@ namespace FSCruiser.WinForms
         }
 
         FormCruiserSelection _cruiserSelectionView;
+        
 
         public void AskCruiser(FSCruiser.Core.Models.Tree tree)
         {
@@ -56,6 +67,12 @@ namespace FSCruiser.WinForms
                 , MessageBoxIcon.Question
                 , (defaultNo) ? MessageBoxDefaultButton.Button2 : MessageBoxDefaultButton.Button1)
                 == DialogResult.Yes;
+        }
+
+        public int? AskKPI(int min, int max)
+        {
+            ThreePNumPad.ShowDialog(min, max, null, false);
+            return ThreePNumPad.UserEnteredValue;
         }
 
         public void ShowMessage(string message)

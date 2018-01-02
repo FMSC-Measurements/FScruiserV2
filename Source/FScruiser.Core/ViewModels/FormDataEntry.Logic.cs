@@ -13,7 +13,7 @@ namespace FSCruiser.Core.DataEntry
 {
     public class FormDataEntryLogic
     {
-        private Dictionary<char, int> _stratumHotKeyLookup;
+        private Dictionary<char, IDataEntryPage> _stratumHotKeyLookup;
 
         public IApplicationController Controller { get; set; }
 
@@ -25,28 +25,24 @@ namespace FSCruiser.Core.DataEntry
 
         IDataEntryDataService DataService { get { return _dataService; } }
 
-        public Dictionary<char, int> StratumHotKeyLookup
+        public Dictionary<char, IDataEntryPage> StratumHotKeyLookup
         {
             get
             {
-                if (_stratumHotKeyLookup == null)
-                {
-                    _stratumHotKeyLookup = new Dictionary<char, int>();
-                }
-                return _stratumHotKeyLookup;
+                return _stratumHotKeyLookup ?? (_stratumHotKeyLookup = new Dictionary<char, IDataEntryPage>());
             }
         }
 
         IDataEntryDataService _dataService;
         IDialogService _dialogService;
         ISoundService _soundService;
-        ApplicationSettings _appSettings;
+        IApplicationSettings _appSettings;
 
         public FormDataEntryLogic(IApplicationController controller
             , IDialogService dialogService
             , ISoundService soundService
             , IDataEntryDataService dataService
-            , ApplicationSettings settings
+            , IApplicationSettings settings
             , IDataEntryView view)
         {
             this.Controller = controller;
@@ -63,7 +59,86 @@ namespace FSCruiser.Core.DataEntry
             return "Unit: " + DataService.CuttingUnit.Code + ", " + DataService.CuttingUnit.Description;
         }
 
+
         public void OnTally(CountTree count)
+        {
+            OnTally(count,
+                DataService, DataService.CuttingUnit.TallyHistoryBuffer,
+                _appSettings, View,
+                _dialogService, _soundService);
+
+            //TallyAction action = null;
+            //SampleGroupDO sg = count.SampleGroup;
+
+            ////if doing a manual tally create a tree and jump out
+            //if (sg.SampleSelectorType == CruiseDAL.Schema.CruiseMethods.CLICKER_SAMPLER_TYPE)
+            //{
+            //    action = new TallyAction(count);
+            //    var newTree = DataService.CreateNewTreeEntry(count, true); //create measure tree
+            //    newTree.TreeCount = sg.SamplingFrequency;     //increment tree count on tally
+            //    action.TreeRecord = newTree;
+            //}
+            //else if (count.SampleGroup.Stratum.Is3P)//threeP sampling
+            //{
+            //    action = TallyThreeP(count);
+            //}
+            //else//non 3P sampling (STR)
+            //{
+            //    action = TallyStandard(count);
+            //}
+
+            ////action may be null if cruising 3P and user doesn't enter a kpi
+            //if (action != null)
+            //{
+            //    try
+            //    {
+            //        count.Save();
+            //        _soundService.SignalTally();
+            //        var tree = action.TreeRecord;
+            //        if (tree != null)
+            //        {
+            //            if (tree.CountOrMeasure == "M")
+            //            {
+            //                _soundService.SignalMeasureTree();
+            //            }
+            //            else if (tree.CountOrMeasure == "I")
+            //            {
+            //                _soundService.SignalInsuranceTree();
+            //            }
+
+            //            if (_appSettings.EnableCruiserPopup)
+            //            {
+            //                _dialogService.AskCruiser(tree);
+            //            }
+            //            else
+            //            {
+            //                var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
+            //                         (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
+            //                _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
+            //            }
+
+            //            tree.TrySave();
+            //            DataService.AddNonPlotTree(tree);
+
+            //            if (tree.CountOrMeasure == "M" && AskEnterMeasureTreeData())
+            //            {
+            //                this.View.GotoTreePage();
+            //                //this.View.TreeViewMoveLast();
+            //            }
+            //        }
+            //        DataService.CuttingUnit.TallyHistoryBuffer.Add(action);
+            //    }
+            //    catch(FMSC.ORM.SQLException e) //count save fail
+            //    {
+            //        _dialogService.ShowMessage("File error");
+            //    }
+            //}
+        }
+
+        public static void OnTally(CountTree count, 
+            ITreeDataService dataService, ICollection<TallyAction> tallyHistory, 
+            IApplicationSettings appSettings, IDataEntryView view, 
+            IDialogService dialogService, ISoundService soundService)
         {
             TallyAction action = null;
             SampleGroupDO sg = count.SampleGroup;
@@ -72,17 +147,17 @@ namespace FSCruiser.Core.DataEntry
             if (sg.SampleSelectorType == CruiseDAL.Schema.CruiseMethods.CLICKER_SAMPLER_TYPE)
             {
                 action = new TallyAction(count);
-                var newTree = DataService.CreateNewTreeEntry(count, true); //create measure tree
+                var newTree = dataService.CreateNewTreeEntry(count, true); //create measure tree
                 newTree.TreeCount = sg.SamplingFrequency;     //increment tree count on tally
                 action.TreeRecord = newTree;
             }
             else if (count.SampleGroup.Stratum.Is3P)//threeP sampling
             {
-                action = TallyThreeP(count);
+                action = TallyThreeP(count, dataService, dialogService);
             }
             else//non 3P sampling (STR)
             {
-                action = TallyStandard(count);
+                action = TallyStandard(count, count.SampleGroup.Sampler, dataService);
             }
 
             //action may be null if cruising 3P and user doesn't enter a kpi
@@ -91,55 +166,58 @@ namespace FSCruiser.Core.DataEntry
                 try
                 {
                     count.Save();
-                    _soundService.SignalTally();
+                    soundService.SignalTally();
                     var tree = action.TreeRecord;
                     if (tree != null)
                     {
                         if (tree.CountOrMeasure == "M")
                         {
-                            _soundService.SignalMeasureTree();
+                            soundService.SignalMeasureTree();
                         }
                         else if (tree.CountOrMeasure == "I")
                         {
-                            _soundService.SignalInsuranceTree();
+                            soundService.SignalInsuranceTree();
                         }
 
-                        if (_appSettings.EnableCruiserPopup)
+                        if (appSettings.EnableCruiserPopup)
                         {
-                            _dialogService.AskCruiser(tree);
+                            dialogService.AskCruiser(tree);
                         }
                         else
                         {
                             var sampleType = (tree.CountOrMeasure == "M") ? "Measure Tree" :
                                      (tree.CountOrMeasure == "I") ? "Insurance Tree" : String.Empty;
-                            _dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
+                            dialogService.ShowMessage("Tree #" + tree.TreeNumber.ToString(), sampleType);
                         }
 
                         tree.TrySave();
-                        DataService.AddNonPlotTree(tree);
+                        dataService.AddNonPlotTree(tree);
 
-                        if (tree.CountOrMeasure == "M" && AskEnterMeasureTreeData())
+                        if (tree.CountOrMeasure == "M" && AskEnterMeasureTreeData(appSettings, dialogService))
                         {
-                            this.View.GotoTreePage();
+                            view.GotoTreePage();
                             //this.View.TreeViewMoveLast();
                         }
                     }
-                    DataService.CuttingUnit.TallyHistoryBuffer.Add(action);
+                    tallyHistory.Add(action);
                 }
-                catch(FMSC.ORM.SQLException e) //count save fail
+                catch (FMSC.ORM.SQLException e) //count save fail
                 {
-                    _dialogService.ShowMessage("File error");
+                    dialogService.ShowMessage("File error");
                 }
             }
         }
 
-        protected TallyAction TallyThreeP(CountTree count)
+        //ViewController (askKPI) //TODO use Dialog Service instead
+        //DataService (CreateNewTreeEntry)
+        //DAL (LogTreeEstimate) //should be dataservice instead
+        protected static TallyAction TallyThreeP(CountTree count, ITreeDataService dataService, IDialogService dialogService)
         {
             TallyAction action = new TallyAction(count);
             var sampler = count.SampleGroup.Sampler;
 
             int kpi = 0;
-            int? value = ViewController.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
+            int? value = dialogService.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
             if (value == null)
             {
                 return null;
@@ -152,12 +230,12 @@ namespace FSCruiser.Core.DataEntry
             Tree tree = null;
             if (kpi == -1)  //user entered sure to measure
             {
-                tree = DataService.CreateNewTreeEntry(count);
+                tree = dataService.CreateNewTreeEntry(count);
                 tree.STM = "Y";
             }
             else
             {
-                action.TreeEstimate = count.LogTreeEstimate(kpi);
+                action.TreeEstimate = dataService.LogTreeEstimate(count, kpi);
                 action.KPI = kpi;
                 count.SumKPI += kpi;
 
@@ -166,7 +244,7 @@ namespace FSCruiser.Core.DataEntry
                 {
                     bool isInsuranceTree = sampler.IsSelectingITrees && sampler.InsuranceCounter.Next();
 
-                    tree = DataService.CreateNewTreeEntry(count);
+                    tree = dataService.CreateNewTreeEntry(count);
                     tree.KPI = kpi;
                     tree.CountOrMeasure = (isInsuranceTree) ? "I" : "M";
                 }
@@ -178,15 +256,17 @@ namespace FSCruiser.Core.DataEntry
             return action;
         }
 
-        protected TallyAction TallyStandard(CountTree count)
+        //DataService (CreateNewTreeEntry)
+        //
+        public static TallyAction TallyStandard(CountTree count, SampleSelecter sampleSelecter, ITreeDataService dataService)
         {
             TallyAction action = new TallyAction(count);
 
-            boolItem item = (boolItem)count.SampleGroup.Sampler.NextItem();
+            boolItem item = (boolItem)sampleSelecter.NextItem();
             //If we receive nothing from the sampler, we don't have a sample
             if (item != null)//&& (item.IsSelected || item.IsInsuranceItem))
             {
-                Tree tree = DataService.CreateNewTreeEntry(count);
+                Tree tree = dataService.CreateNewTreeEntry(count);
                 tree.CountOrMeasure = (item.IsInsuranceItem) ? "I" : "M";
                 action.TreeRecord = tree;
             }
@@ -196,18 +276,18 @@ namespace FSCruiser.Core.DataEntry
             return action;
         }
 
-        protected bool AskEnterMeasureTreeData()
+        protected static bool AskEnterMeasureTreeData(IApplicationSettings appSettings, IDialogService dialogService)
         {
-            if (!_appSettings.EnableAskEnterTreeData) { return false; }
+            if (!appSettings.EnableAskEnterTreeData) { return false; }
 
-            return _dialogService.AskYesNo("Would you like to enter tree data now?", "Sample", false);
+            return dialogService.AskYesNo("Would you like to enter tree data now?", "Sample", false);
         }
 
-        public void RegisterStratumHotKey(string hk, int pageIndex)
+        public void RegisterStratumHotKey(string hk, IDataEntryPage page)
         {
             if (string.IsNullOrEmpty(hk)) { return; }
             char stratumHotKey = char.ToUpper(hk[0]);
-            this.StratumHotKeyLookup.Add(stratumHotKey, pageIndex);
+            this.StratumHotKeyLookup.Add(stratumHotKey, page);
         }
 
         public bool HandleKeyPress(string keyStr)
@@ -242,7 +322,7 @@ namespace FSCruiser.Core.DataEntry
                         //if valid stratm hot key, go to view that stratum belongs to
                         if (this.StratumHotKeyLookup.ContainsKey(key))
                         {
-                            this.View.GoToPageIndex(this.StratumHotKeyLookup[key]);
+                            this.View.GoToPage(this.StratumHotKeyLookup[key]);
                             return true;
                         }
                         else//not valid hotkey, get grumpy
@@ -313,12 +393,12 @@ namespace FSCruiser.Core.DataEntry
             {
                 //Go through all the tree views and validate
                 //if a tree view has invalid trees lets ask the user if they want to continue
-                int viewIndex;
-                if (!this.ValidateTreeViews(out viewIndex)
+                ITreeView view;
+                if (!this.ValidateTreeViews(out view)
                     && !_dialogService.AskYesNo("Error(s) found on tree records. Would you like to continue", "Continue?", true))
                 {
                     e.Cancel = true;
-                    this.View.GoToPageIndex(viewIndex);
+                    this.View.GoToPage(view);
                     return;
                 }
 
@@ -334,7 +414,8 @@ namespace FSCruiser.Core.DataEntry
                             if (!_dialogService.AskYesNo("Tree(s) " + String.Join(", ", treeNums) + " have no logs", "Continue?", true))
                             {
                                 e.Cancel = true;
-                                View.GoToPageIndex(View.Layouts.IndexOf(treeView));
+                                //View.GoToPageIndex(View.Layouts.IndexOf(treeView));
+                                View.GoToPage(treeView);
                                 return;
                             }
                         }
@@ -352,10 +433,11 @@ namespace FSCruiser.Core.DataEntry
         /// </summary>
         /// <param name="invalidViewIndex">index to first invalid view</param>
         /// <returns></returns>
-        protected bool ValidateTreeViews(out int invalidViewIndex)
+        protected bool ValidateTreeViews(out ITreeView invalidView)
         {
+            invalidView = null;
             bool validationPass = true;
-            invalidViewIndex = -1;
+
             foreach (var view in View.Layouts.OfType<ITreeView>())
             {
                 if (view.Trees != null)
@@ -364,10 +446,7 @@ namespace FSCruiser.Core.DataEntry
                     var worker = new TreeValidationWorker(view.Trees);
                     if (!worker.ValidateTrees())
                     {
-                        if (invalidViewIndex != -1)
-                        {
-                            invalidViewIndex = View.Layouts.IndexOf(view);
-                        }
+                        invalidView = view;
                         validationPass = false;
                     }
                 }
