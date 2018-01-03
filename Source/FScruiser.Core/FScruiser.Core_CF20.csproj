@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C78E1A49-9F49-45E6-86A4-13C2F22E8450}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -58,6 +58,7 @@
     <Compile Include="ApplicationSettings.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="IApplicationSettings.cs" />
     <Compile Include="Models\ClickerSelecter.cs" />
     <Compile Include="Models\CountTree.cs" />
     <Compile Include="Models\Cruiser.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Services\ILogDataService.cs" />
     <Compile Include="Services\IRegionalLogRuleDataService.cs" />
     <Compile Include="Services\ISoundService.cs" />
+    <Compile Include="Services\ITreeDataService.cs" />
     <Compile Include="Services\IViewController.cs" />
     <Compile Include="Services\SoundService.cs" />
     <Compile Include="Util\DictionaryExtentions.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="ViewInterfaces\IDataEntryView.cs" />
     <Compile Include="ViewInterfaces\ITallyView.cs" />
     <Compile Include="ViewInterfaces\ITreeView.cs" />
+    <Compile Include="ViewModels\FormDataEntry.Logic.cs" />
     <Compile Include="ViewModels\LimitingDistanceCalculator.cs">
       <SubType>Code</SubType>
     </Compile>
