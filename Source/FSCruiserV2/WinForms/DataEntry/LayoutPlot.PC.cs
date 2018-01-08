@@ -40,7 +40,7 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.AutoGenerateColumns = false;
         }
 
-        public LayoutPlot(IDataEntryDataService dataService
+        public LayoutPlot(IPlotDataService dataService
             , ApplicationSettings appSettings
             , ISoundService soundService
             , IViewController viewController

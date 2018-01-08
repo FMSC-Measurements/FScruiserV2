@@ -12,7 +12,7 @@ namespace FSCruiser.WinForms.Common
 
         IFixCNTTallyCountProvider _tallyCountProvider;
 
-        public IDataEntryDataService DataService { get; set; }
+        public IPlotDataService DataService { get; set; }
 
         public IFixCNTTallyCountProvider TallyCountProvider //plot
         {

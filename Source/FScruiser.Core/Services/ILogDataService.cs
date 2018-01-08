@@ -48,6 +48,10 @@ namespace FScruiser.Core.Services
             }
         }
 
+        public ILogDataService(Tree tree, int region, DAL dataStore)
+            : this(tree, tree.Stratum, RegionalLogRuleProvider.GetRegionLoginfo(region), dataStore)
+        { }
+
         public ILogDataService(Tree tree, Stratum stratum, RegionLogInfo logRule, DAL dataStore)
         {
             DataStore = dataStore;

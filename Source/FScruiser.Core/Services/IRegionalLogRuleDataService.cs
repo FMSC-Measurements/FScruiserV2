@@ -6,43 +6,25 @@ using FSCruiser.Core.Models;
 
 namespace FScruiser.Core.Services
 {
-    public class IRegionalLogRuleDataService
+    public class RegionalLogRuleProvider
     {
-        RegionLogInfo _regionalLogRules;
-
-        public uint Region { get; set; }
-
-        public IRegionalLogRuleDataService(uint region)
+        public static RegionLogInfo GetRegionLoginfo(int region)
         {
-            Region = region;
-
-        }
-
-        public RegionLogInfo RegionLogInfo
-        {
-            get
+            switch (region)
             {
-                if (_regionalLogRules == null)
-                {
-                    switch (Region)
+                case 10:
                     {
-                        case 10:
-                            {
-                                _regionalLogRules = MakeRegionTenLogRules();
-                                break;
-                            }
-                        case 5:
-                            {
-                                _regionalLogRules = MakeRegionFiveLogRules();
-                                break;
-                            }
+                        return MakeRegionTenLogRules();
                     }
-                }
-                return _regionalLogRules;
+                case 5:
+                    {
+                        return MakeRegionFiveLogRules();
+                    }
+                default: { return null; }
             }
         }
 
-        RegionLogInfo MakeRegionFiveLogRules()
+        public static RegionLogInfo MakeRegionFiveLogRules()
         {
             var regionalLogRules = new RegionLogInfo(5);
 
@@ -72,7 +54,7 @@ namespace FScruiser.Core.Services
             return regionalLogRules;
         }
 
-        RegionLogInfo MakeRegionTenLogRules()
+        public static RegionLogInfo MakeRegionTenLogRules()
         {
             var regionalLogRules = new RegionLogInfo(10);
 

@@ -6,8 +6,8 @@ namespace FSCruiser.WinForms.Common
 {
     public partial class FixCNTForm : Form
     {
-        IDataEntryDataService _dataService;
-        IDataEntryDataService DataService 
+        IPlotDataService _dataService;
+        IPlotDataService DataService 
         {
             get { return _dataService; }
             set
@@ -28,7 +28,7 @@ namespace FSCruiser.WinForms.Common
         }
 
         public FixCNTForm(IFixCNTTallyPopulationProvider populationProvider
-            , IDataEntryDataService dataService)
+            , IPlotDataService dataService)
             : this()
         {
             DataService = dataService;

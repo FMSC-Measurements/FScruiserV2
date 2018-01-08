@@ -36,6 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Services\RegionalLogRuleProvider.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\CruiseDAL\CruiseDAL\CruiseDAL.VS15.csproj" />
     <ProjectReference Include="..\..\FMSC.Sampling\src\FMSC.Sampling\FMSC.Sampling.VS15.csproj" />
   </ItemGroup>

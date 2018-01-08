@@ -287,65 +287,85 @@ namespace FSCruiser.WinForms.DataEntry
                 return;
             }
 
+            e.Cancel = !ValidateColumn(e, curTree, cellValue);
+        }
+
+        private bool ValidateColumn(DataGridViewCellValidatingEventArgs e, Tree curTree, object cellValue)
+        {
             if (_treeNumberColumn != null && e.ColumnIndex == _treeNumberColumn.Index)
             {
-                if (cellValue == null || !(cellValue is long))
-                { e.Cancel = true; return; }//if cell value is blank cellValue is an object
-
-                var newTreeNum = (long)cellValue;
-                if (curTree.TreeNumber != newTreeNum
-                    && !DataService.IsTreeNumberAvalible(newTreeNum))
-                {
-                    MessageBox.Show("Tree Number already exists");
-                    e.Cancel = true;
-                }
+                return ValidateTreeNumber(curTree, cellValue);
             }
             else if (_sgColumn != null && e.ColumnIndex == _sgColumn.Index)
             {
-                var sg = cellValue as SampleGroup;
-                if (curTree.HandleSampleGroupChanging(sg))
-                {
-                    curTree.SampleGroup = sg;
-                    curTree.HandleSampleGroupChanged();
-                    e.Cancel = false;
-                }
-                else
-                {
-                    e.Cancel = true;
-                }
+                return ValidateSG(curTree, cellValue);
             }
             else if (_speciesColumn != null && e.ColumnIndex == _speciesColumn.Index)
             {
-                var tdv = cellValue as TreeDefaultValueDO;
-                e.Cancel = !curTree.HandleSpeciesChanged(tdv);
+                return ValidateSpecies(curTree, cellValue);
             }
             else if (_stratumColumn != null && e.ColumnIndex == _stratumColumn.Index)
             {
-                var newSt = cellValue as Stratum;
-                if (curTree.HandleStratumChanging(newSt))
-                {
-                    curTree.Stratum = newSt;
-                    curTree.HandleStratumChanged();
-                    e.Cancel = false;
-                }
-                else
-                {
-                    e.Cancel = true;
-                }
+                return ValidateStratum(curTree, cellValue);
+            }
+            else
+            {
+                return true;//column doesn't need to be validated
             }
         }
 
+        private static bool ValidateStratum(Tree curTree, object cellValue)
+        {
+            var newSt = cellValue as Stratum;
+            if (curTree.HandleStratumChanging(newSt))
+            {
+                curTree.Stratum = newSt;
+                curTree.HandleStratumChanged();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private static bool ValidateSpecies(Tree curTree, object cellValue)
+        {
+            var tdv = cellValue as TreeDefaultValueDO;
+            return curTree.HandleSpeciesChanged(tdv);
+        }
+
+        private static bool ValidateSG(Tree curTree, object cellValue)
+        {
+            var sg = cellValue as SampleGroup;
+            if (curTree.HandleSampleGroupChanging(sg))
+            {
+                curTree.SampleGroup = sg;
+                curTree.HandleSampleGroupChanged();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool ValidateTreeNumber(Tree curTree, object cellValue)
+        {
+            if (cellValue == null || !(cellValue is long))
+            { return false; }//if cell value is blank cellValue is an object
+
+            var newTreeNum = (long)cellValue;
+            if (curTree.TreeNumber != newTreeNum
+                && !DataService.IsTreeNumberAvalible(newTreeNum))
+            {
+                MessageBox.Show("Tree Number already exists");
+                return false;
+            }
+            return true;
+        }
+
         #endregion overrides
-
-        public void UpdateSampleGroupColumn(Tree tree)
-        {
-            UpdateSampleGroupColumn(tree, CurrentCell as DataGridViewComboBoxCell);
-        }
-
-        public void UpdateSpeciesColumn(Tree tree)
-        {
-            UpdateSpeciesColumn(tree, CurrentCell as DataGridViewComboBoxCell);
-        }
 
         protected void UpdateSampleGroupColumn(Tree tree, DataGridViewComboBoxCell cell)
         {

@@ -21,9 +21,6 @@ namespace FSCruiser.Core
 
         void ShowDataEntry(CuttingUnit unit);
 
-
-        int? AskKPI(int min, int max);
-
         void ShowWait();
 
         void HideWait();

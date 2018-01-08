@@ -242,7 +242,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (tree.TrySave())
             {
-                var dataService = DataService.MakeLogDataService(tree);
+                var dataService = new ILogDataService(tree, DataService.Region, DataService.DataStore);
                 using (var view = new FormLogs(dataService))
                 {
                     view.ShowDialog();

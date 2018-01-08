@@ -63,7 +63,7 @@ namespace FSCruiser.Core.DataEntry
         public void OnTally(CountTree count)
         {
             OnTally(count,
-                DataService, DataService.CuttingUnit.TallyHistoryBuffer,
+                DataService, DataService.TallyHistory,
                 _appSettings, View,
                 _dialogService, _soundService);
 
@@ -393,8 +393,7 @@ namespace FSCruiser.Core.DataEntry
             {
                 //Go through all the tree views and validate
                 //if a tree view has invalid trees lets ask the user if they want to continue
-                ITreeView view;
-                if (!this.ValidateTreeViews(out view)
+                if (!this.ValidateTreeViews(out ITreeView view)
                     && !_dialogService.AskYesNo("Error(s) found on tree records. Would you like to continue", "Continue?", true))
                 {
                     e.Cancel = true;

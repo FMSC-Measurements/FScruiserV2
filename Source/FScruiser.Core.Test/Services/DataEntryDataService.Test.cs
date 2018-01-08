@@ -26,7 +26,7 @@ namespace FScruiser.Core.Test.Services
                 var dataServ = new IDataEntryDataService(unit.Code, ds);
 
                 dataServ.CuttingUnit.Should().NotBeNull();
-                dataServ.CuttingUnit.TallyHistoryBuffer.Should().NotBeNull();
+                dataServ.TallyHistory.Should().NotBeNull();
 
                 dataServ.TreeStrata.Should().NotBeNullOrEmpty();
                 dataServ.TreeStrata.Should().HaveCount(1);
@@ -35,24 +35,6 @@ namespace FScruiser.Core.Test.Services
                 dataServ.NonPlotTrees.Should().HaveCount(1);
 
                 dataServ.DefaultStratum.Should().NotBeNull();
-            }
-        }
-
-        [Fact]
-        public void MakeLogDataService_Test()
-        {
-            using (var ds = CreateDataStrore())
-            {
-                var unit = ds.From<CuttingUnitDO>().Query().FirstOrDefault();
-                unit.Should().NotBeNull();
-
-                var dataServ = new IDataEntryDataService(unit.Code, ds);
-
-                var tree = dataServ.NonPlotTrees.First();
-
-                var logDataServ = dataServ.MakeLogDataService(tree);
-
-                logDataServ.Should().NotBeNull();
             }
         }
 

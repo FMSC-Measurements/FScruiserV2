@@ -12,61 +12,20 @@ using System.Xml.Serialization;
 
 namespace FScruiser.Core.Services
 {
-    public class IDataEntryDataService : ITreeFieldProvider, ITreeDataService
+    public class IDataEntryDataService : ITreeFieldProvider, ITreeDataService, IPlotDataService
     {
         public DAL DataStore { get; protected set; }
 
-        #region CuttingUnit
+        public CuttingUnit CuttingUnit { get; protected set; }
 
-        CuttingUnit _cuttingUnit;
+        public TallyHistoryCollection TallyHistory { get; protected set; }
 
-        public CuttingUnit CuttingUnit
-        {
-            get { return _cuttingUnit; }
-            set
-            {
-                _cuttingUnit = value;
-                OnCuttingUnitChanged();
-            }
-        }
-
-        private void OnCuttingUnitChanged()
-        {
-            var unit = CuttingUnit;
-            if (CuttingUnit != null)
-            {
-                var tallyBuffer = new TallyHistoryCollection(this, Constants.MAX_TALLY_HISTORY_SIZE);
-                tallyBuffer.Initialize();
-
-                CuttingUnit.TallyHistoryBuffer = tallyBuffer;
-
-                TreeStrata = ReadTreeBasedStrata().ToList();
-                PlotStrata = ReadPlotStrata().ToList();
-
-                LoadNonPlotTrees();
-            }
-        }
-
-        #endregion CuttingUnit
-
-        public IEnumerable<CountTree> AllCounts
-        {
-            get
-            {
-                foreach (var st in AllStrata)
-                {
-                    foreach (var cnt in st.Counts)
-                    {
-                        yield return cnt;
-                    }
-                }
-            }
-        }
+        
 
         #region NonPlotTrees
 
         object _nonPlotTreesSyncLock = new object();
-        ICollection<Tree> _nonPlotTrees;
+        //ICollection<Tree> _nonPlotTrees;
 
         public ICollection<Tree> NonPlotTrees { get; set; }
 
@@ -115,7 +74,7 @@ namespace FScruiser.Core.Services
 
         public IEnumerable<PlotStratum> PlotStrata { get; protected set; }
 
-        public IEnumerable<Stratum> AllStrata
+        IEnumerable<Stratum> AllStrata
         {
             get
             {
@@ -127,6 +86,20 @@ namespace FScruiser.Core.Services
                 foreach (var st in PlotStrata)
                 {
                     yield return st;
+                }
+            }
+        }
+
+        IEnumerable<CountTree> AllCounts
+        {
+            get
+            {
+                foreach (var st in AllStrata)
+                {
+                    foreach (var cnt in st.Counts)
+                    {
+                        yield return cnt;
+                    }
                 }
             }
         }
@@ -148,28 +121,8 @@ namespace FScruiser.Core.Services
 
         #endregion EnableLogGrading
 
-        IRegionalLogRuleDataService _logRuleDataService;
-        public RegionLogInfo RegionalLogRule { get { return _logRuleDataService.RegionLogInfo; } }
+        public int Region { get; protected set; }
 
-        public uint Region
-        {
-            get
-            {
-                if (_logRuleDataService != null)
-                { return _logRuleDataService.Region; }
-                else
-                { return 0; }
-            }
-            set
-            {
-                if (value > 0)
-                {
-                    _logRuleDataService = new IRegionalLogRuleDataService(value);
-                }
-                else
-                { _logRuleDataService = null; }
-            }
-        }
 
         public bool IsReconCruise { get; set; }
 
@@ -185,15 +138,27 @@ namespace FScruiser.Core.Services
 
             EnableLogGrading = DataStore.ExecuteScalar<bool>("SELECT LogGradingEnabled FROM Sale Limit 1;");
             IsReconCruise = DataStore.ExecuteScalar<bool>("SELECT [Purpose] == 'Recon' FROM Sale LIMIT 1;");
-            Region = DataStore.ExecuteScalar<uint>("SELECT Region FROM Sale LIMIT 1;");
+            Region = DataStore.ExecuteScalar<int>("SELECT Region FROM Sale LIMIT 1;");
 
             CuttingUnit = DataStore.From<CuttingUnit>()
                 .Where("Code = ?").Read(unitCode).FirstOrDefault();
-        }
 
-        public ILogDataService MakeLogDataService(Tree tree)
-        {
-            return new ILogDataService(tree, tree.Stratum, RegionalLogRule, DataStore);
+            TreeStrata = ReadTreeBasedStrata().ToList();
+            PlotStrata = ReadPlotStrata().ToList();
+
+            foreach(var st in PlotStrata)
+            {
+                foreach(var plot in st.Plots)
+                {
+                    plot.PopulateTrees();
+                }
+            }
+
+            LoadNonPlotTrees();
+
+            var tallyBuffer = new TallyHistoryCollection(CuttingUnit, this, Constants.MAX_TALLY_HISTORY_SIZE);
+            tallyBuffer.Initialize(DataStore);
+            TallyHistory = tallyBuffer;
         }
 
         #region Tree
@@ -376,10 +341,12 @@ namespace FScruiser.Core.Services
             , TreeDefaultValueDO tdv
             , bool isMeasure)
         {
-            Tree newTree = new Tree(DataStore);
-            newTree.TreeCount = 0;
-            newTree.CountOrMeasure = (isMeasure) ? "M" : "C";
-            newTree.CuttingUnit = CuttingUnit;
+            Tree newTree = new Tree(DataStore)
+            {
+                TreeCount = 0,
+                CountOrMeasure = (isMeasure) ? "M" : "C",
+                CuttingUnit = CuttingUnit
+            };
 
             if (sg != null)
             {
@@ -475,9 +442,11 @@ namespace FScruiser.Core.Services
         {
             if(count == null) { throw new ArgumentNullException("count"); }
 
-            var te = new TreeEstimateDO(DataStore);
-            te.KPI = kpi;
-            te.CountTree = count;
+            var te = new TreeEstimateDO(DataStore)
+            {
+                KPI = kpi,
+                CountTree = count
+            };
             te.Save();
 
             return te;
@@ -695,35 +664,6 @@ namespace FScruiser.Core.Services
 
         #endregion ITreeFieldProvider
 
-        #region utility
-
-        public void LogTreeCountEdit(CountTreeDO countTree, long oldValue, long newValue)
-        {
-            LogMessage(String.Format("Tree Count Edit: CT_CN={0}; PrevVal={1}; NewVal={2}", countTree.CountTree_CN, oldValue, newValue), "I");
-        }
-
-        public void LogSumKPIEdit(CountTreeDO countTree, long oldValue, long newValue)
-        {
-            LogMessage(String.Format("SumKPI Edit: CT_CN={0}; PrevVal={1}; NewVal={2}", countTree.CountTree_CN, oldValue, newValue), "I");
-        }
-
-        public void LogMessage(string message, string level)
-        {
-            DataStore.LogMessage(message, level);
-        }
-
-        public bool TryLogMessage(string message, string level)
-        {
-            try
-            {
-                DataStore.LogMessage(message, level);
-                return true;
-            }
-            catch { return false; }
-        }
-
-        #endregion utility
-
         public Exception SavePlotData()
         {
             Exception ex = null;
@@ -763,7 +703,7 @@ namespace FScruiser.Core.Services
             {
                 SaveTrees();
 
-                CuttingUnit.TallyHistoryBuffer.Save();
+                TallyHistory.Save();
             }
             catch (Exception e)
             {
@@ -790,10 +730,11 @@ namespace FScruiser.Core.Services
 
         public void DumpNonPlotTrees(System.IO.TextWriter writer)
         {
-            if (_nonPlotTrees != null)
+            var nonPlotTrees = NonPlotTrees;
+            if (nonPlotTrees != null)
             {
                 var treeSerializer = new XmlSerializer(typeof(Tree));
-                treeSerializer.Serialize(writer, _nonPlotTrees);
+                treeSerializer.Serialize(writer, nonPlotTrees);
             }
         }
 

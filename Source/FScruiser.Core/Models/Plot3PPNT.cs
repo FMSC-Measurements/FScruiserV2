@@ -59,7 +59,7 @@ namespace FSCruiser.Core.Models
         {
         }
 
-        public void CreateTrees(IDataEntryDataService dataService)
+        public void CreateTrees(IPlotDataService dataService)
         {
             for (long i = 0; i < this.TreeCount; i++)
             {

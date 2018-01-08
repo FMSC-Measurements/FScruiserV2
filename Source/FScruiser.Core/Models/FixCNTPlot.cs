@@ -19,7 +19,7 @@ namespace FSCruiser.Core.Models
 
         int GetTallyCount(IFixCNTTallyBucket tallyBucket);
 
-        void Tally(IDataEntryDataService dataService, IFixCNTTallyBucket tallyBucket);
+        void Tally(IPlotDataService dataService, IFixCNTTallyBucket tallyBucket);
     }
 
     public class FixCNTPlot : Plot, IFixCNTTallyCountProvider
@@ -100,7 +100,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public void Tally(IDataEntryDataService dataService, IFixCNTTallyBucket tallyBucket)
+        public void Tally(IPlotDataService dataService, IFixCNTTallyBucket tallyBucket)
         {
             var tree = dataService.CreateNewTreeEntry(this, tallyBucket.TallyPopulation.SampleGroup,
                 tallyBucket.TallyPopulation.TreeDefaultValue, false);

@@ -12,7 +12,7 @@ namespace FSCruiser.WinForms.DataEntry
     {
         private CountTree _count;
 
-        IDataEntryDataService DataService { get; set; }
+        ICountTreeDataService DataService { get; set; }
 
         public bool EnableTallyCount
         {
@@ -150,7 +150,7 @@ namespace FSCruiser.WinForms.DataEntry
 #endif
         }
 
-        public FormTallySettings(IDataEntryDataService dataService) : this()
+        public FormTallySettings(ICountTreeDataService dataService) : this()
         {
             this.DataService = dataService;
         }
