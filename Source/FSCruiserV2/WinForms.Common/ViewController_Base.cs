@@ -194,12 +194,6 @@ namespace FSCruiser.WinForms.Common
             }
         }
 
-        //public int? ShowNumericValueInput(int? min, int? max, int? initialValue, bool acceptNullInput)
-        //{
-        //    this.NumPadDialog.ShowDialog(min, max, initialValue, acceptNullInput);
-        //    return this.NumPadDialog.UserEnteredValue;
-        //}
-
         public void ShowWait()
         {
             System.Threading.Interlocked.Increment(ref this._showWait);

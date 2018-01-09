@@ -163,7 +163,7 @@ namespace FSCruiser.WinForms.DataEntry
                     st.SampleSelecter = new ThreePSelecter((int)st.KZ3PPNT, 1000000, 0);
                 }
 
-                st.PopulatePlots(DataService.CuttingUnit.CuttingUnit_CN.GetValueOrDefault());
+                
 
                 LayoutPlot view = new LayoutPlot(DataService
                     , AppSettings

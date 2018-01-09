@@ -19,7 +19,11 @@ namespace FSCruiser.Core.Models
         public int MaxSize
         {
             get { return _maxSize; }
-            protected set { _maxSize = (value > 0) ? value : throw new ArgumentOutOfRangeException(); }
+            protected set 
+            { 
+                if(value <= 0) throw new ArgumentOutOfRangeException();
+                _maxSize = value;
+            }
         }
 
         public int Count { get { return _list.Count; } }

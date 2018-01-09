@@ -391,9 +391,10 @@ namespace FSCruiser.Core.DataEntry
 
             try
             {
+                ITreeView view;
                 //Go through all the tree views and validate
                 //if a tree view has invalid trees lets ask the user if they want to continue
-                if (!this.ValidateTreeViews(out ITreeView view)
+                if (!this.ValidateTreeViews(out view) 
                     && !_dialogService.AskYesNo("Error(s) found on tree records. Would you like to continue", "Continue?", true))
                 {
                     e.Cancel = true;

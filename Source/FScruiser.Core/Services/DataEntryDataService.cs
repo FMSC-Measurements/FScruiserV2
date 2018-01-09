@@ -148,6 +148,8 @@ namespace FScruiser.Core.Services
 
             foreach(var st in PlotStrata)
             {
+                st.PopulatePlots(CuttingUnit.CuttingUnit_CN.GetValueOrDefault());
+
                 foreach(var plot in st.Plots)
                 {
                     plot.PopulateTrees();
