@@ -103,10 +103,10 @@
     <Compile Include="Services\IDialogService.cs" />
     <Compile Include="Services\ILogDataService.cs" />
     <Compile Include="Services\IPlotDataService.cs" />
-    <Compile Include="Services\IRegionalLogRuleDataService.cs" />
     <Compile Include="Services\ISoundService.cs" />
     <Compile Include="Services\ITreeDataService.cs" />
     <Compile Include="Services\IViewController.cs" />
+    <Compile Include="Services\RegionalLogRuleProvider.cs" />
     <Compile Include="Services\SoundService.cs" />
     <Compile Include="Util\DictionaryExtentions.cs" />
     <Compile Include="Util\EnumerableExtentions.cs" />
