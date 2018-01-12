@@ -18,6 +18,8 @@ namespace FScruiser.Core.Services
 
         IEnumerable<PlotStratum> PlotStrata { get; }
 
+        IEnumerable<string> UnitLevelCruisersInitials { get; }
+
         IEnumerable<TreeDefaultValueDO> GetTreeDefaultValuesAll();
 
         long GetNextPlotTreeNumber(long plotNumber);

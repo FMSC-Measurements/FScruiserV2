@@ -1,4 +1,5 @@
-﻿using CruiseDAL.DataObjects;
+﻿using CruiseDAL;
+using CruiseDAL.DataObjects;
 using FSCruiser.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -7,12 +8,25 @@ using System.Text;
 
 namespace FScruiser.Core.Services
 {
-    public interface ITreeDataService
+    public interface ITreeDataService : ITreeFieldProvider
     {
         //IList<Tree> NonPlotTrees { get; }
+
+        DAL DataStore { get; }
+
+        int Region { get; }
+
+        bool EnableLogGrading { get; set; }
+
         CuttingUnit CuttingUnit { get; }
 
         ICollection<Tree> NonPlotTrees { get; }
+
+        IEnumerable<Stratum> TreeStrata { get; }
+
+        IEnumerable<string> UnitLevelCruisersInitials { get; }
+
+        IEnumerable<TreeDefaultValueDO> GetTreeDefaultValuesAll();
 
         Tree CreateNewTreeEntry(CountTree count);
 
@@ -27,6 +41,8 @@ namespace FScruiser.Core.Services
         void AddNonPlotTree(Tree tree);
 
         void DeleteTree(Tree tree);
+
+        Tree UserAddTree();
 
         bool IsTreeNumberAvalible(long treeNumber);
 

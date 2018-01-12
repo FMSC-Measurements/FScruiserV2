@@ -30,9 +30,9 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region DataService
 
-        IDataEntryDataService _dataService;
+        ITreeDataService _dataService;
 
-        IDataEntryDataService DataService
+        ITreeDataService DataService
         {
             get { return _dataService; }
             set
@@ -99,7 +99,7 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _initialsColoumn.DataSource = AppSettings.Cruisers
                     .OrEmpty().Select(x => x.Initials)
-                    .Union(Trees.OrEmpty().Select(x => x.Initials).Distinct())
+                    .Union(DataService.UnitLevelCruisersInitials)
                     .Where(x => !string.IsNullOrEmpty(x))
                     .ToArray();
             }

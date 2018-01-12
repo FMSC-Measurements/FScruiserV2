@@ -12,7 +12,7 @@ using System.Xml.Serialization;
 
 namespace FScruiser.Core.Services
 {
-    public class IDataEntryDataService : ITreeFieldProvider, ITreeDataService, IPlotDataService
+    public class IDataEntryDataService :  ITreeDataService, IPlotDataService
     {
         public DAL DataStore { get; protected set; }
 
@@ -164,6 +164,22 @@ namespace FScruiser.Core.Services
             }
 
             LoadNonPlotTrees();
+
+            UnitLevelCruisersInitials = ReadUnitLevelCruisers(DataStore).ToArray();
+        }
+
+        public static IEnumerable<string> ReadUnitLevelCruisers(FMSC.ORM.Core.DatastoreRedux datastore)
+        {
+            var initialsStr = datastore.ExecuteScalar<string>("SELECT group_concat(Initials, ',') FROM (SELECT Trim(Initials) AS Initials FROM Tree WHERE Initials IS NOT NULL AND trim(Initials) != '' GROUP BY Initials);");
+            if (!string.IsNullOrEmpty(initialsStr))
+            {
+                var initialsArray = initialsStr.Split(',');
+                return initialsArray;
+            }
+            else
+            {
+                return Enumerable.Empty<string>();
+            }
         }
 
         private void ReadSaleLevelData()
@@ -616,10 +632,19 @@ namespace FScruiser.Core.Services
 
         #endregion read methods
 
+        private IEnumerable<string> _unitLevelCruisersInitials;
+
+        public IEnumerable<string> UnitLevelCruisersInitials
+        {
+            get { return _unitLevelCruisersInitials; }
+            protected set { _unitLevelCruisersInitials = value; }
+        }
+
         #region ITreeFieldProvider
 
         object _treeFieldsReadLock = new object();
         IEnumerable<TreeFieldSetupDO> _treeFields;
+        
 
         public IEnumerable<TreeFieldSetupDO> TreeFields
         {

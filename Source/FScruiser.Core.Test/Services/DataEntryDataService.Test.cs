@@ -50,6 +50,40 @@ namespace FScruiser.Core.Test.Services
         }
 
         [Fact]
+        public void ReadUnitLevelCruisersTest()
+        {
+            using (var ds = CreateDataStore())
+            {
+                var unitLevelInitialsEmpty = IDataEntryDataService.ReadUnitLevelCruisers(ds);
+
+                unitLevelInitialsEmpty.Should().NotBeNull();
+                unitLevelInitialsEmpty.Should().BeEmpty();
+
+                var initialsRaw = new string[] { " ", "", "A", "AB", " C " };
+                var initialsExpected = new string[] { "A", "AB", "C" };
+
+                var cuttingUnit = ds.From<CuttingUnitDO>().Query().First();
+                var stratum = ds.From<StratumDO>().Query().First();
+
+                long j = 0;
+                foreach (var initial in initialsRaw)
+                {
+                    var tree = new TreeDO() { DAL = ds,
+                        CuttingUnit = cuttingUnit,
+                        Stratum = stratum,
+                        TreeNumber = ++j,
+                        Initials = initial };
+
+                    tree.Save();
+                }
+
+                var unitLevelInitials = IDataEntryDataService.ReadUnitLevelCruisers(ds);
+
+                unitLevelInitials.Should().Contain(initialsExpected);
+            }
+        }
+
+        [Fact]
         public void IsTreeNumberAvalible_Test()
         {
             using (var ds = CreateDataStore())
