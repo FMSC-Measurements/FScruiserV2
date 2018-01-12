@@ -423,6 +423,11 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public override string ToString()
+        {
+            return TreeNumber.ToString();
+        }
+
         //public double GetDefaultLogCount()
         //{
         //    if (TreeDefaultValue == null) { return 0.0; }

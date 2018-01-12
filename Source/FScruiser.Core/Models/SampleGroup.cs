@@ -339,6 +339,11 @@ namespace FSCruiser.Core.Models
             return selecter;
         }
 
+        public override string ToString()
+        {
+            return Code;
+        }
+
         #endregion Sample Selecter Methods
     }
 }

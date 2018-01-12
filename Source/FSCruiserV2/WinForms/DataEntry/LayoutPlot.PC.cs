@@ -232,6 +232,7 @@ namespace FSCruiser.WinForms.DataEntry
 
             var cell = _dataGrid[e.ColumnIndex, e.RowIndex];
             if (cell == null) { return; }
+            if (cell.ReadOnly) { return; }//we don't need to validate readonly columns
             if (cell.FormattedValue == e.FormattedValue) { return; }//are there any changes
 
             Tree curTree = this.ViewLogicController.CurrentTree;

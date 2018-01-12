@@ -63,8 +63,17 @@ namespace FSCruiser.WinForms
                                 DataPropertyName = nameof(Tree.Stratum),
                                 DisplayMember = nameof(Stratum.Code),
                                 ValueMember = nameof(Stratum.Self),
-                                FlatStyle = FlatStyle.Flat
+                                FlatStyle = FlatStyle.Flat,
+                                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
                             };
+                            if(provider is PlotStratum)
+                            {
+                                col = new DataGridViewTextBoxColumn()
+                                {
+                                    DataPropertyName = nameof(Tree.Stratum),
+                                    ReadOnly = true
+                                };
+                            }
                             break;
                         }
                     case "SampleGroup":
