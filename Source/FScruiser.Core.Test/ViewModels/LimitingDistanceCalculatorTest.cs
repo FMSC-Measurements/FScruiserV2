@@ -14,17 +14,18 @@ namespace FScruiser.Core.Test.ViewModels
         {
         }
 
-        [Fact]
-        public void TestDeterminTreeInOrOut()
+        [Theory]
+        [InlineData(.01,.01,true)]
+        [InlineData(.012, .011, true)]
+        [InlineData(.011,.012, true)]
+        [InlineData(.02,.015, true)]
+        [InlineData(.02,.014, false)]
+        //for tree to be in slope distance (first value) must be less than or equal to limiting distance (second value)
+        //both values are round to two decimal places
+        //here we test edge cases where both values should be determined to be equal
+        public void TestDeterminTreeInOrOut(double slopeDistance, double limitingDistance, bool expectedResult)
         {
-            //for tree to be in slope distance (first value) must be less than or equal to limiting distance (second value)
-            //both values are round to three decimal places
-            //here we test edge cases where both values should be determined to be equal
-            LimitingDistanceCalculator.DeterminTreeInOrOut(.001, .001).Should().BeTrue();
-            LimitingDistanceCalculator.DeterminTreeInOrOut(.0012, .0011).Should().BeTrue();
-            LimitingDistanceCalculator.DeterminTreeInOrOut(.0011, .0012).Should().BeTrue();
-            LimitingDistanceCalculator.DeterminTreeInOrOut(.002, .0015).Should().BeTrue();
-            LimitingDistanceCalculator.DeterminTreeInOrOut(.002, .0014).Should().BeFalse();
+            LimitingDistanceCalculator.DeterminTreeInOrOut(slopeDistance, limitingDistance).ShouldBeEquivalentTo(expectedResult);
         }
 
         [Theory]

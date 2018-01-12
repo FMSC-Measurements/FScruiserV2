@@ -141,7 +141,7 @@ namespace FSCruiser.Core.DataEntry
             IDialogService dialogService, ISoundService soundService)
         {
             TallyAction action = null;
-            SampleGroupDO sg = count.SampleGroup;
+            SampleGroup sg = count.SampleGroup;
 
             //if doing a manual tally create a tree and jump out
             if (sg.SampleSelectorType == CruiseDAL.Schema.CruiseMethods.CLICKER_SAMPLER_TYPE)
@@ -153,11 +153,11 @@ namespace FSCruiser.Core.DataEntry
             }
             else if (count.SampleGroup.Stratum.Is3P)//threeP sampling
             {
-                action = TallyThreeP(count, dataService, dialogService);
+                action = TallyThreeP(count, sg.Sampler, sg, dataService, dialogService);
             }
             else//non 3P sampling (STR)
             {
-                action = TallyStandard(count, count.SampleGroup.Sampler, dataService);
+                action = TallyStandard(count, sg.Sampler, dataService);
             }
 
             //action may be null if cruising 3P and user doesn't enter a kpi
@@ -211,13 +211,12 @@ namespace FSCruiser.Core.DataEntry
         //ViewController (askKPI) //TODO use Dialog Service instead
         //DataService (CreateNewTreeEntry)
         //DAL (LogTreeEstimate) //should be dataservice instead
-        protected static TallyAction TallyThreeP(CountTree count, ITreeDataService dataService, IDialogService dialogService)
+        public static TallyAction TallyThreeP(CountTree count, SampleSelecter sampler, SampleGroup sg, ITreeDataService dataService, IDialogService dialogService)
         {
             TallyAction action = new TallyAction(count);
-            var sampler = count.SampleGroup.Sampler;
 
             int kpi = 0;
-            int? value = dialogService.AskKPI((int)count.SampleGroup.MinKPI, (int)count.SampleGroup.MaxKPI);
+            int? value = dialogService.AskKPI((int)sg.MinKPI, (int)sg.MaxKPI);
             if (value == null)
             {
                 return null;
