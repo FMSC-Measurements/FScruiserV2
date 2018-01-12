@@ -136,31 +136,41 @@ namespace FScruiser.Core.Services
         {
             DataStore = dataStore;
 
-            EnableLogGrading = DataStore.ExecuteScalar<bool>("SELECT LogGradingEnabled FROM Sale Limit 1;");
-            IsReconCruise = DataStore.ExecuteScalar<bool>("SELECT [Purpose] == 'Recon' FROM Sale LIMIT 1;");
-            Region = DataStore.ExecuteScalar<int>("SELECT Region FROM Sale LIMIT 1;");
+            ReadSaleLevelData();
 
+            ReadCruiseData(unitCode);
+
+            var tallyBuffer = new TallyHistoryCollection(CuttingUnit, this, Constants.MAX_TALLY_HISTORY_SIZE);
+            tallyBuffer.Initialize(DataStore);
+            TallyHistory = tallyBuffer;
+        }
+
+        private void ReadCruiseData(string unitCode)
+        {
             CuttingUnit = DataStore.From<CuttingUnit>()
-                .Where("Code = ?").Read(unitCode).FirstOrDefault();
+                            .Where("Code = ?").Read(unitCode).FirstOrDefault();
 
             TreeStrata = ReadTreeBasedStrata().ToList();
             PlotStrata = ReadPlotStrata().ToList();
 
-            foreach(var st in PlotStrata)
+            foreach (var st in PlotStrata)
             {
                 st.PopulatePlots(CuttingUnit.CuttingUnit_CN.GetValueOrDefault());
 
-                foreach(var plot in st.Plots)
+                foreach (var plot in st.Plots)
                 {
                     plot.PopulateTrees();
                 }
             }
 
             LoadNonPlotTrees();
+        }
 
-            var tallyBuffer = new TallyHistoryCollection(CuttingUnit, this, Constants.MAX_TALLY_HISTORY_SIZE);
-            tallyBuffer.Initialize(DataStore);
-            TallyHistory = tallyBuffer;
+        private void ReadSaleLevelData()
+        {
+            EnableLogGrading = DataStore.ExecuteScalar<bool>("SELECT LogGradingEnabled FROM Sale Limit 1;");
+            IsReconCruise = DataStore.ExecuteScalar<bool>("SELECT [Purpose] == 'Recon' FROM Sale LIMIT 1;");
+            Region = DataStore.ExecuteScalar<int>("SELECT Region FROM Sale LIMIT 1;");
         }
 
         #region Tree
