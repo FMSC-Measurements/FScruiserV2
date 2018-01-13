@@ -33,8 +33,13 @@ namespace FScruiser.Core.Test.Services
 
                 stratum.Save();
 
+
+                //set up the log fields
                 int counter = 1;
-                var logFieldSetups = CruiseDAL.Schema.LOG._ALL.Select(x => new LogFieldSetupDO() { DAL = ds, Field = x, FieldOrder = counter++, Heading = x, Stratum = stratum }).ToList();
+                var logFieldSetups = CruiseDAL.Schema.LOG._ALL
+                    .Select(x => new LogFieldSetupDO(){ DAL = ds,Field = x, FieldOrder = counter++, Heading = x, Stratum = stratum })
+                    .ToList();
+
                 foreach (var lfs in logFieldSetups)
                 {
                     lfs.Save();
@@ -99,7 +104,7 @@ namespace FScruiser.Core.Test.Services
 
                 cuttingUnit.Should().NotBeNull();
 
-                var logDs = new ILogDataService(tree, stratum, null, ds);
+                var logDs = new ILogDataService(tree, null, ds);
 
                 logDs.Logs.Should().NotBeNullOrEmpty();
             }
@@ -110,8 +115,8 @@ namespace FScruiser.Core.Test.Services
         {
             var numLogExpected = 10;
 
-            var regionLogRule = new Mock<RegionLogInfo>();
-            regionLogRule.Setup(rlr => rlr.GetLogRule(It.IsAny<string>()).GetDefaultLogCount(It.IsAny<float>(), It.IsAny<float>(), It.IsAny<long>()))
+            var regionLogRuleMock = new Mock<RegionLogInfo>();
+            regionLogRuleMock.Setup(rlr => rlr.GetLogRule(It.IsAny<string>()).GetDefaultLogCount(It.IsAny<float>(), It.IsAny<float>(), It.IsAny<long>()))
             .Returns(numLogExpected);
 
             using (var ds = CreateDataStore(1, 0))
@@ -135,7 +140,7 @@ namespace FScruiser.Core.Test.Services
 
                 tree.TreeDefaultValue = tdv;
 
-                var logDs = new ILogDataService(tree, stratum, regionLogRule.Object, ds);
+                var logDs = new ILogDataService(tree, regionLogRuleMock.Object, ds);
 
                 logDs.Logs.Should().HaveCount(10);
 
@@ -152,21 +157,13 @@ namespace FScruiser.Core.Test.Services
             using (var ds = CreateDataStore(1, 0))
             {
                 var tree = ds.From<Tree>().Read().FirstOrDefault();
+                tree.Stratum.Should().NotBeNull();
+                tree.CuttingUnit.Should().NotBeNull();
 
-                tree.Should().NotBeNull();
-
-                var stratum = tree.Stratum;
-
-                stratum.Should().NotBeNull();
-
-                var cuttingUnit = tree.CuttingUnit;
-
-                cuttingUnit.Should().NotBeNull();
-
-                var logDs = new ILogDataService(tree, stratum, null, ds);
-
+                var logDs = new ILogDataService(tree, null, ds);
                 logDs.Logs.Should().BeEmpty();
 
+                //add log
                 var log = logDs.AddLogRec();
                 ValidateLog(log);
 
@@ -188,18 +185,10 @@ namespace FScruiser.Core.Test.Services
             using (var ds = CreateDataStore(1, 1))
             {
                 var tree = ds.From<Tree>().Read().FirstOrDefault();
+                tree.Stratum.Should().NotBeNull();
+                tree.CuttingUnit.Should().NotBeNull();
 
-                tree.Should().NotBeNull();
-
-                var stratum = tree.Stratum;
-
-                stratum.Should().NotBeNull();
-
-                var cuttingUnit = tree.CuttingUnit;
-
-                cuttingUnit.Should().NotBeNull();
-
-                var logDs = new ILogDataService(tree, stratum, null, ds);
+                var logDs = new ILogDataService(tree, null, ds);
 
                 logDs.Logs.Should().HaveCount(1);
 
@@ -214,6 +203,8 @@ namespace FScruiser.Core.Test.Services
                 logDs.Logs.Should().BeEmpty();
 
                 logDs.Invoking(lds => lds.Save()).ShouldNotThrow();
+
+                ds.GetRowCount("Log", $"WHERE Tree_CN = {tree.Tree_CN}");
             }
         }
 

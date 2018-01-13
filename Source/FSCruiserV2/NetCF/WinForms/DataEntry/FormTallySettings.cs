@@ -15,9 +15,9 @@ namespace FSCruiser.WinForms.DataEntry
 
         private CountTree _count;
 
-        public IDataEntryDataService DataService { get; set; }
+        public ICountTreeDataService DataService { get; set; }
 
-        public FormTallySettings(IDataEntryDataService dataService)
+        public FormTallySettings(ICountTreeDataService dataService)
         {
             this.DataService = dataService;
             InitializeComponent();

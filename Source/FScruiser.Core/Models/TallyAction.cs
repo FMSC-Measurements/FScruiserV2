@@ -76,21 +76,7 @@ namespace FSCruiser.Core.Models
             TreeRecord = treeRecord;
         }
 
-        public void PopulateData(CruiseDAL.DAL dal)
-        {
-            if (this._countCN != 0L)
-            {
-                this.Count = dal.ReadSingleRow<CountTree>(this._countCN);
-            }
-            if (this._treeCN != 0L)
-            {
-                this.TreeRecord = dal.ReadSingleRow<Tree>(this._treeCN);
-            }
-            if (this._treeEstCN != 0L)
-            {
-                this.TreeEstimate = dal.ReadSingleRow<TreeEstimateDO>(this._treeEstCN);
-            }
-        }
+        
 
         public override string ToString()
         {

@@ -16,6 +16,8 @@ namespace FSCruiser.Core.ViewInterfaces
 
         void GoToTallyPage();
 
-        void GoToPageIndex(int i);
+        //void GoToPageIndex(int i);
+
+        void GoToPage(IDataEntryPage page);
     }
 }

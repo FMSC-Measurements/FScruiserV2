@@ -1,7 +1,6 @@
+::Boilderplate 
 @ECHO OFF
 SETLOCAL ENABLEEXTENSIONS
-
-::Boilderplate 
 
 ::name of this script
 SET me=%~n0
@@ -9,8 +8,17 @@ SET me=%~n0
 SET parent=%~dp0
 
 ECHO %me%
+::end Boilderplate
 
-SET msbuildPath="C:\Program Files (x86)\MSBuild\14.0\bin\amd64\MSBuild.exe"
+SET vsWherePath="C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"
+
+for /f "usebackq tokens=1* delims=: " %%i in (`%vsWherePath% -latest -requires Microsoft.Component.MSBuild`) do (
+  if /i "%%i"=="installationPath" set InstallDir=%%j
+)
+
+if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
+  SET msbuildPath="%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" %*
+)
 
 %msbuildPath%  %parent%\FSCruiserV2\FScruiserPC.csproj /target:Rebuild /property:Configuration=Release;Platform=AnyCPU;SolutionDir=%parent%\
 

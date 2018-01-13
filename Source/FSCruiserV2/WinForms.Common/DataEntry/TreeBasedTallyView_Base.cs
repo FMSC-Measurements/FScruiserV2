@@ -277,12 +277,13 @@ namespace FSCruiser.WinForms
             try
             {
                 count.Save();
-                using (FormTallySettings view = new FormTallySettings(DataService))
+                var countTreeDataService = new CountTreeDataService(DataService.DataStore, count);
+                using (FormTallySettings view = new FormTallySettings(countTreeDataService))
                 {
 #if !NetCF
                     view.Owner = this.TopLevelControl as Form;
 #endif
-                    view.ShowDialog(count);
+                    view.ShowDialog();
                 }
             }
             catch (Exception ex)
@@ -319,7 +320,7 @@ namespace FSCruiser.WinForms
             if (MessageBox.Show("Are you sure you want to untally the selected record?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
                 == DialogResult.No) { return; }
 
-            DataService.CuttingUnit.TallyHistoryBuffer.Remove(selectedAction);
+            DataService.TallyHistory.Remove(selectedAction);
         }
 
         #region ITallyView members
@@ -365,7 +366,7 @@ namespace FSCruiser.WinForms
         {
             this.InitializeStrataViews();
 
-            _BS_tallyHistory.DataSource = DataService.CuttingUnit.TallyHistoryBuffer;
+            _BS_tallyHistory.DataSource = DataService.TallyHistory;
             this._viewLoading = false;
         }
 

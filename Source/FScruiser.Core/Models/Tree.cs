@@ -423,53 +423,58 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public double GetDefaultLogCount()
+        public override string ToString()
         {
-            if (TreeDefaultValue == null) { return 0.0; }
-
-            var retionLogInfo = this.CuttingUnit.Sale.GetRegionLogInfo();
-            var mrchHtLL = TreeDefaultValue.MerchHeightLogLength;
-
-            if (retionLogInfo != null)
-            {
-                var logRule = retionLogInfo.GetLogRule(this.Species);
-                if (logRule != null)
-                {
-                    return logRule.GetDefaultLogCount(this.TotalHeight, this.DBH, mrchHtLL);
-                }
-            }
-            return 0;
+            return TreeNumber.ToString();
         }
 
-        public IEnumerable<LogDO> QueryLogs()
-        {
-            return this.DAL.From<LogDO>()
-                .Where("Tree_CN = ?")
-                .OrderBy("CAST (LogNumber AS NUMERIC)")
-                .Query(Tree_CN);
-        }
+        //public double GetDefaultLogCount()
+        //{
+        //    if (TreeDefaultValue == null) { return 0.0; }
 
-        public IList<LogDO> LoadLogs()
-        {
-            var logs = QueryLogs().ToList();
-            var defaultLogCnt = GetDefaultLogCount();
-            this.LogCountDesired = defaultLogCnt;
+        //    var retionLogInfo = this.CuttingUnit.Sale.GetRegionLogInfo();
+        //    var mrchHtLL = TreeDefaultValue.MerchHeightLogLength;
 
-            if (logs.Count == 0)
-            {
-                defaultLogCnt = Math.Ceiling(defaultLogCnt);
-                for (int i = 0; i < defaultLogCnt; i++)
-                {
-                    logs.Add(
-                        new LogDO(this.DAL)
-                        {
-                            LogNumber = (i + 1).ToString(),
-                            Tree = this
-                        });
-                }
-            }
+        //    if (retionLogInfo != null)
+        //    {
+        //        var logRule = retionLogInfo.GetLogRule(this.Species);
+        //        if (logRule != null)
+        //        {
+        //            return logRule.GetDefaultLogCount(this.TotalHeight, this.DBH, mrchHtLL);
+        //        }
+        //    }
+        //    return 0;
+        //}
 
-            return logs;
-        }
+        //public IEnumerable<LogDO> QueryLogs()
+        //{
+        //    return this.DAL.From<LogDO>()
+        //        .Where("Tree_CN = ?")
+        //        .OrderBy("CAST (LogNumber AS NUMERIC)")
+        //        .Query(Tree_CN);
+        //}
+
+        //public IList<LogDO> LoadLogs()
+        //{
+        //    var logs = QueryLogs().ToList();
+        //    var defaultLogCnt = GetDefaultLogCount();
+        //    this.LogCountDesired = defaultLogCnt;
+
+        //    if (logs.Count == 0)
+        //    {
+        //        defaultLogCnt = Math.Ceiling(defaultLogCnt);
+        //        for (int i = 0; i < defaultLogCnt; i++)
+        //        {
+        //            logs.Add(
+        //                new LogDO(this.DAL)
+        //                {
+        //                    LogNumber = (i + 1).ToString(),
+        //                    Tree = this
+        //                });
+        //        }
+        //    }
+
+        //    return logs;
+        //}
     }
 }

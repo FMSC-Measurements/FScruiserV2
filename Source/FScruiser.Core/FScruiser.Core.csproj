@@ -1,173 +1,42 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7D65EE5A-23F0-4F08-9DC6-7DF0E23D3926}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FScruiser.Core</RootNamespace>
-    <AssemblyName>FScruiser.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkProfile />
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFramework>net45</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net4.5.1'">
+
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+  
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
+
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+  
   <ItemGroup>
-    <Reference Include="FMSC.Core">
-      <HintPath>..\..\..\CruiseDAL\FMSC.Core\Net45\FMSC.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.XML" />
+    <Compile Remove="NetCF\**" />
+    <EmbeddedResource Remove="NetCF\**" />
+    <None Remove="NetCF\**" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net4.5.1'">
+    
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
+    
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    
+  </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="ApplicationSettings.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Util\EnumerableExtentions.cs" />
-    <Compile Include="Exceptions.cs" />
-    <Compile Include="Models\ClickerSelecter.cs" />
-    <Compile Include="Models\CountTree.cs" />
-    <Compile Include="Models\Cruiser.cs" />
-    <Compile Include="Models\CuttingUnit.cs" />
-    <Compile Include="Models\DataModelExtensions.cs" />
-    <Compile Include="Models\FixCNTPlot.cs" />
-    <Compile Include="Models\FixCNTStratum.cs" />
-    <Compile Include="Models\FixCNTTallyBucket.cs" />
-    <Compile Include="Models\FixCNTTallyClass.cs" />
-    <Compile Include="Models\FixCNTTallyPopulation.cs" />
-    <Compile Include="Models\Interfaces\ILogFieldProvider.cs" />
-    <Compile Include="Models\Interfaces\ITreeFieldProvider.cs" />
-    <Compile Include="Models\Log.cs" />
-    <Compile Include="Models\LogGradeAuditRule.cs" />
-    <Compile Include="Models\LogHeightClass.cs" />
-    <Compile Include="Models\LogRule.cs" />
-    <Compile Include="Models\Plot.cs" />
-    <Compile Include="Models\Plot3PPNT.cs" />
-    <Compile Include="Models\PlotStratum.cs" />
-    <Compile Include="Models\RecentProject.cs" />
-    <Compile Include="Models\RegionLogInfo.cs" />
-    <Compile Include="Models\Sale.cs" />
-    <Compile Include="Models\SampleGroup.cs" />
-    <Compile Include="Models\Stratum.cs" />
-    <Compile Include="Models\SubPop.cs" />
-    <Compile Include="Models\TallyAction.cs" />
-    <Compile Include="Models\TallyHistoryCollection.cs" />
-    <Compile Include="Models\TallySettings.cs" />
-    <Compile Include="Models\Tree.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DataEntryDataService.cs" />
-    <Compile Include="Services\IApplicationController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\ILogDataService.cs" />
-    <Compile Include="Services\IRegionalLogRuleDataService.cs" />
-    <Compile Include="Services\ISoundService.cs" />
-    <Compile Include="Services\SoundService.cs" />
-    <Compile Include="Util\DictionaryExtentions.cs" />
-    <Compile Include="ViewInterfaces\IDataEntryPage.cs" />
-    <Compile Include="ViewInterfaces\IDataEntryView.cs" />
-    <Compile Include="ViewInterfaces\ITallyView.cs" />
-    <Compile Include="ViewInterfaces\ITreeView.cs" />
-    <Compile Include="ViewModels\LimitingDistanceCalculator.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="Workers\SaveTreesWorker.cs" />
-    <Compile Include="Services\DialogService.cs" />
-    <Compile Include="Services\IDialogService.cs" />
-    <Compile Include="Services\IViewController.cs" />
-    <Compile Include="Workers\TreeValidationWorker.cs" />
+    <ProjectReference Include="..\..\CruiseDAL\CruiseDAL\CruiseDAL.VS15.csproj" />
+    <ProjectReference Include="..\..\FMSC.Sampling\src\FMSC.Sampling\FMSC.Sampling.VS15.csproj" />
   </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\CruiseDAL\CruiseDAL\CruiseDAL.VS15.csproj">
-      <Project>{baf1842e-f8c5-47a5-94c6-adaba8a4b3af}</Project>
-      <Name>CruiseDAL.VS15</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CruiseDAL\FMSC.ORM\FMSC.ORM.VS15.csproj">
-      <Project>{22432d40-9892-40a6-aa0c-cc8c2fa4bb91}</Project>
-      <Name>FMSC.ORM.VS15</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\FMSC.Sampling\src\FMSC.Sampling\FMSC.Sampling.VS15.csproj">
-      <Project>{4097b6d6-d317-4169-9219-43e1ac4dc1f7}</Project>
-      <Name>FMSC.Sampling.VS15</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-</Project>
+</Project> 

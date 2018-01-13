@@ -73,9 +73,9 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region DataService
 
-        IDataEntryDataService _dataService;
+        IPlotDataService _dataService;
 
-        IDataEntryDataService DataService
+        IPlotDataService DataService
         {
             get { return _dataService; }
             set
@@ -147,7 +147,7 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 _initialsColoumn.DataSource = AppSettings.Cruisers
                     .OrEmpty().Select(x => x.Initials)
-                    .Union(Trees.OrEmpty().Select(x => x.Initials).Distinct())
+                    .Union(DataService.UnitLevelCruisersInitials)
                     .Where(x => !string.IsNullOrEmpty(x))
                     .ToArray();
             }
@@ -265,9 +265,9 @@ namespace FSCruiser.WinForms.DataEntry
             try
             {
                 count.Save();
-                using (FormTallySettings view = new FormTallySettings(DataService))
+                var countDataService = new CountTreeDataService(DataService.DataStore, count);
+                using (FormTallySettings view = new FormTallySettings(countDataService))
                 {
-                    view.Count = count;
 #if !NetCF
                     view.ShowDialog(this);
 #else
@@ -343,7 +343,7 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (tree.TrySave())
             {
-                var dataService = DataService.MakeLogDataService(tree);
+                var dataService = new ILogDataService(tree, DataService.Region, DataService.DataStore);
                 using (var view = new FormLogs(dataService))
                 {
 #if !NetCF
@@ -420,7 +420,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public bool ShowPlotInfo(IDataEntryDataService dataService, Plot plot, PlotStratum stratum, bool isNewPlot)
+        public bool ShowPlotInfo(IPlotDataService dataService, Plot plot, PlotStratum stratum, bool isNewPlot)
         {
             System.Diagnostics.Debug.Assert(plot != null);
             System.Diagnostics.Debug.Assert(stratum != null);

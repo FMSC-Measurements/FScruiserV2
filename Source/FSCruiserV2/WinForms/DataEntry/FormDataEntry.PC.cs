@@ -38,6 +38,11 @@ namespace FSCruiser.WinForms.DataEntry
         //    }
         //}
 
+        private void _appSettings_HotKeysChanged()
+        {
+            UpdateAddTreeButton();
+        }
+
         protected void UpdateAddTreeButton()
         {
             var addTreeKey = AppSettings.AddTreeKeyStr;
@@ -69,9 +74,6 @@ namespace FSCruiser.WinForms.DataEntry
             contextMenuStrip1.Show(point);
         }
 
-        private void _appSettings_HotKeysChanged()
-        {
-            UpdateAddTreeButton();
-        }
+        
     }
 }

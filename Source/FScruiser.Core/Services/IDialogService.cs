@@ -12,6 +12,8 @@ namespace FScruiser.Core.Services
 
         void AskCruiser(Tree tree);
 
+        int? AskKPI(int min, int max);
+
         bool AskYesNo(String message, String caption);
 
         bool AskYesNo(string message, String caption, bool defaultNo);

@@ -14,43 +14,40 @@ namespace FSCruiser.Core.Models
     {
         object syncLock = new object();
         List<TallyAction> _list = new List<TallyAction>();
+        int _maxSize = 1;
 
-        public int MaxSize { get; protected set; }
+        public int MaxSize
+        {
+            get { return _maxSize; }
+            protected set 
+            { 
+                if(value <= 0) throw new ArgumentOutOfRangeException();
+                _maxSize = value;
+            }
+        }
 
         public int Count { get { return _list.Count; } }
 
-        IDataEntryDataService _dataService;
+        public CuttingUnit CuttingUnit { get; protected set; }
+        public ITreeDataService DataService { get; protected set; }//required because remove method needs to remove tree from dataService too
 
-        public TallyHistoryCollection(IDataEntryDataService dataService, int maxSize)
+        public TallyHistoryCollection(CuttingUnit cuttingUnit, ITreeDataService dataService, int maxSize)
         {
             this.MaxSize = maxSize;
-            _dataService = dataService;
+            CuttingUnit = cuttingUnit;
+            DataService = dataService;
         }
 
         public void Add(TallyAction action)
         {
-            //if (action.KPI != 0)
-            //{
-            //    TreeEstimateDO te = new TreeEstimateDO(_unit.DAL);
-            //    te.KPI = action.KPI;
-            //    te.CountTree = action.Count;
-            //    action.TreeEstimate = te;
-            //    te.Save();
-            //}
-            //action.Time = DateTime.Now.ToString("hh:mm");
-
             lock (syncLock)
             {
                 _list.Add(action);
                 if (Count > MaxSize)
                 {
-                    while (Count > MaxSize)
+                    while (Count > MaxSize)//MaxSize always greater than 0
                     {
-                        try
-                        {
-                            _list.RemoveAt(0);
-                        }
-                        catch { }//do nothing
+                        _list.RemoveAt(0);
                     }
                     OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
                 }
@@ -68,20 +65,25 @@ namespace FSCruiser.Core.Models
                 int itemIndex = IndexOf(action);
                 if (itemIndex != -1)
                 {
-                    RemoveAt(itemIndex);
-                    action.Count.TreeCount--;
-                    //action.Sampler.Count -= 1;
-                    if (action.KPI > 0)
+                    
+                    var count = action.Count;
+                    if (count.TreeCount > 0)
                     {
-                        action.Count.SumKPI -= action.KPI;
+                        action.Count.TreeCount--;
+                    }
+
+                    if (action.KPI > 0 && count.SumKPI > 0)
+                    {
+                        count.SumKPI -= action.KPI;
                         action.TreeEstimate.Delete();
                     }
 
                     if (action.TreeRecord != null)
                     {
-                        _dataService.DeleteTree(action.TreeRecord);
+                        DataService.DeleteTree(action.TreeRecord);
                     }
 
+                    RemoveAt(itemIndex);
                     return true;
                 }
                 else
@@ -91,58 +93,15 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        //public void AddTallyAction(TallyAction action)
-        //{
-        //    if (action.KPI != 0)
-        //    {
-        //        TreeEstimateDO te = new TreeEstimateDO(_unit.DAL);
-        //        te.KPI = action.KPI;
-        //        te.CountTree = action.Count;
-        //        action.TreeEstimate = te;
-        //        te.Save();
-        //    }
-        //    action.Time = DateTime.Now.ToString("hh:mm");
-        //    Add(action);
-
-        //    OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
-        //}
-
-        //public void Untally(TallyAction action)
-        //{
-        //    if (action == null){return;}
-
-        //    lock (syncLock)
-        //    {
-        //        int itemIndex = base.IndexOf(action);
-        //        if (itemIndex != -1)
-        //        {
-        //            base.RemoveAt(itemIndex);
-        //            action.Count.TreeCount--;
-        //            //action.Sampler.Count -= 1;
-        //            if (action.KPI > 0)
-        //            {
-        //                action.Count.SumKPI -= action.KPI;
-        //                action.TreeEstimate.Delete();
-        //            }
-
-        //            if (action.TreeRecord != null)
-        //            {
-        //                _unit.DeleteTree(action.TreeRecord);
-        //            }
-        //            OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, itemIndex));
-        //        }
-        //    }
-
-        //}
-
-        public void Initialize()
+        public void Initialize(FMSC.ORM.Core.DatastoreRedux datastore)
         {
-            if (!String.IsNullOrEmpty(_dataService.CuttingUnit.TallyHistory))
+            if (!String.IsNullOrEmpty(CuttingUnit.TallyHistory))
             {
-                foreach (TallyAction action in this.DeserializeTallyHistory(_dataService.CuttingUnit.TallyHistory))
-                {
-                    _list.Add(action);
-                }
+                var array = this.DeserializeTallyHistory(CuttingUnit.TallyHistory);
+                _list = new List<TallyAction>(array);
+                InflateTallyActions(datastore);
+
+                OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
             }
         }
 
@@ -154,8 +113,8 @@ namespace FSCruiser.Core.Models
 
                 if (!String.IsNullOrEmpty(xmlStr))
                 {
-                    _dataService.CuttingUnit.TallyHistory = xmlStr;
-                    _dataService.CuttingUnit.Save();
+                    CuttingUnit.TallyHistory = xmlStr;
+                    CuttingUnit.Save();
                 }
             }
             catch (Exception e)
@@ -182,10 +141,7 @@ namespace FSCruiser.Core.Models
                     //tallyHistory.CopyTo(a, (len - this.MAX_TALLY_HISTORY_SIZE) - 2);
                     tallyHistory = a;
                 }
-                foreach (TallyAction action in tallyHistory)
-                {
-                    action.PopulateData(_dataService.CuttingUnit.DAL);
-                }
+                
             }
             catch (Exception e)
             {
@@ -193,6 +149,30 @@ namespace FSCruiser.Core.Models
             }
 
             return tallyHistory;
+        }
+
+        public void InflateTallyActions(FMSC.ORM.Core.DatastoreRedux datastore)
+        {
+            foreach (TallyAction action in this)
+            {
+                InflateTallyAction(action, datastore);
+            }
+        }
+
+        public static void InflateTallyAction(TallyAction action, FMSC.ORM.Core.DatastoreRedux datastore)
+        {
+            if (action.CountCN != 0L)
+            {
+                action.Count = datastore.ReadSingleRow<CountTree>(action.CountCN);
+            }
+            if (action.TreeCN != 0L)
+            {
+                action.TreeRecord = datastore.ReadSingleRow<Tree>(action.TreeCN);
+            }
+            if (action.TreeEstimateCN != 0L)
+            {
+                action.TreeEstimate = datastore.ReadSingleRow<TreeEstimateDO>(action.TreeEstimateCN);
+            }
         }
 
         protected string SerializeTallyHistory()

@@ -11,9 +11,9 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class Form3PPNTPlotInfo : Form
     {
-        IDataEntryDataService DataService { get; set; }
+        IPlotDataService DataService { get; set; }
 
-        public Form3PPNTPlotInfo(IDataEntryDataService dataService)
+        public Form3PPNTPlotInfo(IPlotDataService dataService)
         {
             DataService = dataService;
             InitializeComponent();

@@ -67,12 +67,12 @@ namespace FScruiser.Core.Test.Models
         [Fact]
         public void SerializeTest()
         {
-            var logRule = new Sale { Region = 5 }.GetRegionLogInfo();
+            var logRule = Core.Services.RegionalLogRuleProvider.GetRegionLoginfo(5); 
 
             var output = JsonConvert.SerializeObject(logRule);
 
             output.Should().NotBeNullOrEmpty();
-            output.Length.Should().BeGreaterThan(2, "because then its just an empty json obj");
+            output.Length.Should().BeGreaterThan(2, "because otherwise its just an empty json obj");
 
             var result = JsonConvert.DeserializeObject<RegionLogInfo>(output);
 

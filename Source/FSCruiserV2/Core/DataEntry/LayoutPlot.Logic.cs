@@ -22,7 +22,7 @@ namespace FSCruiser.Core.DataEntry
 
         public IPlotLayout View { get; set; }
 
-        public IDataEntryDataService DataService { get; protected set; }
+        public IPlotDataService DataService { get; protected set; }
 
         public IViewController ViewController { get; protected set; }
 
@@ -61,7 +61,7 @@ namespace FSCruiser.Core.DataEntry
 
         public LayoutPlotLogic(PlotStratum stratum
             , LayoutPlot view
-            , IDataEntryDataService dataService
+            , IPlotDataService dataService
             , ISoundService soundService
             , IDialogService dialogService
             , ApplicationSettings settings
@@ -386,7 +386,7 @@ namespace FSCruiser.Core.DataEntry
             var sampler = sg.Sampler;
 
             int kpi = 0;
-            int? value = ViewController.AskKPI((int)sg.MinKPI, (int)sg.MaxKPI);
+            int? value = _dialogService.AskKPI((int)sg.MinKPI, (int)sg.MaxKPI);
             if (value == null)
             {
                 return null; //user didn't enter valid value
@@ -449,7 +449,6 @@ namespace FSCruiser.Core.DataEntry
             return tree;
         }
 
-        //TODO rename method
         public void AddTree(SubPop subPop)
         {
             Tree tree = DataService.CreateNewTreeEntry(CurrentPlot, subPop);

@@ -176,6 +176,11 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        public override string ToString()
+        {
+            return Code;
+        }
+
         #region ITreeFieldProvider Members
 
         object _treeFieldsReadLock = new object();

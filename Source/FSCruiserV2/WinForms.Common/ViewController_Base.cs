@@ -18,10 +18,8 @@ namespace FSCruiser.WinForms.Common
 
         protected object _dataEntrySyncLock = new object();
         private FormMain _main;
-        private Form3PNumPad _threePNumPad;
 
         private int _showWait = 0;
-        private bool _enableLogGrading = true;
 
         public IApplicationController ApplicationController { get; set; }
 
@@ -48,22 +46,6 @@ namespace FSCruiser.WinForms.Common
             protected set
             {
                 _main = value;
-            }
-        }
-
-        public Form3PNumPad ThreePNumPad
-        {
-            get
-            {
-                if (_threePNumPad == null)
-                {
-                    _threePNumPad = new Form3PNumPad();
-                }
-                return _threePNumPad;
-            }
-            protected set
-            {
-                _threePNumPad = value;
             }
         }
 
@@ -210,21 +192,6 @@ namespace FSCruiser.WinForms.Common
                     //dataService.Dump(dumFilePath);
                 }
             }
-        }
-
-        //public int? ShowNumericValueInput(int? min, int? max, int? initialValue, bool acceptNullInput)
-        //{
-        //    this.NumPadDialog.ShowDialog(min, max, initialValue, acceptNullInput);
-        //    return this.NumPadDialog.UserEnteredValue;
-        //}
-
-        /// <summary>
-        /// </summary>
-        /// <returns>KPI, value is -1 if STM</returns>
-        public int? AskKPI(int min, int max)
-        {
-            ThreePNumPad.ShowDialog(min, max, null, false);
-            return ThreePNumPad.UserEnteredValue;
         }
 
         public void ShowWait()

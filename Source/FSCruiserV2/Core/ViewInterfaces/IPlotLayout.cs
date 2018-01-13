@@ -23,7 +23,7 @@ namespace FSCruiser.Core.ViewInterfaces
 
         void ShowCurrentPlotInfo();
 
-        bool ShowPlotInfo(IDataEntryDataService dataService, Plot plot, PlotStratum stratum, bool isNewPlot);
+        bool ShowPlotInfo(IPlotDataService dataService, Plot plot, PlotStratum stratum, bool isNewPlot);
 
         void RefreshTreeView(Plot currentPlot);
 

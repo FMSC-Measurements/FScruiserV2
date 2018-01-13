@@ -14,7 +14,7 @@ namespace FScruiser.Core.Services
 
         public Tree Tree { get; protected set; }
 
-        public Stratum Stratum { get; protected set; }
+        public Stratum Stratum { get { return Tree.Stratum; } }
 
         RegionLogInfo RegionalLogRule { get; set; }
 
@@ -48,10 +48,13 @@ namespace FScruiser.Core.Services
             }
         }
 
-        public ILogDataService(Tree tree, Stratum stratum, RegionLogInfo logRule, DAL dataStore)
+        public ILogDataService(Tree tree, int region, DAL dataStore)
+            : this(tree, RegionalLogRuleProvider.GetRegionLoginfo(region), dataStore)
+        { }
+
+        public ILogDataService(Tree tree, RegionLogInfo logRule, DAL dataStore)
         {
             DataStore = dataStore;
-            Stratum = stratum;
             RegionalLogRule = logRule;
             Tree = tree;
             LogGradeAudits = LoadLogGradeAudits();
