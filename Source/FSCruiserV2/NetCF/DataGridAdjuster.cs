@@ -47,7 +47,7 @@ namespace FSCruiser.WinForms
 
             foreach (LogFieldSetupDO field in stratum.LogFields)
             {
-                CustomColumnBase col = MakeColumn(field.ColumnType);
+                DataGridTextBoxColumn col = MakeColumn(field.ColumnType);
                 col.MappingName = field.Field;
                 col.HeaderText = field.Heading;
                 col.Format = field.Format; // 'C' = currency, 'N' = number (E.G. "N1" means one decimal place), #0.00
@@ -95,7 +95,7 @@ namespace FSCruiser.WinForms
 
             foreach (TreeFieldSetupDO field in provider.TreeFields)
             {
-                CustomColumnBase col;
+                DataGridTextBoxColumn col;
 
                 switch (field.Field)
                 {
@@ -105,42 +105,59 @@ namespace FSCruiser.WinForms
                         }
                     case "Species":
                         {
-                            col = new FMSC.Controls.EditableComboBoxColumn();
-                            ((EditableComboBoxColumn)col).DisplayMember = "Species";
-                            //((EditableComboBoxColumn)col).ValueMember = "Self";
-                            col.MappingName = "TreeDefaultValue";
-                            col.Format = "[Species]";
+                            col = new FMSC.Controls.EditableComboBoxColumn()
+                            {
+                                DisplayMember = "Species",
+                                //((EditableComboBoxColumn)col).ValueMember = "Self";
+                                MappingName = "TreeDefaultValue",
+                                Format = "[Species]"
+                            };
                             break;
                         }
                     case "CountOrMeasure":
                         {
-                            col = new FMSC.Controls.EditableComboBoxColumn();
-                            //((EditableComboBoxColumn)col).DisplayMember = "CountOrMeasure";
-                            //((EditableComboBoxColumn)col).ValueMember = "CountOrMeasure";
-                            ((EditableComboBoxColumn)col).DataSource = new string[] { "C", "M", "I" };
+                            col = new FMSC.Controls.EditableComboBoxColumn()
+                            {
+                                //((EditableComboBoxColumn)col).DisplayMember = "CountOrMeasure";
+                                //((EditableComboBoxColumn)col).ValueMember = "CountOrMeasure";
+                                DataSource = new string[] { "C", "M", "I" }
+                            };
                             break;
                         }
                     case "LiveDead":
                         {
-                            col = new FMSC.Controls.EditableComboBoxColumn();
-                            //((EditableComboBoxColumn)col).DisplayMember = "LiveDead";
-                            //((EditableComboBoxColumn)col).ValueMember = "LiveDead";
-                            ((EditableComboBoxColumn)col).DataSource = new string[] { "L", "D" };
+                            col = new FMSC.Controls.EditableComboBoxColumn()
+                            {
+                                //((EditableComboBoxColumn)col).DisplayMember = "LiveDead";
+                                //((EditableComboBoxColumn)col).ValueMember = "LiveDead";
+                                DataSource = new string[] { "L", "D" }
+                            };
                             break;
                         }
 
                     case "Stratum":
                         {
-                            col = new FMSC.Controls.EditableComboBoxColumn();
-                            ((EditableComboBoxColumn)col).DisplayMember = "Code";
-                            //((EditableComboBoxColumn)col).ValueMember = "Code";
+                            if (provider is PlotStratum)
+                            {
+                                col = new DataGridTextBoxColumn();
+                            }
+                            else
+                            {
+                                col = new FMSC.Controls.EditableComboBoxColumn()
+                                {
+                                    DisplayMember = "Code"
+                                    //((EditableComboBoxColumn)col).ValueMember = "Code";   
+                                };
+                            }
                             break;
                         }
                     case "SampleGroup":
                         {
-                            col = new FMSC.Controls.EditableComboBoxColumn();
-                            ((EditableComboBoxColumn)col).DisplayMember = "Code";
-                            //((EditableComboBoxColumn)col).ValueMember = "Code";
+                            col = new FMSC.Controls.EditableComboBoxColumn()
+                            {
+                                DisplayMember = "Code"
+                                //((EditableComboBoxColumn)col).ValueMember = "Code";
+                            };
                             break;
                         }
                     case "KPI":
@@ -151,9 +168,11 @@ namespace FSCruiser.WinForms
                         }
                     case "Initials":
                         {
-                            col = new FMSC.Controls.EditableComboBoxColumn();
-                            ((EditableComboBoxColumn)col).DisplayMember = "Initials";
-                            ((EditableComboBoxColumn)col).ValueMember = "Initials";
+                            col = new FMSC.Controls.EditableComboBoxColumn()
+                            {
+                                DisplayMember = "Initials",
+                                ValueMember = "Initials"
+                            };
                             break;
                         }
                     default://all other columns
