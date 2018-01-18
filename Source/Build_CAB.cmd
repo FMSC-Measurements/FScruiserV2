@@ -26,7 +26,7 @@ IF EXIST "%buildLogPath%" DEL /Q "%buildLogPath%"
 IF EXIST "%cabOutDir%FScruiserV2.CAB" DEL /Q "%cabOutDir%FScruiserV2.CAB"
 
 ECHO %me%:Start Building Cab
-"%devenvPath%" %parent%\FScruiserV2.sln /build "Release|AnyCPU" /project "FSCruiserV2CECF20_CAB" /Out "%buildLogPath%"
+"%devenvPath%" %parent%\FScruiserV2.VS08.sln /build "Release|AnyCPU" /project "FSCruiserV2CECF20_CAB" /Out "%buildLogPath%"
 
 IF /I "%ERRORLEVEL%" NEQ "0" (
     ::display build log
