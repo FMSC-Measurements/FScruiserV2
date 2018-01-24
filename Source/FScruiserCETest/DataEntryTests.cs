@@ -22,6 +22,8 @@ namespace FSCruiserV2.Test
         IDialogService _dialogService;
         ISoundService _soundService;
 
+        string _pathToFile;
+
         IApplicationController Controller { get { return _controller; } }
 
         IDataEntryView _view = new DataEntryViewMock();
@@ -29,6 +31,13 @@ namespace FSCruiserV2.Test
 
         public DataEntryTests()
         {
+            _pathToFile = System.IO.Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+                , "testDataStore.cruise");
+
+            if (System.IO.File.Exists(_pathToFile))
+            {
+                System.IO.File.Delete(_pathToFile);
+            }
 
             _dataStore = SetupDataStore();
             _dialogService = new DialogServiceMock();
@@ -46,7 +55,9 @@ namespace FSCruiserV2.Test
 
         DAL SetupDataStore()
         {
-            var dataStore = new DAL();
+
+
+            var dataStore = new DAL(_pathToFile, true);
 
             var sale = new SaleDO(dataStore)
             {
@@ -92,7 +103,7 @@ namespace FSCruiserV2.Test
             return dataStore;
         }
 
-        public void TestTreeTally()
+        public void TestTreeTally(System.IO.TextWriter output)
         {
             var st = _dataStore.From<Stratum>().Read().First();
 
@@ -101,14 +112,18 @@ namespace FSCruiserV2.Test
 
             CountTree count = _dataStore.From<CountTree>().Read().First();
 
+            var stopwatch = new OpenNETCF.Diagnostics.Stopwatch();
+            stopwatch.Start();
             int numSamples = 500;
             for (int i = 0; i < numSamples; i++)
             {
                 _de.OnTally(count);
             }
+            stopwatch.Stop();
 
-            System.Diagnostics.Debug.WriteLine("Sample Count = " + _controller.SampleCount.ToString());
-            System.Diagnostics.Debug.WriteLine("ISample Count = " + _controller.ISampleCount.ToString());
+            output.WriteLine("Sample Count = " + _controller.SampleCount.ToString());
+            output.WriteLine("ISample Count = " + _controller.ISampleCount.ToString());
+            output.WriteLine("Runtime (millSec): " + stopwatch.ElapsedMilliseconds.ToString());
         }
     }
 }

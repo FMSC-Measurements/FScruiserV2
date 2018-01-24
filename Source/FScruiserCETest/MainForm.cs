@@ -236,7 +236,7 @@ namespace FSCruiserV2.Test
                 };
                 tree.Save();
 
-                var dataService = new ILogDataService(tree, stratum, null, ds);
+                var dataService = new ILogDataService(tree, (RegionLogInfo)null, ds);
 
                 using (var view = new FormLogs(dataService))
                 {

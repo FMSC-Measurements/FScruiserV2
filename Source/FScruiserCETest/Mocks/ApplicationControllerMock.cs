@@ -37,15 +37,21 @@ namespace FSCruiserV2.Test.Mocks
 
         #endregion IDisposable Members
 
+
         #region IApplicationController Members
 
-        public CruiseDAL.DAL DataStore
+        public event Action FileStateChanged;
+
+        public IViewController ViewController
         {
             get;
             set;
         }
 
-        public IViewController ViewController { get; set; }
+        public CruiseDAL.DAL DataStore
+        {
+            get { throw new NotImplementedException(); }
+        }
 
         public void OpenFile()
         {
@@ -62,17 +68,7 @@ namespace FSCruiserV2.Test.Mocks
             throw new NotImplementedException();
         }
 
-        public void LogTreeCountEdit(CountTreeDO countTree, long oldValue, long newValue)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void LogSumKPIEdit(CountTreeDO countTree, long oldValue, long newValue)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnLeavingCurrentUnit(System.ComponentModel.CancelEventArgs e)
+        public void OnLeavingCurrentUnit()
         {
             throw new NotImplementedException();
         }

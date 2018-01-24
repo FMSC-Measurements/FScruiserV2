@@ -43,6 +43,11 @@ namespace FSCruiserV2.Test.Mocks
             ShowMessageCallCnt++;
         }
 
+        public int? AskKPI(int min, int max)
+        {
+            return 1;
+        }
+
         #endregion
     }
 }

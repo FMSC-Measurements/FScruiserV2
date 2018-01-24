@@ -8,64 +8,36 @@ namespace FSCruiserV2.Test.Mocks
 {
     public class DataEntryViewMock : IDataEntryView
     {
+
         #region IDataEntryView Members
-
-        public FSCruiser.Core.Models.CuttingUnit Unit
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public FSCruiser.Core.DataEntry.FormDataEntryLogic LogicController
-        {
-            get { throw new NotImplementedException(); }
-        }
 
         public IDataEntryPage FocusedLayout
         {
-            get { throw new NotImplementedException(); }
+            get;
+            set;
         }
 
         public List<IDataEntryPage> Layouts
         {
-            get { throw new NotImplementedException(); }
-        }
-
-        public bool AskEnterMeasureTreeData()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void HandleCuttingUnitDataLoaded()
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public void HandleCruisersChanged()
-        {
-            throw new NotImplementedException();
+            get;
+            set;
         }
 
         public void GotoTreePage()
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public void GoToTallyPage()
         {
-            throw new NotImplementedException();
+            return;
         }
 
-        public void GoToPageIndex(int i)
+        public void GoToPage(IDataEntryPage page)
         {
-            throw new NotImplementedException();
+            return;
         }
 
-        public void TreeViewMoveLast()
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion IDataEntryView Members
+        #endregion
     }
 }
