@@ -191,16 +191,17 @@ namespace FSCruiser.Core.DataEntry
             if (View.ViewLoading) { return; }
             this.EndEdit();
             _BS_Plots.ResetCurrentItem();
-            if (CurrentPlot != null)
+
+            var currentPlot = CurrentPlot;
+            if (currentPlot != null)
             {
-                CurrentPlot.PopulateTrees();
-                this._BS_Trees.DataSource = CurrentPlot.Trees;
+                _BS_Trees.DataSource = currentPlot.Trees;
             }
             else
             {
                 this._BS_Trees.DataSource = new Tree[0];
             }
-            this.View.RefreshTreeView(this.CurrentPlot);
+            this.View.RefreshTreeView(currentPlot);
         }
 
         public void HandleAddPlot()
