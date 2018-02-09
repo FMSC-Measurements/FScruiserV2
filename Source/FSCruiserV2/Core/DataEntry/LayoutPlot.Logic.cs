@@ -1,24 +1,23 @@
-﻿using System;
-using System.Windows.Forms;
-using CruiseDAL.Schema;
-using FMSC.Sampling;
+﻿using FMSC.Sampling;
+using FScruiser.Core.Services;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.DataEntry;
-using FScruiser.Core.Services;
+using System;
+using System.Windows.Forms;
 
 namespace FSCruiser.Core.DataEntry
 {
     public class LayoutPlotLogic
     {
-        IDialogService _dialogService;
-        ISoundService _soundService;
-        ApplicationSettings _appSettings;
+        private IDialogService _dialogService;
+        private ISoundService _soundService;
+        private ApplicationSettings _appSettings;
 
         private bool _disableCheckPlot = false;
         private Plot _prevPlot;
-        private System.Windows.Forms.BindingSource _BS_Plots;
-        public System.Windows.Forms.BindingSource _BS_Trees;
+        private BindingSource _BS_Plots;
+        private BindingSource _BS_Trees;
 
         public IPlotLayout View { get; set; }
 
@@ -89,19 +88,15 @@ namespace FSCruiser.Core.DataEntry
             ((System.ComponentModel.ISupportInitialize)(this._BS_Plots)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._BS_Trees)).EndInit();
 
-            _BS_Plots.DataSource = this.Stratum.Plots;
+            _BS_Plots.DataSource = Stratum.Plots;
         }
 
-        public bool CheckCurrentPlot()
-        {
-            return this.CheckPlot(this.CurrentPlot);
-        }
-
-        public bool CheckPlot(Plot plot)
+        //validate plot before switching plots
+        protected bool CheckPlot(Plot plot)
         {
             if (plot != null)
             {
-                this.EndEdit();
+                EndEdit();
                 if (!(plot is Plot3PPNT)
                     && !plot.IsNull
                     && (plot.Trees != null && plot.Trees.Count == 0))
@@ -123,16 +118,16 @@ namespace FSCruiser.Core.DataEntry
 
         public void HandleViewLoad()
         {
-            this.View.BindPlotData(this._BS_Plots);
-            this.UpdateCurrentPlot();
-            this.View.BindTreeData(this._BS_Trees);
+            View.BindPlotData(_BS_Plots);
+            UpdateCurrentPlot();
+            View.BindTreeData(_BS_Trees);
         }
 
         public void EndEdit()
         {
-            this.View.ViewEndEdit();   //HACK force datagrid to end edits to cause data validation to occur
-            this._BS_Plots.EndEdit();
-            this._BS_Trees.EndEdit();
+            View.ViewEndEdit();   //HACK force datagrid to end edits to cause data validation to occur
+            _BS_Plots.EndEdit();
+            _BS_Trees.EndEdit();
         }
 
         public bool EnsureCurrentPlotWorkable()
@@ -140,50 +135,40 @@ namespace FSCruiser.Core.DataEntry
             return EnsurePlotSelected() && EnsureCurrentPlotNotEmpty();
         }
 
-        public bool EnsurePlotSelected()
+        protected bool EnsurePlotSelected()
         {
-            if (this.View.ViewLoading) { return false; }
-            if (this.CurrentPlot == null)
+            if (View.ViewLoading) { return false; }
+            if (CurrentPlot == null)
             {
-                this.View.ShowNoPlotSelectedMessage();
+                View.ShowNoPlotSelectedMessage();
                 return false;
             }
             return true;
         }
 
-        public bool EnsureCurrentPlotNotEmpty()
+        protected bool EnsureCurrentPlotNotEmpty()
         {
-            if (this.CurrentPlot.IsNull)
+            if (CurrentPlot.IsNull)
             {
-                this.View.ShowNullPlotMessage();
+                View.ShowNullPlotMessage();
                 return false;
             }
             return true;
         }
 
-        public bool SavePlotTrees(Plot plot)
+        protected bool SavePlotTrees(Plot plot)
         {
-            bool goOn = true;
-            this.EndEdit();
-            try
-            {
-                DataService.SaveTrees(plot);
-            }
-            catch (FMSC.ORM.SQLException)
-            {
-                if (!_dialogService.AskYesNo("Can not save all trees in the plot, Would you like to continue?"
-                    , "Continue?", true))
-                {
-                    goOn = false;
-                }
-            }
-            return goOn;
+            EndEdit();
+
+            return DataService.TrySaveTrees(plot)
+                || _dialogService.AskYesNo("Can not save all trees in the plot, Would you like to continue?"
+                    , "Continue?", true);
         }
 
         public bool SavePlotTrees()
         {
             if (this.CurrentPlot == null) { return false; }
-            return this.SavePlotTrees(this.CurrentPlot);
+            return SavePlotTrees(this.CurrentPlot);
         }
 
         public void UpdateCurrentPlot()
@@ -206,24 +191,25 @@ namespace FSCruiser.Core.DataEntry
 
         public void HandleAddPlot()
         {
-            if (this.CurrentPlot != null
-                && (!this.SavePlotTrees(this.CurrentPlot) || !this.CheckCurrentPlot()))
+            var currentPlot = CurrentPlot;
+            if (currentPlot != null
+                && (!SavePlotTrees(currentPlot) || !CheckPlot(currentPlot)))
             {
                 return;
             }
 
-            Plot plotInfo = this.AddPlot();
+            Plot plotInfo = AddPlot();
             if (plotInfo != null)
             {
-                this._disableCheckPlot = true;
+                _disableCheckPlot = true;
                 try
                 {
-                    this._BS_Plots.ResetBindings(false);
-                    this._BS_Plots.MoveLast();
+                    _BS_Plots.ResetBindings(false);
+                    _BS_Plots.MoveLast();
                 }
                 finally
                 {
-                    this._disableCheckPlot = false;
+                    _disableCheckPlot = false;
                 }
             }
         }
@@ -296,24 +282,6 @@ namespace FSCruiser.Core.DataEntry
             }
         }
 
-        //public void HandleTreeNumberChanging(long newTreeNumber, out bool cancel)
-        //{
-        //    try
-        //    {
-        //        if (!this.CurrentPlot.IsTreeNumberAvalible(newTreeNumber))
-        //        {
-        //            cancel = true;
-        //            return;
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        cancel = true;
-        //        return;
-        //    }
-        //    cancel = false;
-        //}
-
         public void OnTally(CountTree count)
         {
             if (!this.EnsureCurrentPlotWorkable()) { return; }
@@ -356,7 +324,7 @@ namespace FSCruiser.Core.DataEntry
             //tree may be null if user didn't enter kpi
             if (tree != null)
             {
-                //single stage trees are always measure so no need to remind the user. 
+                //single stage trees are always measure so no need to remind the user.
                 if (!isSingleStage)
                 {
                     if (tree.CountOrMeasure == "M"
@@ -377,7 +345,7 @@ namespace FSCruiser.Core.DataEntry
                 tree.TrySave();
                 plot.AddTree(tree);
                 SelectLastTree();
-            }            
+            }
         }
 
         protected Tree TallyThreeP(Plot plot, CountTree count)
@@ -521,34 +489,6 @@ namespace FSCruiser.Core.DataEntry
         {
             this._BS_Trees.MoveLast();
             this.View.MoveHomeField();
-        }
-
-        public void Save()
-        {
-            foreach (Plot p in Stratum.Plots)
-            {
-                p.Save();
-
-                try
-                {
-                    DataService.TrySaveTrees(p);
-                }
-                catch (FMSC.ORM.SQLException e)
-                {
-                    _dialogService.ShowMessage(e.Message
-                        , "Stratum " + this.Stratum.Code + "Plot " + p.PlotNumber.ToString());
-                }
-            }
-        }
-
-        public void SaveCounts()
-        {
-            this.Stratum.SaveCounts();
-        }
-
-        public Exception TrySaveCounts()
-        {
-            return Stratum.TrySaveCounts();
         }
 
         #region event handlers
