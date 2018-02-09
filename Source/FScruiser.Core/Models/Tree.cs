@@ -238,13 +238,14 @@ namespace FSCruiser.Core.Models
                 DAL.Execute("DELETE FROM TreeCalculatedValues WHERE Tree_CN = " + this.Tree_CN + ";");
                 DAL.Execute("DELETE FROM Tree WHERE Tree_CN = " + this.Tree_CN + ";");
                 DAL.CommitTransaction();
-                IsDeleted = true;
+                
             }
             catch
             {
                 DAL.RollbackTransaction();
                 throw;
             }
+            IsDeleted = true;
         }
 
         #endregion overridden methods

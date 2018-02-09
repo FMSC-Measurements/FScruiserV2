@@ -54,17 +54,7 @@ namespace FSCruiser.Core.Models
         }
 
         [XmlArray]
-        public IList<Tree> Trees
-        {
-            get
-            {
-                return _trees;
-            }
-            set
-            {
-                _trees = value;
-            }
-        }
+        public IList<Tree> Trees { get; set; }
 
         //[IgnoreField]
         //public long HighestTreeNum
@@ -118,20 +108,20 @@ namespace FSCruiser.Core.Models
                     DAL.Execute("DELETE FROM Log WHERE Tree_CN in (SELECT Tree_CN FROM Tree WHERE Plot_CN = ?);", Plot_CN);
                     DAL.Execute("DELETE FROM Tree WHERE Plot_CN = ?;", Plot_CN);
                     DAL.Execute("DELETE FROM Plot WHERE Plot_CN = ?;", Plot_CN);
-                    this.DAL.CommitTransaction();
-                    OnDeleted();
+                    this.DAL.CommitTransaction();                    
                 }
                 catch
                 {
                     this.DAL.RollbackTransaction();
                     throw;
                 }
+                OnDeleted();
             }
         }
 
         public virtual void PopulateTrees()
         {
-            if (this._trees == null)
+            if (Trees == null)
             {
                 List<Tree> tList = base.DAL.From<Tree>()
                     .Where("Stratum_CN = ? AND CuttingUnit_CN = ? AND Plot_CN = ?")
@@ -145,8 +135,7 @@ namespace FSCruiser.Core.Models
                     t.ValidateVisableFields();
                 }
 
-                this._trees = new BindingList<Tree>(tList);
-                //this._trees = tList;
+                Trees = tList;
             }
         }
 
