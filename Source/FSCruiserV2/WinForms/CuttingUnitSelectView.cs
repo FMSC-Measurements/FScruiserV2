@@ -74,7 +74,7 @@ namespace FSCruiser.WinForms
             }
             else
             {
-                this._strataLB.DataSource = null;
+                this._strataLB.DataSource = Enumerable.Empty<StratumDO>();
             }
         }
     }
