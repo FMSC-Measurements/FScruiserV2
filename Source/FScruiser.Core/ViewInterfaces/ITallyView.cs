@@ -13,6 +13,6 @@ namespace FSCruiser.Core.ViewInterfaces
 
         void OnTally(CountTree count);
 
-        Exception TrySaveCounts();
+        //Exception TrySaveCounts();
     }
 }

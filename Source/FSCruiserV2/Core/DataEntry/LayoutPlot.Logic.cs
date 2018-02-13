@@ -92,18 +92,19 @@ namespace FSCruiser.Core.DataEntry
         }
 
         //validate plot before switching plots
-        protected bool CheckPlot(Plot plot)
+        protected bool ValidatePlot(Plot plot)
         {
             if (plot != null)
             {
                 EndEdit();
                 if (!(plot is Plot3PPNT)
                     && !plot.IsNull
-                    && (plot.Trees != null && plot.Trees.Count == 0))
+                    && (plot.Trees != null && plot.Trees.Count == 0)
+                    && _dialogService.AskYesNo("Plot contains no tree records. Make it a NULL plot?","Mark Plot Empty?"))
                 {
-                    plot.IsNull |= _dialogService.AskYesNo("Plot contains no tree records. Make it a NULL plot?",
-                        "Mark Plot Empty?");
-                    _BS_Plots.ResetItem(_BS_Plots.IndexOf(plot));
+                    plot.IsNull = true;
+                    DataService.DataStore.Save(plot);
+                    _BS_Plots.ResetItem(_BS_Plots.IndexOf(plot));//call reset item to cause the binding source to update view
                 }
 
                 string error;
@@ -193,7 +194,7 @@ namespace FSCruiser.Core.DataEntry
         {
             var currentPlot = CurrentPlot;
             if (currentPlot != null
-                && (!SavePlotTrees(currentPlot) || !CheckPlot(currentPlot)))
+                && (!SavePlotTrees(currentPlot) || !ValidatePlot(currentPlot)))
             {
                 return;
             }
@@ -286,7 +287,7 @@ namespace FSCruiser.Core.DataEntry
         {
             if (!this.EnsureCurrentPlotWorkable()) { return; }
 
-            this.OnTally(count, this.CurrentPlot);
+            OnTally(count, this.CurrentPlot);
         }
 
         protected void OnTally(CountTree count, Plot plot)
@@ -324,6 +325,9 @@ namespace FSCruiser.Core.DataEntry
             //tree may be null if user didn't enter kpi
             if (tree != null)
             {
+                tree.TrySave();
+                plot.AddTree(tree);
+
                 //single stage trees are always measure so no need to remind the user.
                 if (!isSingleStage)
                 {
@@ -342,8 +346,6 @@ namespace FSCruiser.Core.DataEntry
                     }
                 }
 
-                tree.TrySave();
-                plot.AddTree(tree);
                 SelectLastTree();
             }
         }
@@ -497,7 +499,7 @@ namespace FSCruiser.Core.DataEntry
         {
             if (!_disableCheckPlot && _prevPlot != null && _prevPlot != CurrentPlot)
             {
-                if (!this.CheckPlot(_prevPlot) && !this.SavePlotTrees(_prevPlot))
+                if (!this.ValidatePlot(_prevPlot) && !this.SavePlotTrees(_prevPlot))
                 {
                     this.CurrentPlot = _prevPlot;
                 }

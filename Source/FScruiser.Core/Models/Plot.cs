@@ -135,7 +135,7 @@ namespace FSCruiser.Core.Models
                     t.ValidateVisableFields();
                 }
 
-                Trees = tList;
+                Trees = new BindingList<Tree>(tList); ;
             }
         }
 

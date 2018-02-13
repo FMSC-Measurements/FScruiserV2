@@ -36,9 +36,9 @@ namespace FScruiser.Core.Services
 
         void SaveTrees(Plot plot);
 
-        void TrySaveTrees(Plot plot);
+        bool TrySaveTrees(Plot plot);
 
-        void TrySaveTreesAsync(Plot plot);
+        //void TrySaveTreesAsync(Plot plot);
 
         Exception SavePlotData();
 

@@ -10,8 +10,6 @@ namespace FScruiser.Core.Services
 {
     public interface ITreeDataService : ITreeFieldProvider
     {
-        //IList<Tree> NonPlotTrees { get; }
-
         DAL DataStore { get; }
 
         int Region { get; }
@@ -48,10 +46,10 @@ namespace FScruiser.Core.Services
 
         TreeEstimateDO LogTreeEstimate(CountTree count, int kpi);
 
-        void SaveTrees();
+        //void SaveTrees();
 
         bool TrySaveTrees();
 
-        void TrySaveTreesAsync();
+        //void TrySaveTreesAsync();
     }
 }

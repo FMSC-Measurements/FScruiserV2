@@ -241,6 +241,23 @@ namespace FSCruiser.WinForms.DataEntry
 #endif
         }
 
+        public void NotifyLeave()
+        {
+            EndEdit();
+
+            var currentPlot = ViewLogicController.CurrentPlot;
+            try
+            {
+                DataService.TrySaveTrees(currentPlot);
+            }
+            catch (FMSC.ORM.SQLException e)
+            {
+                MessageBox.Show(e.Message
+                    , "Stratum " + Stratum.Code + "Plot " + currentPlot.PlotNumber.ToString());
+            }
+
+        }
+
         public void HandleLoad()
         {
             _viewLoading = false;
@@ -285,11 +302,6 @@ namespace FSCruiser.WinForms.DataEntry
         public void OnTally(CountTree count)
         {
             this.ViewLogicController.OnTally(count);
-        }
-
-        public Exception TrySaveCounts()
-        {
-            return ViewLogicController.TrySaveCounts();
         }
 
         #endregion ITallyView Members

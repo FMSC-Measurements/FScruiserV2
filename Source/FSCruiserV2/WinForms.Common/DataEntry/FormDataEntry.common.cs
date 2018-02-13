@@ -163,8 +163,6 @@ namespace FSCruiser.WinForms.DataEntry
                     st.SampleSelecter = new ThreePSelecter((int)st.KZ3PPNT, 1000000, 0);
                 }
 
-                
-
                 LayoutPlot view = new LayoutPlot(DataService
                     , AppSettings
                     , SoundService.Instance
@@ -187,13 +185,9 @@ namespace FSCruiser.WinForms.DataEntry
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            foreach (IDataEntryPage c in this._layouts)
+            foreach (var tv in this._layouts.OfType<ITreeView>())
             {
-                ITreeView tv = c as ITreeView;
-                if (tv != null)
-                {
-                    tv.HandleLoad();
-                }
+                tv.HandleLoad();
             }
 
             if (this._tallyLayout != null)
@@ -345,42 +339,11 @@ namespace FSCruiser.WinForms.DataEntry
         protected void OnFocusedLayoutChangedCommon(object sender, EventArgs e)
         {
             SoundService.SignalPageChanged();
-            if (_previousLayout != null)
+
+            var previousLayout = _previousLayout;
+            if (previousLayout != null)
             {
-                //note: a view can be a tree view and a tally view,
-                //so we'll handle both conditions
-
-                var oldTreeView = _previousLayout as ITreeView;
-                if (oldTreeView != null)
-                {
-                    oldTreeView.EndEdit();
-                    if (oldTreeView.Trees != null)
-                    {
-                        var hasBadSaveState = !DataService.TrySaveTrees(oldTreeView.Trees);
-                        oldTreeView.HasBadSaveState = hasBadSaveState;
-                        if (hasBadSaveState)
-                        {
-                            MessageBox.Show("Some trees could not be saved\r\n" + "Check for invalid values");
-                        }
-                    }
-                }
-
-                var tallyView = _previousLayout as ITallyView;
-                if (tallyView != null)
-                {
-                    var ex = tallyView.TrySaveCounts();
-                    if (ex != null)
-                    {
-                        if (ex is FMSC.ORM.ReadOnlyException)
-                        {
-                            MessageBox.Show("File Is Read Only \r\n" + DataService.DataStore.Path);
-                        }
-                        else
-                        {
-                            MessageBox.Show(ex.GetType().Name + " " + ex.Message, "Counts");
-                        }
-                    }
-                }
+                previousLayout.NotifyLeave();
             }
 
             var currentLayout = FocusedLayout;
@@ -434,7 +397,6 @@ namespace FSCruiser.WinForms.DataEntry
             if (this.PageContainer == null) { return; }
             //int pageIndex = this.PageContainer.TabPages.IndexOf(_treePage);
             this.GoToPageIndex(_treePageIndex);
-            
         }
 
         public void GoToTallyPage()
@@ -456,7 +418,7 @@ namespace FSCruiser.WinForms.DataEntry
         public void GoToPage(IDataEntryPage page)
         {
             var pageIndex = Layouts.IndexOf(page);
-            if(pageIndex >= 0)
+            if (pageIndex >= 0)
             {
                 GoToPageIndex(pageIndex);
             }

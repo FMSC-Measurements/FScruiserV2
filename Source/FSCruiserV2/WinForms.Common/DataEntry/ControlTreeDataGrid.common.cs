@@ -125,6 +125,18 @@ namespace FSCruiser.WinForms.DataEntry
 #endif
         }
 
+        public void NotifyLeave()
+        {
+            EndEdit();
+
+            var hasBadSaveState = !DataService.TrySaveTrees();
+            HasBadSaveState = hasBadSaveState;
+            if (hasBadSaveState)
+            {
+                MessageBox.Show("Some trees could not be saved\r\n" + "Check for invalid values");
+            }
+        }
+
         public bool PreviewKeypress(string keyStr)
         {
             if (string.IsNullOrEmpty(keyStr)) { return false; }
