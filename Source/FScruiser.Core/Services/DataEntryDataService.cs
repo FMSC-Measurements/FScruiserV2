@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Collections;
 
 namespace FScruiser.Core.Services
 {
@@ -487,7 +488,8 @@ namespace FScruiser.Core.Services
             SaveCounts(DataStore, TreeStrata);
         }
 
-        public static void SaveCounts(DAL datastore, IEnumerable<Stratum> strata)
+        //HACK using IEnumerable because no covariance in net20
+        public static void SaveCounts(DAL datastore, IEnumerable strata)
         {
             if (strata == null) { throw new ArgumentNullException("strata"); }
 
@@ -501,7 +503,7 @@ namespace FScruiser.Core.Services
                 {
                     Exception error = null;
 
-                    foreach (Stratum stratum in strata)
+                    foreach (Stratum stratum in strata.OfType<Stratum>())
                     {
                         if (stratum.SampleGroups == null) { continue; }
 
@@ -571,7 +573,8 @@ namespace FScruiser.Core.Services
             return error;
         }
 
-        public static void SaveSampleGroups(DAL datastore, IEnumerable<Stratum> strata)
+        //HACK using IEnumerable because no covariance in net20
+        public static void SaveSampleGroups(DAL datastore, IEnumerable strata)
         {
             using (var connection = datastore.CreateConnection())
             {
@@ -580,7 +583,7 @@ namespace FScruiser.Core.Services
                 {
                     Exception error = null;
 
-                    foreach (var stratum in strata)
+                    foreach (var stratum in strata.OfType<Stratum>())
                     {
                         if (stratum.SampleGroups == null) { continue; }
 
