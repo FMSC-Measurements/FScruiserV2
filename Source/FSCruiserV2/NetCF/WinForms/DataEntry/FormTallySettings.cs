@@ -18,9 +18,10 @@ namespace FSCruiser.WinForms.DataEntry
         public ICountTreeDataService DataService { get; set; }
 
         public FormTallySettings(ICountTreeDataService dataService)
-        {
-            this.DataService = dataService;
+        {            
             InitializeComponent();
+            this.DataService = dataService;
+            Count = DataService.Count;
 
             if (ViewController.PlatformType == FMSC.Controls.PlatformType.WinCE)
             {

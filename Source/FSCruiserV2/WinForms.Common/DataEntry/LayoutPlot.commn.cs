@@ -246,6 +246,7 @@ namespace FSCruiser.WinForms.DataEntry
             EndEdit();
 
             var currentPlot = ViewLogicController.CurrentPlot;
+            if (currentPlot == null) { return; }
             try
             {
                 DataService.TrySaveTrees(currentPlot);
