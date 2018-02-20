@@ -139,12 +139,6 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public long GetNextTreeNumber()
-        {
-            if (Trees == null || Trees.Count == 0) { return 1L; }
-            return Trees.Max(x => x.TreeNumber) + 1;
-        }
-
         public void ResequenceTreeNumbers()
         {
             if (Trees != null)

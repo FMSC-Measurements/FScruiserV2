@@ -24,41 +24,14 @@ namespace FSCruiser.Core.Models
         [XmlAttribute]
         public int KPI { get; set; }
 
-        private long _countCN = 0L;
+        [XmlAttribute]
+        public long CountCN { get; set; }
 
         [XmlAttribute]
-        public long CountCN
-        {
-            get { return (Count != null && Count.CountTree_CN != null) ? Count.CountTree_CN.Value : 0L; }
-            set
-            {
-                _countCN = value;
-            }
-        }
-
-        private long _treeEstCN;
+        public long TreeEstimateCN { get; set; }
 
         [XmlAttribute]
-        public long TreeEstimateCN
-        {
-            get { return (this.TreeEstimate != null && this.TreeEstimate.TreeEstimate_CN != null) ? this.TreeEstimate.TreeEstimate_CN.Value : 0L; }
-            set
-            {
-                _treeEstCN = value;
-            }
-        }
-
-        private long _treeCN;
-
-        [XmlAttribute]
-        public long TreeCN
-        {
-            get { return (TreeRecord != null && TreeRecord.Tree_CN != null) ? TreeRecord.Tree_CN.Value : 0L; }
-            set
-            {
-                _treeCN = value;
-            }
-        }
+        public long TreeCN { get; set; }
 
         public TallyAction()
         {

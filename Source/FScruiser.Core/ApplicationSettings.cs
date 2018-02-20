@@ -69,9 +69,10 @@ namespace FSCruiser.Core
         List<Cruiser> _cruisers;
         List<RecentProject> _recentProjects = new List<RecentProject>();
 
-        public IEnumerable<RecentProject> RecentProjects
+        public List<RecentProject> RecentProjects
         {
-            get { return _recentProjects; }
+            get { return _recentProjects;  }
+            set { _recentProjects = value; }
         }
 
         public ApplicationSettings()
@@ -302,16 +303,20 @@ namespace FSCruiser.Core
 
         public static ApplicationSettings Deserialize(string path)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
             using (StreamReader reader = new StreamReader(path))
             {
-                return (ApplicationSettings)serializer.Deserialize(reader);
+                return Deserialize(reader);
             }
+        }
+
+        public static ApplicationSettings Deserialize(TextReader reader)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
+            return (ApplicationSettings)serializer.Deserialize(reader);
         }
 
         public void Save()
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
             var dir = ApplicationSettingDirectory;
 
             if (!Directory.Exists(dir))
@@ -323,8 +328,14 @@ namespace FSCruiser.Core
 
             using (StreamWriter writer = new StreamWriter(path))
             {
-                serializer.Serialize(writer, this);
+                Serialize(writer, this);
             }
+        }
+
+        public static void Serialize(TextWriter writer, ApplicationSettings appSettings)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(ApplicationSettings));
+            serializer.Serialize(writer, appSettings);
         }
 
         static string GetExecutionDirectory()

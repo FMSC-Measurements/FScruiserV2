@@ -28,14 +28,45 @@ namespace FSCruiser.Core.Models
 
         public int Count { get { return _list.Count; } }
 
+        public event EventHandler<TallyAction> ItemRemoving;
+
         public CuttingUnit CuttingUnit { get; protected set; }
         public ITreeDataService DataService { get; protected set; }//required because remove method needs to remove tree from dataService too
 
-        public TallyHistoryCollection(CuttingUnit cuttingUnit, ITreeDataService dataService, int maxSize)
+
+        public TallyHistoryCollection(int maxSize)
         {
             this.MaxSize = maxSize;
-            CuttingUnit = cuttingUnit;
-            DataService = dataService;
+        }
+
+        public void Initialize(FMSC.ORM.Core.DatastoreRedux datastore, CuttingUnit cuttingUnit)
+        {
+            if (!String.IsNullOrEmpty(cuttingUnit.TallyHistory))
+            {
+                var array = Deserialize(cuttingUnit.TallyHistory);
+                _list = new List<TallyAction>(array);
+                Inflate(datastore);
+
+                OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+            }
+        }
+
+        public void Save(CuttingUnit cuttingUnit)
+        {
+            try
+            {
+                var xmlStr = Serialize();
+
+                if (!String.IsNullOrEmpty(xmlStr))
+                {
+                    cuttingUnit.TallyHistory = xmlStr;
+                    cuttingUnit.Save();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new TallyHistoryPersistanceException("Unable to save tally history", e);
+            }
         }
 
         public void Add(TallyAction action)
@@ -66,22 +97,6 @@ namespace FSCruiser.Core.Models
                 if (itemIndex != -1)
                 {
                     
-                    var count = action.Count;
-                    if (count.TreeCount > 0)
-                    {
-                        action.Count.TreeCount--;
-                    }
-
-                    if (action.KPI > 0 && count.SumKPI > 0)
-                    {
-                        count.SumKPI -= action.KPI;
-                        action.TreeEstimate.Delete();
-                    }
-
-                    if (action.TreeRecord != null)
-                    {
-                        DataService.DeleteTree(action.TreeRecord);
-                    }
 
                     RemoveAt(itemIndex);
                     return true;
@@ -93,37 +108,18 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public void Initialize(FMSC.ORM.Core.DatastoreRedux datastore)
+        protected virtual void OnItemRemoving(TallyAction action)
         {
-            if (!String.IsNullOrEmpty(CuttingUnit.TallyHistory))
+            var itemRemoving = ItemRemoving;
+            if(itemRemoving != null)
             {
-                var array = this.DeserializeTallyHistory(CuttingUnit.TallyHistory);
-                _list = new List<TallyAction>(array);
-                InflateTallyActions(datastore);
-
-                OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+                itemRemoving.Invoke(this, action);
             }
         }
 
-        public void Save()
-        {
-            try
-            {
-                var xmlStr = SerializeTallyHistory();
+        
 
-                if (!String.IsNullOrEmpty(xmlStr))
-                {
-                    CuttingUnit.TallyHistory = xmlStr;
-                    CuttingUnit.Save();
-                }
-            }
-            catch (Exception e)
-            {
-                throw new TallyHistoryPersistanceException("Unable to save tally history", e);
-            }
-        }
-
-        protected TallyAction[] DeserializeTallyHistory(string xmlStr)
+        public static TallyAction[] Deserialize(string xmlStr)
         {
             TallyAction[] tallyHistory = null;
             try
@@ -151,15 +147,15 @@ namespace FSCruiser.Core.Models
             return tallyHistory;
         }
 
-        public void InflateTallyActions(FMSC.ORM.Core.DatastoreRedux datastore)
+        public void Inflate(FMSC.ORM.Core.DatastoreRedux datastore)
         {
             foreach (TallyAction action in this)
             {
-                InflateTallyAction(action, datastore);
+                Inflate(datastore, action);
             }
         }
 
-        public static void InflateTallyAction(TallyAction action, FMSC.ORM.Core.DatastoreRedux datastore)
+        public static void Inflate(FMSC.ORM.Core.DatastoreRedux datastore, TallyAction action)
         {
             if (action.CountCN != 0L)
             {
@@ -175,7 +171,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        protected string SerializeTallyHistory()
+        public string Serialize()
         {
             using (StringWriter writer = new StringWriter())
             {
@@ -295,6 +291,9 @@ namespace FSCruiser.Core.Models
 
         public void RemoveAt(int index)
         {
+            if(index < 0 || index >= _list.Count) { throw new IndexOutOfRangeException(); }
+            var action = _list[index];
+            OnItemRemoving(action);
             _list.RemoveAt(index);
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
         }

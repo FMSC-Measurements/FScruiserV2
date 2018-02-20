@@ -101,23 +101,22 @@ namespace FScruiser.Core.Test.Services
         [Fact]
         public void GetNextNonPlotTreeNumber_Test()
         {
-            var dataService = new IDataEntryDataService();
-            dataService.NonPlotTrees = new List<Tree>();
+            var trees = new List<Tree>();
 
-            dataService.GetNextNonPlotTreeNumber().ShouldBeEquivalentTo(1);
+            IDataEntryDataService.GetNextTreeNumber(trees).ShouldBeEquivalentTo(1);
 
-            dataService.NonPlotTrees.Add(new Tree() { TreeNumber = 1 });
+            trees.Add(new Tree() { TreeNumber = 1 });
 
-            dataService.GetNextNonPlotTreeNumber().ShouldBeEquivalentTo(2);
+            IDataEntryDataService.GetNextTreeNumber(trees).ShouldBeEquivalentTo(2);
 
             var tree = new Tree() { TreeNumber = 50 };
-            dataService.NonPlotTrees.Add(tree);
+            trees.Add(tree);
 
-            dataService.GetNextNonPlotTreeNumber().ShouldBeEquivalentTo(51);
+            IDataEntryDataService.GetNextTreeNumber(trees).ShouldBeEquivalentTo(51);
 
-            dataService.NonPlotTrees.Remove(tree);
+            trees.Remove(tree);
 
-            dataService.GetNextNonPlotTreeNumber().ShouldBeEquivalentTo(2);
+            IDataEntryDataService.GetNextTreeNumber(trees).ShouldBeEquivalentTo(2);
 
         }
 

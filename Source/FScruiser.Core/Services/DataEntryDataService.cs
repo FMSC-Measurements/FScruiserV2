@@ -126,6 +126,7 @@ namespace FScruiser.Core.Services
 
         public IDataEntryDataService()
         {
+            
         }
 
         public IDataEntryDataService(string unitCode, DAL dataStore)
@@ -136,9 +137,32 @@ namespace FScruiser.Core.Services
 
             ReadCruiseData(unitCode);
 
-            var tallyBuffer = new TallyHistoryCollection(CuttingUnit, this, Constants.MAX_TALLY_HISTORY_SIZE);
-            tallyBuffer.Initialize(DataStore);
+            var tallyBuffer = new TallyHistoryCollection(Constants.MAX_TALLY_HISTORY_SIZE);
+            tallyBuffer.ItemRemoving += TallyBuffer_ItemRemoved;
+            tallyBuffer.Initialize(dataStore, CuttingUnit);
             TallyHistory = tallyBuffer;
+        }
+
+        private void TallyBuffer_ItemRemoved(object sender, TallyAction action)
+        {
+            var count = action.Count;
+            if (count.TreeCount > 0)
+            {
+                action.Count.TreeCount--;
+            }
+
+            if (action.KPI > 0 && count.SumKPI > 0)
+            {
+                count.SumKPI -= action.KPI;
+                action.TreeEstimate.Delete();
+            }
+
+            if (action.TreeRecord != null)
+            {
+                this.DeleteTree(action.TreeRecord);
+            }
+
+            count.Save();
         }
 
         #region load data methods
@@ -193,13 +217,17 @@ namespace FScruiser.Core.Services
 
         #region treeNumbering
 
-        public long GetNextNonPlotTreeNumber()
+        protected long GetNextNonPlotTreeNumber()
         {
-            if (this.NonPlotTrees == null || this.NonPlotTrees.Count == 0)
+            return GetNextTreeNumber(NonPlotTrees);
+        }
+
+        public static long GetNextTreeNumber(IEnumerable<Tree> trees)
+        {
+            if (trees == null || trees.Count() == 0)
             { return 1; }
 
-            var highestTreeNum = NonPlotTrees.Max(x => x.TreeNumber);
-            return highestTreeNum + 1;
+            return trees.Max(x => x.TreeNumber) + 1;
         }
 
         public long GetNextPlotTreeNumber(long plotNumber)
@@ -219,9 +247,9 @@ namespace FScruiser.Core.Services
             return topTreeNum + 1;
         }
 
-        public bool IsTreeNumberAvalible(long treeNumber)
+        public static bool IsTreeNumberAvalible(IEnumerable<Tree> trees, long treeNumber)
         {
-            foreach (Tree tree in this.NonPlotTrees)
+            foreach (Tree tree in trees)
             {
                 if (tree.TreeNumber == treeNumber)
                 {
@@ -230,6 +258,11 @@ namespace FScruiser.Core.Services
             }
 
             return true;
+        }
+
+        public bool IsTreeNumberAvalible(long treeNumber)
+        {
+            return IsTreeNumberAvalible(NonPlotTrees, treeNumber);
         }
 
         #endregion treeNumbering
@@ -313,7 +346,7 @@ namespace FScruiser.Core.Services
             newTree.Plot = plot;
             if (IsReconCruise)
             {
-                newTree.TreeNumber = plot.GetNextTreeNumber();
+                newTree.TreeNumber = GetNextTreeNumber(plot.Trees);
             }
             else
             {
@@ -885,7 +918,7 @@ namespace FScruiser.Core.Services
             {
                 SaveTrees(NonPlotTrees);
 
-                TallyHistory.Save();
+                TallyHistory.Save(CuttingUnit);
             }
             catch (Exception e)
             {
