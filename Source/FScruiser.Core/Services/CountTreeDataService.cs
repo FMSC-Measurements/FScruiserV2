@@ -13,8 +13,12 @@ namespace FScruiser.Core.Services
 
         public CountTree Count { get; protected set; }
 
-        public CountTreeDataService(DatastoreRedux datastore, CountTree count)
+        public CountTreeDataService(DAL datastore, CountTree count)
         {
+            if(datastore == null) { throw new ArgumentNullException("datastore"); }
+            if(count == null) { throw new ArgumentNullException("count"); }
+
+            Datastore = datastore;
             Count = count;
         }
 

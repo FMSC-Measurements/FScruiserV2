@@ -51,6 +51,7 @@
   <ItemGroup>
     <None Remove="Core\DataEntry\FormDataEntry.Logic.cs" />
     <None Remove="Core\DataEntry\FormDataEntry.Logic.cs~" />
+    <None Remove="WinForms.Common\DataEntry\FormTallySettings.common.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -107,6 +108,7 @@
     <Compile Include="WinForms.Common\DataEntry\FormLogs.common.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="WinForms.Common\DataEntry\FormTallySettings.common.cs" />
     <Compile Include="WinForms.Common\DataEntry\LayoutTreeBased.common.cs">
       <SubType>UserControl</SubType>
     </Compile>
