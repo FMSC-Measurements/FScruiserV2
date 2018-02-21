@@ -71,6 +71,7 @@ namespace FSCruiser.WinForms
 
         public int? AskKPI(int min, int max)
         {
+            min = Math.Max(min, 1);
             ThreePNumPad.ShowDialog(min, max, null, false);
             return ThreePNumPad.UserEnteredValue;
         }
