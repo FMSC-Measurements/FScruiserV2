@@ -1,10 +1,7 @@
-﻿using FluentAssertions;
+﻿using CruiseDAL.DataObjects;
+using FluentAssertions;
 using FSCruiser.Core.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace FScruiser.Core.Test.Models
@@ -16,28 +13,34 @@ namespace FScruiser.Core.Test.Models
         {
             var tallyHistoryCollection = new TallyHistoryCollection(10);
 
+            var count = new CountTree() { CountTree_CN = 1 };
+            var tree = new Tree() { Tree_CN = 2 };
+            var treeEstimate = new TreeEstimateDO() { TreeEstimate_CN = 3 };
+            var kpiValue = 1234;
+            var timeValue = "123";
+
             tallyHistoryCollection.Add(new TallyAction()
             {
-                CountCN = 1,
-                Time = "123",
-                TreeCN = 2,
-                TreeEstimateCN = 3
+                Count = count,
+                Time = timeValue,
+                KPI = kpiValue,
+                TreeRecord = tree,
+                TreeEstimate = treeEstimate
             });
 
             var xmlText = tallyHistoryCollection.Serialize();
 
-            var deserializeResult = TallyHistoryCollection.Deserialize(xmlText);
+            var resultCollection = TallyHistoryCollection.Deserialize(xmlText);
 
-            deserializeResult.Should().HaveSameCount(tallyHistoryCollection);
+            resultCollection.Should().HaveSameCount(tallyHistoryCollection);
 
-            foreach (var item in deserializeResult.Zip(tallyHistoryCollection, (x, y) => new { Left = x, Right = y }))
-            {
-                item.Left.TreeCN.ShouldBeEquivalentTo(item.Right.TreeCN);
-                item.Left.TreeEstimateCN.ShouldBeEquivalentTo(item.Right.TreeEstimateCN);
-                item.Left.CountCN.ShouldBeEquivalentTo(item.Right.CountCN);
-                item.Left.KPI.ShouldBeEquivalentTo(item.Right.KPI);
-                item.Left.Time.ShouldBeEquivalentTo(item.Right.Time);
-            }
+            var resultItem = resultCollection.First();
+
+            resultItem.TreeCN.ShouldBeEquivalentTo(tree.Tree_CN);
+            resultItem.TreeEstimateCN.ShouldBeEquivalentTo(treeEstimate.TreeEstimate_CN);
+            resultItem.CountCN.ShouldBeEquivalentTo(count.CountTree_CN);
+            resultItem.KPI.ShouldBeEquivalentTo(kpiValue);
+            resultItem.Time.ShouldBeEquivalentTo(timeValue);
         }
 
         [Fact]
@@ -71,7 +74,7 @@ namespace FScruiser.Core.Test.Models
                 dataStore.Insert(new SampleGroup() { Code = "01", CutLeave = "", UOM = "", Stratum_CN = 1, SampleGroup_CN = 1, PrimaryProduct = "01" });
                 dataStore.Insert(new CruiseDAL.DataObjects.TallyDO() { Tally_CN = 1, Hotkey = "", Description = "" });
 
-                dataStore.Insert(new Tree() {TreeNumber = 1, Tree_CN = 1, CuttingUnit_CN = 1, Stratum_CN = 1 });
+                dataStore.Insert(new Tree() { TreeNumber = 1, Tree_CN = 1, CuttingUnit_CN = 1, Stratum_CN = 1 });
                 dataStore.Insert(new CountTree() { CountTree_CN = 1, CuttingUnit_CN = 1, SampleGroup_CN = 1 });
                 dataStore.Insert(new CruiseDAL.DataObjects.TreeEstimateDO() { CountTree_CN = 1 });
 
@@ -101,7 +104,6 @@ namespace FScruiser.Core.Test.Models
             tallHistoryCollection.Should().HaveCount(1);
             tallHistoryCollection.Should().Contain(ta2);
             tallHistoryCollection.Should().NotContain(ta1);
-
         }
 
         [Fact]

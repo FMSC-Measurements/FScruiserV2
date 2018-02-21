@@ -1,17 +1,19 @@
-﻿using System;
+﻿using CruiseDAL.DataObjects;
+using System;
 using System.Xml.Serialization;
-using CruiseDAL.DataObjects;
 
 namespace FSCruiser.Core.Models
 {
     [Serializable]
     public class TallyAction
     {
+        private long _countCN;
+        private long _treeCN;
+        private long _treeEstimateCN;
+
         [XmlIgnore]
         public Tree TreeRecord { get; set; }
 
-        //[XmlIgnore]
-        //public SampleSelecter Sampler { get { return Count.Tag as SampleSelecter; } }
         [XmlIgnore]
         public CountTree Count { get; set; }
 
@@ -25,13 +27,25 @@ namespace FSCruiser.Core.Models
         public int KPI { get; set; }
 
         [XmlAttribute]
-        public long CountCN { get; set; }
+        public long CountCN
+        {
+            get { return (Count != null) ? Count.CountTree_CN.GetValueOrDefault() : _countCN; }
+            set { _countCN = value; }
+        }
 
         [XmlAttribute]
-        public long TreeEstimateCN { get; set; }
+        public long TreeEstimateCN
+        {
+            get { return (TreeEstimate != null) ? TreeEstimate.TreeEstimate_CN.GetValueOrDefault() : _treeEstimateCN; }
+            set { _treeEstimateCN = value; }
+        }
 
         [XmlAttribute]
-        public long TreeCN { get; set; }
+        public long TreeCN
+        {
+            get { return (TreeRecord != null) ? TreeRecord.Tree_CN.GetValueOrDefault() : _treeCN; }
+            set { _treeCN = value; }
+        }
 
         public TallyAction()
         {
@@ -48,8 +62,6 @@ namespace FSCruiser.Core.Models
         {
             TreeRecord = treeRecord;
         }
-
-        
 
         public override string ToString()
         {

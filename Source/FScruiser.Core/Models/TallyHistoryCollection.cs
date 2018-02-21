@@ -10,6 +10,11 @@ using FScruiser.Core.Services;
 
 namespace FSCruiser.Core.Models
 {
+    public class ItemRemovingEventArgs<tItem> : EventArgs
+    {
+        public tItem Item { get; set; }
+    }
+
     public class TallyHistoryCollection : IList<TallyAction>, System.ComponentModel.IBindingList, ICollection, IList
     {
         object syncLock = new object();
@@ -28,7 +33,7 @@ namespace FSCruiser.Core.Models
 
         public int Count { get { return _list.Count; } }
 
-        public event EventHandler<TallyAction> ItemRemoving;
+        public event EventHandler<ItemRemovingEventArgs<TallyAction>> ItemRemoving;
 
         public CuttingUnit CuttingUnit { get; protected set; }
         public ITreeDataService DataService { get; protected set; }//required because remove method needs to remove tree from dataService too
@@ -110,10 +115,12 @@ namespace FSCruiser.Core.Models
 
         protected virtual void OnItemRemoving(TallyAction action)
         {
+            var eventArgs = new ItemRemovingEventArgs<TallyAction>(){Item = action};
+
             var itemRemoving = ItemRemoving;
             if(itemRemoving != null)
             {
-                itemRemoving.Invoke(this, action);
+                itemRemoving.Invoke(this, eventArgs);
             }
         }
 

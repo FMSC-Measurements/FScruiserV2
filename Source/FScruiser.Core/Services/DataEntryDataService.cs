@@ -143,18 +143,23 @@ namespace FScruiser.Core.Services
             TallyHistory = tallyBuffer;
         }
 
-        private void TallyBuffer_ItemRemoved(object sender, TallyAction action)
+        private void TallyBuffer_ItemRemoved(object sender, ItemRemovingEventArgs<TallyAction> eventArgs)
         {
-            var count = action.Count;
-            if (count.TreeCount > 0)
-            {
-                action.Count.TreeCount--;
-            }
+            var action = eventArgs.Item;
 
-            if (action.KPI > 0 && count.SumKPI > 0)
+            var count = action.Count;
+            if (count != null)
             {
-                count.SumKPI -= action.KPI;
-                action.TreeEstimate.Delete();
+                if (count.TreeCount > 0)
+                {
+                    action.Count.TreeCount--;
+                }
+
+                if (action.KPI > 0 && count.SumKPI > 0)
+                {
+                    count.SumKPI -= action.KPI;
+                    action.TreeEstimate.Delete();
+                }
             }
 
             if (action.TreeRecord != null)
