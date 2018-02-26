@@ -11,5 +11,7 @@
         bool PreviewKeypress(string keyStr);
 
         void NotifyEnter();
+
+        void NotifyLeave();
     }
 }

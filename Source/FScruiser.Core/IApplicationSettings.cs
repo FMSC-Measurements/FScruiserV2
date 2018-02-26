@@ -9,7 +9,7 @@ namespace FSCruiser.Core
     {
         event EventHandler CruisersChanged;
 
-        IEnumerable<RecentProject> RecentProjects { get; }
+        List<RecentProject> RecentProjects { get; }
 
         bool EnableCruiserPopup { get; set; }
 

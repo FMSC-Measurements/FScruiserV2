@@ -57,6 +57,8 @@ Senario: user enters a kpi that is greater than the max kpi
     THEN the message "Must be Less or Equal to 30" is displayed
     AND the device squaks                               //fail
 
+Senario: user enters a kpi less than our equal to 1 and sample group doens't have a min kpi
+
 Senario: user tallys a STM tree
     GIVEN the user has tallyed a tree
     AND the three p number pad is displayed

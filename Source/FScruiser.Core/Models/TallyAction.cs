@@ -1,17 +1,19 @@
-﻿using System;
+﻿using CruiseDAL.DataObjects;
+using System;
 using System.Xml.Serialization;
-using CruiseDAL.DataObjects;
 
 namespace FSCruiser.Core.Models
 {
     [Serializable]
     public class TallyAction
     {
+        private long _countCN;
+        private long _treeCN;
+        private long _treeEstimateCN;
+
         [XmlIgnore]
         public Tree TreeRecord { get; set; }
 
-        //[XmlIgnore]
-        //public SampleSelecter Sampler { get { return Count.Tag as SampleSelecter; } }
         [XmlIgnore]
         public CountTree Count { get; set; }
 
@@ -24,40 +26,25 @@ namespace FSCruiser.Core.Models
         [XmlAttribute]
         public int KPI { get; set; }
 
-        private long _countCN = 0L;
-
         [XmlAttribute]
         public long CountCN
         {
-            get { return (Count != null && Count.CountTree_CN != null) ? Count.CountTree_CN.Value : 0L; }
-            set
-            {
-                _countCN = value;
-            }
+            get { return (Count != null) ? Count.CountTree_CN.GetValueOrDefault() : _countCN; }
+            set { _countCN = value; }
         }
-
-        private long _treeEstCN;
 
         [XmlAttribute]
         public long TreeEstimateCN
         {
-            get { return (this.TreeEstimate != null && this.TreeEstimate.TreeEstimate_CN != null) ? this.TreeEstimate.TreeEstimate_CN.Value : 0L; }
-            set
-            {
-                _treeEstCN = value;
-            }
+            get { return (TreeEstimate != null) ? TreeEstimate.TreeEstimate_CN.GetValueOrDefault() : _treeEstimateCN; }
+            set { _treeEstimateCN = value; }
         }
-
-        private long _treeCN;
 
         [XmlAttribute]
         public long TreeCN
         {
-            get { return (TreeRecord != null && TreeRecord.Tree_CN != null) ? TreeRecord.Tree_CN.Value : 0L; }
-            set
-            {
-                _treeCN = value;
-            }
+            get { return (TreeRecord != null) ? TreeRecord.Tree_CN.GetValueOrDefault() : _treeCN; }
+            set { _treeCN = value; }
         }
 
         public TallyAction()
@@ -75,8 +62,6 @@ namespace FSCruiser.Core.Models
         {
             TreeRecord = treeRecord;
         }
-
-        
 
         public override string ToString()
         {

@@ -71,11 +71,6 @@ namespace FSCruiser.Core.Models
             return count;
         }
 
-        public override void PopulateTrees()
-        {
-            base.PopulateTrees();
-        }
-
         //public override Tree CreateNewTreeEntry(SampleGroup sg, TreeDefaultValueDO tdv, bool isMeasure)
         //{
         //    return base.CreateNewTreeEntry(sg, tdv, false);

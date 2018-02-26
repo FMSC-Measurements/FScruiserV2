@@ -170,6 +170,9 @@
     <Compile Include="WinForms.Common\DataEntry\FormPlotInfo.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="WinForms.Common\DataEntry\FormTallySettings.common.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="WinForms.Common\DataEntry\LayoutPlot.commn.cs">
       <SubType>UserControl</SubType>
     </Compile>

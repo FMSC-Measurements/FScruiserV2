@@ -1,24 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
-using System.Linq;
-using CruiseDAL;
+﻿using FMSC.ORM.SQLite;
 using FSCruiser.Core.Models;
-using FMSC.ORM.SQLite;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace FSCruiser.Core
 {
     public class SaveTreesWorker : IDisposable
     {
-        IEnumerable<Tree> _treesLocal;
-        Thread _saveTreesWorkerThread;
-        SQLiteDatastore _datastore;
+        private IEnumerable<Tree> _treesLocal;
+        private Thread _saveTreesWorkerThread;
+        private SQLiteDatastore _datastore;
 
         public SaveTreesWorker(SQLiteDatastore datastore, IEnumerable<Tree> trees)
         {
-            Debug.Assert(datastore != null);
-            Debug.Assert(trees != null);
+            if (datastore == null) { throw new ArgumentNullException("datastore"); }
+            if (trees == null) { throw new ArgumentNullException("trees"); }
 
             _datastore = datastore;
             lock (((System.Collections.ICollection)trees).SyncRoot)
@@ -80,21 +78,24 @@ namespace FSCruiser.Core
 
         public void SaveAll()
         {
-            lock (_datastore.TransactionSyncLock)
+            using (var connection = _datastore.CreateConnection())
             {
-                _datastore.BeginTransaction();
-                try
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
                 {
-                    foreach (Tree tree in _treesLocal)
+                    try
                     {
-                        tree.Save();
+                        foreach (var tree in _treesLocal)
+                        {
+                            _datastore.Save(connection, tree, transaction);
+                        }
+                        transaction.Commit();
                     }
-                    _datastore.CommitTransaction();
-                }
-                catch
-                {
-                    _datastore.RollbackTransaction();
-                    throw;
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
             }
         }

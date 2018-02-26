@@ -45,6 +45,10 @@ namespace FSCruiser.Core.Models
             {
                 value = this.DAL.ExecuteScalar("SELECT sum(TreeCount) FROM Tree WHERE CuttingUnit_CN = ? AND SampleGroup_CN = ?;", this.CuttingUnit_CN, this.SampleGroup_CN);
             }
+            if(value == null || value == DBNull.Value)
+            {
+                return 0;
+            }
 
             return Convert.ToInt64(value);
         }

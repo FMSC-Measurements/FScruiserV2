@@ -87,34 +87,6 @@ namespace FSCruiser.Core.Models
             Counts = counts;
         }
 
-        public void SaveCounts()
-        {
-            if (Counts == null) { return; } // if this is a h_pct stratum then counts won't be populated
-            foreach (CountTree count in Counts)
-            {
-                count.Save();
-            }
-        }
-
-        public bool TrySaveCounts(out Exception ex)
-        {
-            ex = null;
-            foreach (var count in Counts)
-            {
-                try
-                {
-                    count.Save();
-                }
-                catch (Exception e)
-                {
-                    System.Diagnostics.Debug.WriteLine(e, "Exception");
-                    ex = e;
-                }
-            }
-
-            return ex == null;
-        }
-
         public bool HasTreeDefault(TreeDefaultValueDO tdv)
         {
             return DAL.ExecuteScalar<bool>("SELECT count(1) " +

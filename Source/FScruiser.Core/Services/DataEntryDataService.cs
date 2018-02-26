@@ -1,18 +1,17 @@
-﻿using System;
+﻿using CruiseDAL;
+using CruiseDAL.DataObjects;
+using FSCruiser.Core;
+using FSCruiser.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using CruiseDAL;
-using CruiseDAL.DataObjects;
-using FMSC.ORM.SQLite;
-using FSCruiser.Core;
-using FSCruiser.Core.Models;
-using System.Xml.Serialization;
+using System.Collections;
 
 namespace FScruiser.Core.Services
 {
-    public class IDataEntryDataService :  ITreeDataService, IPlotDataService
+    public class IDataEntryDataService : ITreeDataService, IPlotDataService
     {
         public DAL DataStore { get; protected set; }
 
@@ -20,14 +19,12 @@ namespace FScruiser.Core.Services
 
         public TallyHistoryCollection TallyHistory { get; protected set; }
 
-        
-
         #region NonPlotTrees
 
-        object _nonPlotTreesSyncLock = new object();
+        private object _nonPlotTreesSyncLock = new object();
         //ICollection<Tree> _nonPlotTrees;
 
-        public ICollection<Tree> NonPlotTrees { get; set; }
+        public ICollection<Tree> NonPlotTrees { get; protected set; }
 
         #endregion NonPlotTrees
 
@@ -35,7 +32,7 @@ namespace FScruiser.Core.Services
 
         #region TreeStrata
 
-        IEnumerable<Stratum> _treeStrata;
+        private IEnumerable<Stratum> _treeStrata;
 
         public IEnumerable<Stratum> TreeStrata
         {
@@ -74,41 +71,41 @@ namespace FScruiser.Core.Services
 
         public IEnumerable<PlotStratum> PlotStrata { get; protected set; }
 
-        IEnumerable<Stratum> AllStrata
-        {
-            get
-            {
-                foreach (var st in TreeStrata)
-                {
-                    yield return st;
-                }
+        //private IEnumerable<Stratum> AllStrata
+        //{
+        //    get
+        //    {
+        //        foreach (var st in TreeStrata)
+        //        {
+        //            yield return st;
+        //        }
 
-                foreach (var st in PlotStrata)
-                {
-                    yield return st;
-                }
-            }
-        }
+        //        foreach (var st in PlotStrata)
+        //        {
+        //            yield return st;
+        //        }
+        //    }
+        //}
 
-        IEnumerable<CountTree> AllCounts
-        {
-            get
-            {
-                foreach (var st in AllStrata)
-                {
-                    foreach (var cnt in st.Counts)
-                    {
-                        yield return cnt;
-                    }
-                }
-            }
-        }
+        //private IEnumerable<CountTree> AllCounts
+        //{
+        //    get
+        //    {
+        //        foreach (var st in AllStrata)
+        //        {
+        //            foreach (var cnt in st.Counts)
+        //            {
+        //                yield return cnt;
+        //            }
+        //        }
+        //    }
+        //}
 
         #region sale level props
 
         #region EnableLogGrading
 
-        bool _enableLogGrading;
+        private bool _enableLogGrading;
 
         public bool EnableLogGrading
         {
@@ -123,13 +120,13 @@ namespace FScruiser.Core.Services
 
         public int Region { get; protected set; }
 
-
-        public bool IsReconCruise { get; set; }
+        public bool IsReconCruise { get; protected set; }
 
         #endregion sale level props
 
         public IDataEntryDataService()
         {
+            
         }
 
         public IDataEntryDataService(string unitCode, DAL dataStore)
@@ -140,10 +137,40 @@ namespace FScruiser.Core.Services
 
             ReadCruiseData(unitCode);
 
-            var tallyBuffer = new TallyHistoryCollection(CuttingUnit, this, Constants.MAX_TALLY_HISTORY_SIZE);
-            tallyBuffer.Initialize(DataStore);
+            var tallyBuffer = new TallyHistoryCollection(Constants.MAX_TALLY_HISTORY_SIZE);
+            tallyBuffer.ItemRemoving += TallyBuffer_ItemRemoved;
+            tallyBuffer.Initialize(dataStore, CuttingUnit);
             TallyHistory = tallyBuffer;
         }
+
+        private void TallyBuffer_ItemRemoved(object sender, ItemRemovingEventArgs<TallyAction> eventArgs)
+        {
+            var action = eventArgs.Item;
+
+            var count = action.Count;
+            if (count != null)
+            {
+                if (count.TreeCount > 0)
+                {
+                    action.Count.TreeCount--;
+                }
+
+                if (action.KPI > 0 && count.SumKPI > 0)
+                {
+                    count.SumKPI -= action.KPI;
+                    action.TreeEstimate.Delete();
+                }
+            }
+
+            if (action.TreeRecord != null)
+            {
+                this.DeleteTree(action.TreeRecord);
+            }
+
+            count.Save();
+        }
+
+        #region load data methods
 
         private void ReadCruiseData(string unitCode)
         {
@@ -189,17 +216,23 @@ namespace FScruiser.Core.Services
             Region = DataStore.ExecuteScalar<int>("SELECT Region FROM Sale LIMIT 1;");
         }
 
+        #endregion load data methods
+
         #region Tree
 
         #region treeNumbering
 
-        public long GetNextNonPlotTreeNumber()
+        protected long GetNextNonPlotTreeNumber()
         {
-            if (this.NonPlotTrees == null || this.NonPlotTrees.Count == 0)
+            return GetNextTreeNumber(NonPlotTrees);
+        }
+
+        public static long GetNextTreeNumber(IEnumerable<Tree> trees)
+        {
+            if (trees == null || trees.Count() == 0)
             { return 1; }
 
-            var highestTreeNum = NonPlotTrees.Max(x => x.TreeNumber);
-            return highestTreeNum + 1;
+            return trees.Max(x => x.TreeNumber) + 1;
         }
 
         public long GetNextPlotTreeNumber(long plotNumber)
@@ -219,9 +252,9 @@ namespace FScruiser.Core.Services
             return topTreeNum + 1;
         }
 
-        public bool IsTreeNumberAvalible(long treeNumber)
+        public static bool IsTreeNumberAvalible(IEnumerable<Tree> trees, long treeNumber)
         {
-            foreach (Tree tree in this.NonPlotTrees)
+            foreach (Tree tree in trees)
             {
                 if (tree.TreeNumber == treeNumber)
                 {
@@ -230,6 +263,11 @@ namespace FScruiser.Core.Services
             }
 
             return true;
+        }
+
+        public bool IsTreeNumberAvalible(long treeNumber)
+        {
+            return IsTreeNumberAvalible(NonPlotTrees, treeNumber);
         }
 
         #endregion treeNumbering
@@ -313,7 +351,7 @@ namespace FScruiser.Core.Services
             newTree.Plot = plot;
             if (IsReconCruise)
             {
-                newTree.TreeNumber = plot.GetNextTreeNumber();
+                newTree.TreeNumber = GetNextTreeNumber(plot.Trees);
             }
             else
             {
@@ -329,20 +367,20 @@ namespace FScruiser.Core.Services
             SaveTrees(plot.Trees);
         }
 
-        public void TrySaveTrees(Plot plot)
+        public bool TrySaveTrees(Plot plot)
         {
-            TrySaveTrees(plot.Trees);
+            return TrySaveTrees(plot.Trees);
         }
 
-        public void TrySaveTreesAsync(Plot plot)
-        {
-            TrySaveTreesAsync(plot.Trees);
-        }
+        //public void TrySaveTreesAsync(Plot plot)
+        //{
+        //    TrySaveTreesAsync(plot.Trees);
+        //}
 
         #endregion plot variations
 
-        int _treesAddedSinceLastSave;
-        int TREE_SAVE_INTERVAL = 10;
+        private int _treesAddedSinceLastSave;
+        private int TREE_SAVE_INTERVAL = 10;
 
         public Tree CreateNewTreeEntry(CountTree count)
         {
@@ -413,6 +451,7 @@ namespace FScruiser.Core.Services
             if (_treesAddedSinceLastSave >= TREE_SAVE_INTERVAL)
             {
                 this.TrySaveTreesAsync();
+                _treesAddedSinceLastSave = 0;
             }
         }
 
@@ -459,7 +498,7 @@ namespace FScruiser.Core.Services
             DialogService.AskCruiser(newTree);
 
             newTree.TrySave();
-            this.AddNonPlotTree(newTree);
+            AddNonPlotTree(newTree);
 
             return newTree;
         }
@@ -468,7 +507,7 @@ namespace FScruiser.Core.Services
 
         public TreeEstimateDO LogTreeEstimate(CountTree count, int kpi)
         {
-            if(count == null) { throw new ArgumentNullException("count"); }
+            if (count == null) { throw new ArgumentNullException("count"); }
 
             var te = new TreeEstimateDO(DataStore)
             {
@@ -484,41 +523,147 @@ namespace FScruiser.Core.Services
 
         public void SaveCounts()
         {
-            if (TreeStrata != null)
+            SaveCounts(DataStore, TreeStrata);
+        }
+
+        //HACK using IEnumerable because no covariance in net20
+        public static void SaveCounts(DAL datastore, IEnumerable strata)
+        {
+            if (strata == null) { throw new ArgumentNullException("strata"); }
+
+            int changesSaved = 0;
+
+            using (var connection = datastore.CreateConnection())
+            {
+                connection.Open();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    Exception error = null;
+
+                    foreach (Stratum stratum in strata.OfType<Stratum>())
+                    {
+                        if (stratum.SampleGroups == null) { continue; }
+
+                        foreach (var sg in stratum.SampleGroups)
+                        {
+                            if (sg.Counts == null) { continue; }
+
+                            foreach (var count in sg.Counts)
+                            {
+                                if (count.IsChanged)
+                                {
+                                    try
+                                    {
+                                        changesSaved++;
+                                        datastore.Save(connection, count, transaction);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        System.Diagnostics.Debug.WriteLine(e, "Exception");
+                                        error = e;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    transaction.Commit();
+                    if (error != null) { throw error; }
+                }
+            }
+
+            Debug.Assert(changesSaved == 0, "counts saved " + changesSaved);//counts saved should be zero because we are now saving counts as they are modified
+        }
+
+        public Exception TrySaveCounts(PlotStratum stratum)
+        {
+            if (stratum == null) { throw new ArgumentNullException("stratum"); }
+            Exception error = null;
+
+            using (var connection = DataStore.CreateConnection())
+            {
+                connection.Open();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    foreach (var sg in stratum.SampleGroups.OrEmpty())
+                    {
+                        if (sg.Counts == null) { continue; }
+                        foreach (var count in sg.Counts)
+                        {
+                            try
+                            {
+                                DataStore.Save(connection, count, transaction);
+                            }
+                            catch (Exception e)
+                            {
+                                System.Diagnostics.Debug.WriteLine(e, "Exception");
+                                error = e;
+                            }
+                        }
+                    }
+
+                    transaction.Commit();
+                }
+            }
+
+            return error;
+        }
+
+        //HACK using IEnumerable because no covariance in net20
+        public static void SaveSampleGroups(DAL datastore, IEnumerable strata)
+        {
+            using (var connection = datastore.CreateConnection())
+            {
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    Exception error = null;
+
+                    foreach (var stratum in strata.OfType<Stratum>())
+                    {
+                        if (stratum.SampleGroups == null) { continue; }
+
+                        foreach (SampleGroup sg in stratum.SampleGroups)
+                        {
+                            try
+                            {
+                                sg.SerializeSamplerState();
+                                datastore.Save(connection, sg, transaction);
+                            }
+                            catch (Exception ex)
+                            {
+                                error = ex;
+                            }
+                        }
+                    }
+
+                    transaction.Commit();
+                    if (error != null) { throw error; }
+                }
+            }
+        }
+
+        public Exception TrySaveSampleGroups(Stratum stratum)
+        {
+            Exception ex = null;
+            foreach (var sg in stratum.SampleGroups.OrEmpty())
             {
                 try
                 {
-                    DataStore.BeginTransaction();
-                    foreach (var stratum in TreeStrata)
+                    sg.SerializeSamplerState();
+                    sg.Save();
+                }
+                catch (Exception e)
+                {
+                    if (ex == null)
                     {
-                        stratum.SaveCounts();
+                        ex = e;
                     }
-                    DataStore.CommitTransaction();
-                }
-                catch
-                {
-                    DataStore.RollbackTransaction();
-                    throw;
-                }
-            }
-        }
-
-        public Exception TrySaveCounts()
-        {
-            Exception ex = null;
-            if (TreeStrata != null)
-            {
-                foreach (Stratum stratum in TreeStrata)
-                {
-                    ex = stratum.TrySaveCounts() ?? ex;
                 }
             }
             return ex;
-        }
-
-        public void SaveTrees()
-        {
-            SaveTrees(NonPlotTrees);
         }
 
         public bool TrySaveTrees()
@@ -526,10 +671,9 @@ namespace FScruiser.Core.Services
             return TrySaveTrees(NonPlotTrees);
         }
 
-        public void TrySaveTreesAsync()
+        protected void TrySaveTreesAsync()
         {
             TrySaveTreesAsync(NonPlotTrees);
-            _treesAddedSinceLastSave = 0;
         }
 
         public void SaveTrees(IEnumerable<Tree> trees)
@@ -540,8 +684,14 @@ namespace FScruiser.Core.Services
 
         public bool TrySaveTrees(IEnumerable<Tree> trees)
         {
-            var worker = new SaveTreesWorker(DataStore, trees);
-            return worker.TrySaveAll();
+            bool success = true;
+
+            foreach (Tree t in trees)
+            {
+                success = t.TrySave() && success;
+            }
+
+            return success;
         }
 
         public void TrySaveTreesAsync(IEnumerable<Tree> trees)
@@ -559,7 +709,7 @@ namespace FScruiser.Core.Services
             return DataStore.From<TreeDefaultValueDO>().Read();
         }
 
-        IEnumerable<PlotStratum> ReadPlotStrata()
+        private IEnumerable<PlotStratum> ReadPlotStrata()
         {
             Debug.Assert(DataStore != null);
 
@@ -589,7 +739,7 @@ namespace FScruiser.Core.Services
             }
         }
 
-        IEnumerable<Stratum> ReadTreeBasedStrata()
+        private IEnumerable<Stratum> ReadTreeBasedStrata()
         {
             Debug.Assert(DataStore != null);
 
@@ -642,9 +792,8 @@ namespace FScruiser.Core.Services
 
         #region ITreeFieldProvider
 
-        object _treeFieldsReadLock = new object();
-        IEnumerable<TreeFieldSetupDO> _treeFields;
-        
+        private object _treeFieldsReadLock = new object();
+        private IEnumerable<TreeFieldSetupDO> _treeFields;
 
         public IEnumerable<TreeFieldSetupDO> TreeFields
         {
@@ -704,12 +853,29 @@ namespace FScruiser.Core.Services
         public Exception SavePlotData()
         {
             Exception ex = null;
+
+            try
+            {
+                SaveCounts(DataStore, PlotStrata);
+            }
+            catch (Exception e)
+            {
+                ex = e;
+            }
+
+            try
+            {
+                SaveSampleGroups(DataStore, PlotStrata);
+            }
+            catch (Exception e)
+            {
+                ex = e;
+            }
+
             if (PlotStrata != null)
             {
                 foreach (var st in PlotStrata)
                 {
-                    ex = st.TrySaveCounts() ?? ex;
-                    ex = st.TrySaveSampleGroups() ?? ex;
                     if (st.Plots == null) { continue; }
                     foreach (var plot in st.Plots)
                     {
@@ -733,61 +899,73 @@ namespace FScruiser.Core.Services
 
         public Exception SaveNonPlotData()
         {
-            Exception ex;
+            Exception ex = null;
 
-            ex = TrySaveCounts();
             try
             {
-                SaveTrees();
-
-                TallyHistory.Save();
+                SaveCounts(DataStore, TreeStrata);
             }
             catch (Exception e)
             {
                 ex = e;
             }
 
-            foreach (var st in TreeStrata)
+            try
             {
-                st.SaveSampleGroups();
+                SaveSampleGroups(DataStore, TreeStrata);
+            }
+            catch (Exception e)
+            {
+                ex = e;
+            }
+
+            try
+            {
+                SaveTrees(NonPlotTrees);
+
+                TallyHistory.Save(CuttingUnit);
+            }
+            catch (Exception e)
+            {
+                ex = e;
             }
 
             return ex;
         }
 
-        public void Dump(string path)
-        {
-            using (var writer = new System.IO.StreamWriter(path))
-            {
-                //DumpCounts(writer);
-                DumpNonPlotTrees(writer);
-                DumpPlotStrata(writer);
-            }
-        }
+        //public void Dump(string path)
+        //{
+        //    using (var writer = new System.IO.StreamWriter(path))
+        //    {
+        //        //DumpCounts(writer);
+        //        DumpNonPlotTrees(writer);
+        //        DumpPlotStrata(writer);
+        //    }
+        //}
 
-        public void DumpNonPlotTrees(System.IO.TextWriter writer)
-        {
-            var nonPlotTrees = NonPlotTrees;
-            if (nonPlotTrees != null)
-            {
-                var treeSerializer = new XmlSerializer(typeof(Tree));
-                treeSerializer.Serialize(writer, nonPlotTrees);
-            }
-        }
+        //public void DumpNonPlotTrees(System.IO.TextWriter writer)
+        //{
+        //    var nonPlotTrees = NonPlotTrees;
+        //    if (nonPlotTrees != null)
+        //    {
+        //        var treeSerializer = new XmlSerializer(typeof(Tree));
+        //        treeSerializer.Serialize(writer, nonPlotTrees);
+        //    }
+        //}
 
-        public void DumpPlotStrata(System.IO.TextWriter writer)
-        {
-            if (PlotStrata != null)
-            {
-                var plotStrataSerializer = new XmlSerializer(typeof(PlotStratum), new Type[] { typeof(Plot), typeof(Tree) });
-                plotStrataSerializer.Serialize(writer, PlotStrata);
-            }
-        }
+        //public void DumpPlotStrata(System.IO.TextWriter writer)
+        //{
+        //    if (PlotStrata != null)
+        //    {
+        //        var plotStrataSerializer = new XmlSerializer(typeof(PlotStratum), new Type[] { typeof(Plot), typeof(Tree) });
+        //        plotStrataSerializer.Serialize(writer, PlotStrata);
+        //    }
+        //}
 
-        public void DumpCounts(System.IO.TextWriter writer)
-        {
-            var countTreeSerializer = new XmlSerializer(typeof(CountTree));
-            countTreeSerializer.Serialize(writer, AllCounts.ToList());
-        }
+        //public void DumpCounts(System.IO.TextWriter writer)
+        //{
+        //    var countTreeSerializer = new XmlSerializer(typeof(CountTree));
+        //    countTreeSerializer.Serialize(writer, AllCounts.ToList());
+        //}
     }
 }

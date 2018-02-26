@@ -372,7 +372,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         public DialogResult ShowDialog(int? min, int? max, int? initialValue, bool canReturnNull)
         {
-            _minValue = (min != null && min > 0 && min < max) ? min : null;
+            _minValue = (min != null && min > 0) ? min : null;
 
             _maxValue = (max != null && max > 0 && max > min) ? max : null;
 

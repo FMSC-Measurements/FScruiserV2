@@ -109,61 +109,61 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public Exception TrySaveSampleGroups()
-        {
-            Exception ex = null;
-            foreach (var sg in SampleGroups)
-            {
-                try
-                {
-                    sg.SerializeSamplerState();
-                    sg.Save();
-                }
-                catch (Exception e)
-                {
-                    if (ex == null)
-                    {
-                        ex = e;
-                    }
-                }
-            }
-            return ex;
-        }
+        //public Exception TrySaveSampleGroups()
+        //{
+        //    Exception ex = null;
+        //    foreach (var sg in SampleGroups)
+        //    {
+        //        try
+        //        {
+        //            sg.SerializeSamplerState();
+        //            sg.Save();
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            if (ex == null)
+        //            {
+        //                ex = e;
+        //            }
+        //        }
+        //    }
+        //    return ex;
+        //}
 
-        public void SaveSampleGroups()
-        {
-            foreach (SampleGroup sg in SampleGroups)
-            {
-                sg.SerializeSamplerState();
-                sg.Save();
-            }
-        }
+        //public void SaveSampleGroups()
+        //{
+        //    foreach (SampleGroup sg in SampleGroups)
+        //    {
+        //        sg.SerializeSamplerState();
+        //        sg.Save();
+        //    }
+        //}
 
-        public void SaveCounts()
-        {
-            if (SampleGroups == null) { return; }
-            foreach (var sg in SampleGroups)
-            {
-                sg.SaveCounts();
-            }
-        }
+        //public void SaveCounts()
+        //{
+        //    if (SampleGroups == null) { return; }
+        //    foreach (var sg in SampleGroups)
+        //    {
+        //        sg.SaveCounts();
+        //    }
+        //}
 
-        public Exception TrySaveCounts()
-        {
-            Exception ex = null;
+        //public Exception TrySaveCounts()
+        //{
+        //    Exception ex = null;
 
-            if (SampleGroups == null) { return null; }
-            foreach (var sg in SampleGroups)
-            {
-                Exception ex1;
-                if (!sg.TrySaveCounts(out ex1))
-                {
-                    ex = ex1;
-                }
-            }
+        //    if (SampleGroups == null) { return null; }
+        //    foreach (var sg in SampleGroups)
+        //    {
+        //        Exception ex1;
+        //        if (!sg.TrySaveCounts(out ex1))
+        //        {
+        //            ex = ex1;
+        //        }
+        //    }
 
-            return ex;
-        }
+        //    return ex;
+        //}
 
         new IEnumerable<SampleGroup> ReadSampleGroups()
         {

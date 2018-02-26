@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-using CruiseDAL.DataObjects;
+﻿using CruiseDAL.DataObjects;
+using FScruiser.Core.Services;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
-using FScruiser.Core.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -65,7 +65,7 @@ namespace FSCruiser.WinForms.DataEntry
             //Controller.PopulateTallies(this.StratumInfo, this._mode, Controller.CurrentUnit, this._tallyListPanel, this);
         }
 
-        void InitializeDataGrid(PlotStratum stratum)
+        private void InitializeDataGrid(PlotStratum stratum)
         {
             this._dataGrid.SuspendLayout();
 
@@ -104,7 +104,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        void InitializeTallyPanel(PlotStratum stratum)
+        private void InitializeTallyPanel(PlotStratum stratum)
         {
             _tallyListPanel.SuspendLayout();
 
@@ -165,11 +165,11 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region splitter
 
-        static event SplitterMovedEventHandler SplitterMoved;
+        private static event SplitterMovedEventHandler SplitterMoved;
 
-        bool suppressSplitterEvents;
+        private bool suppressSplitterEvents;
 
-        void WireSplitter(PlotStratum stratum)
+        private void WireSplitter(PlotStratum stratum)
         {
             if (stratum.Is3PPNT == false)
             {
@@ -182,7 +182,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        void HandleSplitterMoved(object sender, SplitterEventArgs e)
+        private void HandleSplitterMoved(object sender, SplitterEventArgs e)
         {
             if (this.ViewLoading
                 || suppressSplitterEvents) { return; }
@@ -192,7 +192,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        void LayoutPlot_SplitterMoved(object sender, int newPosition)
+        private void LayoutPlot_SplitterMoved(object sender, int newPosition)
         {
             if (sender == this) { return; }
             else
@@ -209,7 +209,7 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region DataGrid events
 
-        void _dataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void _dataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.RowIndex >= Trees.Count) { return; }
 
@@ -227,15 +227,18 @@ namespace FSCruiser.WinForms.DataEntry
 
         private void _dataGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
+            //check bounds
             if (e.RowIndex > _dataGrid.RowCount - 1 || e.RowIndex < 0) { return; }
             if (e.ColumnIndex > _dataGrid.ColumnCount - 1 || e.ColumnIndex < 0) { return; }
 
-            var cell = _dataGrid[e.ColumnIndex, e.RowIndex];
+            var row = _dataGrid.Rows[e.RowIndex];
+
+            var cell = row.Cells[e.ColumnIndex];
             if (cell == null) { return; }
             if (cell.ReadOnly) { return; }//we don't need to validate readonly columns
-            if (cell.FormattedValue == e.FormattedValue) { return; }//are there any changes
+            if (cell.FormattedValue == e.FormattedValue) { return; }//no changes
 
-            Tree curTree = this.ViewLogicController.CurrentTree;
+            var curTree = _dataGrid.Rows[e.RowIndex].DataBoundItem as Tree;
             if (curTree == null) { return; }
 
             object cellValue = null;
@@ -251,44 +254,63 @@ namespace FSCruiser.WinForms.DataEntry
 
             if (_treeNumberColumn != null && e.ColumnIndex == _treeNumberColumn.Index)
             {
-                if (cellValue == null || !(cellValue is long))
-                { e.Cancel = true; return; }//if cell value is blank cellValue is an object
-
-                var newTreeNum = (long)cellValue;
-                var currPlot = ViewLogicController.CurrentPlot;
-                if (curTree.TreeNumber != newTreeNum)
-                {
-                    if (!currPlot.IsTreeNumberAvalible(newTreeNum))
-                    {
-                        MessageBox.Show("Tree Number already exists");
-                        e.Cancel = true;
-                    }
-                    else if (!ViewLogicController.DataService.CrossStrataIsTreeNumberAvalible(currPlot, newTreeNum))
-                    {
-                        MessageBox.Show("Tree Number already exist, in a different stratum");
-                        e.Cancel = true;
-                    }
-                }
+                e.Cancel = !ValicateTreeNumber(curTree, cellValue);
+                return;
             }
             else if (_sgColumn != null && cell.ColumnIndex == _sgColumn.Index)
             {
-                var sg = cellValue as SampleGroup;
-                if (curTree.HandleSampleGroupChanging(sg))
-                {
-                    curTree.SampleGroup = sg;
-                    curTree.HandleSampleGroupChanged();
-                    e.Cancel = false;
-                }
-                else
-                {
-                    e.Cancel = true;
-                }
+                e.Cancel = !ValidateSampleGroup(curTree, cellValue);
+                return;
             }
             else if (_speciesColumn != null && cell.ColumnIndex == _speciesColumn.Index)
             {
                 TreeDefaultValueDO tdv = cellValue as TreeDefaultValueDO;
                 e.Cancel = !ProcessSpeciesChanged(curTree, tdv);
             }
+        }
+
+        protected bool ProcessSpeciesChanged(Tree tree, TreeDefaultValueDO tdv)
+        {
+            if (tree == null) { return true; }
+            if (tree.TreeDefaultValue == tdv) { return true; }
+            tree.SetTreeTDV(tdv);
+            return tree.TrySave();
+        }
+
+        private static bool ValidateSampleGroup(Tree curTree, object cellValue)
+        {
+            var sg = cellValue as SampleGroup;
+            if (curTree.HandleSampleGroupChanging(sg))
+            {
+                curTree.SampleGroup = sg;
+                curTree.HandleSampleGroupChanged();
+                return true;
+            }
+            else { return false; }
+        }
+
+        private bool ValicateTreeNumber(Tree curTree, object cellValue)
+        {
+            if (cellValue == null || !(cellValue is long))
+            { return false; }//if cell value is blank cellValue is an object
+
+            var newTreeNum = (long)cellValue;
+            var currPlot = ViewLogicController.CurrentPlot;
+            if (curTree.TreeNumber != newTreeNum)
+            {
+                if (!currPlot.IsTreeNumberAvalible(newTreeNum))
+                {
+                    MessageBox.Show("Tree Number already exists");
+                    return false;
+                }
+                else if (!ViewLogicController.DataService.CrossStrataIsTreeNumberAvalible(currPlot, newTreeNum))
+                {
+                    MessageBox.Show("Tree Number already exist, in a different stratum");
+                    return false;
+                }
+                else { return true; }
+            }
+            else { return true; }
         }
 
         private void _datagrid_CellEnter(object sender, DataGridViewCellEventArgs e)
@@ -311,18 +333,7 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public void HandleCurrentTreeChanged(Tree tree)
-        {/*Do nothing*/ }
-
-        public void UpdateSampleGroupColumn(Tree tree)
-        {
-            this.UpdateSampleGroupColumn(tree, this._dataGrid.CurrentCell as DataGridViewComboBoxCell);
-        }
-
-        public void UpdateSpeciesColumn(Tree tree)
-        {
-            this.UpdateSpeciesColumn(tree, this._dataGrid.CurrentCell as DataGridViewComboBoxCell);
-        }
+        
 
         protected void UpdateSampleGroupColumn(Tree tree, DataGridViewComboBoxCell cell)
         {
@@ -334,56 +345,6 @@ namespace FSCruiser.WinForms.DataEntry
         {
             if (cell == null) { return; }
             cell.DataSource = tree.ReadValidTDVs();
-        }
-
-        //protected bool ProcessSampleGroupChanging(TreeVM tree, SampleGroupVM newSG)
-        //{
-        //    if (tree == null || newSG == null) { return false; }
-
-        //    if (tree.SampleGroup != null)
-        //    {
-        //        if (MessageBox.Show("You are changing the Sample Group of a tree, are you sure you want to do this?", "!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2)
-        //            == DialogResult.No)
-        //        {
-        //            return false;
-        //        }
-        //        else
-        //        {
-        //            this.AppController._cDal.LogMessage(String.Format("Tree Sample Group Changed (Cu:{0} St:{1} Sg:{2} -> {3} Tdv_CN:{4} T#: {5}",
-        //                tree.CuttingUnit.Code,
-        //                tree.Stratum.Code,
-        //                (tree.SampleGroup != null) ? tree.SampleGroup.Code : "?",
-        //                newSG.Code,
-        //                (tree.TreeDefaultValue != null) ? tree.TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?",
-        //                tree.TreeNumber), "high");
-        //            tree.SampleGroup = newSG;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        tree.SampleGroup = newSG;
-        //    }
-        //    if (tree.TreeDefaultValue != null)
-        //    {
-        //        var hasTDV = tree.DAL.ExecuteScalar<bool>("SELECT count(1) " +
-        //            "FROM SampleGroupTreeDefaultValue " +
-        //            "WHERE TreeDefaultValue_CN = ? AND SampleGroup_CN"
-        //            , tree.TreeDefaultValue_CN, newSG.SampleGroup_CN);
-
-        //        if (!hasTDV)
-        //        {
-        //            tree.SetTreeTDV(null);
-        //        }
-        //    }
-        //    return tree.TrySave();
-        //}
-
-        protected bool ProcessSpeciesChanged(Tree tree, TreeDefaultValueDO tdv)
-        {
-            if (tree == null) { return true; }
-            if (tree.TreeDefaultValue == tdv) { return true; }
-            tree.SetTreeTDV(tdv);
-            return tree.TrySave();
         }
 
         private void _dataGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -453,6 +414,9 @@ namespace FSCruiser.WinForms.DataEntry
                 _isGridExpanded = value;
             }
         }
+
+        public void HandleCurrentTreeChanged(Tree tree)
+        {/*Do nothing*/ }
 
         #endregion IPlotLayout members
 

@@ -101,28 +101,14 @@ namespace FSCruiser.WinForms
             StrataViewContainer = strataViewContainer;
             DataEntryController = dataEntryController;
             DataService = dataService;
+
+            InitializeStrataViews();
         }
 
         protected void InitializeStrataViews()
         {
-            this.SuspendLayout();
+            SuspendLayout();
 
-            this.PopulateStrata();
-
-            //if there is only one strata in the unit
-            //display the counts for that stratum
-            var strata = DataService.TreeStrata;
-            if (strata.Count() == 1)
-            {
-                var singleStratum = strata.First();
-                this.DisplayTallyPanel(singleStratum);
-            }
-
-            this.ResumeLayout(false);
-        }
-
-        void PopulateStrata()
-        {
             foreach (Stratum stratum in DataService.TreeStrata)
             {
                 if (stratum.Method == CruiseDAL.Schema.CruiseMethods.H_PCT) { continue; }
@@ -172,6 +158,17 @@ namespace FSCruiser.WinForms
                     StrataHotKeyLookup.Add(char.ToUpper(stratum.Hotkey[0]), stratum);
                 }
             }
+
+            //if there is only one strata in the unit
+            //display the counts for that stratum
+            var strata = DataService.TreeStrata;
+            if (strata.Count() == 1)
+            {
+                var singleStratum = strata.First();
+                this.DisplayTallyPanel(singleStratum);
+            }
+
+            this.ResumeLayout(false);
         }
 
         Control MakeTallyRow(Control container, CountTree count)
@@ -349,10 +346,10 @@ namespace FSCruiser.WinForms
             this._BS_tallyHistory.MoveLast();
         }
 
-        public Exception TrySaveCounts()
-        {
-            return DataService.TrySaveCounts();
-        }
+        //public Exception TrySaveCounts()
+        //{
+        //    return DataService.TrySaveCounts();
+        //}
 
         #endregion ITallyView members
 
@@ -364,7 +361,7 @@ namespace FSCruiser.WinForms
 
         public void HandleLoad()
         {
-            this.InitializeStrataViews();
+            //this.InitializeStrataViews();
 
             _BS_tallyHistory.DataSource = DataService.TallyHistory;
             this._viewLoading = false;
@@ -398,6 +395,26 @@ namespace FSCruiser.WinForms
 
         public void NotifyEnter()
         { /*do nothing */}
+
+        public void NotifyLeave()
+        {
+            try
+            {
+                DataService.SaveCounts();
+            }            
+            catch(FMSC.ORM.ReadOnlyException ex)
+            {
+                MessageBox.Show("File Is Read Only \r\n" + DataService.DataStore.Path);
+            }
+            catch (FMSC.ORM.SQLException ex)
+            {
+                MessageBox.Show(ex.GetType().Name, "Save Error, Write down counts before leaving unit");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.GetType().Name + " " + ex.Message, "Save Error, Write down counts before leaving unit");
+            }
+        }
 
         #endregion IDataEntryPage Members
 

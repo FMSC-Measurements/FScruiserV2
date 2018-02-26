@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 
 namespace FSCruiserV2.Test
@@ -21,10 +22,17 @@ namespace FSCruiserV2.Test
 
         protected override void OnLoad(EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             base.OnLoad(e);
             DataEntryTests tester = new DataEntryTests();
 
-            tester.TestTreeTally();
+
+            var outputWriter = new StringWriter();
+
+            tester.TestTreeTally(outputWriter);
+
+            this.textBox1.Text = outputWriter.ToString();
+            Cursor.Current = Cursors.Default;
         }
     }
 }
