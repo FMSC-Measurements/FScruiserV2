@@ -7,7 +7,7 @@ namespace FSCruiser
 {
     public static class Constants
     {
-        public const string FSCRUISER_VERSION = "2018.02.23";
+        public const string FSCRUISER_VERSION = "2018.02.26";
 
         public const string APP_TITLE = "FScruiser - " + FSCRUISER_VERSION;
 
