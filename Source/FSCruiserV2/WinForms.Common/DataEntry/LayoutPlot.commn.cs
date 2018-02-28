@@ -149,6 +149,7 @@ namespace FSCruiser.WinForms.DataEntry
                     .OrEmpty().Select(x => x.Initials)
                     .Union(DataService.UnitLevelCruisersInitials)
                     .Where(x => !string.IsNullOrEmpty(x))
+                    .Prepend("")
                     .ToArray();
             }
         }
@@ -249,14 +250,13 @@ namespace FSCruiser.WinForms.DataEntry
             if (currentPlot == null) { return; }
             try
             {
-                DataService.TrySaveTrees(currentPlot);
+                DataService.SaveTrees(currentPlot);
             }
             catch (FMSC.ORM.SQLException e)
             {
                 MessageBox.Show(e.Message
                     , "Stratum " + Stratum.Code + "Plot " + currentPlot.PlotNumber.ToString());
             }
-
         }
 
         public void HandleLoad()

@@ -408,11 +408,11 @@ namespace FSCruiser.WinForms
             }
             catch (FMSC.ORM.SQLException ex)
             {
-                MessageBox.Show(ex.GetType().Name, "Save Error, Write down counts before leaving unit");
+                MessageBox.Show("Save Error, Write down counts before leaving unit", ex.GetType().Name);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.GetType().Name + " " + ex.Message, "Save Error, Write down counts before leaving unit");
+                MessageBox.Show("Save Error, Write down counts before leaving unit", ex.GetType().Name + " " + ex.Message);
             }
         }
 

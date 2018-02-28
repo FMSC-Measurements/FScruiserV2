@@ -499,7 +499,7 @@ namespace FSCruiser.Core.DataEntry
         {
             if (!_disableCheckPlot && _prevPlot != null && _prevPlot != CurrentPlot)
             {
-                if (!this.ValidatePlot(_prevPlot) && !this.SavePlotTrees(_prevPlot))
+                if (!this.ValidatePlot(_prevPlot) || !this.SavePlotTrees(_prevPlot))
                 {
                     this.CurrentPlot = _prevPlot;
                 }
