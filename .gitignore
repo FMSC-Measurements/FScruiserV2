@@ -1,3 +1,9 @@
+Source/Icons/fscruiser_24dp.png
+Source/Icons/fscruiser_32dp.png
+Source/Icons/fscruiser_48dp.png
+
+.vs/
+
 /Deployment/EmulatorPackage/OutPut/
 /Deployment/EmulatorPackage/*.dess
 /Deployment/EmulatorPackage/*.exe
@@ -6,6 +12,8 @@
 /Deployment/wce*/
 /Deployment/Output/
 /Deployment/*.cab
+
+
 
 
 
@@ -240,7 +248,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-Source/Icons/fscruiser_24dp.png
-Source/Icons/fscruiser_32dp.png
-Source/Icons/fscruiser_48dp.png
-Source/.vs/FScruiserV2/v15/sqlite3/storage.ide
+
