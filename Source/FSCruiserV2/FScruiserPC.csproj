@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net4.5.1</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <ApplicationIcon />
+    <ApplicationIcon>fscruiser.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
     <StartupObject>FSCruiser.WinForms.Program</StartupObject>
     <RootNamespace>FScruiser</RootNamespace>
