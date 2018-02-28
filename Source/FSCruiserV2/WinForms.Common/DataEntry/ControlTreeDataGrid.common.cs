@@ -101,6 +101,7 @@ namespace FSCruiser.WinForms.DataEntry
                     .OrEmpty().Select(x => x.Initials)
                     .Union(DataService.UnitLevelCruisersInitials)
                     .Where(x => !string.IsNullOrEmpty(x))
+                    .Prepend("")
                     .ToArray();
             }
         }
