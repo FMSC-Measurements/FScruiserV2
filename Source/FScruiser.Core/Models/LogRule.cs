@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FSCruiser.Core.Models
 {
@@ -16,7 +17,7 @@ namespace FSCruiser.Core.Models
         public LogRule(string species)
             : this()
         {
-            var speciesArray = species.Split(' ');
+            var speciesArray = species.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             Species = new List<string>(speciesArray);
         }
 

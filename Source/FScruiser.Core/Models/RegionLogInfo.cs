@@ -25,21 +25,25 @@ namespace FSCruiser.Core.Models
                 if (species == null
                     || species.Count == 0)
                 {
-                    System.Diagnostics.Debug.Assert(SpeciesToRuleCodes.ContainsKey("") == false);
                     SpeciesToRuleCodes.Add("", index);
                 }
                 else
                 {
                     foreach (string sp in species)
                     {
-                        SpeciesToRuleCodes.Add(sp, index);
+                        SpeciesToRuleCodes.Add(NomalizeSpecies(sp), index);
                     }
                 }
             }
 
+            string NomalizeSpecies(string species)
+            {
+                return (species ?? "").Trim(' ').TrimStart('0');
+            }
+
             public LogRule GetLogRule(String species)
             {
-                species = species ?? String.Empty;
+                species = NomalizeSpecies(species);
 
                 if (SpeciesToRuleCodes.ContainsKey(species))
                 {
@@ -96,7 +100,7 @@ namespace FSCruiser.Core.Models
         }
 
         public virtual LogRule GetLogRule(String species)
-        {
+        {            
             return _rules.GetLogRule(species);
         }
 
