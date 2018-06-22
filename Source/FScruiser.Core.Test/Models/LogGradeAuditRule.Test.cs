@@ -43,7 +43,7 @@ namespace FScruiser.Core.Test.Models
         //        DefectMax = maxDefect
         //    };
 
-        //    lga.ValidateLog(log).ShouldBeEquivalentTo(failPass, maxDefect.ToString());
+        //    lga.ValidateLog(log).Should().Be(failPass, maxDefect.ToString());
         //}
     }
 }

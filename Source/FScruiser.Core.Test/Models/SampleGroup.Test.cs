@@ -61,7 +61,7 @@ namespace FSCruiser.Core.Models
             sg.Sampler.Should().BeOfType<BlockSelecter>();
 
             var blockSampler = sg.Sampler as FMSC.Sampling.BlockSelecter;
-            blockSampler.Frequency.ShouldBeEquivalentTo(1);
+            blockSampler.Frequency.Should().Be(1);
 
             //test: if sampling freq is > 0
             //AND SampleSelectorType is Systematic
@@ -81,7 +81,7 @@ namespace FSCruiser.Core.Models
             sg.Sampler.Should().BeOfType<SystematicSelecter>();
 
             var systmaticSampler = sg.Sampler as FMSC.Sampling.SystematicSelecter;
-            systmaticSampler.Frequency.ShouldBeEquivalentTo(1);
+            systmaticSampler.Frequency.Should().Be(1);
         }
 
         [Fact]
@@ -144,8 +144,8 @@ namespace FSCruiser.Core.Models
             sg.Sampler.Should().BeOfType<SystematicSelecter>();
 
             var sampler = sg.Sampler as FMSC.Sampling.IFrequencyBasedSelecter;
-            sampler.Frequency.ShouldBeEquivalentTo(1);
-            sampler.ITreeFrequency.ShouldBeEquivalentTo(1);
+            sampler.Frequency.Should().Be(1);
+            sampler.ITreeFrequency.Should().Be(1);
         }
 
         [Fact]
@@ -166,7 +166,7 @@ namespace FSCruiser.Core.Models
             sg.MakeSampleSelecter().Should().NotBeNull();
             sg.Sampler.Should().NotBeNull();
             sg.Sampler.Should().BeOfType<ThreePSelecter>();
-            ((ThreePSelecter)sg.Sampler).KZ.ShouldBeEquivalentTo(100);
+            ((ThreePSelecter)sg.Sampler).KZ.Should().Be(100);
         }
 
         [Fact]
@@ -187,7 +187,7 @@ namespace FSCruiser.Core.Models
             sg.MakeSampleSelecter().Should().NotBeNull();
             sg.Sampler.Should().NotBeNull();
             sg.Sampler.Should().BeOfType<ThreePSelecter>();
-            ((ThreePSelecter)sg.Sampler).KZ.ShouldBeEquivalentTo(100);
+            ((ThreePSelecter)sg.Sampler).KZ.Should().Be(100);
         }
 
         [Fact]
@@ -208,7 +208,7 @@ namespace FSCruiser.Core.Models
             sg.MakeSampleSelecter().Should().NotBeNull();
             sg.Sampler.Should().NotBeNull();
             sg.Sampler.Should().BeOfType<ThreePSelecter>();
-            ((ThreePSelecter)sg.Sampler).KZ.ShouldBeEquivalentTo(100);
+            ((ThreePSelecter)sg.Sampler).KZ.Should().Be(100);
         }
     }
 }

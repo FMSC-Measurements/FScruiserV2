@@ -52,9 +52,9 @@ namespace FScruiser.Core.Test
 
             stratum.SampleGroups = new List<SampleGroup>(samplegroups);
 
-            stratum.GetCountByHotKey('A').ShouldBeEquivalentTo(counts[0]);
-            stratum.GetCountByHotKey('B').ShouldBeEquivalentTo(counts[1]);
-            stratum.GetCountByHotKey('C').ShouldBeEquivalentTo(counts[2]);
+            stratum.GetCountByHotKey('A').Should().Be(counts[0]);
+            stratum.GetCountByHotKey('B').Should().Be(counts[1]);
+            stratum.GetCountByHotKey('C').Should().Be(counts[2]);
             stratum.GetCountByHotKey('0').Should().BeNull();
         }
 

@@ -13,7 +13,7 @@ namespace FScruiser.Core.Test.Models
     public class RegionLogInfoTest
     {
         [Fact]
-        public void CreateTestWithBlankSpecies()
+        public void GetLogRule_with_species_not_set()
         {
             var inst = new RegionLogInfo();
 
@@ -25,17 +25,56 @@ namespace FScruiser.Core.Test.Models
             inst.GetLogRule(string.Empty).Should().NotBeNull();
 
             inst.GetLogRule("something").Should().BeNull();
-            //-------------------------------------------------------
-            inst = new RegionLogInfo();
 
-            logRule = new LogRule(string.Empty);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void GetLogRule_with_blank_speckes(string species)
+        {
+            var inst = new RegionLogInfo();
+
+            var logRule = new LogRule(species);
             logRule.Add(new LogHeightClass(0, 0, 0));
 
             inst.AddRule(logRule);
-            inst.GetLogRule(null).Should().NotBeNull();
-            inst.GetLogRule(string.Empty).Should().NotBeNull();
+            inst.GetLogRule(null).Should().NotBeNull("null value");
+            inst.GetLogRule("").Should().NotBeNull("empty value");
+            inst.GetLogRule(" ").Should().NotBeNull("white space");
 
             inst.GetLogRule("something").Should().BeNull();
+        }
+
+        [Theory]
+        [InlineData("1", true, "01")]
+        [InlineData("1", true, " 01 ")]
+        [InlineData("1", true, "1")]
+        [InlineData("01", true, "1")]
+        [InlineData("1", true, "001")]
+        [InlineData("1", true, " 001")]
+        [InlineData("1", false, " 10")]
+        public void GetLogRule(string speciesIn, bool shouldReturnValue, params string[] speciesOut)
+        {
+            var inst = new RegionLogInfo();
+
+            var logRule = new LogRule(speciesIn);
+            logRule.Add(new LogHeightClass(0, 0, 0));
+
+            inst.AddRule(logRule);
+
+            foreach (var sp in speciesOut)
+            {
+                var value = inst.GetLogRule(sp);
+                if (shouldReturnValue)
+                {
+                    value.Should().NotBeNull();
+                }
+                else
+                {
+                    value.Should().BeNull();
+                }
+            }
         }
 
         [Fact]
@@ -72,7 +111,7 @@ namespace FScruiser.Core.Test.Models
             var output = JsonConvert.SerializeObject(logRule);
 
             output.Should().NotBeNullOrEmpty();
-            output.Length.Should().BeGreaterThan(2, "because otherwise its just an empty json obj");
+            output.Length.Should().BeGreaterThan(2, "otherwise its just an empty json obj");
 
             var result = JsonConvert.DeserializeObject<RegionLogInfo>(output);
 
