@@ -36,11 +36,11 @@ namespace FScruiser.Core.Test.Models
 
             var resultItem = resultCollection.First();
 
-            resultItem.TreeCN.ShouldBeEquivalentTo(tree.Tree_CN);
-            resultItem.TreeEstimateCN.ShouldBeEquivalentTo(treeEstimate.TreeEstimate_CN);
-            resultItem.CountCN.ShouldBeEquivalentTo(count.CountTree_CN);
-            resultItem.KPI.ShouldBeEquivalentTo(kpiValue);
-            resultItem.Time.ShouldBeEquivalentTo(timeValue);
+            resultItem.TreeCN.Should().Be(tree.Tree_CN);
+            resultItem.TreeEstimateCN.Should().Be(treeEstimate.TreeEstimate_CN);
+            resultItem.CountCN.Should().Be(count.CountTree_CN);
+            resultItem.KPI.Should().Be(kpiValue);
+            resultItem.Time.Should().Be(timeValue);
         }
 
         [Fact]
@@ -56,11 +56,11 @@ namespace FScruiser.Core.Test.Models
 
             foreach (var item in deserializeResult.Zip(tallyHistoryCollection, (x, y) => new { Left = x, Right = y }))
             {
-                item.Left.TreeCN.ShouldBeEquivalentTo(item.Right.TreeCN);
-                item.Left.TreeEstimateCN.ShouldBeEquivalentTo(item.Right.TreeEstimateCN);
-                item.Left.CountCN.ShouldBeEquivalentTo(item.Right.CountCN);
-                item.Left.KPI.ShouldBeEquivalentTo(item.Right.KPI);
-                item.Left.Time.ShouldBeEquivalentTo(item.Right.Time);
+                item.Left.TreeCN.Should().Be(item.Right.TreeCN);
+                item.Left.TreeEstimateCN.Should().Be(item.Right.TreeEstimateCN);
+                item.Left.CountCN.Should().Be(item.Right.CountCN);
+                item.Left.KPI.Should().Be(item.Right.KPI);
+                item.Left.Time.Should().Be(item.Right.Time);
             }
         }
 
@@ -115,9 +115,11 @@ namespace FScruiser.Core.Test.Models
 
             tallyHistoryCollection.Add(ta1);
 
-            tallyHistoryCollection.MonitorEvents();
-            tallyHistoryCollection.Remove(ta1);
-            tallyHistoryCollection.ShouldRaise(nameof(TallyHistoryCollection.ItemRemoving));
+            using (var monitoredTallyHistoryCollection = tallyHistoryCollection.Monitor())
+            {
+                tallyHistoryCollection.Remove(ta1);
+                monitoredTallyHistoryCollection.Should().Raise(nameof(TallyHistoryCollection.ItemRemoving));
+            }
         }
 
         [Fact]
@@ -129,9 +131,11 @@ namespace FScruiser.Core.Test.Models
 
             tallyHistoryCollection.Add(ta1);
 
-            tallyHistoryCollection.MonitorEvents();
-            tallyHistoryCollection.RemoveAt(0);
-            tallyHistoryCollection.ShouldRaise(nameof(TallyHistoryCollection.ItemRemoving));
+            using (var monitoredTallyHistoryCollection = tallyHistoryCollection.Monitor())
+            {
+                tallyHistoryCollection.RemoveAt(0);
+                monitoredTallyHistoryCollection.Should().Raise(nameof(TallyHistoryCollection.ItemRemoving));
+            }
         }
     }
 }

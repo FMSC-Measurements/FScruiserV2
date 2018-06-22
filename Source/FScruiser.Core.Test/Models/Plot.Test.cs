@@ -16,7 +16,7 @@ namespace FScruiser.Core.Test.Models
         //{
         //    var plot = new Plot();
 
-        //    plot.GetNextTreeNumber().ShouldBeEquivalentTo(1);
+        //    plot.GetNextTreeNumber().Should().Be(1);
         //}
     }
 }

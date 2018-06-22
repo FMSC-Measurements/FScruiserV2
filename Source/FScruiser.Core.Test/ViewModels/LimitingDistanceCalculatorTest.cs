@@ -25,7 +25,7 @@ namespace FScruiser.Core.Test.ViewModels
         //here we test edge cases where both values should be determined to be equal
         public void TestDeterminTreeInOrOut(double slopeDistance, double limitingDistance, bool expectedResult)
         {
-            LimitingDistanceCalculator.DeterminTreeInOrOut(slopeDistance, limitingDistance).ShouldBeEquivalentTo(expectedResult);
+            LimitingDistanceCalculator.DeterminTreeInOrOut(slopeDistance, limitingDistance).Should().Be(expectedResult);
         }
 
         [Theory]
@@ -45,7 +45,7 @@ namespace FScruiser.Core.Test.ViewModels
             var ld = LimitingDistanceCalculator.CalculateLimitingDistance(BAForFPS, dbh, slopePCT, isVar, measureTo);
             ld = Math.Round(ld, sigDec);
             expected = Math.Round(expected, 3);
-            ld.ShouldBeEquivalentTo(expected);
+            ld.Should().Be(expected);
         }
 
         [Fact]

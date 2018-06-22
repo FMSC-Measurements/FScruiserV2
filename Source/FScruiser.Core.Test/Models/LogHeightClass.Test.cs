@@ -36,7 +36,7 @@ namespace FScruiser.Core.Test.Models
 
             var lhc = new LogHeightClass(0, 0, numLogsBase);
 
-            lhc.GetDefaultLogCount(dbh).ShouldBeEquivalentTo(numLogsExpected);
+            lhc.GetDefaultLogCount(dbh).Should().Be(numLogsExpected);
         }
 
         [Fact]
@@ -80,9 +80,9 @@ namespace FScruiser.Core.Test.Models
 
             var result = JsonConvert.DeserializeObject<LogHeightClass>(output);
 
-            result.Num16FtLogs.ShouldBeEquivalentTo(numLogsBase);
-            result.From.ShouldBeEquivalentTo(from);
-            result.To.ShouldBeEquivalentTo(to);
+            result.Num16FtLogs.Should().Be(numLogsBase);
+            result.From.Should().Be(from);
+            result.To.Should().Be(to);
             if (breaks != null && breaks.Count() > 0)
             {
                 result.Breaks.Should().NotBeNullOrEmpty();
@@ -96,11 +96,11 @@ namespace FScruiser.Core.Test.Models
 
         void ValidateLogCountWithBreaks(LogHeightClass lhc, int numLogsBase, IEnumerable<uint> breaks)
         {
-            lhc.GetDefaultLogCount(0).ShouldBeEquivalentTo(numLogsBase);
-            lhc.GetDefaultLogCount(breaks.First() - .01f).ShouldBeEquivalentTo(numLogsBase);
+            lhc.GetDefaultLogCount(0).Should().Be(numLogsBase);
+            lhc.GetDefaultLogCount(breaks.First() - .01f).Should().Be(numLogsBase);
 
-            lhc.GetDefaultLogCount(breaks.First()).ShouldBeEquivalentTo(numLogsBase + 1);
-            lhc.GetDefaultLogCount(breaks.ElementAt(1)).ShouldBeEquivalentTo(numLogsBase + 2);
+            lhc.GetDefaultLogCount(breaks.First()).Should().Be(numLogsBase + 1);
+            lhc.GetDefaultLogCount(breaks.ElementAt(1)).Should().Be(numLogsBase + 2);
         }
     }
 }

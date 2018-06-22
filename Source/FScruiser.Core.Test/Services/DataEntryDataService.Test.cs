@@ -103,20 +103,20 @@ namespace FScruiser.Core.Test.Services
         {
             var trees = new List<Tree>();
 
-            IDataEntryDataService.GetNextTreeNumber(trees).ShouldBeEquivalentTo(1);
+            IDataEntryDataService.GetNextTreeNumber(trees).Should().Be(1);
 
             trees.Add(new Tree() { TreeNumber = 1 });
 
-            IDataEntryDataService.GetNextTreeNumber(trees).ShouldBeEquivalentTo(2);
+            IDataEntryDataService.GetNextTreeNumber(trees).Should().Be(2);
 
             var tree = new Tree() { TreeNumber = 50 };
             trees.Add(tree);
 
-            IDataEntryDataService.GetNextTreeNumber(trees).ShouldBeEquivalentTo(51);
+            IDataEntryDataService.GetNextTreeNumber(trees).Should().Be(51);
 
             trees.Remove(tree);
 
-            IDataEntryDataService.GetNextTreeNumber(trees).ShouldBeEquivalentTo(2);
+            IDataEntryDataService.GetNextTreeNumber(trees).Should().Be(2);
 
         }
 

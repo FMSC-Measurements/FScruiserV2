@@ -175,7 +175,7 @@ namespace FScruiser.Core.Test.Services
 
                 logDs.Logs.Should().Contain(log2);
 
-                logDs.Invoking(lds => lds.Save()).ShouldNotThrow();
+                logDs.Invoking(lds => lds.Save()).Should().NotThrow();
             }
         }
 
@@ -202,7 +202,7 @@ namespace FScruiser.Core.Test.Services
 
                 logDs.Logs.Should().BeEmpty();
 
-                logDs.Invoking(lds => lds.Save()).ShouldNotThrow();
+                logDs.Invoking(lds => lds.Save()).Should().NotThrow();
 
                 ds.GetRowCount("Log", $"WHERE Tree_CN = {tree.Tree_CN}");
             }

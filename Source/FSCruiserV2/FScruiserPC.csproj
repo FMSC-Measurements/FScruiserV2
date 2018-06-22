@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net4.5.1</TargetFramework>
+    <TargetFramework>net451</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>fscruiser.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
@@ -12,17 +12,6 @@
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
   </PropertyGroup>
     
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net4.5.1'">
-
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
-
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    
-  </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,26 +21,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net4.5.1'">
-    
-  </ItemGroup>
-  
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
-    
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    
-  </ItemGroup>
-
   <ItemGroup>
     <None Remove="NetCF\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Core\DataEntry\FormDataEntry.Logic.cs" />
-    <None Remove="Core\DataEntry\FormDataEntry.Logic.cs~" />
-    <None Remove="WinForms.Common\DataEntry\FormTallySettings.common.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -350,20 +321,6 @@
     <Compile Include="WinForms\Program.cs" />
     <None Include="WinForms.Common\Controls\HotKeySelectControl.xmta" />
   </ItemGroup>
-   
-
-  <ItemGroup>
-    <PackageReference Include="NBug" Version="1.2.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\FMSC.Controls\FMSC.Controls\FMSC.Controls.VS15.csproj" />
-    <ProjectReference Include="..\FScruiser.Core\FScruiser.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Update="Sounds\insurance.wav">
@@ -379,4 +336,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+    <PackageReference Include="NBug" Version="1.2.2" />
+    <ProjectReference Include="..\..\FMSC.Controls\FMSC.Controls\FMSC.Controls.VS15.csproj" />
+    <ProjectReference Include="..\FScruiser.Core\FScruiser.Core.csproj" />
+  </ItemGroup>
+
+  
 </Project> 

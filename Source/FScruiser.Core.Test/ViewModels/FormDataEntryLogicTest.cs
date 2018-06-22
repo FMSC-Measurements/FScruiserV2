@@ -7,11 +7,8 @@ using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace FScruiser.Core.Test.ViewModels
@@ -26,7 +23,6 @@ namespace FScruiser.Core.Test.ViewModels
         //[InlineData(0,0, "C", false, false)]//frequency of 0 is not allowed and breaks the OnTally
         public void OnTallyTest_STR(int frequency, int insuranceFreq, string resultCountMeasure, bool enableCruiserPopup, bool enterMeasureTreeData)
         {
-
             using (var ds = CreateDatastore(CruiseDAL.Schema.CruiseMethods.STR, frequency, insuranceFreq))
             {
                 var dataService = new IDataEntryDataService("01", ds);
@@ -46,20 +42,17 @@ namespace FScruiser.Core.Test.ViewModels
 
                 var soundServiceMock = new Mock<ISoundService>();
 
-
-                FormDataEntryLogic.OnTally(count, dataService, tallyHistory, 
-                    appSettingsMock.Object, 
-                    dataEntryViewMock.Object, 
-                    dialogServiceMock.Object, 
+                FormDataEntryLogic.OnTally(count, dataService, tallyHistory,
+                    appSettingsMock.Object,
+                    dataEntryViewMock.Object,
+                    dialogServiceMock.Object,
                     soundServiceMock.Object);
-
-                
 
                 tallyHistory.Should().HaveCount(1);
                 var tallyAction = tallyHistory.Single();
 
                 var treeCount = ds.ExecuteScalar<int>("SELECT Sum(TreeCount) FROM CountTree;");
-                treeCount.ShouldBeEquivalentTo(1);
+                treeCount.Should().Be(1);
 
                 soundServiceMock.Verify(x => x.SignalTally(It.IsAny<bool>()));
 
@@ -71,9 +64,9 @@ namespace FScruiser.Core.Test.ViewModels
 
                     var tree = ds.From<Tree>().Read().Single();
                     tree.Should().NotBeNull();
-                    tree.CountOrMeasure.ShouldBeEquivalentTo(resultCountMeasure);
+                    tree.CountOrMeasure.Should().Be(resultCountMeasure);
 
-                    if(resultCountMeasure == "M")
+                    if (resultCountMeasure == "M")
                     {
                         soundServiceMock.Verify(x => x.SignalMeasureTree());
                     }
@@ -139,17 +132,18 @@ namespace FScruiser.Core.Test.ViewModels
                 };
                 cust.Save();
 
-                var sampleGroup = new SampleGroupDO() {
+                var sampleGroup = new SampleGroupDO()
+                {
                     DAL = ds,
                     Stratum = stratum,
                     Code = "01",
-                    PrimaryProduct = "01",                    
+                    PrimaryProduct = "01",
                     UOM = "something",
                     CutLeave = "something",
                     InsuranceFrequency = insuranceFreq
                 };
 
-                if(CruiseMethods.THREE_P_METHODS.Contains(cruiseMethod))
+                if (CruiseMethods.THREE_P_METHODS.Contains(cruiseMethod))
                 {
                     sampleGroup.KZ = freqORkz;
                 }
@@ -193,28 +187,29 @@ namespace FScruiser.Core.Test.ViewModels
             FMSC.Sampling.SampleSelecter sampleSelector = new FMSC.Sampling.SystematicSelecter(1);//100%
 
             var expectedTree = new Tree();
-            var dataServiceMock = new Moq.Mock<ITreeDataService>();
 
+            var dataServiceMock = new Moq.Mock<ITreeDataService>();
             dataServiceMock.Setup(ds => ds.CreateNewTreeEntry(It.IsAny<CountTree>())).Returns(expectedTree);
 
+            var dialogServiceMock = new Mock<IDialogService>();
+            //dialogServiceMock.Setup()
 
-            var result = FormDataEntryLogic.TallyStandard(count, sampleSelector, dataServiceMock.Object);
+            var result = FormDataEntryLogic.TallyStandard(count, sampleSelector, dataServiceMock.Object, dialogServiceMock.Object);
 
             result.Should().NotBeNull();
             result.TreeRecord.Should().BeSameAs(expectedTree);
             result.Count.Should().BeSameAs(count);
-            count.TreeCount.ShouldBeEquivalentTo(1);
-            expectedTree.CountOrMeasure.ShouldAllBeEquivalentTo("M");
+            count.TreeCount.Should().Be(1);
+            expectedTree.CountOrMeasure.Should().Be("M");
 
             sampleSelector = new ZeroPCTSelector();//0%
 
-            sampleSelector.Next().ShouldBeEquivalentTo(false);
+            sampleSelector.Next().Should().Be(false);
 
-            result = FormDataEntryLogic.TallyStandard(count, sampleSelector, dataServiceMock.Object);
+            result = FormDataEntryLogic.TallyStandard(count, sampleSelector, dataServiceMock.Object, dialogServiceMock.Object);
             result.TreeRecord.Should().BeNull();
 
-            count.TreeCount.ShouldBeEquivalentTo(2);
-
+            count.TreeCount.Should().Be(2);
         }
 
         [Fact]
@@ -233,8 +228,6 @@ namespace FScruiser.Core.Test.ViewModels
             var count = new CountTree() { TreeCount = 0, SumKPI = 0 };
             FMSC.Sampling.SampleSelecter sampleSelector = new FMSC.Sampling.ThreePSelecter(1, 1, 0);
 
-
-
             var expectedTree = new Tree();
             var dataServiceMock = new Moq.Mock<ITreeDataService>();
 
@@ -245,12 +238,12 @@ namespace FScruiser.Core.Test.ViewModels
             result.Should().NotBeNull();
             result.TreeRecord.Should().BeSameAs(expectedTree);
             result.Count.Should().BeSameAs(count);
-            result.KPI.ShouldBeEquivalentTo(expectedKPI);
+            result.KPI.Should().Be(expectedKPI);
 
-            count.TreeCount.ShouldBeEquivalentTo(1);
-            count.SumKPI.ShouldBeEquivalentTo(expectedKPI);
+            count.TreeCount.Should().Be(1);
+            count.SumKPI.Should().Be(expectedKPI);
 
-            expectedTree.CountOrMeasure.ShouldBeEquivalentTo("M");
+            expectedTree.CountOrMeasure.Should().Be("M");
         }
 
         [Fact]
@@ -269,8 +262,6 @@ namespace FScruiser.Core.Test.ViewModels
             var count = new CountTree() { TreeCount = 0, SumKPI = 0 };
             FMSC.Sampling.SampleSelecter sampleSelector = new FMSC.Sampling.ThreePSelecter(1, 1, 0);
 
-
-
             var expectedTree = new Tree();
             var dataServiceMock = new Moq.Mock<ITreeDataService>();
 
@@ -280,8 +271,8 @@ namespace FScruiser.Core.Test.ViewModels
 
             result.Should().BeNull();
 
-            count.TreeCount.ShouldBeEquivalentTo(0);
-            count.SumKPI.ShouldBeEquivalentTo(0);
+            count.TreeCount.Should().Be(0);
+            count.SumKPI.Should().Be(0);
         }
 
         [Fact]
@@ -300,8 +291,6 @@ namespace FScruiser.Core.Test.ViewModels
             var count = new CountTree() { TreeCount = 0, SumKPI = 0 };
             FMSC.Sampling.SampleSelecter sampleSelector = new FMSC.Sampling.ThreePSelecter(1, 1, 0);
 
-
-
             var expectedTree = new Tree();
             var dataServiceMock = new Moq.Mock<ITreeDataService>();
 
@@ -312,10 +301,10 @@ namespace FScruiser.Core.Test.ViewModels
             result.Should().NotBeNull();
             result.TreeRecord.Should().BeSameAs(expectedTree);
             result.Count.Should().BeSameAs(count);
-            result.KPI.ShouldBeEquivalentTo(0);
+            result.KPI.Should().Be(0);
 
-            count.TreeCount.ShouldBeEquivalentTo(1);
-            count.SumKPI.ShouldBeEquivalentTo(0);
+            count.TreeCount.Should().Be(1);
+            count.SumKPI.Should().Be(0);
 
             expectedTree.CountOrMeasure.Should().BeNull();
             expectedTree.STM = "Y";

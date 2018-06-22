@@ -16,23 +16,23 @@ namespace FScruiser.Core.Test.Models
         {
             var tallyAction = new TallyAction();
             tallyAction.ToString().Should().NotBeNullOrWhiteSpace();
-            tallyAction.ToString().ShouldBeEquivalentTo("-- ----");
+            tallyAction.ToString().Should().Be("-- ----");
 
             tallyAction.Count = new CountTree();
 
             tallyAction.ToString().Should().NotBeNullOrWhiteSpace();
-            tallyAction.ToString().ShouldBeEquivalentTo("-- ----");
+            tallyAction.ToString().Should().Be("-- ----");
 
             tallyAction.Count.SampleGroup = new SampleGroup() { Code = "1111111", Stratum = new Stratum() { Code = "222" } };
 
             tallyAction.ToString().Should().NotBeNullOrWhiteSpace();
-            tallyAction.ToString().ShouldBeEquivalentTo("22 1111");
+            tallyAction.ToString().Should().Be("22 1111");
 
             tallyAction.Count.SampleGroup.Code = "1";
             tallyAction.Count.SampleGroup.Stratum.Code = "2";
 
             tallyAction.ToString().Should().NotBeNullOrWhiteSpace();
-            tallyAction.ToString().ShouldBeEquivalentTo("2 1");
+            tallyAction.ToString().Should().Be("2 1");
         }
     }
 }

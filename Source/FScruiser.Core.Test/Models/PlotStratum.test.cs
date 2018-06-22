@@ -41,19 +41,19 @@ namespace FScruiser.Core.Test.Models
 
                 plot.Should().BeOfType<Plot>();
 
-                plot.PlotNumber.ShouldBeEquivalentTo(1L);
+                plot.PlotNumber.Should().Be(1L);
 
-                plot.DAL.ShouldBeEquivalentTo(dal);
+                plot.DAL.Should().Be(dal);
 
-                plot.CuttingUnit.ShouldBeEquivalentTo(unit);
-                plot.Stratum.ShouldBeEquivalentTo(stratum);
+                plot.CuttingUnit.Should().Be(unit);
+                plot.Stratum.Should().Be(stratum);
 
                 plot.Trees.Should().NotBeNull();
 
                 plot.Save();
 
                 plot = stratum.MakePlot(unit);
-                plot.PlotNumber.ShouldBeEquivalentTo(2L);
+                plot.PlotNumber.Should().Be(2L);
             }
         }
 
@@ -83,10 +83,10 @@ namespace FScruiser.Core.Test.Models
 
                 plot.Should().BeOfType<Plot3PPNT>();
 
-                plot.PlotNumber.ShouldBeEquivalentTo(1L);
+                plot.PlotNumber.Should().Be(1L);
 
-                plot.CuttingUnit.ShouldBeEquivalentTo(unit);
-                plot.Stratum.ShouldBeEquivalentTo(stratum);
+                plot.CuttingUnit.Should().Be(unit);
+                plot.Stratum.Should().Be(stratum);
 
                 plot.Trees.Should().NotBeNull();
             }
