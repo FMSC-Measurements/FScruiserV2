@@ -1,7 +1,3 @@
-[submodule "CruiseDAL"]
-	path = CruiseDAL
-	url = https://github.com/FMSC-Measurements/CruiseDAL/
-
 [submodule "FMSC.Util"]
 	path = FMSC.Util
 	url = https://github.com/FMSC-Measurements/FMSC.Util
@@ -9,7 +5,3 @@
 [submodule "FMSC.Controls"]
 	path = FMSC.Controls
 	url = https://github.com/FMSC-Measurements/FMSC.Controls
-
-[submodule "FMSC.Sampling"]
-	path = FMSC.Sampling
-	url = https://github.com/FMSC-Measurements/FMSC.Sampling
