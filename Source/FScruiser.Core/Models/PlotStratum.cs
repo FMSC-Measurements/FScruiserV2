@@ -48,7 +48,7 @@ namespace FSCruiser.Core.Models
             Plot newPlot;
             if (this.Is3PPNT)
             {
-                newPlot = new Plot3PPNT(this.DAL)
+                newPlot = new Plot3PPNT(DAL)
                 {
                     CuttingUnit = cuttingUnit,
                     Stratum = this,

@@ -8,18 +8,18 @@ using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
 using FScruiser.Core.Services;
 using System.Xml.Serialization;
+using FMSC.ORM.Core;
 
 namespace FSCruiser.Core.Models
 {
     public class Plot : PlotDO
     {
-        private IList<Tree> _trees;
 
         public Plot()
             : base()
         { }
 
-        public Plot(DAL dal)
+        public Plot(Datastore dal)
             : base(dal)
         { }
 

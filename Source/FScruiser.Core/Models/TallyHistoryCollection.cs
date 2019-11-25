@@ -44,7 +44,7 @@ namespace FSCruiser.Core.Models
             this.MaxSize = maxSize;
         }
 
-        public void Initialize(FMSC.ORM.Core.DatastoreRedux datastore, CuttingUnit cuttingUnit)
+        public void Initialize(FMSC.ORM.Core.Datastore datastore, CuttingUnit cuttingUnit)
         {
             if (!String.IsNullOrEmpty(cuttingUnit.TallyHistory))
             {
@@ -154,7 +154,7 @@ namespace FSCruiser.Core.Models
             return tallyHistory;
         }
 
-        public void Inflate(FMSC.ORM.Core.DatastoreRedux datastore)
+        public void Inflate(FMSC.ORM.Core.Datastore datastore)
         {
             foreach (TallyAction action in this)
             {
@@ -162,7 +162,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        public static void Inflate(FMSC.ORM.Core.DatastoreRedux datastore, TallyAction action)
+        public static void Inflate(FMSC.ORM.Core.Datastore datastore, TallyAction action)
         {
             if (action.CountCN != 0L)
             {

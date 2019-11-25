@@ -8,14 +8,14 @@ namespace FSCruiser.Core.Models
     /// What is the purpose of this class? It is a place holder of sorts. I figure that the CountTree table needs to be broken up into seperate data/settings tables
     /// </summary>
     /// TODO this class probably doen't need to inharet from DataObject
-    [EntitySource(SourceName = "CountTree")]
+    [Table("CountTree")]
     public class TallySettings : DataObject_Base
     {
         public TallySettings()
             : base()
         { }
 
-        public TallySettings(DatastoreRedux db)
+        public TallySettings(Datastore db)
             : base(db)
         { }
 

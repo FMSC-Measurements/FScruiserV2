@@ -195,7 +195,7 @@ namespace FScruiser.Core.Services
             UnitLevelCruisersInitials = ReadUnitLevelCruisers(DataStore).ToArray();
         }
 
-        public static IEnumerable<string> ReadUnitLevelCruisers(FMSC.ORM.Core.DatastoreRedux datastore)
+        public static IEnumerable<string> ReadUnitLevelCruisers(FMSC.ORM.Core.Datastore datastore)
         {
             var initialsStr = datastore.ExecuteScalar<string>("SELECT group_concat(Initials, ',') FROM (SELECT Trim(Initials) AS Initials FROM Tree WHERE Initials IS NOT NULL AND trim(Initials) != '' GROUP BY Initials);");
             if (!string.IsNullOrEmpty(initialsStr))
@@ -849,6 +849,11 @@ namespace FScruiser.Core.Services
         }
 
         #endregion ITreeFieldProvider
+
+        public void SaveTree(Tree tree)
+        {
+            DataStore.Save(tree);
+        }
 
         public Exception SavePlotData()
         {

@@ -30,7 +30,7 @@ namespace FSCruiser.Core.Models
         ICollection<FixCNTTallyBucket> Buckets { get; }
     }
 
-    [EntitySource(SourceName = "FixCNTTallyPopulation")]
+    [Table("FixCNTTallyPopulation")]
     public class FixCNTTallyPopulation : IFixCNTTallyPopulation
     {
         #region IFixCNTTallyPopulation Members

@@ -3,6 +3,7 @@
 using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
 using FScruiser.Core.Services;
+using FMSC.ORM.Core;
 
 namespace FSCruiser.Core.Models
 {
@@ -51,7 +52,7 @@ namespace FSCruiser.Core.Models
         {
         }
 
-        public Plot3PPNT(CruiseDAL.DAL dal) : base(dal)
+        public Plot3PPNT(Datastore dal) : base(dal)
         {
         }
 
