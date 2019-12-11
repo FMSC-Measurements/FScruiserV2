@@ -14,7 +14,7 @@
     <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
     <OSVersion>5.1</OSVersion>
     <DeployDirSuffix>FScruiser.Core</DeployDirSuffix>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <NativePlatformName>Windows Mobile 5.0 Pocket PC SDK</NativePlatformName>
     <FormFactorID>
     </FormFactorID>
@@ -45,12 +45,29 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LINQBridge.CF, Version=1.0.6354.22636, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Backpack.SqlBuilder, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\CruiseDAL\libs\LINQBridge.CF.dll</HintPath>
+      <HintPath>..\libs\net35-cf\Backpack.SqlBuilder.dll</HintPath>
+    </Reference>
+    <Reference Include="CruiseDAL.Core, Version=3.0.0.43, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\net35-cf\CruiseDAL.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CruiseDAL.V2, Version=2.5.1.43, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\net35-cf\CruiseDAL.V2.dll</HintPath>
+    </Reference>
+    <Reference Include="FMSC.ORM, Version=2.4.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\net35-cf\FMSC.ORM.dll</HintPath>
+    </Reference>
+    <Reference Include="FMSC.Sampling, Version=2.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\net35-cf\FMSC.Sampling.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -59,7 +76,8 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="IApplicationSettings.cs" />
-    <Compile Include="Models\ClickerSelecter.cs" />
+    <Compile Include="Logic\HundredPCTSelector.cs" />
+    <Compile Include="Logic\ZeroFrequencySelector.cs" />
     <Compile Include="Models\CountTree.cs" />
     <Compile Include="Models\Cruiser.cs" />
     <Compile Include="Models\CuttingUnit.cs" />
@@ -121,20 +139,6 @@
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Workers\SaveTreesWorker.cs" />
     <Compile Include="Workers\TreeValidationWorker.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\CruiseDAL\CruiseDAL\CruiseDAL_CF20.csproj">
-      <Project>{DC8A4894-F4A8-4554-B475-2EBAD49AF148}</Project>
-      <Name>CruiseDAL_CF20</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CruiseDAL\FMSC.ORM\FMSC.ORM.NetCF20.csproj">
-      <Project>{D346BFEA-85A0-4A5D-BD89-D07E073B065E}</Project>
-      <Name>FMSC.ORM.NetCF20</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\FMSC.Sampling\src\FMSC.Sampling\FMSC.Sampling_CF20.csproj">
-      <Project>{932C2341-A331-4B7C-8BC9-9D3491F1821B}</Project>
-      <Name>FMSC.Sampling_CF20</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>
