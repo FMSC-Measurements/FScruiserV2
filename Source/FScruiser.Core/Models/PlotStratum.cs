@@ -27,7 +27,7 @@ namespace FSCruiser.Core.Models
         /// for 3ppnt
         /// </summary>
         [XmlIgnore]
-        public ThreePSelecter SampleSelecter { get; set; }
+        public IThreePSelector SampleSelecter { get; set; }
 
         [XmlIgnore]
         [IgnoreField]

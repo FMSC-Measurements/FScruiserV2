@@ -48,6 +48,8 @@ namespace FScruiser.Core.Services
 
         void SaveTree(Tree tree);
 
+        bool TrySaveTree(Tree tree);
+
         //void SaveTrees();
 
         bool TrySaveTrees();

@@ -120,6 +120,27 @@ namespace FScruiser.Core.Test.Services
 
         }
 
+        [Fact]
+        public void SaveTallyAction()
+        {
+            using (var database = CreateDataStore(methods: new[] { "STR" }))
+            {
+                var treeCount = 1;
+                var unitCode = "01";
+                var ds = new IDataEntryDataService(unitCode, database);
+
+                var count = ds.TreeStrata.First().Counts.First();
+                var treecountBefore = count.TreeCount;
+
+                var tallyAction = new TallyAction(count)
+                { TreeCount = treeCount, };
+
+                ds.SaveTallyAction(tallyAction);
+
+                count.TreeCount.Should().Be(treeCount + treecountBefore);
+            }
+        }
+
         DAL CreateDataStore(string salePurpose = null, string saleRegion = "01", IEnumerable<string> methods = null)
         {
             methods = methods ?? new string[] { CruiseMethods.STR, CruiseMethods.FIX };
@@ -208,7 +229,16 @@ namespace FScruiser.Core.Test.Services
                         TreeNumber = 1
                     };
                     tree.Save();
-                }                
+                }
+
+                var countTree = new CountTree()
+                {
+                    CuttingUnit_CN = cuttingUnit.CuttingUnit_CN,
+                    SampleGroup_CN = sg.SampleGroup_CN,
+                    TreeDefaultValue_CN = tdv.TreeDefaultValue_CN,
+                };
+
+                ds.Save(countTree);
             }
 
             return ds;

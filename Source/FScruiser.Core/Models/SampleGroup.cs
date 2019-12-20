@@ -30,10 +30,10 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        SampleSelecter _sampler;
+        ISampleSelector _sampler;
 
         [IgnoreField]
-        public SampleSelecter Sampler
+        public ISampleSelector Sampler
         {
             get
             {
@@ -104,7 +104,7 @@ namespace FSCruiser.Core.Models
         public void SerializeSamplerState()
         {
             if (_sampler == null) { return; }
-            SampleSelecter selector = _sampler;
+            var selector = _sampler;
             if (selector != null && (selector is BlockSelecter || selector is SystematicSelecter))
             {
                 XmlSerializer serializer = new XmlSerializer(selector.GetType());
@@ -119,7 +119,7 @@ namespace FSCruiser.Core.Models
         //   System.InvalidOperationException:
         //     An error occurred during deserialization. The original exception is available
         //     using the System.Exception.InnerException property.
-        public SampleSelecter DeserializeSamplerState()
+        public ISampleSelector DeserializeSamplerState()
         {
             XmlSerializer serializer = null;
 
@@ -145,7 +145,7 @@ namespace FSCruiser.Core.Models
                 case "ThreeP":
                 case "ThreePSelecter":
                     {
-                        return new ThreePSelecter((int)this.KZ, 10000, (int)this.InsuranceFrequency);
+                        return new ThreePSelecter((int)this.KZ, (int)this.InsuranceFrequency);
                     }
             }
             if (serializer != null)
@@ -160,7 +160,7 @@ namespace FSCruiser.Core.Models
             return null;
         }
 
-        public SampleSelecter MakeSampleSelecter()
+        public ISampleSelector MakeSampleSelecter()
         {
             var method = Stratum.Method;
 
@@ -218,9 +218,9 @@ namespace FSCruiser.Core.Models
             }
         }
 
-        SampleSelecter InitializePersistedSampler()
+        ISampleSelector InitializePersistedSampler()
         {
-            SampleSelecter selecter;
+            ISampleSelector selecter;
             try
             {
                 selecter = DeserializeSamplerState();
@@ -236,7 +236,7 @@ namespace FSCruiser.Core.Models
             {
                 if (!ValidateFreqSelecter((IFrequencyBasedSelecter)selecter))
                 {
-                    DAL.LogMessage(string.Format("Frequency missmatch on SG:{0} Sf={1} If={2}; SelectorState: Sf={3} If={4};",
+                    ((CruiseDatastore)DAL).LogMessage(string.Format("Frequency missmatch on SG:{0} Sf={1} If={2}; SelectorState: Sf={3} If={4};",
                             this.Code,
                             this.SamplingFrequency,
                             this.InsuranceFrequency,
@@ -275,40 +275,33 @@ namespace FSCruiser.Core.Models
             else { return true; }
         }
 
-        private SampleSelecter MakeThreePSampleSelector()
+        private ISampleSelector MakeThreePSampleSelector()
         {
-            SampleSelecter selecter = null;
             int iFrequency = (int)this.InsuranceFrequency;
             int kz = (int)this.KZ;
-            int maxKPI = 100000;
-            selecter = new FMSC.Sampling.ThreePSelecter(kz, maxKPI, iFrequency);
-            return selecter;
+            return new FMSC.Sampling.ThreePSelecter(kz, iFrequency);
         }
 
-        private SampleSelecter MakeSystematicSampleSelector()
+        private IFrequencyBasedSelecter MakeSystematicSampleSelector()
         {
-            SampleSelecter selecter = null;
             int iFrequency = (int)this.InsuranceFrequency;
             int frequency = (int)this.SamplingFrequency;
-            if (frequency == 0) { selecter = null; }
+            if (frequency == 0) { return (IFrequencyBasedSelecter)null; }
             else
             {
-                selecter = new FMSC.Sampling.SystematicSelecter(frequency, iFrequency, true);
+                return new FMSC.Sampling.SystematicSelecter(frequency, iFrequency, true);
             }
-            return selecter;
         }
 
-        private SampleSelecter MakeBlockSampleSelector()
+        private IFrequencyBasedSelecter MakeBlockSampleSelector()
         {
-            SampleSelecter selecter = null;
             int iFrequency = (int)this.InsuranceFrequency;
             int frequency = (int)this.SamplingFrequency;
-            if (frequency == 0) { selecter = null; }
+            if (frequency == 0) { return (IFrequencyBasedSelecter)null; }
             else
             {
-                selecter = new FMSC.Sampling.BlockSelecter(frequency, iFrequency);
+                return new FMSC.Sampling.BlockSelecter(frequency, iFrequency);
             }
-            return selecter;
         }
 
         public override string ToString()

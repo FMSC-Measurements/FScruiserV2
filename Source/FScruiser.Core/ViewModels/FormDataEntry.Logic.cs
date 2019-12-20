@@ -134,7 +134,7 @@ namespace FSCruiser.Core.DataEntry
         }
 
         public static void OnTally(CountTree count,
-            ITreeDataService dataService, ICollection<TallyAction> tallyHistory,
+            IDataEntryDataService dataService, ICollection<TallyAction> tallyHistory,
             IApplicationSettings appSettings, IDataEntryView view,
             IDialogService dialogService, ISoundService soundService)
         {
@@ -150,9 +150,6 @@ namespace FSCruiser.Core.DataEntry
                     var newTree = dataService.CreateNewTreeEntry(count, true); //create measure tree
                     newTree.TreeCount = sg.SamplingFrequency;     //increment tree count on tally
                     action.TreeRecord = newTree;
-                    newTree.TrySave();
-
-                    dataService.AddNonPlotTree(newTree);
                 }
                 catch (FMSC.ORM.SQLException e) //count save fail
                 {
@@ -171,7 +168,9 @@ namespace FSCruiser.Core.DataEntry
             //action may be null if cruising 3P and user doesn't enter a kpi
             if (action != null)
             {
+                dataService.SaveTallyAction(action);
                 soundService.SignalTally();
+
                 var tree = action.TreeRecord;
                 if (tree != null)
                 {
@@ -210,9 +209,13 @@ namespace FSCruiser.Core.DataEntry
         //DataService (CreateNewTreeEntry)
         //DAL (LogTreeEstimate) //should be dataservice instead
         //SampleGroup (MinKPI/MaxKPI)
-        public static TallyAction TallyThreeP(CountTree count, SampleSelecter sampler, SampleGroup sg, ITreeDataService dataService, IDialogService dialogService)
+        public static TallyAction TallyThreeP(CountTree count, ISampleSelector sampler, SampleGroup sg, ITreeDataService dataService, IDialogService dialogService)
         {
-            TallyAction action = new TallyAction(count);
+            TallyAction action = new TallyAction(count)
+            {
+                TreeCount = 1,
+            };
+
 
             int kpi = 0;
             int? value = dialogService.AskKPI((int)sg.MinKPI, (int)sg.MaxKPI);
@@ -225,95 +228,50 @@ namespace FSCruiser.Core.DataEntry
                 kpi = value.Value;
             }
 
-            var originalCount = count.TreeCount;
-            var originalSumKPI = count.SumKPI;
-
-            Tree tree = null;
             if (kpi == -1)  //user entered sure to measure
             {
-                tree = dataService.CreateNewTreeEntry(count);
+                var tree = dataService.CreateNewTreeEntry(count);
                 tree.STM = "Y";
+                action.TreeRecord = tree;
             }
             else
             {
                 action.TreeEstimate = dataService.LogTreeEstimate(count, kpi);
                 action.KPI = kpi;
-                count.SumKPI += kpi;
 
-                ThreePItem item = (ThreePItem)((ThreePSelecter)sampler).NextItem();
-                if (item != null && kpi > item.KPI)
+                var result = ((IThreePSelector)sampler).Sample(kpi);
+                if (result != SampleResult.C)
                 {
-                    bool isInsuranceTree = sampler.IsSelectingITrees && sampler.InsuranceCounter.Next();
-
-                    tree = dataService.CreateNewTreeEntry(count);
+                    var tree = dataService.CreateNewTreeEntry(count);
                     tree.KPI = kpi;
-                    tree.CountOrMeasure = (isInsuranceTree) ? "I" : "M";
-                }
-            }
-
-            try
-            {
-                if (tree != null)
-                {
-                    tree.Save();
+                    tree.CountOrMeasure = result.ToString();
                     action.TreeRecord = tree;
                 }
-
-                count.TreeCount++;
-                count.Save();
-
-                return action;
             }
-            catch (FMSC.ORM.SQLException e) //count save fail
-            {
-                count.SumKPI = originalSumKPI;
-                count.TreeCount = originalCount;
 
-                dialogService.ShowMessage("File error");
-
-                return null;
-            }
+            return action;
         }
 
         //DataService (CreateNewTreeEntry)
         //
-        public static TallyAction TallyStandard(CountTree count, SampleSelecter sampleSelecter, ITreeDataService dataService, IDialogService dialogService)
+        public static TallyAction TallyStandard(CountTree count, ISampleSelector sampleSelecter, ITreeDataService dataService, IDialogService dialogService)
         {
-            TallyAction action = new TallyAction(count);
+            TallyAction action = new TallyAction(count)
+            {
+                TreeCount = 1,
+            };
 
-            boolItem item = (boolItem)sampleSelecter.NextItem();
+            var result = ((IFrequencyBasedSelecter)sampleSelecter).Sample();
 
-            var originalCount = count.TreeCount;
-
-            Tree tree = null;
             //If we receive nothing from the sampler, we don't have a sample
-            if (item != null)//&& (item.IsSelected || item.IsInsuranceItem))
+            if (result != SampleResult.C)//&& (item.IsSelected || item.IsInsuranceItem))
             {
-                tree = dataService.CreateNewTreeEntry(count);
-                tree.CountOrMeasure = (item.IsInsuranceItem) ? "I" : "M";
+                var tree = dataService.CreateNewTreeEntry(count);
+                tree.CountOrMeasure = result.ToString();
+                action.TreeRecord = tree;
             }
 
-            try
-            {
-                if (tree != null)
-                {
-                    tree.Save();
-                    action.TreeRecord = tree;
-                }
-
-                count.TreeCount++;
-                count.Save();
-
-                return action;
-            }
-            catch (FMSC.ORM.SQLException e) //count save fail
-            {
-                count.TreeCount = originalCount;
-
-                dialogService.ShowMessage("File error", e.GetType().Name);
-
-                return null;
-            }
+            return action;
         }
 
         protected static bool AskEnterMeasureTreeData(IApplicationSettings appSettings, IDialogService dialogService)

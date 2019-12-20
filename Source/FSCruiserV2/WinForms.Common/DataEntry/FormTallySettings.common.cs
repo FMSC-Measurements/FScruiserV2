@@ -132,7 +132,7 @@ namespace FSCruiser.WinForms.DataEntry
                 this._measureTrees_TB.Text = count.GetMeasureTreeCount().ToString();
 
                 String samplingMethod = "Manual";
-                SampleSelecter sampler = count.SampleGroup.Sampler;
+                var sampler = count.SampleGroup.Sampler;
                 if (sampler != null)
                 {
                     if (sampler is SystematicSelecter)

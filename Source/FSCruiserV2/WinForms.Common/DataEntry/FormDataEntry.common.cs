@@ -160,7 +160,7 @@ namespace FSCruiser.WinForms.DataEntry
                         MessageBox.Show("error 3PPNT missing KZ value, please return to Cruise System Manger and fix");
                         continue;
                     }
-                    st.SampleSelecter = new ThreePSelecter((int)st.KZ3PPNT, 1000000, 0);
+                    st.SampleSelecter = new ThreePSelecter((int)st.KZ3PPNT, 0);
                 }
 
                 LayoutPlot view = new LayoutPlot(DataService

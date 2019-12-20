@@ -455,6 +455,24 @@ namespace FScruiser.Core.Services
             }
         }
 
+        public void SaveTree(Tree tree)
+        {
+            DataStore.Save(tree);
+        }
+
+        public bool TrySaveTree(Tree tree)
+        {
+            try
+            {
+                DataStore.Save(tree);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public void DeleteTree(Tree tree)
         {
             lock (_nonPlotTreesSyncLock)
@@ -520,6 +538,45 @@ namespace FScruiser.Core.Services
         }
 
         #region save methods
+
+        public void SaveTallyAction(TallyAction tallyAction)
+        {
+            var database = DataStore;
+
+            var countTree = tallyAction.Count;
+            var tree = tallyAction.TreeRecord;
+
+            var persistedTreeCount = countTree.TreeCount;
+            var persistedSumKPI = countTree.SumKPI;
+            var treeCountDelta = tallyAction.TreeCount;
+            var kpiDelta = tallyAction.KPI;
+            if (treeCountDelta > 0)
+            { countTree.TreeCount = persistedTreeCount + treeCountDelta; }
+            if(kpiDelta > 0)
+            { countTree.SumKPI = persistedSumKPI + kpiDelta; }
+
+            database.BeginTransaction();
+            try
+            {
+                database.Save(countTree);
+
+                if (tree != null)
+                { database.Save(tree); }
+
+                database.CommitTransaction();
+
+                if(tree != null)
+                {
+                    AddNonPlotTree(tree);
+                }
+            }
+            catch(Exception e)
+            {
+                countTree.TreeCount = persistedTreeCount;
+                countTree.SumKPI = persistedSumKPI;
+                database.RollbackTransaction();
+            }
+        }
 
         public void SaveCounts()
         {
@@ -849,11 +906,6 @@ namespace FScruiser.Core.Services
         }
 
         #endregion ITreeFieldProvider
-
-        public void SaveTree(Tree tree)
-        {
-            DataStore.Save(tree);
-        }
 
         public Exception SavePlotData()
         {

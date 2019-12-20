@@ -370,22 +370,10 @@ namespace FSCruiser.Core.DataEntry
             //if kpi == -1 then tree is sure to measure
             if (kpi != -1)
             {
-                ThreePItem item = (ThreePItem)((ThreePSelecter)sampler).NextItem();
+                var result = ((IThreePSelector)sampler).Sample(kpi);
 
-                if (item != null && kpi > item.KPI)
-                {
-                    //because the three p sample selector doesn't select insurance trees for us
-                    //we need to select them our selves
-                    bool isInsuranceTree = sampler.IsSelectingITrees && sampler.InsuranceCounter.Next();
-
-                    tree = DataService.CreateNewTreeEntry(plot, count, true);
-                    tree.CountOrMeasure = (isInsuranceTree) ? "I" : "M";
-                }
-                else
-                {
-                    tree = DataService.CreateNewTreeEntry(plot, count, false);
-                    tree.CountOrMeasure = "C";
-                }
+                tree = DataService.CreateNewTreeEntry(plot, count, (result != SampleResult.C));
+                tree.CountOrMeasure = result.ToString();
                 tree.KPI = kpi;
             }
             else//tree is sure to measure
@@ -404,17 +392,10 @@ namespace FSCruiser.Core.DataEntry
             var sampler = count.SampleGroup.Sampler;
             Tree tree;
 
-            boolItem item = (sampler != null) ? (boolItem)sampler.NextItem() : (boolItem)null;
-            if (item != null)
-            {
-                tree = DataService.CreateNewTreeEntry(plot, count, true);
-                tree.CountOrMeasure = (item.IsInsuranceItem) ? "I" : "M";
-            }
-            else
-            {
-                tree = DataService.CreateNewTreeEntry(plot, count, false);
-            }
-
+            // sampler maybe null, if it is treat as zero frequency sampler
+            var result = ((IFrequencyBasedSelecter)sampler)?.Sample() ?? SampleResult.C;
+            tree = DataService.CreateNewTreeEntry(plot, count, (result != SampleResult.C));
+            tree.CountOrMeasure = result.ToString();
             tree.TreeCount = 1;
 
             return tree;

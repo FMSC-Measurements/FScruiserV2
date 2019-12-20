@@ -100,10 +100,10 @@ namespace FSCruiser.Core.Models
             };
 
             sg.MakeSampleSelecter().Should().BeOfType<ClickerSelecter>();
+            var sampler = sg.Sampler as IFrequencyBasedSelecter;
             sg.Sampler.Should().NotBeNull();
 
-            sg.Sampler.Next().Should().BeTrue(); //clicker selector should always return true
-            sg.Sampler.NextItem().IsSelected.Should().BeTrue();
+            sampler.Sample().Should().Be(SampleResult.M); //clicker selector should always return true
         }
 
         [Fact]
@@ -166,7 +166,7 @@ namespace FSCruiser.Core.Models
             sg.MakeSampleSelecter().Should().NotBeNull();
             sg.Sampler.Should().NotBeNull();
             sg.Sampler.Should().BeOfType<ThreePSelecter>();
-            ((ThreePSelecter)sg.Sampler).KZ.Should().Be(100);
+            //((IThreePSelector)sg.Sampler).KZ.Should().Be(100);
         }
 
         [Fact]
@@ -187,7 +187,7 @@ namespace FSCruiser.Core.Models
             sg.MakeSampleSelecter().Should().NotBeNull();
             sg.Sampler.Should().NotBeNull();
             sg.Sampler.Should().BeOfType<ThreePSelecter>();
-            ((ThreePSelecter)sg.Sampler).KZ.Should().Be(100);
+            //((ThreePSelecter)sg.Sampler).KZ.Should().Be(100);
         }
 
         [Fact]
@@ -208,7 +208,7 @@ namespace FSCruiser.Core.Models
             sg.MakeSampleSelecter().Should().NotBeNull();
             sg.Sampler.Should().NotBeNull();
             sg.Sampler.Should().BeOfType<ThreePSelecter>();
-            ((ThreePSelecter)sg.Sampler).KZ.Should().Be(100);
+            //((ThreePSelecter)sg.Sampler).KZ.Should().Be(100);
         }
     }
 }

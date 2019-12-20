@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net451</TargetFramework>
@@ -340,6 +340,7 @@
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
     <PackageReference Include="NBug" Version="1.2.2" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
     <ProjectReference Include="..\..\FMSC.Controls\FMSC.Controls\FMSC.Controls.VS15.csproj" />
     <ProjectReference Include="..\FScruiser.Core\FScruiser.Core.csproj" />
   </ItemGroup>
