@@ -5,6 +5,7 @@ using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.Common;
 using FScruiser.Core.Services;
+using FScruiser.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -15,12 +16,13 @@ namespace FSCruiser.WinForms.DataEntry
             InitializeComponent();
         }
 
-        public FormDataEntry(IApplicationController controller
-            , ApplicationSettings appSettings
-            , IDataEntryDataService dataService)
+        public FormDataEntry(IApplicationController controller,
+            ApplicationSettings appSettings,
+            IDataEntryDataService dataService,
+            ISampleSelectorRepository sampleSelectorRepository)
         {
             InitializeComponent();
-            InitializeCommon(controller, appSettings, dataService);
+            InitializeCommon(controller, appSettings, dataService, sampleSelectorRepository);
 
             UpdateAddTreeButton();
         }

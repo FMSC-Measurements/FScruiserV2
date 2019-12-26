@@ -1,5 +1,6 @@
 ﻿using FMSC.Sampling;
 using FScruiser.Core.Services;
+using FScruiser.Services;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
@@ -48,9 +49,10 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region Initialize Controls
 
-        protected void InitializeCommon(IApplicationController controller
-            , ApplicationSettings appSettings
-            , IDataEntryDataService dataService)
+        protected void InitializeCommon(IApplicationController controller,
+            ApplicationSettings appSettings,
+            IDataEntryDataService dataService,
+            ISampleSelectorRepository sampleSelectorRepository)
         {
             KeyPreview = true;
 
@@ -58,12 +60,13 @@ namespace FSCruiser.WinForms.DataEntry
             DataService = dataService;
             AppSettings = appSettings;
 
-            LogicController = new FormDataEntryLogic(Controller
-                , DialogService.Instance
-                , SoundService.Instance
-                , DataService
-                , AppSettings
-                , this);
+            LogicController = new FormDataEntryLogic(Controller,
+                DialogService.Instance,
+                SoundService.Instance,
+                DataService,
+                AppSettings,
+                this,
+                sampleSelectorRepository);
 
             InitializePageContainer();
         }

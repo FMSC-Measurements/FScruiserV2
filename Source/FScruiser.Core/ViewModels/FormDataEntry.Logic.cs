@@ -1,5 +1,7 @@
 ﻿using FMSC.Sampling;
 using FScruiser.Core.Services;
+using FScruiser.Sampling;
+using FScruiser.Services;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using System;
@@ -36,13 +38,15 @@ namespace FSCruiser.Core.DataEntry
         private IDialogService _dialogService;
         private ISoundService _soundService;
         private IApplicationSettings _appSettings;
+        private ISampleSelectorRepository _sampleSelectorRepo;
 
-        public FormDataEntryLogic(IApplicationController controller
-            , IDialogService dialogService
-            , ISoundService soundService
-            , IDataEntryDataService dataService
-            , IApplicationSettings settings
-            , IDataEntryView view)
+        public FormDataEntryLogic(IApplicationController controller,
+            IDialogService dialogService,
+            ISoundService soundService,
+            IDataEntryDataService dataService,
+            IApplicationSettings settings,
+            IDataEntryView view,
+            ISampleSelectorRepository sampleSelectorRepository)
         {
             this.Controller = controller;
             this.View = view;
@@ -51,6 +55,7 @@ namespace FSCruiser.Core.DataEntry
             _soundService = soundService;
             _dataService = dataService;
             _appSettings = settings;
+            _sampleSelectorRepo = sampleSelectorRepository;
         }
 
         public string GetViewTitle()
@@ -63,7 +68,7 @@ namespace FSCruiser.Core.DataEntry
             OnTally(count,
                 DataService, DataService.TallyHistory,
                 _appSettings, View,
-                _dialogService, _soundService);
+                _dialogService, _soundService, _sampleSelectorRepo);
 
             //TallyAction action = null;
             //SampleGroupDO sg = count.SampleGroup;
@@ -136,13 +141,20 @@ namespace FSCruiser.Core.DataEntry
         public static void OnTally(CountTree count,
             IDataEntryDataService dataService, ICollection<TallyAction> tallyHistory,
             IApplicationSettings appSettings, IDataEntryView view,
-            IDialogService dialogService, ISoundService soundService)
+            IDialogService dialogService, ISoundService soundService, 
+            ISampleSelectorRepository sampleSelectorRepository)
         {
             TallyAction action = null;
             SampleGroup sg = count.SampleGroup;
+            var sampler = sampleSelectorRepository.GetSamplerBySampleGroupCode(sg.Stratum.Code, sg.Code);
 
-            //if doing a manual tally create a tree and jump out
-            if (sg.SampleSelectorType == CruiseDAL.Schema.CruiseMethods.CLICKER_SAMPLER_TYPE)
+            
+            if(sampler == null)
+            {
+
+            }
+            // if doing a manual tally create a tree and jump out
+            else if (sampler is ExternalSampleSelectorPlaceholder)
             {
                 try
                 {
@@ -158,11 +170,11 @@ namespace FSCruiser.Core.DataEntry
             }
             else if (count.SampleGroup.Stratum.Is3P)//threeP sampling
             {
-                action = TallyThreeP(count, sg.Sampler, sg, dataService, dialogService);
+                action = TallyThreeP(count, sampler, sg, dataService, dialogService);
             }
             else//non 3P sampling (STR)
             {
-                action = TallyStandard(count, sg.Sampler, dataService, dialogService);
+                action = TallyStandard(count, sampler, dataService, dialogService);
             }
 
             //action may be null if cruising 3P and user doesn't enter a kpi
