@@ -3,6 +3,7 @@ using CruiseDAL.Schema;
 using FluentAssertions;
 using FMSC.Sampling;
 using FScruiser.Core.Services;
+using FScruiser.Services;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
@@ -43,11 +44,14 @@ namespace FScruiser.Core.Test.ViewModels
 
                 var soundServiceMock = new Mock<ISoundService>();
 
+                var samplerRepo = new Mock<ISampleSelectorRepository>();
+
                 FormDataEntryLogic.OnTally(count, dataService, tallyHistory,
                     appSettingsMock.Object,
                     dataEntryViewMock.Object,
                     dialogServiceMock.Object,
-                    soundServiceMock.Object);
+                    soundServiceMock.Object,
+                    samplerRepo.Object);
 
                 tallyHistory.Should().HaveCount(1);
                 var tallyAction = tallyHistory.Single();

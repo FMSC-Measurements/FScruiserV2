@@ -39,6 +39,7 @@ namespace FScruiser.Services
 
         public ISampleSelector MakeSampleSelecter(SamplerInfo samplerInfo)
         {
+            if(samplerInfo == null) { throw new ArgumentNullException(nameof(samplerInfo)); }
             var method = samplerInfo.Method;
 
             if (samplerInfo.UseExternalSampler)
@@ -153,7 +154,7 @@ namespace FScruiser.Services
 
             var freq = samplerInfo.SamplingFrequency;
 
-            if (freq == 0) { return null; }
+            if (freq == 0) { return new ZeroFrequencySelecter(); }
 
             if (state == null)
             {

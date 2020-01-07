@@ -34,17 +34,17 @@ namespace FScruiser.Data
         public SamplerState GetSamplerState(string stratumCode, string sampleGroupCode)
         {
             return Database.Query<SamplerState>(
-                "SELECT ss.StratumCode, " +
-                "ss.SampleGroupCode, " +
+                "SELECT st.Code AS StratumCode, " +
+                "sg.Code AS SampleGroupCode, " +
                 "ss.SampleSelectorType, " +
                 "ss.BlockState, " +
                 "ss.SystematicIndex, " +
                 "ss.Counter, " +
                 "ss.InsuranceIndex, " +
                 "ss.InsuranceCounter " +
-                "FROM SamplerState " +
-                "JOIN SampleGroup USING (SampleGroup_CN) " +
-                "JOIN Stratum USING (Stratum_CN) " +
+                "FROM SamplerState AS ss " +
+                "JOIN SampleGroup AS sg USING (SampleGroup_CN) " +
+                "JOIN Stratum AS st USING (Stratum_CN) " +
                 "WHERE st.Code = @p1 AND sg.Code = @p2;",
                 stratumCode, sampleGroupCode)
                 .FirstOrDefault();

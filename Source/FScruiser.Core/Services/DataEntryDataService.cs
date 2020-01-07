@@ -686,7 +686,7 @@ namespace FScruiser.Core.Services
                         {
                             try
                             {
-                                sg.SerializeSamplerState();
+                                //sg.SerializeSamplerState();
                                 datastore.Save(connection, sg, transaction);
                             }
                             catch (Exception ex)
@@ -709,7 +709,7 @@ namespace FScruiser.Core.Services
             {
                 try
                 {
-                    sg.SerializeSamplerState();
+                    //sg.SerializeSamplerState();
                     sg.Save();
                 }
                 catch (Exception e)
