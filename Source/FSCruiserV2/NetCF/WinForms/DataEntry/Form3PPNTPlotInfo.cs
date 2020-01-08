@@ -94,16 +94,17 @@ namespace FSCruiser.WinForms.DataEntry
                     {
                         _plot.Save();
 
-                        ThreePItem item = (ThreePItem)_stratum.SampleSelecter.NextItem();
+                        var kpi = (int)_plot.KPI;
+                        var result = _stratum.SampleSelecter.Sample(kpi);
 
-                        if (_plot.KPI >= item.KPI)
+                        if (result == SampleResult.C)
                         {
-                            _plot.CreateTrees(DataService);
-                            SignalMeasurePlot();
+                            SignalCountPlot();
                         }
                         else
                         {
-                            this.SignalCountPlot();
+                            _plot.CreateTrees(DataService);
+                            SignalMeasurePlot();
                         }
 
                         _plot.DAL.CommitTransaction();

@@ -7,6 +7,7 @@ using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.Common;
 using FSCruiser.WinForms;
 using FScruiser.Core.Services;
+using FScruiser.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -27,11 +28,12 @@ namespace FSCruiser.WinForms.DataEntry
             }
         }
 
-        public FormDataEntry(IApplicationController controller
-            , ApplicationSettings appSettings
-            , IDataEntryDataService dataService) : this()
+        public FormDataEntry(IApplicationController controller,
+            ApplicationSettings appSettings,
+            IDataEntryDataService dataService,
+            ISampleSelectorRepository sampleSelectorRepository) : this()
         {
-            InitializeCommon(controller, appSettings, dataService);
+            InitializeCommon(controller, appSettings, dataService, sampleSelectorRepository);
         }
 
         void RefreshPreventSleepTimer()
