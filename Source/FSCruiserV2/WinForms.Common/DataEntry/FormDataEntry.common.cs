@@ -40,6 +40,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected IDataEntryDataService DataService { get; set; }
 
+        protected ISampleSelectorRepository SampleSelectorRepository { get; set; }
+
         public IApplicationController Controller { get; protected set; }
 
         protected TabControl PageContainer
@@ -59,6 +61,7 @@ namespace FSCruiser.WinForms.DataEntry
             Controller = controller;
             DataService = dataService;
             AppSettings = appSettings;
+            SampleSelectorRepository = sampleSelectorRepository;
 
             LogicController = new FormDataEntryLogic(Controller,
                 DialogService.Instance,
@@ -145,9 +148,10 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void InitializeTallyTab()
         {
-            _tallyLayout = new LayoutTreeBased(DataService
-                , AppSettings
-                , LogicController);
+            _tallyLayout = new LayoutTreeBased(DataService,
+                SampleSelectorRepository,
+                AppSettings,
+                LogicController);
 
             _tallyPageIndex = AddLayout(_tallyLayout);
         }
@@ -166,11 +170,12 @@ namespace FSCruiser.WinForms.DataEntry
                     st.SampleSelecter = new ThreePSelecter((int)st.KZ3PPNT, 0);
                 }
 
-                LayoutPlot view = new LayoutPlot(DataService
-                    , AppSettings
-                    , SoundService.Instance
-                    , Controller.ViewController
-                    , st);
+                LayoutPlot view = new LayoutPlot(DataService,
+                    SampleSelectorRepository,
+                    AppSettings,
+                    SoundService.Instance,
+                    Controller.ViewController,
+                    st);
                 view.UserCanAddTrees = true;
 
 #if NetCF

@@ -1,4 +1,5 @@
 ﻿using FScruiser.Core.Services;
+using FScruiser.Services;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using System;
@@ -23,12 +24,17 @@ namespace FSCruiser.WinForms.DataEntry
             this._untallyBTN.Click += new System.EventHandler(this.OnUntallyButtonClicked);
         }
 
-        public LayoutTreeBased(IDataEntryDataService dataService
-            , ApplicationSettings appSettings
-            , FormDataEntryLogic dataEntryController)
+        public LayoutTreeBased(IDataEntryDataService dataService,
+            ISampleSelectorRepository sampleSelectorRepository,
+            ApplicationSettings appSettings,
+            FormDataEntryLogic dataEntryController)
             : this()
         {
-            base.Initialize(dataService, appSettings, dataEntryController, _leftContentPanel);
+            Initialize(dataService, 
+                sampleSelectorRepository, 
+                appSettings, 
+                dataEntryController, 
+                _leftContentPanel);
         }
 
         protected override void UpdateUntallyButton()

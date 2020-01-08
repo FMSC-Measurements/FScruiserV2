@@ -1,5 +1,6 @@
 ﻿using FMSC.Sampling;
 using FScruiser.Core.Services;
+using FScruiser.Services;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.DataEntry;
@@ -24,6 +25,8 @@ namespace FSCruiser.Core.DataEntry
         public IPlotDataService DataService { get; protected set; }
 
         public IViewController ViewController { get; protected set; }
+
+        public ISampleSelectorRepository SampleSelectorRepository { get; protected set; }
 
         public bool UserCanAddTrees { get; set; }
 
@@ -64,29 +67,31 @@ namespace FSCruiser.Core.DataEntry
             , ISoundService soundService
             , IDialogService dialogService
             , ApplicationSettings settings
-            , IViewController viewController)
+            , IViewController viewController
+            , ISampleSelectorRepository sampleSelectorRepository)
         {
-            this.Stratum = stratum;
-            this.View = view;
+            SampleSelectorRepository = sampleSelectorRepository;
+            Stratum = stratum;
+            View = view;
             DataService = dataService;
             _soundService = soundService;
             _dialogService = dialogService;
             _appSettings = settings;
-            this.ViewController = viewController;
+            ViewController = viewController;
 
-            this._BS_Plots = new BindingSource();
-            this._BS_Trees = new BindingSource();
-            ((System.ComponentModel.ISupportInitialize)(this._BS_Plots)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this._BS_Trees)).BeginInit();
+            _BS_Plots = new BindingSource();
+            _BS_Trees = new BindingSource();
+            ((System.ComponentModel.ISupportInitialize)(_BS_Plots)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(_BS_Trees)).BeginInit();
 
-            this._BS_Plots.DataSource = typeof(Plot);
-            this._BS_Plots.CurrentChanged += new System.EventHandler(this._BS_Plots_CurrentChanged);
+            _BS_Plots.DataSource = typeof(Plot);
+            _BS_Plots.CurrentChanged += new System.EventHandler(_BS_Plots_CurrentChanged);
 
-            this._BS_Trees.DataSource = typeof(Tree);
-            this._BS_Trees.CurrentChanged += new System.EventHandler(this._BS_Trees_CurrentChanged);
+            _BS_Trees.DataSource = typeof(Tree);
+            _BS_Trees.CurrentChanged += new System.EventHandler(_BS_Trees_CurrentChanged);
 
-            ((System.ComponentModel.ISupportInitialize)(this._BS_Plots)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this._BS_Trees)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(_BS_Plots)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(_BS_Trees)).EndInit();
 
             _BS_Plots.DataSource = Stratum.Plots;
         }
@@ -354,7 +359,9 @@ namespace FSCruiser.Core.DataEntry
         {
             Tree tree;
             var sg = count.SampleGroup;
-            var sampler = sg.Sampler;
+            var sgCode = sg.Code;
+            var stCode = sg.Stratum.Code;
+            var sampler = SampleSelectorRepository.GetSamplerBySampleGroupCode(stCode, sgCode);
 
             int kpi = 0;
             int? value = _dialogService.AskKPI((int)sg.MinKPI, (int)sg.MaxKPI);
@@ -389,11 +396,15 @@ namespace FSCruiser.Core.DataEntry
 
         protected Tree TallyStandard(Plot plot, CountTree count)
         {
-            var sampler = count.SampleGroup.Sampler;
-            Tree tree;
+            var sg = count.SampleGroup;
+            var sgCode = sg.Code;
+            var stCode = sg.Stratum.Code;
+            var sampler = SampleSelectorRepository.GetSamplerBySampleGroupCode(stCode, sgCode);
 
+            Tree tree;
+            var freqSampler = sampler as IFrequencyBasedSelecter;
             // sampler maybe null, if it is treat as zero frequency sampler
-            var result = ((IFrequencyBasedSelecter)sampler)?.Sample() ?? SampleResult.C;
+            var result = (freqSampler != null) ? freqSampler.Sample() : SampleResult.C;
             tree = DataService.CreateNewTreeEntry(plot, count, (result != SampleResult.C));
             tree.CountOrMeasure = result.ToString();
             tree.TreeCount = 1;
