@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FScruiser.Data
 {
@@ -25,10 +24,11 @@ namespace FScruiser.Data
 
         public Dataservice_Base_V2(DAL database)
         {
-            Database = database;
+            _database = database;
         }
 
-        protected DAL Database { get; }
+        DAL _database;
+        protected DAL Database { get { return _database; } }
 
 
     }

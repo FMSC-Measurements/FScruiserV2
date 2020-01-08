@@ -5,35 +5,46 @@ namespace FScruiser.Sampling
 {
     public class S3PSelector : ISampleSelector
     {
-        protected BlockSelecter BlockSelecter { get; }
+        BlockSelecter _blockSelecter;
+        ThreePSelecter _threePSelecter;
 
-        protected ThreePSelecter ThreePSelecter { get; }
+        protected BlockSelecter BlockSelecter { get { return _blockSelecter; } }
 
-        public string BlockState => BlockSelecter.BlockState;
+        protected ThreePSelecter ThreePSelecter { get { return _threePSelecter; } }
 
-        public int Count => BlockSelecter.Count;
+        public string BlockState { get { return BlockSelecter.BlockState; } }
 
-        public int ITreeFrequency => 0;
+        public int Count { get { return BlockSelecter.Count; } }
 
-        public bool IsSelectingITrees => false;
+        public int ITreeFrequency { get { return 0; } }
 
-        public int InsuranceCounter => BlockSelecter.InsuranceCounter;
+        public bool IsSelectingITrees { get { return false; } }
 
-        public int InsuranceIndex => BlockSelecter.InsuranceIndex;
+        public int InsuranceCounter { get { return BlockSelecter.InsuranceCounter; } }
 
-        public string StratumCode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string SampleGroupCode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int InsuranceIndex { get { return BlockSelecter.InsuranceIndex; } }
+
+        public string StratumCode 
+        { 
+            get { throw new NotImplementedException(); } 
+            set { throw new NotImplementedException(); }
+        }
+        public string SampleGroupCode 
+        { 
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
 
         public S3PSelector(int freq, int kz)
         {
-            BlockSelecter = new BlockSelecter(freq, 0);
-            ThreePSelecter = new ThreePSelecter(kz, 0);
+            _blockSelecter = new BlockSelecter(freq, 0);
+            _threePSelecter = new ThreePSelecter(kz, 0);
         }
 
         public S3PSelector(int freq, int kz, int count, string blockState)
         {
-            BlockSelecter = new BlockSelecter(freq, 0, blockState, count, 0, 0);
-            ThreePSelecter = new ThreePSelecter(kz, 0);
+            _blockSelecter = new BlockSelecter(freq, 0, blockState, count, 0, 0);
+            _threePSelecter = new ThreePSelecter(kz, 0);
         }
 
         public SampleResult Sample()

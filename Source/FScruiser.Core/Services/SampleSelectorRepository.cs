@@ -14,7 +14,8 @@ namespace FScruiser.Services
 
         public SampleSelectorRepository(ISamplerInfoDataservice dataservice)
         {
-            Dataservice = dataservice ?? throw new ArgumentNullException(nameof(dataservice));
+            if(dataservice == null) { throw new ArgumentNullException("dataservice"); }
+            Dataservice = dataservice;
         }
 
         public ISamplerInfoDataservice Dataservice { get; set; }
@@ -39,7 +40,7 @@ namespace FScruiser.Services
 
         public ISampleSelector MakeSampleSelecter(SamplerInfo samplerInfo)
         {
-            if(samplerInfo == null) { throw new ArgumentNullException(nameof(samplerInfo)); }
+            if(samplerInfo == null) { throw new ArgumentNullException("samplerInfo"); }
             var method = samplerInfo.Method;
 
             if (samplerInfo.UseExternalSampler)

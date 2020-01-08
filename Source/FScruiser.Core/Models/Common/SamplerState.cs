@@ -1,4 +1,5 @@
 ﻿using FMSC.Sampling;
+using FScruiser.Sampling;
 
 namespace FScruiser.Models
 {
@@ -17,27 +18,28 @@ namespace FScruiser.Models
             InsuranceCounter = sampler.InsuranceCounter;
             InsuranceIndex = sampler.InsuranceIndex;
 
-            switch (sampler)
+            var samplerName = sampler.GetType().Name;
+            switch (samplerName)
             {
-                case SystematicSelecter s:
+                case "SystematicSelecter":
                     {
-                        SystematicIndex = s.HitIndex;
+                        SystematicIndex = ((SystematicSelecter)sampler).HitIndex;
                         break;
                     }
-                case BlockSelecter b:
+                case "BlockSelecter":
                     {
-                        BlockState = b.BlockState;
+                        BlockState = ((BlockSelecter)sampler).BlockState;
                         break;
                     }
-                case ThreePSelecter s:
+                case "ThreePSelecter":
                     {
                         break;
                     }
-                //case S3PSelector s:
-                //    {
-                //        BlockState = s.BlockState;
-                //        break;
-                //    }
+                case "S3PSelector":
+                    {
+                        BlockState = ((S3PSelector)sampler).BlockState;
+                        break;
+                    }
             }
         }
 
