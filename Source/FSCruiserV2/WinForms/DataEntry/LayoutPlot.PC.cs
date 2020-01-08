@@ -1,5 +1,6 @@
 ﻿using CruiseDAL.DataObjects;
 using FScruiser.Core.Services;
+using FScruiser.Services;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
@@ -40,22 +41,25 @@ namespace FSCruiser.WinForms.DataEntry
             this._dataGrid.AutoGenerateColumns = false;
         }
 
-        public LayoutPlot(IPlotDataService dataService
-            , ApplicationSettings appSettings
-            , ISoundService soundService
-            , IViewController viewController
-            , PlotStratum stratum) : this()
+        public LayoutPlot(IPlotDataService dataService,
+            ISampleSelectorRepository sampleSelectorRepository,
+            ApplicationSettings appSettings,
+            ISoundService soundService,
+            IViewController viewController,
+            PlotStratum stratum) : this()
         {
+            SampleSelectorRepository = sampleSelectorRepository;
             //Stratum = stratum;
             DataService = dataService;
             AppSettings = appSettings;
-            this.ViewLogicController = new LayoutPlotLogic(stratum
-                , this
-                , dataService
-                , soundService
-                , DialogService.Instance
-                , AppSettings
-                , viewController);
+            this.ViewLogicController = new LayoutPlotLogic(stratum,
+                this,
+                dataService,
+                soundService,
+                DialogService.Instance,
+                AppSettings,
+                viewController,
+                sampleSelectorRepository);
 
             WireSplitter(stratum);
 
