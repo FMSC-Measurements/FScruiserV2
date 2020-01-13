@@ -6,9 +6,15 @@ automaticly add nessicary fields to the tree view.
 
 Senario: Unit has multiple tree strata but none of them have stratum selected, automaticly add stratum column
 
+Senario: Unit has single tree stratum with out stratum column
+When : tree table loads
+Then tree table doesn't have a stratum column
 
 
 Senario: unit contains a three p stratum but STM is not selected, automaticly add STM column
 
 Senario: unit has plot based strata but count measure column is not selected, automaticly add C/m column
+
+Senario: unit has plot based stratum with with stratum column
+then: stratum column is read only
 
