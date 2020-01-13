@@ -416,6 +416,7 @@ namespace FSCruiser.WinForms.DataEntry
             , IViewController viewController
             , PlotStratum stratum) : this()
         {
+            SampleSelectorRepository = sampleSelectorRepository;
             DataService = dataService;
             AppSettings = appSettings;
 
