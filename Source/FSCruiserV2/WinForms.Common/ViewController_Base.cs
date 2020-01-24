@@ -12,6 +12,10 @@ using System.Diagnostics;
 using FScruiser.Services;
 using FScruiser.Data;
 
+#if !NetCF
+using Microsoft.AppCenter.Crashes;
+#endif
+
 namespace FSCruiser.WinForms.Common
 {
     public abstract class WinFormsViewControllerBase : IViewController
@@ -156,7 +160,8 @@ namespace FSCruiser.WinForms.Common
                 Debug.Fail(ex.Message);
             }
 #else
-            NBug.Exceptions.Report(e);
+            //NBug.Exceptions.Report(e);
+            Crashes.TrackError(e);
 #endif
         }
 

@@ -3,6 +3,10 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using FSCruiser.Core;
 using FScruiser.Core.Services;
+using System.Globalization;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 
 namespace FSCruiser.WinForms
 {
@@ -22,7 +26,17 @@ namespace FSCruiser.WinForms
                 dalPath = args[1];
             }
 
-            InitializeNBug();
+            //InitializeNBug();
+
+#if !DEBUG
+            var countryCode = RegionInfo.CurrentRegion.TwoLetterISORegionName;
+            AppCenter.SetCountryCode(countryCode);
+
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
+
+            AppCenter.Start(Secrets.APPCENTER_KEY_WINDOWS,
+                               typeof(Analytics), typeof(Crashes));
+#endif
 
             DialogService.Instance = new WinFormsDialogService();
             using (var appMutex = new System.Threading.Mutex(true, "FScruiser"))
@@ -41,33 +55,33 @@ namespace FSCruiser.WinForms
             Application.Exit();// forces any extra forms (splash screen) to close
         }
 
-        static void InitializeNBug()
-        {
-            try
-            {
-                NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
-                NBug.Settings.StoragePath = NBug.Enums.StoragePath.WindowsTemp;
-                NBug.Settings.Destinations.Add(new NBug.Core.Submission.Tracker.Redmine()
-                {
-                    ApiKey = "6cf4343091c7509dbf27d6afd84a267189b9d3b9",
-                    CustomSubject = "CrashReport",
-                    Url = "http://fmsc-projects.herokuapp.com/projects/fscruiser/",
-                    ProjectId = "fscruiser",
-                    TrackerId = "5",
-                    PriorityId = "1",
-                    StatusId = "1"
-                });
+        //static void InitializeNBug()
+        //{
+        //    try
+        //    {
+        //        NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
+        //        NBug.Settings.StoragePath = NBug.Enums.StoragePath.WindowsTemp;
+        //        NBug.Settings.Destinations.Add(new NBug.Core.Submission.Tracker.Redmine()
+        //        {
+        //            ApiKey = "6cf4343091c7509dbf27d6afd84a267189b9d3b9",
+        //            CustomSubject = "CrashReport",
+        //            Url = "http://fmsc-projects.herokuapp.com/projects/fscruiser/",
+        //            ProjectId = "fscruiser",
+        //            TrackerId = "5",
+        //            PriorityId = "1",
+        //            StatusId = "1"
+        //        });
 
-                NBug.Settings.ReleaseMode = true;//only create error reports if debugger not attached
-                NBug.Settings.StopReportingAfter = 120;
+        //        NBug.Settings.ReleaseMode = true;//only create error reports if debugger not attached
+        //        NBug.Settings.StopReportingAfter = 120;
 
-                AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
-                Application.ThreadException += NBug.Handler.ThreadException;
-            }
-            catch (Exception e)
-            {
-                Debug.Write(e.ToString());
-            }
-        }
+        //        AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
+        //        Application.ThreadException += NBug.Handler.ThreadException;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Debug.Write(e.ToString());
+        //    }
+        //}
     }
 }
