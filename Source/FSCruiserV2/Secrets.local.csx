@@ -5,7 +5,7 @@ namespace FSCruiser.WinForms
     {{
 		static Secrets()
 		{{
-			APPCENTER_KEY_WINDOWS = ""{System.Environment.GetEnvironmentVariable("fscruiser_appcenterr_key_windows") ?? ""}"";
+			APPCENTER_KEY_WINDOWS = ""{System.Environment.GetEnvironmentVariable("fscruiserv2_appcenterr_key_windows") ?? ""}"";
 		}}
     }}
 }}
