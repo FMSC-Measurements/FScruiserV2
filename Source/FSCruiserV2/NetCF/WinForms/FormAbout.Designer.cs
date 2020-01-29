@@ -36,7 +36,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this._exeLBL = new System.Windows.Forms.Label();
             this._exeDOB_LBL = new System.Windows.Forms.Label();
-            
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -72,11 +71,11 @@
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(10, 174);
+            this.label4.Location = new System.Drawing.Point(9, 174);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(212, 52);
-            this.label4.Text = "Matt Oberle - moberle@fs.fed.us       Benjamin Campbell - benjaminjcampbell@fs.fe" +
-                "d.us";
+            this.label4.Size = new System.Drawing.Size(231, 52);
+            this.label4.Text = "Matt Oberle - matt.oberle@usda.gov       Benjamin Campbell - benjamin.campbell@us" +
+                "da.gov";
             // 
             // _exeLBL
             // 
@@ -105,7 +104,6 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
-            
             this.MinimizeBox = false;
             this.Name = "FormAbout";
             this.Text = "About FScruiser";

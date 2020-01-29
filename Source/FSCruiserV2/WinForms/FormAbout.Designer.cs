@@ -43,8 +43,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(212, 52);
             this.label4.TabIndex = 7;
-            this.label4.Text = "Matt Oberle - moberle@fs.fed.us       Benjamin Campbell - benjaminjcampbell@fs.fe" +
-                "d.us";
+            this.label4.Text = "Matt Oberle - matt.oberle@usda.gov       Benjamin Campbell - benjamin.campbell@usda.gov";
             // 
             // label3
             // 
@@ -61,8 +60,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(212, 68);
             this.label2.TabIndex = 9;
-            this.label2.Text = "U.S. Forest Service\r\nForest Management Service Center\r\nFort Collins, CO\r\nhttp://w" +
-                "ww.fs.fed.us/fmsc/measure";
+            this.label2.Text = "U.S. Forest Service\r\nForest Management Service Center\r\nFort Collins, CO\r\nhttps://www.fs.fed.us/forestmanagement/products/measurement/";
             // 
             // label1
             // 
