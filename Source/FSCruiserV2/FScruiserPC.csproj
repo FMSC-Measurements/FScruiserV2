@@ -1,8 +1,8 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFramework>net451</TargetFramework>
-    <ExtrasEnableWinFormsProjectSetup>true</ExtrasEnableWinFormsProjectSetup>
+	  <UseWindowsForms>true</UseWindowsForms>
     <IsPackable>false</IsPackable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>fscruiser.ico</ApplicationIcon>
@@ -40,7 +40,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
     <ProjectReference Include="..\..\FMSC.Controls\FMSC.Controls\FMSC.Controls.VS15.csproj" />
     <ProjectReference Include="..\FScruiser.Core\FScruiser.Core.csproj" />
   </ItemGroup>
