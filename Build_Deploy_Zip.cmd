@@ -16,7 +16,7 @@ IF NOT DEFINED verStamp (SET verStamp=%date:~10,4%%date:~4,2%%date:~7,2%)
 
 set outFile=%parent%Deployment\Output\FScruiser_%verStamp%.zip
 
-cd .\Source\FSCruiserV2\bin\Release\net4.5.1
+cd .\Source\FSCruiserV2\bin\Release\net451
 
 7z a -tzip -spf %outFile%  FScruiserPC.exe x86\*.dll x64\*.dll *.dll Sounds\*
 

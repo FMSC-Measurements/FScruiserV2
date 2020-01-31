@@ -16,7 +16,7 @@ SET msbuild="%parent%tools\msbuild.cmd"
 
 IF NOT DEFINED build_config SET build_config="Release"
 
-call %msbuild% %parent%\FSCruiserV2\FScruiserPC.csproj /target:Rebuild /p:Configuration=%build_config%;Platform=AnyCPU;SolutionDir=%parent%\
+call %msbuild% %parent%\FSCruiserV2\FScruiserPC.csproj /target:Rebuild /p:Configuration=%build_config%;SolutionDir=%parent%\
 
 ::if invoked from windows explorer, pause
 IF "%interactive%"=="0" PAUSE

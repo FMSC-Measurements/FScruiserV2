@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FSCruiserV2CE_CF20")]
+[assembly: AssemblyTitle("FSCruiserV2_CF35")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("USDA Forest Service")]
-[assembly: AssemblyProduct("FSCruiserV2CE_CF20")]
+[assembly: AssemblyProduct("FSCruiserV2_CF35")]
 [assembly: AssemblyCopyright("Copyright © USDA Forest Service 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

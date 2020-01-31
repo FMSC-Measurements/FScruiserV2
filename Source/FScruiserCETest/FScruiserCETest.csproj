@@ -104,13 +104,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FScruiser.Core\FScruiser.Core_CF20.csproj">
+    <ProjectReference Include="..\FScruiser.Core\FScruiser.Core_CF35.csproj">
       <Project>{C78E1A49-9F49-45E6-86A4-13C2F22E8450}</Project>
-      <Name>FScruiser.Core_CF20</Name>
+      <Name>FScruiser.Core_CF35</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FSCruiserV2\FSCruiserV2CE_CF20.csproj">
+    <ProjectReference Include="..\FSCruiserV2\FSCruiserV2_CF35.csproj">
       <Project>{AFD7A43E-A691-4A30-859A-28C9245EB0FC}</Project>
-      <Name>FSCruiserV2CE_CF20</Name>
+      <Name>FSCruiserV2_CF35</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

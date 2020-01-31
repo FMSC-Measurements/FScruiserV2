@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FScruiser.Core</RootNamespace>
-    <AssemblyName>FScruiser.Core_CF20</AssemblyName>
+    <AssemblyName>FScruiser.Core</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>PocketPC</PlatformFamilyName>
     <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
@@ -23,8 +23,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\CF20\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NetCF NetCF_20 PocketPC</DefineConstants>
+    <OutputPath>bin\CF35\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NetCF</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -35,8 +35,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\CF20\Release\</OutputPath>
-    <DefineConstants>TRACE;NetCF NetCF_20 PocketPC</DefineConstants>
+    <OutputPath>bin\CF35\Release\</OutputPath>
+    <DefineConstants>TRACE;NetCF</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -113,8 +113,6 @@
     <Compile Include="Models\TallyHistoryCollection.cs" />
     <Compile Include="Models\TallySettings.cs" />
     <Compile Include="Models\Tree.cs" />
-    <Compile Include="NetCF\Action.cs" />
-    <Compile Include="NetCF\ExtensionAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sampling\ExternalSampleSelectorPlaceholder.cs" />
     <Compile Include="Sampling\HundredPCTSelector.cs" />

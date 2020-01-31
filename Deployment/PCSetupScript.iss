@@ -1,6 +1,6 @@
 #define APP "FSCruiserV2"
 
-#define APP_VERSION "2017.06.09"
+#define APP_VERSION "2020.01.30"
 #define SPECIALTAG "Production"
 #define BASEURL "http://www.fs.fed.us/fmsc/measure"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
@@ -44,11 +44,11 @@ AllowNetworkDrive=no
 Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:AdditionalIcons};
 
 [Files]
-Source: "..\Source\FSCruiserV2\bin\Release\net4.5.1\FScruiserPC.exe"; DestDir: "{app}"; Flags: ignoreversion;
-Source: "..\Source\FSCruiserV2\bin\Release\net4.5.1\*.dll"; DestDir: "{app}"; Flags: ignoreversion;
-Source: "..\Source\FSCruiserV2\bin\Release\net4.5.1\x64\*.dll"; DestDir: "{app}"; Flags: ignoreversion;
-Source: "..\Source\FSCruiserV2\bin\Release\net4.5.1\*.dll"; DestDir: "{app}"; Flags: ignoreversion;
-Source: "..\Source\FSCruiserV2\bin\Release\net4.5.1\Sounds\*";  DestDir: "{app}"; Flags: ignoreversion;
+Source: "..\Source\FSCruiserV2\bin\Release\net451\FScruiserPC.exe"; DestDir: "{app}"; Flags: ignoreversion;
+Source: "..\Source\FSCruiserV2\bin\Release\net451\*.dll"; DestDir: "{app}"; Flags: ignoreversion;
+Source: "..\Source\FSCruiserV2\bin\Release\net451\x64\*.dll"; DestDir: "{app}"; Flags: ignoreversion;
+Source: "..\Source\FSCruiserV2\bin\Release\net451\Sounds\*";  DestDir: "{app}"; Flags: ignoreversion;
+Source: "..\Source\FSCruiserV2\bin\Release\net451\FScruiserPC.exe.config"; DestDir: "{app}"; Flags: ignoreversion;
                                                      
 
 [Icons]

@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FSCruiser</RootNamespace>
-    <AssemblyName>FSCruiserV2CE_CF20</AssemblyName>
+    <AssemblyName>FSCruiserV2_CF35</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>WindowsCE</PlatformFamilyName>
     <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
@@ -19,14 +19,15 @@
     <FormFactorID>
     </FormFactorID>
     <StartupObject>FSCruiser.WinForms.Program</StartupObject>
-    <ApplicationIcon>fscruiser.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\CF20\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NetCF NetCF20</DefineConstants>
+    <OutputPath>bin\CF35\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NetCF</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -37,8 +38,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\CF20\Release\</OutputPath>
-    <DefineConstants>TRACE;NetCF NetCF20</DefineConstants>
+    <OutputPath>bin\CF35\Release\</OutputPath>
+    <DefineConstants>TRACE;NetCF</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -67,7 +68,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\net35-cf\FMSC.Sampling.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsCE.Forms" />
+    <Reference Include="Microsoft.Windowsce.Forms" />
     <Reference Include="mscorlib" />
     <Reference Include="OpenNETCF, Version=2.3.12317.0, Culture=neutral, PublicKeyToken=e60dbea84bb431b7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -97,7 +98,6 @@
     <Compile Include="Core\Workers\Worker.cs" />
     <Compile Include="Core\Workers\WorkerExceptionThrownEventArgs.cs" />
     <Compile Include="Core\Workers\WorkerProgressChangedEventArgs.cs" />
-    <Compile Include="NetCF\ExtensionAttribute.cs" />
     <Compile Include="NetCF\KeysConverter.cs" />
     <Compile Include="WinForms.Common\Controls\HotKeySelectControl.cs">
       <SubType>Component</SubType>
@@ -297,7 +297,7 @@
     </Compile>
     <Compile Include="WinForms.Common\ViewController_Base.cs" />
     <Compile Include="NetCF\Program.cs" />
-    <Compile Include="Properties\AssemblyInfoCE_CF20.cs" />
+    <Compile Include="Properties\AssemblyInfo_CF35.cs" />
     <EmbeddedResource Include="NetCF\WinForms\FormAbout.resx">
       <DependentUpon>FormAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -455,9 +455,9 @@
       <Project>{9FB2BD45-C3F1-44C2-9EFF-427D032CBB44}</Project>
       <Name>FMSC.Utility_CF35</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FScruiser.Core\FScruiser.Core_CF20.csproj">
+    <ProjectReference Include="..\FScruiser.Core\FScruiser.Core_CF35.csproj">
       <Project>{C78E1A49-9F49-45E6-86A4-13C2F22E8450}</Project>
-      <Name>FScruiser.Core_CF20</Name>
+      <Name>FScruiser.Core_CF35</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
+  <PropertyGroup Label="Assembily Info">
+    <AssemblyName>FScruiserPC</AssemblyName>
+    <Version>2020.01.30</Version>
+    <Copyright>CC0 Public Domain</Copyright>
+    <Company>USDA Forest Service</Company>
+    <Authors>Benjamin Campbell</Authors>
+  </PropertyGroup>
+  
   <PropertyGroup>
     <TargetFramework>net451</TargetFramework>
 	  <UseWindowsForms>true</UseWindowsForms>
@@ -9,7 +17,6 @@
     <OutputType>WinExe</OutputType>
     <StartupObject>FSCruiser.WinForms.Program</StartupObject>
     <RootNamespace>FScruiser</RootNamespace>
-    <AssemblyName>FScruiserPC</AssemblyName>
   </PropertyGroup>    
 
   <ItemGroup>
@@ -24,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Properties\AssemblyInfoCE_CF20.cs" />
+    <Compile Remove="Properties\AssemblyInfo_CF35.cs" />
   </ItemGroup>
 
   <ItemGroup>
