@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 
 using FScruiser.Core.Services;
+using FScruiser.Services;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
@@ -70,6 +71,8 @@ namespace FSCruiser.WinForms.DataEntry
                 (HasBadSaveState) ? "!" : "");
             Text = pageText;
         }
+
+        protected ISampleSelectorRepository SampleSelectorRepository { get; set; }
 
         #region DataService
 
@@ -284,7 +287,7 @@ namespace FSCruiser.WinForms.DataEntry
             {
                 count.Save();
                 var countDataService = new CountTreeDataService(DataService.DataStore, count);
-                using (FormTallySettings view = new FormTallySettings(countDataService))
+                using (FormTallySettings view = new FormTallySettings(countDataService, SampleSelectorRepository))
                 {
 #if !NetCF
                     view.ShowDialog(this);

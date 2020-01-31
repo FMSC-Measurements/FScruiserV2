@@ -1,5 +1,6 @@
 ﻿using FMSC.Sampling;
 using FScruiser.Core.Services;
+using FScruiser.Services;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
@@ -39,6 +40,8 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected IDataEntryDataService DataService { get; set; }
 
+        protected ISampleSelectorRepository SampleSelectorRepository { get; set; }
+
         public IApplicationController Controller { get; protected set; }
 
         protected TabControl PageContainer
@@ -48,22 +51,25 @@ namespace FSCruiser.WinForms.DataEntry
 
         #region Initialize Controls
 
-        protected void InitializeCommon(IApplicationController controller
-            , ApplicationSettings appSettings
-            , IDataEntryDataService dataService)
+        protected void InitializeCommon(IApplicationController controller,
+            ApplicationSettings appSettings,
+            IDataEntryDataService dataService,
+            ISampleSelectorRepository sampleSelectorRepository)
         {
             KeyPreview = true;
 
             Controller = controller;
             DataService = dataService;
             AppSettings = appSettings;
+            SampleSelectorRepository = sampleSelectorRepository;
 
-            LogicController = new FormDataEntryLogic(Controller
-                , DialogService.Instance
-                , SoundService.Instance
-                , DataService
-                , AppSettings
-                , this);
+            LogicController = new FormDataEntryLogic(Controller,
+                DialogService.Instance,
+                SoundService.Instance,
+                DataService,
+                AppSettings,
+                this,
+                sampleSelectorRepository);
 
             InitializePageContainer();
         }
@@ -142,9 +148,10 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void InitializeTallyTab()
         {
-            _tallyLayout = new LayoutTreeBased(DataService
-                , AppSettings
-                , LogicController);
+            _tallyLayout = new LayoutTreeBased(DataService,
+                SampleSelectorRepository,
+                AppSettings,
+                LogicController);
 
             _tallyPageIndex = AddLayout(_tallyLayout);
         }
@@ -160,14 +167,15 @@ namespace FSCruiser.WinForms.DataEntry
                         MessageBox.Show("error 3PPNT missing KZ value, please return to Cruise System Manger and fix");
                         continue;
                     }
-                    st.SampleSelecter = new ThreePSelecter((int)st.KZ3PPNT, 1000000, 0);
+                    st.SampleSelecter = new ThreePSelecter((int)st.KZ3PPNT, 0);
                 }
 
-                LayoutPlot view = new LayoutPlot(DataService
-                    , AppSettings
-                    , SoundService.Instance
-                    , Controller.ViewController
-                    , st);
+                LayoutPlot view = new LayoutPlot(DataService,
+                    SampleSelectorRepository,
+                    AppSettings,
+                    SoundService.Instance,
+                    Controller.ViewController,
+                    st);
                 view.UserCanAddTrees = true;
 
 #if NetCF

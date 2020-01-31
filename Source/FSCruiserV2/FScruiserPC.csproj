@@ -1,348 +1,50 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
+  <PropertyGroup Label="Assembily Info">
+    <AssemblyName>FScruiserPC</AssemblyName>
+    <Version>2020.01.31.0</Version>
+    <Copyright>CC0 Public Domain</Copyright>
+    <Company>USDA Forest Service</Company>
+    <Authors>Benjamin Campbell</Authors>
+  </PropertyGroup>
+  
   <PropertyGroup>
     <TargetFramework>net451</TargetFramework>
+	  <UseWindowsForms>true</UseWindowsForms>
+    <IsPackable>false</IsPackable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>fscruiser.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
     <StartupObject>FSCruiser.WinForms.Program</StartupObject>
     <RootNamespace>FScruiser</RootNamespace>
-    <AssemblyName>FScruiserPC</AssemblyName>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
-  </PropertyGroup>
-    
-  
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
+  </PropertyGroup>    
 
   <ItemGroup>
+    <Compile Remove="Include\**" />
+    <Compile Remove="NetCF\**" />
+    <EmbeddedResource Remove="Include\**" />
+    <EmbeddedResource Remove="NetCF\**" />
+    <None Remove="Include\**" />
     <None Remove="NetCF\**" />
+    <_SettingsFiles Remove="Include\**" />
+    <_SettingsFiles Remove="NetCF\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Constants.cs" />
-    <Compile Include="Core\ApplicationController.cs" />
-    <Compile Include="Core\DataEntry\LayoutPlot.Logic.cs" />
-    <Compile Include="Core\ExceptionHandler.cs" />
-    <Compile Include="Core\IExceptionHandler.cs" />
-    <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
-    <Compile Include="Core\Workers\FileLoadWorker.cs" />
-    <Compile Include="Core\FormCruiserSelection.Logic.cs" />
-    <Compile Include="Core\ViewInterfaces\INumPad.cs" />
-    <Compile Include="Core\ViewInterfaces\IPlotLayout.cs" />
-    <Compile Include="Core\Workers\CancelWorkerException.cs" />
-    <Compile Include="Core\Workers\IWorker.cs" />
-    <Compile Include="Core\Workers\SaveTreeWorker2.cs" />
-    <Compile Include="Core\Workers\Worker.cs" />
-    <Compile Include="Core\Workers\WorkerExceptionThrownEventArgs.cs" />
-    <Compile Include="Core\Workers\WorkerProgressChangedEventArgs.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="WinForms.Common\Controls\HotKeySelectControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\ControlTreeDataGrid.common.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\FormLimitingDistance.common.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\FixCNTForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\FixCNTForm.Designer.cs">
-      <DependentUpon>FixCNTForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\Controls\FixCNTTallyButton.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\Controls\FixCNTTallyButton.Designer.cs">
-      <DependentUpon>FixCNTTallyButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\Controls\FixCNTTallyControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\Controls\FixCNTTallyControl.Designer.cs">
-      <DependentUpon>FixCNTTallyControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\Controls\FixCntTallyRow.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\Controls\FixCntTallyRow.Designer.cs">
-      <DependentUpon>FixCntTallyRow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\FormLogs.common.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\FormTallySettings.common.cs" />
-    <Compile Include="WinForms.Common\DataEntry\LayoutTreeBased.common.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\TreeBasedTallyView_Base.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\TreeBasedTallyView_Base.Designer.cs">
-      <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms.Common\FormCruiserSelection.common.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\FormDataEntry.common.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\FormPlotInfo.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\FormManageCruisers.common.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\FormSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\ITallyButton.cs" />
-    <Compile Include="WinForms.Common\DataEntry\LayoutPlot.commn.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\Controls\SpeciesRow.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\DataEntry\Controls\TallyRow.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms.Common\ViewController_Base.cs" />
-    <Compile Include="WinForms.Common\WinFormsDialogService.cs" />
-    <Compile Include="WinForms.Common\WinFormsSoundService.cs" />
-    <Compile Include="WinForms\Controls\CustomDataGridView.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\ControlTreeDataGrid.PC.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="WinForms\CuttingUnitSelectView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms\CuttingUnitSelectView.Designer.cs">
-      <DependentUpon>CuttingUnitSelectView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\Form3PNumPad.PC.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\Form3PNumPad.PC.Designer.cs">
-      <DependentUpon>Form3PNumPad.PC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormCruiserSelection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormCruiserSelection.Designer.cs">
-      <DependentUpon>FormCruiserSelection.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormLimitingDistance.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormLimitingDistance.Designer.cs">
-      <DependentUpon>FormLimitingDistance.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormLogs.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormLogs.Designer.cs">
-      <DependentUpon>FormLogs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\FormManageCruisers.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\FormManageCruisers.Designer.cs">
-      <DependentUpon>FormManageCruisers.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\Controls\SampleGroupRow.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms\Controls\SampleGroupRow.Designer.cs">
-      <DependentUpon>SampleGroupRow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\Controls\PlotTallyRow.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataGridExtentions.cs" />
-    <Compile Include="WinForms\FormAbout.PC.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\FormAbout.PC.Designer.cs">
-      <DependentUpon>FormAbout.PC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormDataEntry.PC.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormDataEntry.PC.Designer.cs">
-      <DependentUpon>FormDataEntry.PC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\FormMain.PC.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\FormMain.PC.Designer.cs">
-      <DependentUpon>FormMain.PC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormNumPad.PC.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormNumPad.PC.Designer.cs">
-      <DependentUpon>FormNumPad.PC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormPlotInfo3PPNT.PC.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormPlotInfo3PPNT.PC.Designer.cs">
-      <DependentUpon>FormPlotInfo3PPNT.PC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormTallySettings.PC.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\FormTallySettings.PC.Designer.cs">
-      <DependentUpon>FormTallySettings.PC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\LayoutPlot.PC.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\LayoutPlot.PC.Designer.cs">
-      <DependentUpon>LayoutPlot.PC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\LayoutTreeBased.PC.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WinForms\DataEntry\LayoutTreeBased.PC.Designer.cs">
-      <DependentUpon>LayoutTreeBased.PC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\ILogFieldProviderExtentions.cs" />
-    <Compile Include="WinForms\ITreeFieldProviderExtentions.cs" />
-    <Compile Include="WinForms\ViewController.PC.cs" />
-    <Compile Include="Properties\AssemblyInfo.PC.cs" />
-    <EmbeddedResource Include="WinForms.Common\DataEntry\FixCNTForm.resx">
-      <DependentUpon>FixCNTForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\DataEntry\Controls\FixCNTTallyButton.resx">
-      <DependentUpon>FixCNTTallyButton.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\DataEntry\Controls\FixCNTTallyControl.resx">
-      <DependentUpon>FixCNTTallyControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\DataEntry\Controls\FixCntTallyRow.resx">
-      <DependentUpon>FixCntTallyRow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\DataEntry\FormPlotInfo.resx">
-      <DependentUpon>FormPlotInfo.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\DataEntry\TreeBasedTallyView_Base.resx">
-      <DependentUpon>TreeBasedTallyView_Base.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\FormSettings.resx">
-      <DependentUpon>FormSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms.Common\DataEntry\Controls\TallyRow.resx">
-      <DependentUpon>TallyRow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\CuttingUnitSelectView.resx">
-      <DependentUpon>CuttingUnitSelectView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\Form3PNumPad.PC.resx">
-      <DependentUpon>Form3PNumPad.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\FormCruiserSelection.resx">
-      <DependentUpon>FormCruiserSelection.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\FormLimitingDistance.resx">
-      <DependentUpon>FormLimitingDistance.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\FormLogs.resx">
-      <DependentUpon>FormLogs.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\FormManageCruisers.resx">
-      <DependentUpon>FormManageCruisers.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\Controls\SampleGroupRow.resx">
-      <DependentUpon>SampleGroupRow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\Controls\PlotTallyRow.resx">
-      <DependentUpon>PlotTallyRow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\FormAbout.PC.resx">
-      <DependentUpon>FormAbout.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\FormDataEntry.PC.resx">
-      <DependentUpon>FormDataEntry.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\FormMain.PC.resx">
-      <DependentUpon>FormMain.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\FormNumPad.PC.resx">
-      <DependentUpon>FormNumPad.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\FormPlotInfo3PPNT.PC.resx">
-      <DependentUpon>FormPlotInfo3PPNT.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\FormTallySettings.PC.resx">
-      <DependentUpon>FormTallySettings.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\LayoutPlot.PC.resx">
-      <DependentUpon>LayoutPlot.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\DataEntry\LayoutTreeBased.PC.resx">
-      <DependentUpon>LayoutTreeBased.PC.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-    <None Include="Properties\DataSources\CruiseDAL.DataObjects.CountTreeDO.datasource" />
-    <None Include="Properties\DataSources\CruiseDAL.DataObjects.TreeDO.datasource" />
-    <None Include="Properties\DataSources\FSCruiser.Core.Models.Plot3PPNT.datasource" />
-    <None Include="Properties\DataSources\FSCruiser.WinForms.DataEntry.FormPlotInfo.datasource" />
-    <None Include="Properties\DataSources\FSCruiserV2.Logic.CuttingUnitVM.datasource" />
-    <None Include="Properties\DataSources\FSCruiserV2.Logic.PlotInfo.datasource" />
-    <None Include="Properties\DataSources\FSCruiserV2.Logic.TallyAction.datasource" />
-    <None Include="Properties\DataSources\FSCruiserV2.Logic.TreeVM.datasource" />
-    <Compile Include="WinForms\Program.cs" />
-    <None Include="WinForms.Common\Controls\HotKeySelectControl.xmta" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Sounds\insurance.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Sounds\measure.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Sounds\pageChange.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Sounds\tally.wav">
+    <None Update="Sounds\*.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
-    <PackageReference Include="NBug" Version="1.2.2" />
+    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="2.6.4" />
+    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="2.6.4" />
+    <PackageReference Include="Scripty.MsBuild" Version="0.7.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <ProjectReference Include="..\..\FMSC.Controls\FMSC.Controls\FMSC.Controls.VS15.csproj" />
     <ProjectReference Include="..\FScruiser.Core\FScruiser.Core.csproj" />
   </ItemGroup>
 
-  
 </Project> 

@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace FSCruiser.Core.Models
 {
-    [EntitySource(SourceName = CruiseDAL.Schema.TREEFIELDSETUP._NAME)]
+    [Table(CruiseDAL.Schema.TREEFIELDSETUP._NAME)]
     public class StratumFieldCollection
     {
         [Field(Alias = "FieldStr", SQLExpression = "group_concat(Field)")]
@@ -37,7 +37,7 @@ namespace FSCruiser.Core.Models
     {
         int cachedLogCount = -1;
 
-        public Tree(DatastoreRedux dal)
+        public Tree(Datastore dal)
             : base(dal)
         {
         }
@@ -301,23 +301,23 @@ namespace FSCruiser.Core.Models
 
             if (SampleGroup != null)
             {
+#if NetCF
                 if (!DialogService.AskYesNo("You are changing the Sample Group of a tree, are you sure you want to do this?"
                     , "!"
                     , true))
                 {
                     return false;
                 }
-                else
-                {
-                    DAL.LogMessage(String.Format("Tree Sample Group Changed (Cu:{0} St:{1} Sg:{2} -> {3} Tdv_CN:{4} T#: {5}",
+#endif
+
+                ((CruiseDatastore)DAL).LogMessage(String.Format("Tree Sample Group Changed (Cu:{0} St:{1} Sg:{2} -> {3} Tdv_CN:{4} T#: {5}",
                         CuttingUnit.Code,
                         Stratum.Code,
                         (SampleGroup != null) ? SampleGroup.Code : "?",
                         newSG.Code,
                         (TreeDefaultValue != null) ? TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?",
                         TreeNumber), "high");
-                    return true;
-                }
+                return true;
             }
             else
             {
@@ -346,25 +346,25 @@ namespace FSCruiser.Core.Models
 
             if (Stratum != null)
             {
+#if NetCF
                 if (!DialogService.AskYesNo("You are changing the stratum of a tree" +
                     ", are you sure you want to do this?"
                     , "!"))
                 {
                     return false;//do not change stratum
                 }
-                else
-                {
-                    //log stratum changed
-                    DAL.LogMessage(String.Format("Tree Stratum Changed (Cu:{0} St:{1} -> {2} Sg:{3} Tdv_CN:{4} T#: {5} P#:{6}"
-                        , CuttingUnit.Code
-                        , Stratum.Code
-                        , newStratum.Code
-                        , (SampleGroup != null) ? SampleGroup.Code : "?"
-                        , (TreeDefaultValue != null) ? TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?"
-                        , TreeNumber
-                        , (Plot != null) ? Plot.PlotNumber.ToString() : "-"), "I");
-                    return true;
-                }
+#endif
+
+                //log stratum changed
+                ((CruiseDatastore)DAL).LogMessage(String.Format("Tree Stratum Changed (Cu:{0} St:{1} -> {2} Sg:{3} Tdv_CN:{4} T#: {5} P#:{6}"
+                    , CuttingUnit.Code
+                    , Stratum.Code
+                    , newStratum.Code
+                    , (SampleGroup != null) ? SampleGroup.Code : "?"
+                    , (TreeDefaultValue != null) ? TreeDefaultValue.TreeDefaultValue_CN.ToString() : "?"
+                    , TreeNumber
+                    , (Plot != null) ? Plot.PlotNumber.ToString() : "-"), "I");
+                return true;
             }
             else
             {

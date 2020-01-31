@@ -9,6 +9,12 @@ using FSCruiser.WinForms.DataEntry;
 using FScruiser.Core.Services;
 using CruiseDAL;
 using System.Diagnostics;
+using FScruiser.Services;
+using FScruiser.Data;
+
+#if !NetCF
+using Microsoft.AppCenter.Crashes;
+#endif
 
 namespace FSCruiser.WinForms.Common
 {
@@ -74,13 +80,13 @@ namespace FSCruiser.WinForms.Common
 
         public abstract bool ShowOpenCruiseFileDialog(out string fileName);
 
-        protected void ShowDataEntry(IDataEntryDataService dataService)
+        protected void ShowDataEntry(IDataEntryDataService dataService, ISampleSelectorRepository sampleSelectorRepository)
         {
             try
             {
                 using (var dataEntryView = new FormDataEntry(this.ApplicationController
                     , ApplicationSettings.Instance
-                    , dataService))
+                    , dataService, sampleSelectorRepository))
                 {
 #if !NetCF
                     dataEntryView.ShowDialog(MainView);
@@ -97,14 +103,16 @@ namespace FSCruiser.WinForms.Common
             }
             finally
             {
-                SaveData(dataService);
+                SaveData(dataService, sampleSelectorRepository);
             }
         }
 
-        void SaveData(IDataEntryDataService dataService)
+        void SaveData(IDataEntryDataService dataService, ISampleSelectorRepository sampleSelectorRepository)
         {
             try
             {
+                sampleSelectorRepository.SaveSamplerStates();
+
                 Exception ex;
 
                 ex = dataService.SaveNonPlotData();
@@ -125,7 +133,7 @@ namespace FSCruiser.WinForms.Common
                 MessageBox.Show("Data Constraint Failed\r\n" + ex.Message, "Error");
                 if (DialogService.AskYesNo("Would you like to go back to data entry?", string.Empty))
                 {
-                    ShowDataEntry(dataService);
+                    ShowDataEntry(dataService, sampleSelectorRepository);
                 }
             }
             catch (Exception ex)
@@ -133,7 +141,7 @@ namespace FSCruiser.WinForms.Common
                 ReportException(ex);
                 if (DialogService.AskYesNo("Would you like to go back to data entry?", string.Empty))
                 {
-                    ShowDataEntry(dataService);
+                    ShowDataEntry(dataService, sampleSelectorRepository);
                 }
             }
         }
@@ -152,7 +160,8 @@ namespace FSCruiser.WinForms.Common
                 Debug.Fail(ex.Message);
             }
 #else
-            NBug.Exceptions.Report(e);
+            //NBug.Exceptions.Report(e);
+            Crashes.TrackError(e);
 #endif
         }
 
@@ -161,9 +170,11 @@ namespace FSCruiser.WinForms.Common
             lock (_dataEntrySyncLock)
             {
                 IDataEntryDataService dataService;
+                ISampleSelectorRepository sampleSelectorReop;
                 try
                 {
                     dataService = new IDataEntryDataService(unit.Code, ApplicationController.DataStore);
+                    sampleSelectorReop = new SampleSelectorRepository(new SamplerInfoDataservice_V2(ApplicationController.DataStore));
                 }
                 catch (CruiseConfigurationException e)
                 {
@@ -179,7 +190,7 @@ namespace FSCruiser.WinForms.Common
 
                 try
                 {
-                    ShowDataEntry(dataService);
+                    ShowDataEntry(dataService, sampleSelectorReop);
                 }
                 catch (Exception ex)
                 {

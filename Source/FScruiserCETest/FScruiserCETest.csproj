@@ -104,25 +104,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CruiseDAL\CruiseDAL\CruiseDAL_CF20.csproj">
-      <Project>{DC8A4894-F4A8-4554-B475-2EBAD49AF148}</Project>
-      <Name>CruiseDAL_CF20</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CruiseDAL\FMSC.ORM\FMSC.ORM.NetCF20.csproj">
-      <Project>{D346BFEA-85A0-4A5D-BD89-D07E073B065E}</Project>
-      <Name>FMSC.ORM.NetCF20</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\FMSC.Controls\FMSC.Controls\FMSC.Controls_CF20.csproj">
-      <Project>{66B57265-EED3-49D7-B3B7-68CDE1061085}</Project>
-      <Name>FMSC.Controls_CF20</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FScruiser.Core\FScruiser.Core_CF20.csproj">
+    <ProjectReference Include="..\FScruiser.Core\FScruiser.Core_CF35.csproj">
       <Project>{C78E1A49-9F49-45E6-86A4-13C2F22E8450}</Project>
-      <Name>FScruiser.Core_CF20</Name>
+      <Name>FScruiser.Core_CF35</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FSCruiserV2\FSCruiserV2CE_CF20.csproj">
+    <ProjectReference Include="..\FSCruiserV2\FSCruiserV2_CF35.csproj">
       <Project>{AFD7A43E-A691-4A30-859A-28C9245EB0FC}</Project>
-      <Name>FSCruiserV2CE_CF20</Name>
+      <Name>FSCruiserV2_CF35</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

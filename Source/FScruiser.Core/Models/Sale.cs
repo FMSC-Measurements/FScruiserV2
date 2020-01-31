@@ -2,7 +2,7 @@
 
 namespace FSCruiser.Core.Models
 {
-    [EntitySource(SourceName = "Sale")]
+    [Table("Sale")]
     public class Sale
     {
         RegionLogInfo _regionalLogRules;

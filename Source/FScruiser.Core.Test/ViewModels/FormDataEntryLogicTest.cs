@@ -1,7 +1,9 @@
 ﻿using CruiseDAL.DataObjects;
 using CruiseDAL.Schema;
 using FluentAssertions;
+using FMSC.Sampling;
 using FScruiser.Core.Services;
+using FScruiser.Services;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
@@ -18,7 +20,7 @@ namespace FScruiser.Core.Test.ViewModels
         [Theory]
         [InlineData(1, 0, "M", false, false)]
         //TODO it would be nice to have a better way to guarntee a insurance sample
-        [InlineData(2, 1, "I", false, false)]//if freq is 1 sampler wont do insurance
+        //[InlineData(2, 1, "I", false, false)]//if freq is 1 sampler wont do insurance
         [InlineData(1, 0, "M", true, true)]
         //[InlineData(0,0, "C", false, false)]//frequency of 0 is not allowed and breaks the OnTally
         public void OnTallyTest_STR(int frequency, int insuranceFreq, string resultCountMeasure, bool enableCruiserPopup, bool enterMeasureTreeData)
@@ -42,11 +44,14 @@ namespace FScruiser.Core.Test.ViewModels
 
                 var soundServiceMock = new Mock<ISoundService>();
 
+                var samplerRepo = new Mock<ISampleSelectorRepository>();
+
                 FormDataEntryLogic.OnTally(count, dataService, tallyHistory,
                     appSettingsMock.Object,
                     dataEntryViewMock.Object,
                     dialogServiceMock.Object,
-                    soundServiceMock.Object);
+                    soundServiceMock.Object,
+                    samplerRepo.Object);
 
                 tallyHistory.Should().HaveCount(1);
                 var tallyAction = tallyHistory.Single();
@@ -184,7 +189,7 @@ namespace FScruiser.Core.Test.ViewModels
         public void TallyStandardTest()
         {
             var count = new CountTree() { TreeCount = 0 };
-            FMSC.Sampling.SampleSelecter sampleSelector = new FMSC.Sampling.SystematicSelecter(1);//100%
+            FMSC.Sampling.IFrequencyBasedSelecter sampleSelector = new FMSC.Sampling.SystematicSelecter(1, 0, true);//100%
 
             var expectedTree = new Tree();
 
@@ -199,17 +204,19 @@ namespace FScruiser.Core.Test.ViewModels
             result.Should().NotBeNull();
             result.TreeRecord.Should().BeSameAs(expectedTree);
             result.Count.Should().BeSameAs(count);
-            count.TreeCount.Should().Be(1);
+            result.TreeCount.Should().Be(1);
+            result.KPI.Should().Be(0);
+
             expectedTree.CountOrMeasure.Should().Be("M");
 
             sampleSelector = new ZeroPCTSelector();//0%
 
-            sampleSelector.Next().Should().Be(false);
+            sampleSelector.Sample().Should().Be(SampleResult.C);
 
             result = FormDataEntryLogic.TallyStandard(count, sampleSelector, dataServiceMock.Object, dialogServiceMock.Object);
             result.TreeRecord.Should().BeNull();
-
-            count.TreeCount.Should().Be(2);
+            result.TreeCount.Should().Be(1);
+            result.KPI.Should().Be(0);
         }
 
         [Fact]
@@ -226,7 +233,7 @@ namespace FScruiser.Core.Test.ViewModels
             var sg = new SampleGroup() { MinKPI = minKPI, MaxKPI = maxKPI };
 
             var count = new CountTree() { TreeCount = 0, SumKPI = 0 };
-            FMSC.Sampling.SampleSelecter sampleSelector = new FMSC.Sampling.ThreePSelecter(1, 1, 0);
+            var sampleSelector = new FMSC.Sampling.ThreePSelecter(1, 0);
 
             var expectedTree = new Tree();
             var dataServiceMock = new Moq.Mock<ITreeDataService>();
@@ -239,9 +246,7 @@ namespace FScruiser.Core.Test.ViewModels
             result.TreeRecord.Should().BeSameAs(expectedTree);
             result.Count.Should().BeSameAs(count);
             result.KPI.Should().Be(expectedKPI);
-
-            count.TreeCount.Should().Be(1);
-            count.SumKPI.Should().Be(expectedKPI);
+            result.TreeCount.Should().Be(1);
 
             expectedTree.CountOrMeasure.Should().Be("M");
         }
@@ -260,7 +265,7 @@ namespace FScruiser.Core.Test.ViewModels
             var sg = new SampleGroup() { MinKPI = minKPI, MaxKPI = maxKPI };
 
             var count = new CountTree() { TreeCount = 0, SumKPI = 0 };
-            FMSC.Sampling.SampleSelecter sampleSelector = new FMSC.Sampling.ThreePSelecter(1, 1, 0);
+            var sampleSelector = new FMSC.Sampling.ThreePSelecter(1,  0);
 
             var expectedTree = new Tree();
             var dataServiceMock = new Moq.Mock<ITreeDataService>();
@@ -270,9 +275,6 @@ namespace FScruiser.Core.Test.ViewModels
             var result = FormDataEntryLogic.TallyThreeP(count, sampleSelector, sg, dataServiceMock.Object, dialogServiceMock.Object);
 
             result.Should().BeNull();
-
-            count.TreeCount.Should().Be(0);
-            count.SumKPI.Should().Be(0);
         }
 
         [Fact]
@@ -289,7 +291,7 @@ namespace FScruiser.Core.Test.ViewModels
             var sg = new SampleGroup() { MinKPI = minKPI, MaxKPI = maxKPI };
 
             var count = new CountTree() { TreeCount = 0, SumKPI = 0 };
-            FMSC.Sampling.SampleSelecter sampleSelector = new FMSC.Sampling.ThreePSelecter(1, 1, 0);
+            var sampleSelector = new FMSC.Sampling.ThreePSelecter(1, 0);
 
             var expectedTree = new Tree();
             var dataServiceMock = new Moq.Mock<ITreeDataService>();
@@ -302,24 +304,32 @@ namespace FScruiser.Core.Test.ViewModels
             result.TreeRecord.Should().BeSameAs(expectedTree);
             result.Count.Should().BeSameAs(count);
             result.KPI.Should().Be(0);
-
-            count.TreeCount.Should().Be(1);
-            count.SumKPI.Should().Be(0);
+            result.TreeCount.Should().Be(1);
 
             expectedTree.CountOrMeasure.Should().BeNull();
             expectedTree.STM = "Y";
         }
 
-        public class ZeroPCTSelector : FMSC.Sampling.SampleSelecter
+        public class ZeroPCTSelector : FMSC.Sampling.IFrequencyBasedSelecter
         {
-            public override FMSC.Sampling.SampleItem NextItem()
-            {
-                return null;
-            }
+            public int Frequency => 0;
 
-            public override bool Ready(bool throwException)
+            public int Count => 0;
+
+            public int ITreeFrequency => 0;
+
+            public bool IsSelectingITrees => false;
+
+            public int InsuranceCounter => 0;
+
+            public int InsuranceIndex => 0;
+
+            public string StratumCode { get; set; }
+            public string SampleGroupCode { get; set; }
+
+            public SampleResult Sample()
             {
-                return true;
+                return SampleResult.C;
             }
         }
     }

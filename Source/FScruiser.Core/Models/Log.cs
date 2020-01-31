@@ -7,10 +7,11 @@ using FMSC.ORM.EntityModel.Attributes;
 using CruiseDAL.Schema;
 using FMSC.ORM.EntityModel;
 using System.ComponentModel;
+using CruiseDAL.EntityAttributes;
 
 namespace FSCruiser.Core.Models
 {
-    [EntitySource("Log")]
+    [Table("Log")]
     public class Log : DataObject_Base, IDataErrorInfo
     {
         [PrimaryKeyField(Name = "Log_CN")]
@@ -305,8 +306,8 @@ namespace FSCruiser.Core.Models
         [CreatedByField()]
         public string CreatedBy { get; set; }
 
-        [InfrastructureFieldAttribute(Name = "CreatedDate",
-        PersistMode = PersistMode.Never)]
+        [Field(Name = "CreatedDate",
+        PersistanceFlags = PersistanceFlags.Never)]
         public DateTime CreatedDate { get; set; }
 
         [ModifiedByField()]
@@ -325,6 +326,7 @@ namespace FSCruiser.Core.Models
             }
         }
 
+        [IgnoreField]
         public string this[string columnName]
         {
             get

@@ -1,5 +1,6 @@
 ﻿using FMSC.Sampling;
 using FScruiser.Core.Services;
+using FScruiser.Services;
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -11,6 +12,8 @@ namespace FSCruiser.WinForms.DataEntry
         #region properties
 
         private ICountTreeDataService DataService { get; set; }
+
+        private ISampleSelectorRepository SampleSelectorRepository { get; set; }
 
         public bool EnableTallyCount
         {
@@ -92,9 +95,11 @@ namespace FSCruiser.WinForms.DataEntry
 #endif
         }
 
-        public FormTallySettings(ICountTreeDataService dataService) : this()
+        public FormTallySettings(ICountTreeDataService dataService, 
+            ISampleSelectorRepository sampleSelectorRepository) : this()
         {
-            this.DataService = dataService;
+            DataService = dataService;
+            SampleSelectorRepository = sampleSelectorRepository;
 
             InitializeData();
         }
@@ -132,7 +137,11 @@ namespace FSCruiser.WinForms.DataEntry
                 this._measureTrees_TB.Text = count.GetMeasureTreeCount().ToString();
 
                 String samplingMethod = "Manual";
-                SampleSelecter sampler = count.SampleGroup.Sampler;
+
+                var sgCode = count.SampleGroup.Code;
+                var stCode = count.SampleGroup.Stratum.Code;
+                var sampler = SampleSelectorRepository.GetSamplerBySampleGroupCode(stCode, sgCode);
+
                 if (sampler != null)
                 {
                     if (sampler is SystematicSelecter)
@@ -147,6 +156,8 @@ namespace FSCruiser.WinForms.DataEntry
                     {
                         samplingMethod = "Three P";
                     }
+                    else
+                    { samplingMethod = "undefined"; }
                 }
                 this._samplingMethod_TB.Text = samplingMethod;
             }

@@ -10,6 +10,7 @@ using FSCruiser.Core.DataEntry;
 using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using Microsoft.WindowsCE.Forms;
+using FScruiser.Services;
 
 namespace FSCruiser.WinForms.DataEntry
 {
@@ -409,21 +410,24 @@ namespace FSCruiser.WinForms.DataEntry
         }
 
         public LayoutPlot(IDataEntryDataService dataService
+            , ISampleSelectorRepository sampleSelectorRepository
             , ApplicationSettings appSettings
             , ISoundService soundService
             , IViewController viewController
             , PlotStratum stratum) : this()
         {
+            SampleSelectorRepository = sampleSelectorRepository;
             DataService = dataService;
             AppSettings = appSettings;
 
-            this.ViewLogicController = new LayoutPlotLogic(stratum
-                , this
-                , dataService
-                , soundService
-                , DialogService.Instance
-                , AppSettings
-                , viewController);
+            this.ViewLogicController = new LayoutPlotLogic(stratum,
+                this,
+                dataService,
+                soundService,
+                DialogService.Instance,
+                AppSettings,
+                viewController,
+                sampleSelectorRepository);
 
             //Setup DataGrid
             _tableStyle = stratum.InitializeTreeColumns(_dataGrid);

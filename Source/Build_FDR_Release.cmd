@@ -11,6 +11,6 @@ SET parent=%~dp0
 
 SET msbuildPath=C:\Windows\Microsoft.NET\Framework\v3.5\MSBuild.exe
 
-%msbuildPath%  %parent%\FSCruiserV2\FScruiserV2CE_CF20.csproj /target:Rebuild /property:Configuration=Release;Platform=AnyCPU;SolutionDir=%parent%
+%msbuildPath%  %parent%\FSCruiserV2\FScruiserV2_CF35.csproj /target:Rebuild /property:Configuration=Release;Platform=AnyCPU;SolutionDir=%parent%
 
 EXIT /B %errorlevel%

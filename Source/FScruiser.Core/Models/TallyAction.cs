@@ -21,6 +21,9 @@ namespace FSCruiser.Core.Models
         public TreeEstimateDO TreeEstimate { get; set; }
 
         [XmlAttribute]
+        public int TreeCount { get; set; }
+
+        [XmlAttribute]
         public String Time { get; set; }
 
         [XmlAttribute]

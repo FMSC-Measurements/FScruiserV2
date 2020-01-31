@@ -21,7 +21,7 @@ namespace FSCruiser.Core.Models
         double GetTreeFieldValue(Tree tree);
     }
 
-    [EntitySource(SourceName = "FixCNTTallyClass")]
+    [Table("FixCNTTallyClass")]
     public class FixCNTTallyClass : IFixCNTTallyClass
     {
         [PrimaryKeyField(Name = "FixCNTTallyClass_CN")]

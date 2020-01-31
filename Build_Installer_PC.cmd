@@ -23,7 +23,7 @@ IF "%interactive%"=="0" PAUSE
 EXIT /B 1
 )
 
-"C:\Program Files (x86)\Inno Setup 5\iscc" /dAPP_VERSION=%appVer% /F"FScruiserV2_PC_%verStamp%" "./Deployment/PCSetupScript.iss" 
+"%localappdata%\Programs\Inno Setup 6\ISCC.exe" /dAPP_VERSION=%appVer% /F"FScruiserV2_PC_%verStamp%" "./Deployment/PCSetupScript.iss" 
 
 ::if invoked from windows explorer, pause
 IF "%interactive%"=="0" PAUSE

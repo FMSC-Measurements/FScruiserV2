@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <RootNamespace>FScruiser</RootNamespace>
   </PropertyGroup>
     
   <PropertyGroup Condition="'$(TargetFramework)' == 'net4.5.1'">
@@ -36,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CruiseDAL\CruiseDAL\CruiseDAL.VS15.csproj" />
-    <ProjectReference Include="..\..\FMSC.Sampling\src\FMSC.Sampling\FMSC.Sampling.VS15.csproj" />
+    <PackageReference Include="CruiseDAL.V2" Version="2.6.1.50" />
+    <PackageReference Include="FMSC.Sampling" Version="2.0.1" />
   </ItemGroup>
 </Project> 

@@ -2,6 +2,7 @@
 using CruiseDAL;
 using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
+using FMSC.ORM.Core;
 
 namespace FSCruiser.Core.Models
 {
@@ -11,7 +12,7 @@ namespace FSCruiser.Core.Models
             : base()
         { }
 
-        public CountTree(DAL ds)
+        public CountTree(Datastore ds)
             : base(ds)
         { }
 

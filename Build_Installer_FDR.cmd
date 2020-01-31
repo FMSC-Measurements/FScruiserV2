@@ -26,7 +26,7 @@ EXIT /B 1
 ::Build Inno Setup Installer
 SET appVer=%date:~10,4%.%date:~4,2%.%date:~7,2%
 
-"C:\Program Files (x86)\Inno Setup 5\iscc" /dAPP_VERSION=%appVer% /F"FScruiserV2_FDR_%verStamp%" "./Deployment/CFSetupScript.iss"  
+"%localappdata%\Programs\Inno Setup 6\ISCC.exe" /dAPP_VERSION=%appVer% /F"FScruiserV2_FDR_%verStamp%" "./Deployment/CFSetupScript.iss"  
 
 IF "%interactive%"=="0" PAUSE
 ENDLOCAL

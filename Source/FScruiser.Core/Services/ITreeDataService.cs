@@ -46,6 +46,10 @@ namespace FScruiser.Core.Services
 
         TreeEstimateDO LogTreeEstimate(CountTree count, int kpi);
 
+        void SaveTree(Tree tree);
+
+        bool TrySaveTree(Tree tree);
+
         //void SaveTrees();
 
         bool TrySaveTrees();

@@ -9,6 +9,7 @@ using FSCruiser.Core.Models;
 using FSCruiser.Core.ViewInterfaces;
 using FSCruiser.WinForms.DataEntry;
 using FScruiser.Core.Services;
+using FScruiser.Services;
 
 namespace FSCruiser.WinForms
 {
@@ -21,6 +22,8 @@ namespace FSCruiser.WinForms
         #endregion Fields
 
         #region properties
+
+        protected ISampleSelectorRepository SampleSelectorRepository { get; set; }
 
         public FormDataEntryLogic DataEntryController { get; protected set; }
 
@@ -92,11 +95,13 @@ namespace FSCruiser.WinForms
             InitializeComponent();
         }
 
-        protected void Initialize(IDataEntryDataService dataService
-            , ApplicationSettings appSettings
-            , FormDataEntryLogic dataEntryController
-            , Panel strataViewContainer)
+        protected void Initialize(IDataEntryDataService dataService,
+            ISampleSelectorRepository sampleSelectorRepository,
+            ApplicationSettings appSettings,
+            FormDataEntryLogic dataEntryController,
+            Panel strataViewContainer)
         {
+            SampleSelectorRepository = sampleSelectorRepository;
             AppSettings = appSettings;
             StrataViewContainer = strataViewContainer;
             DataEntryController = dataEntryController;
@@ -275,7 +280,7 @@ namespace FSCruiser.WinForms
             {
                 count.Save();
                 var countTreeDataService = new CountTreeDataService(DataService.DataStore, count);
-                using (FormTallySettings view = new FormTallySettings(countTreeDataService))
+                using (FormTallySettings view = new FormTallySettings(countTreeDataService, SampleSelectorRepository))
                 {
 #if !NetCF
                     view.Owner = this.TopLevelControl as Form;
