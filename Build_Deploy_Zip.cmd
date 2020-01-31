@@ -11,6 +11,7 @@ IF %ERRORLEVEL% == 0 SET interactive=0
 SET me=%~n0
 ::directory of script
 SET parent=%~dp0
+SET zip="%parent%Source\tools\zip.cmd"
 
 IF NOT DEFINED verStamp (SET verStamp=%date:~10,4%%date:~4,2%%date:~7,2%)
 
@@ -18,7 +19,7 @@ set outFile=%parent%Deployment\Output\FScruiser_%verStamp%.zip
 
 cd .\Source\FSCruiserV2\bin\Release\net451
 
-7z a -tzip -spf %outFile%  FScruiserPC.exe x86\*.dll x64\*.dll *.dll Sounds\*
+call %zip% a -tzip -spf %outFile%  FScruiserPC.exe FScruiserPC.exe.config x86\*.dll x64\*.dll *.dll Sounds\*
 
 ::if invoked from windows explorer, pause
 IF "%interactive%"=="0" PAUSE
