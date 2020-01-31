@@ -2,7 +2,7 @@
 
   <PropertyGroup Label="Assembily Info">
     <AssemblyName>FScruiserPC</AssemblyName>
-    <Version>2020.01.30</Version>
+    <Version>2020.01.31.0</Version>
     <Copyright>CC0 Public Domain</Copyright>
     <Company>USDA Forest Service</Company>
     <Authors>Benjamin Campbell</Authors>
@@ -28,10 +28,6 @@
     <None Remove="NetCF\**" />
     <_SettingsFiles Remove="Include\**" />
     <_SettingsFiles Remove="NetCF\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Properties\AssemblyInfo_CF35.cs" />
   </ItemGroup>
 
   <ItemGroup>
