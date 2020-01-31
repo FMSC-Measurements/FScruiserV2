@@ -54,7 +54,8 @@ namespace FSCruiser.WinForms
 
         public void HandleFileStateChanged()
         {
-            this._BS_CuttingUnits.DataSource = ReadCuttingUnits().ToArray();
+            _BS_CuttingUnits.DataSource = ReadCuttingUnits().ToArray();
+            _BS_CuttingUnits.MoveFirst();
         }
 
         private void _BS_CuttingUnits_CurrentChanged(object sender, EventArgs e)

@@ -132,6 +132,7 @@ namespace FSCruiser.WinForms
         void UpdateCuttingUnits()
         {
             _BS_cuttingUnits.DataSource = ReadCuttingUnits().ToArray();
+            _BS_cuttingUnits.MoveFirst();
         }
 
         IEnumerable<CuttingUnit> ReadCuttingUnits()
