@@ -2,7 +2,6 @@
 
   <PropertyGroup Label="Assembily Info">
     <AssemblyName>FScruiserPC</AssemblyName>
-    <Version>2020.01.31.0</Version>
     <Copyright>CC0 Public Domain</Copyright>
     <Company>USDA Forest Service</Company>
     <Authors>Benjamin Campbell</Authors>

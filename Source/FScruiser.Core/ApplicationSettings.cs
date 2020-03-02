@@ -45,7 +45,7 @@ namespace FSCruiser.Core
         {
             get
             {
-#if NetCF
+#if WindowsCE || NetCF
                 return System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FScruiser"); ;
 
 #else

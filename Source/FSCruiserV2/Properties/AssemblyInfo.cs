@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FSCruiserV2_CF35")]
+[assembly: AssemblyTitle("FSCruiserV2")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("USDA Forest Service")]
-[assembly: AssemblyProduct("FSCruiserV2_CF35")]
+[assembly: AssemblyProduct("FSCruiserV2")]
 [assembly: AssemblyCopyright("Copyright © USDA Forest Service 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -28,7 +28,7 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion(FSCruiser.Constants.FSCRUISER_VERSION + ".0")]
+[assembly: AssemblyVersion(FSCruiser.Core.Constants.FSCRUISER_VERSION + ".0")]
 
 // Below attribute is to suppress FxCop warning "CA2232 : Microsoft.Usage : Add STAThreadAttribute to assembly"
 // as Device app does not support STA thread.
