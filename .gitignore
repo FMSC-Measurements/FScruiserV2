@@ -251,3 +251,7 @@ $RECYCLE.BIN/
 *.lnk
 
 *.local.cs
+
+# include dlls and debug symbols in libs folder
+!/Source/libs/**/*.pdb
+!/Source/libs/**/*.dll

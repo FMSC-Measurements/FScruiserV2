@@ -10,7 +10,7 @@ namespace FSCruiser.WinForms
     {
         private bool _viewLoading;
 
-        public FMSC.ORM.Core.DatastoreRedux Datastore { get; set; }
+        public FMSC.ORM.Core.Datastore Datastore { get; set; }
 
         //private TreeDefaultValueDO _treeDefaultValue;
         public TreeDefaultValueDO TreeDefaultValue
@@ -25,7 +25,7 @@ namespace FSCruiser.WinForms
             }
         }
 
-        public FormEditTreeDefault(FMSC.ORM.Core.DatastoreRedux dataStore)
+        public FormEditTreeDefault(FMSC.ORM.Core.Datastore dataStore)
         {
             Datastore = dataStore;
             InitializeComponent();

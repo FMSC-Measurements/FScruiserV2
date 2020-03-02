@@ -7,9 +7,9 @@ namespace FSCruiser
 {
     public static class Constants
     {
-        public const string FSCRUISER_VERSION = "2020.01.31";
+        //public const string FSCRUISER_VERSION = "2020.02.28";
 
-        public const string APP_TITLE = "FScruiser - " + FSCRUISER_VERSION;
+        public const string APP_TITLE = "FScruiser - " + FSCruiser.Core.Constants.FSCRUISER_VERSION;
 
         public const int LOG_COLUMN_WIDTH = 50;
 

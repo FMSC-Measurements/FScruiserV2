@@ -18,7 +18,7 @@ namespace FSCruiser.WinForms
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            label1.Text = "Version " + Constants.FSCRUISER_VERSION;
+            label1.Text = "Version " + Core.Constants.FSCRUISER_VERSION;
             //this._dob_LBL.Text = "DOB: " + File.GetCreationTime(Assembly.GetExecutingAssembly().GetName().CodeBase).ToString();
         }
 

@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.2.1.0")]
+[assembly: AssemblyVersion(FSCruiser.Core.Constants.FSCRUISER_VERSION + ".0")]
 #if !NetCF
-[assembly: AssemblyFileVersion("1.1.1.0")]
+[assembly: AssemblyFileVersion(FSCruiser.Core.Constants.FSCRUISER_VERSION + ".0")]
 #endif
