@@ -3,6 +3,7 @@ using CruiseDAL.Schema;
 using FluentAssertions;
 using FMSC.Sampling;
 using FScruiser.Core.Services;
+using FScruiser.Sampling;
 using FScruiser.Services;
 using FSCruiser.Core;
 using FSCruiser.Core.DataEntry;
@@ -45,6 +46,8 @@ namespace FScruiser.Core.Test.ViewModels
                 var soundServiceMock = new Mock<ISoundService>();
 
                 var samplerRepo = new Mock<ISampleSelectorRepository>();
+                samplerRepo.Setup(x => x.GetSamplerBySampleGroupCode(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new FMSC.Sampling.SystematicSelecter(frequency, insuranceFreq, false));
 
                 FormDataEntryLogic.OnTally(count, dataService, tallyHistory,
                     appSettingsMock.Object,
@@ -59,6 +62,7 @@ namespace FScruiser.Core.Test.ViewModels
                 var treeCount = ds.ExecuteScalar<int>("SELECT Sum(TreeCount) FROM CountTree;");
                 treeCount.Should().Be(1);
 
+                // verify SingnalTally was called
                 soundServiceMock.Verify(x => x.SignalTally(It.IsAny<bool>()));
 
                 if (resultCountMeasure == "M" || resultCountMeasure == "I")
