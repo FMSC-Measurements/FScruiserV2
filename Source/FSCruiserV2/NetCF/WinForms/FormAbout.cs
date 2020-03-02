@@ -41,7 +41,7 @@ namespace FSCruiser.WinForms
         private void FormAbout_Load(object sender, EventArgs e)
         {
             // Get the version from ApplicationController
-            label1.Text = "Version " + Constants.FSCRUISER_VERSION;
+            label1.Text = "Version " + Core.Constants.FSCRUISER_VERSION;
             this._exeLBL.Text = AppDomain.CurrentDomain.FriendlyName;
             this._exeDOB_LBL.Text = "Installed: " + File.GetCreationTime(Assembly.GetExecutingAssembly().GetName().CodeBase).ToString();
             bool srFound = System.IO.File.Exists("\\Windows\\mscoree.dll");
@@ -55,7 +55,7 @@ namespace FSCruiser.WinForms
         {
             base.OnClosed(e);
             // Check the device date
-            if (DateTime.Now < DateTime.Parse(Constants.FSCRUISER_VERSION))
+            if (DateTime.Now < DateTime.Parse(Core.Constants.FSCRUISER_VERSION))
             {
                 MessageBox.Show("The date on your mobile device is not correct. Please update the date and time before using FScruiser.", "Warning");
                 // Controller._cDal.LogMessage("FScruiser", "User notified of incorrect date on mobile device.", "W");
