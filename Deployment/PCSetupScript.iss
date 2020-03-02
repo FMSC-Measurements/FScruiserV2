@@ -44,11 +44,11 @@ AllowNetworkDrive=no
 Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:AdditionalIcons};
 
 [Files]
-Source: "..\Source\FSCruiserV2\bin\Release\net451\FScruiserPC.exe"; DestDir: "{app}"; Flags: ignoreversion;
-Source: "..\Source\FSCruiserV2\bin\Release\net451\*.dll"; DestDir: "{app}"; Flags: ignoreversion;
-Source: "..\Source\FSCruiserV2\bin\Release\net451\x64\*.dll"; DestDir: "{app}"; Flags: ignoreversion;
-Source: "..\Source\FSCruiserV2\bin\Release\net451\Sounds\*";  DestDir: "{app}"; Flags: ignoreversion;
-Source: "..\Source\FSCruiserV2\bin\Release\net451\FScruiserPC.exe.config"; DestDir: "{app}"; Flags: ignoreversion;
+Source: "..\Source\FSCruiserV2\bin\Release\net451\FScruiserPC.exe"; DestDir: {app}; Flags: ignoreversion;
+Source: "..\Source\FSCruiserV2\bin\Release\net451\*.dll"; DestDir: {app}; Flags: ignoreversion;
+Source: "..\Source\FSCruiserV2\bin\Release\net451\x64\*.dll"; DestDir: {app}\x64; Flags: ignoreversion;
+Source: "..\Source\FSCruiserV2\bin\Release\net451\Sounds\*";  DestDir: {app}\Sounds; Flags: ignoreversion;
+Source: "..\Source\FSCruiserV2\bin\Release\net451\FScruiserPC.exe.config"; DestDir: {app}; Flags: ignoreversion;
                                                      
 
 [Icons]
