@@ -5,7 +5,7 @@ namespace FSCruiser.Core
 {
     public static class Constants
     {
-        public const string FSCRUISER_VERSION = "2020.02.28";
+        public const string FSCRUISER_VERSION = "2020.03.02";
 
         public const string BACKUP_PREFIX = "BACK_";
         public const string BACKUP_TIME_FORMAT = "(yyyy_MM_dd__HH_mm)";
