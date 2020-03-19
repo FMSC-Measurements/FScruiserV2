@@ -13,7 +13,7 @@ namespace FSCruiser.Core.Models
     {
         IFixCNTTallyClass _tallyClass;
 
-        IFixCNTTallyClass TallyClass
+        public IFixCNTTallyClass TallyClass
         {
             get
             {

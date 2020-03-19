@@ -27,7 +27,9 @@ namespace FSCruiser.Core.Models
         [PrimaryKeyField(Name = "FixCNTTallyClass_CN")]
         public long? FixCNTTallyClass_CN { get; set; }
 
-        [Field(Name = "FieldName")]
+        // type for FieldName is Integer but value stored is a string
+        // cast value to text to tell System.Data.Sqlite to retrive value as string
+        [Field(Alias = "FieldName", SQLExpression = "CAST (FieldName as Text)")]
         public FixCNTTallyField Field { get; set; }
 
         [Field(Name = "Stratum_CN")]
