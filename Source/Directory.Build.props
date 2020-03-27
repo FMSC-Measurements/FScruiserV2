@@ -1,4 +1,9 @@
-<Project>  
+<Project>
+  <PropertyGroup Label="Custom Properties">
+    <CruiseDALV2Version>2.7.0.58</CruiseDALV2Version>
+    <SamplingVersion>2.0.1</SamplingVersion>
+  </PropertyGroup>
+  
   <PropertyGroup Label="Package Info">
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>Benjamin Campbell</Authors>
