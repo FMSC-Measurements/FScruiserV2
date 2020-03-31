@@ -32,7 +32,9 @@ namespace FScruiser.Core.Test.Models
                 var tallyClass = fixSt.TallyClass;
                 tallyClass.Should().NotBeNull();
 
-                tallyClass.Field.Should().NotBe(FixCNTTallyField.Unknown);
+                tallyClass.Field.Should().BeOneOf(FixCNTTallyFields.DBH,
+                                                  FixCNTTallyFields.TOTALHEIGHT,
+                                                  FixCNTTallyFields.DRC);
             }
         }
     }

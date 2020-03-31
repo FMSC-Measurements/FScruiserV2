@@ -4,13 +4,18 @@ using FMSC.ORM.EntityModel.Attributes;
 
 namespace FSCruiser.Core.Models
 {
-    public enum FixCNTTallyField { Unknown, DBH, TotalHeight, DRC };
+    public static class FixCNTTallyFields
+    {
+        public const string DBH = "DBH";
+        public const string TOTALHEIGHT = "TotalHeight";
+        public const string DRC = "DRC";
+    }
 
     public interface IFixCNTTallyClass
     {
         long? FixCNTTallyClass_CN { get; set; }
 
-        FixCNTTallyField Field { get; set; }
+        string Field { get; set; }
 
         long? Stratum_CN { get; set; }
 
@@ -30,7 +35,7 @@ namespace FSCruiser.Core.Models
         // type for FieldName is Integer but value stored is a string
         // cast value to text to tell System.Data.Sqlite to retrive value as string
         [Field(Alias = "FieldName", SQLExpression = "CAST (FieldName as Text)")]
-        public FixCNTTallyField Field { get; set; }
+        public string Field { get; set; }
 
         [Field(Name = "Stratum_CN")]
         public long? Stratum_CN { get; set; }
@@ -39,41 +44,45 @@ namespace FSCruiser.Core.Models
 
         public void SetTreeFieldValue(Tree tree, IFixCNTTallyBucket tallyBucket)
         {
-            if (this.Field == FixCNTTallyField.DBH)
+            var field = Field;
+
+            if (field.Equals(FixCNTTallyFields.DBH, StringComparison.OrdinalIgnoreCase))
             {
                 tree.DBH = (float)tallyBucket.MidpointValue;
             }
-            else if (Field == FixCNTTallyField.TotalHeight)
+            else if (field.Equals(FixCNTTallyFields.TOTALHEIGHT, StringComparison.OrdinalIgnoreCase))
             {
                 tree.TotalHeight = (float)tallyBucket.MidpointValue;
             }
-            else if (Field == FixCNTTallyField.DRC)
+            else if (field.Equals(FixCNTTallyFields.DRC, StringComparison.OrdinalIgnoreCase))
             {
                 tree.DRC = (float)tallyBucket.MidpointValue;
             }
             else
             {
-                throw new NotImplementedException();
+                throw new InvalidOperationException("Invalid Field Value:" + field);
             }
         }
 
         public double GetTreeFieldValue(Tree tree)
         {
-            if (this.Field == FixCNTTallyField.DBH)
+            var field = Field;
+
+            if (field.Equals(FixCNTTallyFields.DBH, StringComparison.OrdinalIgnoreCase))
             {
                 return tree.DBH;
             }
-            else if (Field == FixCNTTallyField.TotalHeight)
+            else if (field.Equals(FixCNTTallyFields.TOTALHEIGHT, StringComparison.OrdinalIgnoreCase))
             {
                 return tree.TotalHeight;
             }
-            else if (Field == FixCNTTallyField.DRC)
+            else if (field.Equals(FixCNTTallyFields.DRC, StringComparison.OrdinalIgnoreCase))
             {
                 return tree.DRC;
             }
             else
             {
-                throw new NotImplementedException();
+                throw new InvalidOperationException("Invalid Field Value:" + field);
             }
         }
     }

@@ -49,7 +49,7 @@ namespace FSCruiser.WinForms.Common
         {
             var intVal = (_bucket != null) ? _bucket.MidpointValue : 0;
             _bucketValue_LBL.Text = String.Format("{0}{1}", intVal,
-                Bucket.Field == FixCNTTallyField.DBH ? "\"" : "'");
+                Bucket.Field == FixCNTTallyFields.DBH ? "\"" : "'");
         }
 
         private void OnBucketChanging()
