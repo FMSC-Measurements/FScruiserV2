@@ -1,0 +1,53 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project=".\Common.props"/>
+  <PropertyGroup>
+    <!-- these props just for CF version, these are automaicly determined for non-CF -->
+    <BackpackSqlBuilderVersion>1.1.5</BackpackSqlBuilderVersion>
+    <FMSCOrmVersion>2.5.4</FMSCOrmVersion>
+    <CruiseDALCoreVersion>3.0.0.58</CruiseDALCoreVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LocalNugetPackagesDir>$(UserProfile)\.nuget\packages\</LocalNugetPackagesDir>
+    <BackpackSqlbuilderPackageDir>$(LocalNugetPackagesDir)backpack.sqlbuilder\$(BackpackSqlBuilderVersion)</BackpackSqlbuilderPackageDir>
+    <FMSCOrmPackageDir>$(LocalNugetPackagesDir)fmsc.orm\$(FMSCOrmVersion)</FMSCOrmPackageDir>
+    <CruiseDALCorePackageDir>$(LocalNugetPackagesDir)cruisedal.core\$(CruiseDALCoreVersion)</CruiseDALCorePackageDir>
+    <CruiseDALV2PackageDir>$(LocalNugetPackagesDir)cruisedal.v2\$(CruiseDALV2Version)</CruiseDALV2PackageDir>
+    <FMSCSamplingPackageDir>$(LocalNugetPackagesDir)fmsc.sampling\$(SamplingVersion)</FMSCSamplingPackageDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Backpack.SqlBuilder, Version=$(BackpackSqlBuilderVersion), Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(BackpackSqlbuilderPackageDir)\lib\net35-cf\Backpack.SqlBuilder.dll</HintPath>
+    </Reference>
+    <Reference Include="CruiseDAL.Core, Version=$(CruiseDALCoreVersion), Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(CruiseDALCorePackageDir)\lib\net35-cf\CruiseDAL.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CruiseDAL.V2, Version=$(CruiseDALV2Version), Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(CruiseDALV2PackageDir)\lib\net35-cf\CruiseDAL.V2.dll</HintPath>
+    </Reference>
+    <Reference Include="FMSC.ORM, Version=$(FMSCOrmVersion), Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(FMSCOrmPackageDir)\lib\net35-cf\FMSC.ORM.dll</HintPath>
+    </Reference>
+    <Reference Include="FMSC.Sampling, Version=$(SamplingVersion), Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(FMSCSamplingPackageDir)\lib\net35-cf\FMSC.Sampling.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Data.SQLite, Version=1.0.112.0, Culture=neutral, PublicKeyToken=1fdb50b1b62b4c84, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\net35-cf\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Content Include="..\libs\net35-cf\SQLite.Interop.112.dll">
+      <Link>SQLite.Interop.112.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

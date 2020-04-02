@@ -13,6 +13,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSC.Controls_CF35", "..\FM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMSC.Utility_CF35", "..\FMSC.Util\FMSC.Utility\FMSC.Utility_CF35.csproj", "{9FB2BD45-C3F1-44C2-9EFF-427D032CBB44}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{33486F69-14A6-4028-AA34-870CB2B06B8E}"
+	ProjectSection(SolutionItems) = preProject
+		Custom.props = Custom.props
+		NetCF.props = NetCF.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
