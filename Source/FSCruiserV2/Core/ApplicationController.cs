@@ -7,6 +7,9 @@ using FSCruiser.Core.Models;
 using FSCruiser.Core.Workers;
 using FScruiser.Core.Services;
 using System.Diagnostics;
+#if !NetCF
+using Microsoft.AppCenter.Crashes;
+#endif
 
 namespace FSCruiser.Core
 {
@@ -55,7 +58,10 @@ namespace FSCruiser.Core
             }
             if (ex != null)
             {
-                Logger.Log.E(optMessage, ex);
+#if !NetCF
+                Crashes.TrackError(ex);
+#endif
+                Trace.WriteLine("Error::" + ex.Message + "::" + optMessage);
             }
             DialogService.ShowMessage(optMessage, "Non-Critical Error");
             //MessageBox.Show(optMessage, "Non-Critical Error");
@@ -71,14 +77,18 @@ namespace FSCruiser.Core
 #endif
             }
 
-            Logger.Log.E(ex);
+#if !NetCF
+            Crashes.TrackError(ex);
+#endif
+            Trace.WriteLine("Error::" + ex.Message + "::" + optMessage);
+
             DialogService.ShowMessage(optMessage ?? ex.Message,
                 (isCritical) ? "Error" : "Non-Critical Error");
         }
 
-        #endregion exception handleing
+#endregion exception handleing
 
-        #region File
+#region File
 
         public void OpenFile()
         {
@@ -178,9 +188,9 @@ namespace FSCruiser.Core
             OnFileStateChanged();
         }
 
-        #endregion File
+#endregion File
 
-        #region backup
+#region backup
 
         private string GetBackupFileName(string backupDir, bool addTimeStamp)
         {
@@ -268,7 +278,7 @@ namespace FSCruiser.Core
             }
         }
 
-        #endregion backup
+#endregion backup
 
         private void OnApplicationClosing(object sender, CancelEventArgs e)
         {
@@ -291,7 +301,7 @@ namespace FSCruiser.Core
             }
         }
 
-        #region IDisposable Members
+#region IDisposable Members
 
         public void Dispose()
         {
@@ -317,6 +327,6 @@ namespace FSCruiser.Core
             }
         }
 
-        #endregion IDisposable Members
+#endregion IDisposable Members
     }
 }

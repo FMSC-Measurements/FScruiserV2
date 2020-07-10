@@ -6,7 +6,7 @@
 
         double MidpointValue { get; set; }
 
-        FixCNTTallyField Field { get; set; }
+        string Field { get; set; }
     }
 
     public class FixCNTTallyBucket : IFixCNTTallyBucket
@@ -15,7 +15,7 @@
 
         public double MidpointValue { get; set; }
 
-        public FixCNTTallyField Field { get; set; }
+        public string Field { get; set; }
 
         //public int TreeCount { get; set; }
 

@@ -13,7 +13,7 @@ namespace FSCruiser.Core.Models
     {
         IFixCNTTallyClass _tallyClass;
 
-        IFixCNTTallyClass TallyClass
+        public IFixCNTTallyClass TallyClass
         {
             get
             {
@@ -33,8 +33,9 @@ namespace FSCruiser.Core.Models
             {
                 CuttingUnit = cuttingUnit,
                 Stratum = this,
-                PlotNumber = GetNextPlotNumber(cuttingUnit.CuttingUnit_CN.Value)
-            };
+                PlotNumber = GetNextPlotNumber(cuttingUnit.CuttingUnit_CN.Value),
+                Trees = new System.ComponentModel.BindingList<Tree>(),
+        };
         }
 
         public IEnumerable<IFixCNTTallyPopulation> GetFixCNTTallyPopulations()

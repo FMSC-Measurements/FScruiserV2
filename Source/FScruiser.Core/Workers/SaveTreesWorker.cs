@@ -78,25 +78,18 @@ namespace FSCruiser.Core
 
         public void SaveAll()
         {
-            using (var connection = _datastore.CreateConnection())
+            try
             {
-                connection.Open();
-                using (var transaction = connection.BeginTransaction())
+                foreach (var tree in _treesLocal)
                 {
-                    try
-                    {
-                        foreach (var tree in _treesLocal)
-                        {
-                            _datastore.Save(connection, tree, transaction);
-                        }
-                        transaction.Commit();
-                    }
-                    catch
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
+                    _datastore.Save(tree);
                 }
+                _datastore.CommitTransaction();
+            }
+            catch
+            {
+                _datastore.RollbackTransaction();
+                throw;
             }
         }
 

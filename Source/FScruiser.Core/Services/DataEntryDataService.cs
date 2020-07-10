@@ -570,7 +570,7 @@ namespace FScruiser.Core.Services
                     AddNonPlotTree(tree);
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 countTree.TreeCount = persistedTreeCount;
                 countTree.SumKPI = persistedSumKPI;
@@ -590,44 +590,45 @@ namespace FScruiser.Core.Services
 
             int changesSaved = 0;
 
-            using (var connection = datastore.CreateConnection())
+            Exception error = null;
+
+            datastore.BeginTransaction();
+            try
             {
-                connection.Open();
-
-                using (var transaction = connection.BeginTransaction())
+                foreach (Stratum stratum in strata.OfType<Stratum>())
                 {
-                    Exception error = null;
+                    if (stratum.SampleGroups == null) { continue; }
 
-                    foreach (Stratum stratum in strata.OfType<Stratum>())
+                    foreach (var sg in stratum.SampleGroups)
                     {
-                        if (stratum.SampleGroups == null) { continue; }
+                        if (sg.Counts == null) { continue; }
 
-                        foreach (var sg in stratum.SampleGroups)
+                        foreach (var count in sg.Counts)
                         {
-                            if (sg.Counts == null) { continue; }
-
-                            foreach (var count in sg.Counts)
+                            if (count.IsChanged)
                             {
-                                if (count.IsChanged)
+                                try
                                 {
-                                    try
-                                    {
-                                        changesSaved++;
-                                        datastore.Save(connection, count, transaction);
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        System.Diagnostics.Debug.WriteLine(e, "Exception");
-                                        error = e;
-                                    }
+                                    changesSaved++;
+                                    datastore.Save(count);
+                                }
+                                catch (Exception e)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(e, "Exception");
+                                    error = e;
                                 }
                             }
                         }
                     }
-
-                    transaction.Commit();
-                    if (error != null) { throw error; }
                 }
+
+                datastore.CommitTransaction();
+                if (error != null) { throw error; }
+            }
+            catch(Exception)
+            {
+                datastore.RollbackTransaction();
+                throw;
             }
 
             Debug.Assert(changesSaved == 0, "counts saved " + changesSaved);//counts saved should be zero because we are now saving counts as they are modified
@@ -635,34 +636,35 @@ namespace FScruiser.Core.Services
 
         public Exception TrySaveCounts(PlotStratum stratum)
         {
+            var datastore = DataStore;
             if (stratum == null) { throw new ArgumentNullException("stratum"); }
             Exception error = null;
 
-            using (var connection = DataStore.CreateConnection())
+            datastore.BeginTransaction();
+            try
             {
-                connection.Open();
-
-                using (var transaction = connection.BeginTransaction())
+                foreach (var sg in stratum.SampleGroups.OrEmpty())
                 {
-                    foreach (var sg in stratum.SampleGroups.OrEmpty())
+                    if (sg.Counts == null) { continue; }
+                    foreach (var count in sg.Counts)
                     {
-                        if (sg.Counts == null) { continue; }
-                        foreach (var count in sg.Counts)
+                        try
                         {
-                            try
-                            {
-                                DataStore.Save(connection, count, transaction);
-                            }
-                            catch (Exception e)
-                            {
-                                System.Diagnostics.Debug.WriteLine(e, "Exception");
-                                error = e;
-                            }
+                            datastore.Save(count);
+                        }
+                        catch (Exception e)
+                        {
+                            System.Diagnostics.Debug.WriteLine(e, "Exception");
+                            error = e;
                         }
                     }
-
-                    transaction.Commit();
                 }
+                datastore.CommitTransaction();
+            }
+            catch(Exception)
+            {
+                datastore.RollbackTransaction();
+                throw;
             }
 
             return error;
@@ -671,34 +673,36 @@ namespace FScruiser.Core.Services
         //HACK using IEnumerable because no covariance in net20
         public static void SaveSampleGroups(DAL datastore, IEnumerable strata)
         {
-            using (var connection = datastore.CreateConnection())
+            Exception error = null;
+            datastore.BeginTransaction();
+            try
             {
-                connection.Open();
-                using (var transaction = connection.BeginTransaction())
+
+                foreach (var stratum in strata.OfType<Stratum>())
                 {
-                    Exception error = null;
+                    if (stratum.SampleGroups == null) { continue; }
 
-                    foreach (var stratum in strata.OfType<Stratum>())
+                    foreach (SampleGroup sg in stratum.SampleGroups)
                     {
-                        if (stratum.SampleGroups == null) { continue; }
-
-                        foreach (SampleGroup sg in stratum.SampleGroups)
+                        try
                         {
-                            try
-                            {
-                                //sg.SerializeSamplerState();
-                                datastore.Save(connection, sg, transaction);
-                            }
-                            catch (Exception ex)
-                            {
-                                error = ex;
-                            }
+                            //sg.SerializeSamplerState();
+                            datastore.Save(sg);
+                        }
+                        catch (Exception ex)
+                        {
+                            error = ex;
                         }
                     }
-
-                    transaction.Commit();
-                    if (error != null) { throw error; }
                 }
+
+                datastore.CommitTransaction();
+                if (error != null) { throw error; }
+            }
+            catch(Exception)
+            {
+                datastore.RollbackTransaction();
+                throw;
             }
         }
 

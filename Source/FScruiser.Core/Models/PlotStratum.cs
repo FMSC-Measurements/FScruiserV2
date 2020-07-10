@@ -121,9 +121,8 @@ namespace FSCruiser.Core.Models
                 }
                 return highestInUnit + 1;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Logger.Log.E("Unable to establish next plot number", e);
                 return 1;
             }
         }

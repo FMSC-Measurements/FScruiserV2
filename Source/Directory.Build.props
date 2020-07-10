@@ -1,4 +1,6 @@
-<Project>  
+<Project>
+  <Import Project=".\Common.props" />
+  
   <PropertyGroup Label="Package Info">
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>Benjamin Campbell</Authors>
