@@ -160,7 +160,6 @@ namespace FSCruiser.WinForms.Common
                 Debug.Fail(ex.Message);
             }
 #else
-            //NBug.Exceptions.Report(e);
             Crashes.TrackError(e);
 #endif
         }

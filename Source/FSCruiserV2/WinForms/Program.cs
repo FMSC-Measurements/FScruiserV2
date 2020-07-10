@@ -29,9 +29,6 @@ namespace FSCruiser.WinForms
             //InitializeNBug();
 
 #if !DEBUG
-            var countryCode = RegionInfo.CurrentRegion.TwoLetterISORegionName;
-            AppCenter.SetCountryCode(countryCode);
-
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
 
             AppCenter.Start(Secrets.APPCENTER_KEY_WINDOWS,
