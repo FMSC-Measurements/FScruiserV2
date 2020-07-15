@@ -20,7 +20,7 @@ namespace FSCruiser.Core.Models
                 if (_tallyClass == null)
                 {
                     _tallyClass = DAL.From<FixCNTTallyClass>()
-                        .Where("Stratum_CN = ?")
+                        .Where("Stratum_CN = @p1")
                         .Query(Stratum_CN).FirstOrDefault();
                 }
                 return _tallyClass;
@@ -43,17 +43,17 @@ namespace FSCruiser.Core.Models
             var tallyClass = TallyClass;
 
             var tallyPopulations = DAL.From<FixCNTTallyPopulation>()
-                .Where("FixCNTTallyClass_CN = ?")
+                .Where("FixCNTTallyClass_CN = @p1")
                 .Query(tallyClass.FixCNTTallyClass_CN);
 
             foreach (var tallyPop in tallyPopulations)
             {
                 tallyPop.SampleGroup = DAL.From<SampleGroup>()
-                    .Where("SampleGroup_CN = ?")
+                    .Where("SampleGroup_CN = @p1")
                     .Read(tallyPop.SampleGroup_CN).FirstOrDefault();
 
                 tallyPop.TreeDefaultValue = DAL.From<TreeDefaultValueDO>()
-                    .Where("TreeDefaultValue_CN = ?")
+                    .Where("TreeDefaultValue_CN = @p1")
                     .Read(tallyPop.TreeDefaultValue_CN).FirstOrDefault();
 
                 tallyPop.TallyClass = tallyClass;
@@ -63,7 +63,7 @@ namespace FSCruiser.Core.Models
 
         protected override IEnumerable<Plot> ReadPlots(long cuttingUnit_CN)
         {
-            foreach (var plot in this.DAL.From<FixCNTPlot>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
+            foreach (var plot in this.DAL.From<FixCNTPlot>().Where("Stratum_CN = @p1 AND CuttingUnit_CN = @p2")
                 .OrderBy("PlotNumber")
                 .Query(this.Stratum_CN, cuttingUnit_CN))
             {

@@ -42,14 +42,14 @@ namespace FSCruiser.Core.Models
         {
             var counts = new List<CountTree>();
             var tallySettings = DAL.From<TallySettings>()
-                .Where("SampleGroup_CN = ?")
+                .Where("SampleGroup_CN = @p1")
                 .GroupBy("CountTree.SampleGroup_CN", "CountTree.TreeDefaultValue_CN", "CountTree.Tally_CN")
                 .Read(SampleGroup_CN);
 
             foreach (TallySettings ts in tallySettings)
             {
                 CountTree count = DAL.From<CountTree>()
-                    .Where("CuttingUnit_CN = ? AND SampleGroup_CN = ? AND Tally_CN = ?")
+                    .Where("CuttingUnit_CN = @p1 AND SampleGroup_CN = @p2 AND Tally_CN = @p3")
                     .Read(unit.CuttingUnit_CN
                     , ts.SampleGroup_CN
                     , ts.Tally_CN).FirstOrDefault();
@@ -76,7 +76,7 @@ namespace FSCruiser.Core.Models
         {
             return DAL.ExecuteScalar<bool>("SELECT count(1) " +
                     "FROM SampleGroupTreeDefaultValue " +
-                    "WHERE TreeDefaultValue_CN = ? AND SampleGroup_CN = ?"
+                    "WHERE TreeDefaultValue_CN = @p1 AND SampleGroup_CN = @p2"
                     , tdv.TreeDefaultValue_CN, SampleGroup_CN);
         }
 

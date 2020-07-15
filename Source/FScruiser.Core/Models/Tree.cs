@@ -112,7 +112,7 @@ namespace FSCruiser.Core.Models
             {
                 if (cachedLogCount == -1 || this.LogCountDirty)
                 {
-                    cachedLogCount = (int)this.DAL.GetRowCount("Log", "WHERE Tree_CN = ?", this.Tree_CN);
+                    cachedLogCount = (int)this.DAL.GetRowCount("Log", "WHERE Tree_CN = @p1", this.Tree_CN);
                     LogCountDirty = false;
                 }
                 return cachedLogCount;
@@ -180,7 +180,7 @@ namespace FSCruiser.Core.Models
         public override CuttingUnitDO GetCuttingUnit()
         {
             if (DAL == null) { return null; }
-            return DAL.From<CuttingUnit>().Where("CuttingUnit_CN = ?")
+            return DAL.From<CuttingUnit>().Where("CuttingUnit_CN = @p1")
                 .Read(this.CuttingUnit_CN).FirstOrDefault();
         }
 
@@ -260,7 +260,7 @@ namespace FSCruiser.Core.Models
             if (!_stratumFieldsLookup.ContainsKey(stratum_CN.Value))
             {
                 var stFields = DAL.From<StratumFieldCollection>()
-                    .Where("Stratum_CN = ?")
+                    .Where("Stratum_CN = @p1")
                     .Query(stratum_CN.Value).FirstOrDefault();
                 _stratumFieldsLookup.Add(stratum_CN.Value, stFields);
                 return stFields;

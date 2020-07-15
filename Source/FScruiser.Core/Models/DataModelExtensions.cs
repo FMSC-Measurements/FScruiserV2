@@ -80,7 +80,7 @@ namespace FSCruiser.Core.Models
         public static CountTree FindCountRecord(this Tree tree)
         {
             return tree.DAL.From<CountTree>()
-                .Where("SampleGroup_CN = ? AND CuttingUnit_CN = ? AND (TreeDefaultValue_CN = ? OR ifnull(TreeDefaultValue_CN, 0) = 0)")
+                .Where("SampleGroup_CN = @p1 AND CuttingUnit_CN = @p2 AND (TreeDefaultValue_CN = @p3 OR ifnull(TreeDefaultValue_CN, 0) = 0)")
                 .Read(tree.SampleGroup_CN
                 , tree.CuttingUnit_CN
                 , tree.TreeDefaultValue_CN).FirstOrDefault();
@@ -109,7 +109,7 @@ namespace FSCruiser.Core.Models
             }
 
             return tree.DAL.From<SampleGroup>()
-                .Where("Stratum_CN = ?")
+                .Where("Stratum_CN = @p1")
                 .Read(tree.Stratum_CN).ToList();
         }
 
@@ -121,10 +121,10 @@ namespace FSCruiser.Core.Models
             if (tree.SampleGroup == null)
             {
                 //if stratum has only one sampleGroup, make it this tree's SG
-                if (tree.DAL.GetRowCount("SampleGroup", "WHERE Stratum_CN = ?", tree.Stratum_CN) == 1)
+                if (tree.DAL.GetRowCount("SampleGroup", "WHERE Stratum_CN = @p1", tree.Stratum_CN) == 1)
                 {
                     tree.SampleGroup = tree.DAL.From<SampleGroup>()
-                        .Where("Stratum_CN = ?")
+                        .Where("Stratum_CN = @p1")
                         .Read(tree.Stratum_CN)
                         .FirstOrDefault();
                 }
@@ -137,7 +137,7 @@ namespace FSCruiser.Core.Models
 
             List<TreeDefaultValueDO> tdvs = tree.DAL.From<TreeDefaultValueDO>()
                 .Join("SampleGroupTreeDefaultValue", "USING (TreeDefaultValue_CN)")
-                .Where("SampleGroup_CN = ?")
+                .Where("SampleGroup_CN = @p1")
                 .Read(tree.SampleGroup_CN).ToList();
 
             return tdvs;

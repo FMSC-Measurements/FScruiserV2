@@ -105,9 +105,9 @@ namespace FSCruiser.Core.Models
                 {
                     DAL.Execute("DELETE FROM LogStock;");
                     DAL.Execute("DELETE FROM TreeCalculatedValues;");
-                    DAL.Execute("DELETE FROM Log WHERE Tree_CN in (SELECT Tree_CN FROM Tree WHERE Plot_CN = ?);", Plot_CN);
-                    DAL.Execute("DELETE FROM Tree WHERE Plot_CN = ?;", Plot_CN);
-                    DAL.Execute("DELETE FROM Plot WHERE Plot_CN = ?;", Plot_CN);
+                    DAL.Execute("DELETE FROM Log WHERE Tree_CN in (SELECT Tree_CN FROM Tree WHERE Plot_CN = @p1);", Plot_CN);
+                    DAL.Execute("DELETE FROM Tree WHERE Plot_CN = @p1;", Plot_CN);
+                    DAL.Execute("DELETE FROM Plot WHERE Plot_CN = @p1;", Plot_CN);
                     this.DAL.CommitTransaction();                    
                 }
                 catch
@@ -124,7 +124,7 @@ namespace FSCruiser.Core.Models
             if (Trees == null)
             {
                 List<Tree> tList = base.DAL.From<Tree>()
-                    .Where("Stratum_CN = ? AND CuttingUnit_CN = ? AND Plot_CN = ?")
+                    .Where("Stratum_CN = @p1 AND CuttingUnit_CN = @p2 AND Plot_CN = @p3")
                     .OrderBy("TreeNumber")
                     .Read(base.Stratum.Stratum_CN
                     , base.CuttingUnit.CuttingUnit_CN

@@ -168,7 +168,7 @@ namespace FSCruiser.Core.Models
         new IEnumerable<SampleGroup> ReadSampleGroups()
         {
             foreach (var sg in DAL.From<SampleGroup>()
-                        .Where("Stratum_CN = ?")
+                        .Where("Stratum_CN = @p1")
                         .Read(Stratum_CN))
             {
                 sg.Stratum = this;
@@ -209,7 +209,7 @@ namespace FSCruiser.Core.Models
         protected List<TreeFieldSetupDO> InternalReadTreeFields()
         {
             var fields = DAL.From<TreeFieldSetupDO>()
-                .Where("Stratum_CN = ?")
+                .Where("Stratum_CN = @p1")
                 .OrderBy("FieldOrder")
                 .Query(Stratum_CN).ToList();
 
@@ -252,7 +252,7 @@ namespace FSCruiser.Core.Models
         protected IEnumerable<LogFieldSetupDO> ReadLogFields()
         {
             var fields = DAL.From<LogFieldSetupDO>()
-                .Where("Stratum_CN = ?")
+                .Where("Stratum_CN = @p1")
                 .OrderBy("FieldOrder")
                 .Query(Stratum_CN).ToList();
 

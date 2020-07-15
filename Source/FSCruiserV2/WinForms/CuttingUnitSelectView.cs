@@ -65,7 +65,7 @@ namespace FSCruiser.WinForms
             {
                 var strata = unit.DAL.From<StratumDO>()
                    .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
-                   .Where("CUST.CuttingUnit_CN = ?")
+                   .Where("CUST.CuttingUnit_CN = @p1")
                    .Query(unit.CuttingUnit_CN);
 
                 var strataDescriptions = (from StratumDO st in strata
