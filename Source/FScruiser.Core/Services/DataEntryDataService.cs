@@ -175,7 +175,7 @@ namespace FScruiser.Core.Services
         private void ReadCruiseData(string unitCode)
         {
             CuttingUnit = DataStore.From<CuttingUnit>()
-                            .Where("Code = ?").Read(unitCode).FirstOrDefault();
+                            .Where("Code = @p1").Read(unitCode).FirstOrDefault();
 
             TreeStrata = ReadTreeBasedStrata().ToList();
             PlotStrata = ReadPlotStrata().ToList();
@@ -304,7 +304,7 @@ namespace FScruiser.Core.Services
             if (assumedSG == null)//if we have a stratum but no sample group, pick the first one
             {
                 List<SampleGroup> samplegroups = DataStore.From<SampleGroup>()
-                    .Where("Stratum_CN = ?")
+                    .Where("Stratum_CN = @p1")
                     .Read(plot.Stratum.Stratum_CN).ToList();
                 if (samplegroups.Count == 1)
                 {
@@ -777,7 +777,7 @@ namespace FScruiser.Core.Services
             foreach (var st in
                  DataStore.From<PlotStratum>()
                 .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
-                .Where("CUST.CuttingUnit_CN = ? "
+                .Where("CUST.CuttingUnit_CN = @p1 "
                 + "AND Stratum.Method IN ( 'FIX', 'FCM', 'F3P', 'PNT', 'PCM', 'P3P', '3PPNT')")
                 .Query(CuttingUnit.CuttingUnit_CN))
             {
@@ -789,7 +789,7 @@ namespace FScruiser.Core.Services
 
             foreach (var st in DataStore.From<FixCNTStratum>()
                 .Join("CuttingUnitStratum", "USING (Stratum_CN)", "CUST")
-                .Where("CUST.CuttingUnit_CN = ? "
+                .Where("CUST.CuttingUnit_CN = @p1 "
                 + "AND Stratum.Method = '" + CruiseDAL.Schema.CruiseMethods.FIXCNT + "'")
                 .Query(CuttingUnit.CuttingUnit_CN))
             {
@@ -807,8 +807,7 @@ namespace FScruiser.Core.Services
             foreach (var st in
                 DataStore.From<Stratum>()
                 .Join("CuttingUnitStratum", "USING (Stratum_CN)")
-                .Where("CuttingUnitStratum.CuttingUnit_CN = ?" +
-                        "AND Method IN ( '100', 'STR', '3P', 'S3P')")
+                .Where("CuttingUnitStratum.CuttingUnit_CN = @p1 AND Method IN ( '100', 'STR', '3P', 'S3P')")
                 .Read(CuttingUnit.CuttingUnit_CN))
             {
                 st.LoadSampleGroups();
@@ -826,7 +825,7 @@ namespace FScruiser.Core.Services
                 {
                     var trees = DataStore.From<Tree>()
                         .Join("Stratum", "USING (Stratum_CN)")
-                        .Where("Tree.CuttingUnit_CN = ? AND " +
+                        .Where("Tree.CuttingUnit_CN = @p1 AND " +
                                 "Stratum.Method IN ('100','STR','3P','S3P')")
                         .OrderBy("TreeNumber")
                         .Read(CuttingUnit.CuttingUnit_CN).ToList();
@@ -875,7 +874,7 @@ namespace FScruiser.Core.Services
             var fields = DataStore.From<TreeFieldSetupDO>()
                 .Join("CuttingUnitStratum", "USING (Stratum_CN)")
                 .Join("Stratum", "USING (Stratum_CN)")
-                .Where(String.Format("CuttingUnit_CN = ? AND Stratum.Method NOT IN ({0})"
+                .Where(String.Format("CuttingUnit_CN = @p1 AND Stratum.Method NOT IN ({0})"
                 , string.Join(",", CruiseDAL.Schema.CruiseMethods.PLOT_METHODS.Select(s => "'" + s + "'").ToArray())))
                 .GroupBy("Field")
                 .OrderBy("FieldOrder")

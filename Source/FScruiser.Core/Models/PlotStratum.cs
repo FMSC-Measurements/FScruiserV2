@@ -73,7 +73,7 @@ namespace FSCruiser.Core.Models
             //HACK covariance wasn't added until C# 4.0 so we can just return the IEnumerable from the Read methods
             if (Is3PPNT)
             {
-                var source = DAL.From<Plot3PPNT>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
+                var source = DAL.From<Plot3PPNT>().Where("Stratum_CN = @p1 AND CuttingUnit_CN = @p2")
                 .OrderBy("PlotNumber")
                 .Read(this.Stratum_CN, cuttingUnit_CN);
 
@@ -85,7 +85,7 @@ namespace FSCruiser.Core.Models
             }
             else
             {
-                var source = DAL.From<Plot>().Where("Stratum_CN = ? AND CuttingUnit_CN = ?")
+                var source = DAL.From<Plot>().Where("Stratum_CN = @p1 AND CuttingUnit_CN = @p2")
                 .OrderBy("PlotNumber")
                 .Read(this.Stratum_CN, cuttingUnit_CN);
 

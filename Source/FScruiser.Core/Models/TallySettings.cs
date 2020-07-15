@@ -1,4 +1,5 @@
-﻿using FMSC.ORM.Core;
+﻿using CruiseDAL;
+using FMSC.ORM.Core;
 using FMSC.ORM.EntityModel;
 using FMSC.ORM.EntityModel.Attributes;
 
@@ -15,7 +16,7 @@ namespace FSCruiser.Core.Models
             : base()
         { }
 
-        public TallySettings(Datastore db)
+        public TallySettings(DAL db)
             : base(db)
         { }
 

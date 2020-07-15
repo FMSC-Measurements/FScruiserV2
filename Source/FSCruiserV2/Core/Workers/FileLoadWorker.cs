@@ -31,10 +31,10 @@ namespace FSCruiser.Core.Workers
 
         protected override void OnExceptionThrown(WorkerExceptionThrownEventArgs e)
         {
-            if (this.DataStore != null)
-            {
-                this.DataStore.Dispose();
-            }
+            //if (this.DataStore != null)
+            //{
+            //    this.DataStore.Dispose();
+            //}
             this.DataStore = null;
 
             base.OnExceptionThrown(e);
@@ -56,7 +56,7 @@ namespace FSCruiser.Core.Workers
             {
                 if (DataStore != null)
                 {
-                    DataStore.Dispose();
+                    //DataStore.Dispose();
                     DataStore = null;
                 }
             }

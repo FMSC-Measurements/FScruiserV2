@@ -4,6 +4,7 @@ using CruiseDAL.DataObjects;
 using FMSC.ORM.EntityModel.Attributes;
 using FScruiser.Core.Services;
 using FMSC.ORM.Core;
+using CruiseDAL;
 
 namespace FSCruiser.Core.Models
 {
@@ -28,7 +29,7 @@ namespace FSCruiser.Core.Models
         public FixCNTPlot()
         { }
 
-        public FixCNTPlot(Datastore ds)
+        public FixCNTPlot(DAL ds)
             : base(ds)
         { }
 
@@ -55,10 +56,15 @@ namespace FSCruiser.Core.Models
 
         public int GetTallyCount(IFixCNTTallyBucket tallyBucket)
         {
-            int count = 0;
-            var population = tallyBucket.TallyPopulation;
-            var tallyClass = population.TallyClass;
+            if(tallyBucket == null) { throw new ArgumentNullException("tallyBucket"); }
 
+            var population = tallyBucket.TallyPopulation;
+            if(population == null) { throw new ArgumentNullException("population"); }
+
+            var tallyClass = population.TallyClass;
+            if(tallyClass == null) { throw new ArgumentNullException("tallyClass"); }
+
+            int count = 0;
             foreach (var tree in Trees)
             {
                 if (tree.SampleGroup_CN == population.SampleGroup_CN

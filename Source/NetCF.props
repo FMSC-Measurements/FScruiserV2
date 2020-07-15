@@ -3,8 +3,8 @@
   <PropertyGroup>
     <!-- these props just for CF version, these are automaicly determined for non-CF -->
     <BackpackSqlBuilderVersion>1.1.5</BackpackSqlBuilderVersion>
-    <FMSCOrmVersion>2.6.3</FMSCOrmVersion>
-    <CruiseDALCoreVersion>3.0.0.65</CruiseDALCoreVersion>
+    <FMSCOrmVersion>2.6.5</FMSCOrmVersion>
+    <CruiseDALCoreVersion>3.0.0.68</CruiseDALCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>

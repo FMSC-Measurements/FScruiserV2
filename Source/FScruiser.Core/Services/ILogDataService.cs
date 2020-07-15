@@ -64,7 +64,7 @@ namespace FScruiser.Core.Services
         IList<Log> LoadLogs()
         {
             var logs = DataStore.From<Log>()
-                .Where("Tree_CN = ?")
+                .Where("Tree_CN = @p1")
                 .OrderBy("CAST (LogNumber AS NUMERIC)")
                 .Read(Tree.Tree_CN).ToList();
 
@@ -99,7 +99,7 @@ namespace FScruiser.Core.Services
                 var species = Tree.TreeDefaultValue.Species;
 
                 return DataStore.From<LogGradeAuditRule>()
-                .Where("Species = ? OR Species = 'ANY'")
+                .Where("Species = @p1 OR Species = 'ANY'")
                 .Query(Tree.TreeDefaultValue.Species).ToArray();
             }
             else
