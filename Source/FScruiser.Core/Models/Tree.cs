@@ -37,7 +37,7 @@ namespace FSCruiser.Core.Models
     {
         int cachedLogCount = -1;
 
-        public Tree(Datastore dal)
+        public Tree(DAL dal)
             : base(dal)
         {
         }

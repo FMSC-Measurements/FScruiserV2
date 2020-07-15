@@ -1,4 +1,5 @@
-﻿using FMSC.ORM.SQLite;
+﻿using CruiseDAL;
+using FMSC.ORM.SQLite;
 using FSCruiser.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,9 @@ namespace FSCruiser.Core
     {
         private IEnumerable<Tree> _treesLocal;
         private Thread _saveTreesWorkerThread;
-        private SQLiteDatastore _datastore;
+        private DAL _datastore;
 
-        public SaveTreesWorker(SQLiteDatastore datastore, IEnumerable<Tree> trees)
+        public SaveTreesWorker(DAL datastore, IEnumerable<Tree> trees)
         {
             if (datastore == null) { throw new ArgumentNullException("datastore"); }
             if (trees == null) { throw new ArgumentNullException("trees"); }

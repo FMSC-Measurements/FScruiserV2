@@ -19,7 +19,7 @@ namespace FSCruiser.Core.Models
             : base()
         { }
 
-        public Plot(Datastore dal)
+        public Plot(DAL dal)
             : base(dal)
         { }
 

@@ -12,7 +12,7 @@ namespace FSCruiser.Core.Models
             : base()
         { }
 
-        public CountTree(Datastore ds)
+        public CountTree(DAL ds)
             : base(ds)
         { }
 
