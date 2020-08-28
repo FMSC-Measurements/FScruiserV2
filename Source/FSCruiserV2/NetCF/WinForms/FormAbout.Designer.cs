@@ -63,11 +63,11 @@
             // 
             // label3
             // 
-            this.label3.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Bold);
+            this.label3.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
             this.label3.Location = new System.Drawing.Point(117, 9);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(104, 27);
-            this.label3.Text = "FScruiser";
+            this.label3.Size = new System.Drawing.Size(123, 27);
+            this.label3.Text = "FScruiser V2";
             // 
             // label4
             // 

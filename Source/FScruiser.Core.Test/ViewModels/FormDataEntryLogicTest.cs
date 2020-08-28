@@ -231,7 +231,7 @@ namespace FScruiser.Core.Test.ViewModels
             int maxKPI = 102;
 
             var dialogServiceMock = new Mock<IDialogService>();
-            dialogServiceMock.Setup(ds => ds.AskKPI(It.Is<int>(x => x == minKPI), It.Is<int>(x => x == maxKPI)))
+            dialogServiceMock.Setup(ds => ds.AskKPI(It.Is<int>(x => x == minKPI), It.Is<int>(x => x == maxKPI), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>() ))
                 .Returns(expectedKPI);
 
             var sg = new SampleGroup() { MinKPI = minKPI, MaxKPI = maxKPI };
@@ -263,7 +263,7 @@ namespace FScruiser.Core.Test.ViewModels
             int maxKPI = 102;
 
             var dialogServiceMock = new Mock<IDialogService>();
-            dialogServiceMock.Setup(ds => ds.AskKPI(It.Is<int>(x => x == minKPI), It.Is<int>(x => x == maxKPI)))
+            dialogServiceMock.Setup(ds => ds.AskKPI(It.Is<int>(x => x == minKPI), It.Is<int>(x => x == maxKPI), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(expectedKPI);
 
             var sg = new SampleGroup() { MinKPI = minKPI, MaxKPI = maxKPI };
@@ -289,7 +289,7 @@ namespace FScruiser.Core.Test.ViewModels
             int maxKPI = 102;
 
             var dialogServiceMock = new Mock<IDialogService>();
-            dialogServiceMock.Setup(ds => ds.AskKPI(It.Is<int>(x => x == minKPI), It.Is<int>(x => x == maxKPI)))
+            dialogServiceMock.Setup(ds => ds.AskKPI(It.Is<int>(x => x == minKPI), It.Is<int>(x => x == maxKPI), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(expectedKPI);
 
             var sg = new SampleGroup() { MinKPI = minKPI, MaxKPI = maxKPI };
