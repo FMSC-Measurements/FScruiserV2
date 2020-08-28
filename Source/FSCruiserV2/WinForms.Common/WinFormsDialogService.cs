@@ -69,10 +69,10 @@ namespace FSCruiser.WinForms
                 == DialogResult.Yes;
         }
 
-        public int? AskKPI(int min, int max)
+        public int? AskKPI(int min, int max, string stCode, string sgCode, string spCode)
         {
             min = Math.Max(min, 1);
-            ThreePNumPad.ShowDialog(min, max, null, false);
+            ThreePNumPad.ShowDialog(min, max, null, false, stCode, sgCode, spCode);
             return ThreePNumPad.UserEnteredValue;
         }
 

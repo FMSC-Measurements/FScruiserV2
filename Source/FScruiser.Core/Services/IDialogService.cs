@@ -12,7 +12,7 @@ namespace FScruiser.Core.Services
 
         void AskCruiser(Tree tree);
 
-        int? AskKPI(int min, int max);
+        int? AskKPI(int min, int max, string stCode, string sgCode, string spCode);
 
         bool AskYesNo(String message, String caption);
 

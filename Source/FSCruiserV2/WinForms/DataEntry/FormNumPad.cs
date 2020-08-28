@@ -4,7 +4,7 @@ using FSCruiser.Core.ViewInterfaces;
 
 namespace FSCruiser.WinForms.DataEntry
 {
-    public partial class FormNumPad : Form, INumPad
+    public partial class FormNumPad : Form
     {
         private int? _minValue;
         private int? _maxValue;

@@ -361,10 +361,11 @@ namespace FSCruiser.Core.DataEntry
             var sg = count.SampleGroup;
             var sgCode = sg.Code;
             var stCode = sg.Stratum.Code;
+            var spCode = count.TreeDefaultValue.Species;
             var sampler = SampleSelectorRepository.GetSamplerBySampleGroupCode(stCode, sgCode);
 
             int kpi = 0;
-            int? value = _dialogService.AskKPI((int)sg.MinKPI, (int)sg.MaxKPI);
+            int? value = _dialogService.AskKPI((int)sg.MinKPI, (int)sg.MaxKPI, stCode, sgCode, spCode);
             if (value == null)
             {
                 return null; //user didn't enter valid value
