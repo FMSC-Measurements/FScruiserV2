@@ -62,7 +62,6 @@
     <Compile Include="Core\ExceptionHandler.cs" />
     <Compile Include="Core\IExceptionHandler.cs" />
     <Compile Include="Core\ViewInterfaces\ICruiserSelectionView.cs" />
-    <Compile Include="Core\ViewInterfaces\INumPad.cs" />
     <Compile Include="Core\Workers\CancelWorkerException.cs" />
     <Compile Include="Core\Workers\FileLoadWorker.cs" />
     <Compile Include="Core\Workers\IWorker.cs" />

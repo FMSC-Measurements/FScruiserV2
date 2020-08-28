@@ -365,12 +365,12 @@ namespace FSCruiser.WinForms.DataEntry
             _row4.ResumeLayout();
         }
 
-        public DialogResult ShowDialog(int? initialValue, bool canReturnNull)
+        public DialogResult ShowDialog(int? initialValue, bool canReturnNull, string stCode, string sgCode, string spCode)
         {
-            return this.ShowDialog(null, null, initialValue, canReturnNull);
+            return this.ShowDialog(null, null, initialValue, canReturnNull, stCode, sgCode, spCode);
         }
 
-        public DialogResult ShowDialog(int? min, int? max, int? initialValue, bool canReturnNull)
+        public DialogResult ShowDialog(int? min, int? max, int? initialValue, bool canReturnNull, string stCode, string sgCode, string spCode)
         {
             _minValue = (min != null && min > 0) ? min : null;
 
@@ -378,6 +378,8 @@ namespace FSCruiser.WinForms.DataEntry
 
             this.UserEnteredValue = initialValue;
             this._canReturnNull = canReturnNull;
+
+            Text = "KPI" + " St: " + stCode + " Sg: " + sgCode + " Sp: " + spCode;
             return this.ShowDialog();
         }
 

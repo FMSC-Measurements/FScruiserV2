@@ -228,9 +228,11 @@ namespace FSCruiser.Core.DataEntry
                 TreeCount = 1,
             };
 
-
+            var sgCode = sg.Code;
+            var stCode = sg.Stratum.Code;
+            var spCode = count.TreeDefaultValue.Species;
             int kpi = 0;
-            int? value = dialogService.AskKPI((int)sg.MinKPI, (int)sg.MaxKPI);
+            int? value = dialogService.AskKPI((int)sg.MinKPI, (int)sg.MaxKPI, stCode, sgCode, spCode);
             if (value == null)
             {
                 return null;

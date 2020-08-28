@@ -26,9 +26,9 @@ namespace FScruiser.Core.Services
             Instance.AskCruiser(tree);
         }
 
-        public static int? AskKPI(int min, int max)
+        public static int? AskKPI(int min, int max, string stCode, string sgCode, string spCode)
         {
-            return Instance.AskKPI(min, max);
+            return Instance.AskKPI(min, max, stCode, sgCode, spCode);
         }
 
         public static bool AskYesNo(String message, String caption)
