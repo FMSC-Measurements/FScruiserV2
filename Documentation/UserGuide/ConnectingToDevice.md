@@ -4,7 +4,7 @@ To connect your device to a PC, first make sure you have Windows Mobile Device C
 
 If you do not have WMDC installed see download link below. 
 
-[Download WMDC](/raw/master/Documentation/resources/drvupdate-amd64.exe)
+[Download WMDC](https://junipersys.com/data/support/drvupdate-amd64.exe)
 
 
 ## Disable Advanced Network Functionality
