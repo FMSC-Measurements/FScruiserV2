@@ -17,8 +17,12 @@ To disable Advanced Network Functionality
 ## Windows 10
 Some Windows 10 users may experience issues using WMDC. These issues may due to the version of Windows 10 update installed. 
 
-Additional information on connecting using Windows 10:
-http://www.junipersys.com/Juniper-Systems-Rugged-Handheld-Computers/support/Knowledge-Base/Support-Knowledge-Base-Topics/Desktop-Connection-ActiveSync-or-Windows-Mobile-Device-Center/WMDC-in-Windows-10
+There are two tools available that attempt to fix compatibility issues in Windows 10.
+ - [WMDCRegistryUpdate.exe by Trimble](https://trl.trimble.com/dscgi/ds.py/Get/File-848877/WMDCRegistryUpdate.exe)
+ - [wmdc-fixes-for-win10.msi by Juniper](https://junipersys.com/data/support/WMDC-fixes-for-Win10.msi)
+
+
+[Additional information on connecting using Windows 10](http://www.junipersys.com/Juniper-Systems-Rugged-Handheld-Computers/support/Knowledge-Base/Support-Knowledge-Base-Topics/Desktop-Connection-ActiveSync-or-Windows-Mobile-Device-Center/WMDC-in-Windows-10)
 
 ## Thumbdrive 
 If you are unable to connect to your device using WMDC, you might still be able to transfer files between your device and PC using a thumb drive or SD card. 
