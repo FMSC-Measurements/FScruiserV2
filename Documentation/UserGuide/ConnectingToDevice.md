@@ -17,10 +17,13 @@ To disable Advanced Network Functionality
 ## Windows 10
 Some Windows 10 users may experience issues using WMDC. These issues may due to the version of Windows 10 update installed. 
 
-There are two tools available that attempt to fix compatibility issues in Windows 10.
- - [WMDCRegistryUpdate.exe by Trimble](https://trl.trimble.com/dscgi/ds.py/Get/File-848877/WMDCRegistryUpdate.exe)
+There are two tools available that attempt to fix compatibility issues in Windows 10. **After running either of these tools you will need to reboot your computer for the changes to take effect.**
  - [wmdc-fixes-for-win10.msi by Juniper](https://junipersys.com/data/support/WMDC-fixes-for-Win10.msi)
+ - [WMDCRegistryUpdate.exe by Trimble](https://trl.trimble.com/dscgi/ds.py/Get/File-848877/WMDCRegistryUpdate.exe)
 
+ 
+
+If you are using Internet Explorer, you may need to save the file and run it outside of Internet Explorer, rather than using the "Run" button from inside your browser. 
 
 [Additional information on connecting using Windows 10](http://www.junipersys.com/Juniper-Systems-Rugged-Handheld-Computers/support/Knowledge-Base/Support-Knowledge-Base-Topics/Desktop-Connection-ActiveSync-or-Windows-Mobile-Device-Center/WMDC-in-Windows-10)
 
