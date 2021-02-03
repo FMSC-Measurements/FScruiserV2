@@ -1,4 +1,4 @@
-# Connecting To Your Device
+# Connecting To Device
 
 ## Windows Mobile Device Center (WMDC)
 
