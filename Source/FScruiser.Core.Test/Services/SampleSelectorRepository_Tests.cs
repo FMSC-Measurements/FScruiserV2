@@ -7,10 +7,7 @@ using FScruiser.Models;
 using FScruiser.Services;
 using Moq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace FScruiser.Core.Test.Services
@@ -23,7 +20,7 @@ namespace FScruiser.Core.Test.Services
             var stCode = "00";
             var sgCode = "01";
 
-            using(var db = CreateDataStore(methods: new[] { "100"}))
+            using (var db = CreateDataStore(methods: new[] { "100" }))
             {
                 var sids = new SamplerInfoDataservice_V2(db);
                 var ssRepo = new SampleSelectorRepository(sids);
@@ -42,12 +39,15 @@ namespace FScruiser.Core.Test.Services
             }
         }
 
-        [Fact]
-        public void GetSamplerBySampleGroupCode_STR()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(5)]
+        public void GetSamplerBySampleGroupCode_STR(int freq)
         {
             var stCode = "00";
             var sgCode = "01";
-            var freq = 5;
             var iFreq = 2;
 
             using (var db = CreateDataStore(methods: new[] { "STR" }))
@@ -65,6 +65,7 @@ namespace FScruiser.Core.Test.Services
                 sampler.SampleGroupCode.Should().Be(sgCode);
 
                 sampler.Should().BeAssignableTo<IFrequencyBasedSelecter>();
+                //sampler.Should().BeOfType<BlockSelecter>();
                 ((IFrequencyBasedSelecter)sampler).Sample().Should().NotBeNull();
 
                 var samplerAgain = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
@@ -337,6 +338,62 @@ namespace FScruiser.Core.Test.Services
 
                 var samplerAgain = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
                 samplerAgain.Should().BeSameAs(sampler);
+            }
+        }
+
+        [Theory]
+        [InlineData("100")]
+        [InlineData("FIX")]
+        [InlineData("PNT")]
+        [InlineData("FIXCNT")]
+        [InlineData("STR")]
+        [InlineData("S3P")]
+        [InlineData("3P")]
+        [InlineData("P3P")]
+        [InlineData("F3P")]
+        [InlineData("FCM")]
+        [InlineData("PCM")]
+        public void SaveSamplerStates(string method)
+        {
+            var freq = 5;
+            var stCode = "00";
+            var sgCode = "01";
+            var iFreq = 2;
+
+            using (var db = CreateDataStore(methods: new[] { "STR" }))
+            {
+                db.Execute($"UPDATE SampleGroup SET SamplingFrequency = @p2, InsuranceFrequency = @p3 WHERE Code = @p1;",
+                    sgCode, freq, iFreq);
+
+                var sids = new SamplerInfoDataservice_V2(db);
+                var ssRepo = new SampleSelectorRepository(sids);
+
+                var sampler = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
+                sampler.Should().NotBeNull();
+
+                if (sampler is IFrequencyBasedSelecter fbs)
+                { fbs.Sample(); }
+                else if (sampler is IThreePSelector tps)
+                { tps.Sample(10); }
+                else { throw new Exception("unexpected sampler type"); }
+
+                var samplerAgain = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
+                samplerAgain.Should().BeSameAs(sampler);
+
+                // save sampler states and repopulate them
+                ssRepo.SaveSamplerStates();
+
+                // repopulate samplers using a new repo
+                var ssRepo2 = new SampleSelectorRepository(sids);
+                var samplerAgian2 = ssRepo2.GetSamplerBySampleGroupCode(stCode, sgCode);
+                samplerAgian2.Should().BeEquivalentTo(sampler);
+
+                // make sure it works
+                if (samplerAgian2 is IFrequencyBasedSelecter fbs2)
+                { fbs2.Sample(); }
+                else if (sampler is IThreePSelector tps)
+                { tps.Sample(10); }
+                else { throw new Exception("unexpected sampler type"); }
             }
         }
     }

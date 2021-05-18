@@ -163,7 +163,7 @@ namespace FSCruiser.Core.DataEntry
                     newTree.TreeCount = sg.SamplingFrequency;     //increment tree count on tally
                     action.TreeRecord = newTree;
                 }
-                catch (FMSC.ORM.SQLException e) //count save fail
+                catch (FMSC.ORM.SQLException) //count save fail
                 {
                     dialogService.ShowMessage("File error");
                 }
