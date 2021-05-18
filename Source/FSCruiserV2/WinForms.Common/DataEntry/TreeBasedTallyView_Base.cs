@@ -407,7 +407,7 @@ namespace FSCruiser.WinForms
             {
                 DataService.SaveCounts();
             }            
-            catch(FMSC.ORM.ReadOnlyException ex)
+            catch(FMSC.ORM.ReadOnlyException)
             {
                 MessageBox.Show("File Is Read Only \r\n" + DataService.DataStore.Path);
             }
