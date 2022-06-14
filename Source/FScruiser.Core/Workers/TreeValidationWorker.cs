@@ -13,7 +13,6 @@ namespace FSCruiser.Core
 
         public TreeValidationWorker(ICollection<Tree> trees)
         {
-            Debug.Assert(trees != null);
             lock (((System.Collections.ICollection)trees).SyncRoot)
             {
                 Tree[] copy = new Tree[trees.Count];
@@ -24,7 +23,6 @@ namespace FSCruiser.Core
 
         public void ValidateTreesAsync()
         {
-            Debug.Assert(_validateTreesWorkerThread == null);
 
             if (this._validateTreesWorkerThread != null)
             {

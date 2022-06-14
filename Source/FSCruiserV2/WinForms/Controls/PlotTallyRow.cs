@@ -106,7 +106,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         void UpdateTallyButton()
         {
-            System.Diagnostics.Debug.Assert(Count != null);
 
             this._tallyBTN.Text = string.Format("{0}"
                     , Count.Tally.Description);

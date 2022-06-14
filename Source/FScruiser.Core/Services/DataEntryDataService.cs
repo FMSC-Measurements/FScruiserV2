@@ -341,7 +341,6 @@ namespace FScruiser.Core.Services
 
         public virtual Tree CreateNewTreeEntry(Plot plot, SampleGroup sg, TreeDefaultValueDO tdv, bool isMeasure)
         {
-            Debug.Assert(plot.CuttingUnit != null);
 
             if (plot is FixCNTPlot)
             { isMeasure = false; }
@@ -630,8 +629,6 @@ namespace FScruiser.Core.Services
                 datastore.RollbackTransaction();
                 throw;
             }
-
-            Debug.Assert(changesSaved == 0, "counts saved " + changesSaved);//counts saved should be zero because we are now saving counts as they are modified
         }
 
         public Exception TrySaveCounts(PlotStratum stratum)
@@ -772,7 +769,6 @@ namespace FScruiser.Core.Services
 
         private IEnumerable<PlotStratum> ReadPlotStrata()
         {
-            Debug.Assert(DataStore != null);
 
             foreach (var st in
                  DataStore.From<PlotStratum>()
@@ -802,7 +798,6 @@ namespace FScruiser.Core.Services
 
         private IEnumerable<Stratum> ReadTreeBasedStrata()
         {
-            Debug.Assert(DataStore != null);
 
             foreach (var st in
                 DataStore.From<Stratum>()

@@ -438,8 +438,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         public bool ShowPlotInfo(IPlotDataService dataService, Plot plot, PlotStratum stratum, bool isNewPlot)
         {
-            System.Diagnostics.Debug.Assert(plot != null);
-            System.Diagnostics.Debug.Assert(stratum != null);
 
             if (stratum.Is3PPNT && isNewPlot)
             {

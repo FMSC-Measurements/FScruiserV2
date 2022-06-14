@@ -86,7 +86,6 @@
             {
                 if (keyNames == null)
                 {
-                    Debug.Assert(displayOrder == null);
                     Initialize();
                 }
                 return keyNames;
@@ -99,7 +98,6 @@
             {
                 if (displayOrder == null)
                 {
-                    Debug.Assert(keyNames == null);
                     Initialize();
                 }
                 return displayOrder;

@@ -107,7 +107,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         void UpdateTallyButton()
         {
-            System.Diagnostics.Debug.Assert(Count != null);
             var hotkey = (!String.IsNullOrEmpty(Count.Tally.Hotkey)) ?
                 "[" + Count.Tally.Hotkey.Substring(0, 1) + "] "
                 : String.Empty;

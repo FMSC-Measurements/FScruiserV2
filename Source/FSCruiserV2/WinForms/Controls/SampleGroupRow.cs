@@ -48,10 +48,8 @@ namespace FSCruiser.WinForms.DataEntry
         void HandleSpeciesClicked(object sender, EventArgs e)
         {
             var spButton = sender as SpeciesRow;
-            System.Diagnostics.Debug.Assert(spButton != null);
             if (sender == null) { return; }
             var subPop = spButton.SubPopulation;
-            System.Diagnostics.Debug.Assert(subPop != null);
 
             if (SpeciesClicked != null)
             {

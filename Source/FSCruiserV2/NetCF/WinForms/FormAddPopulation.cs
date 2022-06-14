@@ -174,7 +174,7 @@ namespace FSCruiser.WinForms
                 TreeDefaultValueDO tdv = cb.Tag as TreeDefaultValueDO;
                 if (tdv == null)
                 {
-                    System.Diagnostics.Debug.Assert(false);//condition should be unreachable
+                    System.Diagnostics.Debug.Assert(false, "Unreachable Condition, TDV on Checkbox is null");
                     continue;
                 }
 
