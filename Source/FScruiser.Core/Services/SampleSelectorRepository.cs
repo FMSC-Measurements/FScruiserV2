@@ -10,6 +10,7 @@ namespace FScruiser.Services
 {
     public class SampleSelectorRepository : ISampleSelectorRepository
     {
+
         private Dictionary<string, ISampleSelector> _sampleSelectors = new Dictionary<string, ISampleSelector>();
 
         public SampleSelectorRepository(ISamplerInfoDataservice dataservice)
@@ -22,6 +23,9 @@ namespace FScruiser.Services
 
         public ISampleSelector GetSamplerBySampleGroupCode(string stratumCode, string sgCode)
         {
+            if (string.IsNullOrEmpty(stratumCode)) { throw new ArgumentException($"'{nameof(stratumCode)}' cannot be null or empty", nameof(stratumCode)); }
+            if (string.IsNullOrEmpty(sgCode)) { throw new ArgumentException($"'{nameof(sgCode)}' cannot be null or empty", nameof(sgCode)); }
+
             var key = stratumCode + "/" + sgCode;
 
             if (_sampleSelectors.ContainsKey(key) == false)
@@ -65,7 +69,11 @@ namespace FScruiser.Services
 
                 case "STR":
                     {
-                        return MakeBlockSampleSelector(samplerInfo);
+                        // default sample selector for STR is blocked
+                        if (samplerInfo.SampleSelectorType == CruiseDAL.Schema.CruiseMethods.SYSTEMATIC_SAMPLER_TYPE)
+                        { return MakeSystematicSampleSelector(samplerInfo); }
+                        else
+                        { return MakeBlockSampleSelector(samplerInfo); }
                     }
                 case "S3P":
                     {

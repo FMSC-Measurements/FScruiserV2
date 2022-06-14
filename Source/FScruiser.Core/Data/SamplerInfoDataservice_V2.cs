@@ -20,7 +20,8 @@ namespace FScruiser.Data
                 "SELECT st.Code AS StratumCode, " +
                 "sg.Code AS SampleGroupCode, " +
                 "st.Method, " +
-                String.Format("(CASE sg.SampleSelectorType WHEN '{0}' THEN 1 ELSE 0 END) AS UseExternalSampler,", CruiseMethods.CLICKER_SAMPLER_TYPE) +
+                String.Format("(CASE sg.SampleSelectorType WHEN '{0}' THEN 1 ELSE 0 END) AS UseExternalSampler, ", CruiseMethods.CLICKER_SAMPLER_TYPE) +
+                "sg.SampleSelectorType, " +
                 "sg.SamplingFrequency, " +
                 "sg.InsuranceFrequency, " +
                 "sg.KZ " +

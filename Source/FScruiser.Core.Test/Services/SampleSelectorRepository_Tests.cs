@@ -4,6 +4,7 @@ using FMSC.Sampling;
 using FScruiser.Core.Test.Data;
 using FScruiser.Data;
 using FScruiser.Models;
+using FScruiser.Sampling;
 using FScruiser.Services;
 using Moq;
 using System;
@@ -36,6 +37,8 @@ namespace FScruiser.Core.Test.Services
 
                 var samplerAgain = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
                 samplerAgain.Should().BeSameAs(sampler);
+
+                ssRepo.SaveSamplerStates();
             }
         }
 
@@ -65,11 +68,57 @@ namespace FScruiser.Core.Test.Services
                 sampler.SampleGroupCode.Should().Be(sgCode);
 
                 sampler.Should().BeAssignableTo<IFrequencyBasedSelecter>();
-                //sampler.Should().BeOfType<BlockSelecter>();
+                if (freq > 0)
+                { sampler.Should().BeOfType<BlockSelecter>(); }
+                else
+                { sampler.Should().BeOfType<ZeroFrequencySelecter>(); }
+                ((IFrequencyBasedSelecter)sampler).Sample().Should().NotBeNull();
+
                 ((IFrequencyBasedSelecter)sampler).Sample().Should().NotBeNull();
 
                 var samplerAgain = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
                 samplerAgain.Should().BeSameAs(sampler);
+
+                ssRepo.SaveSamplerStates();
+            }
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(5)]
+        public void GetSamplerBySampleGroupCode_STR_Systematic(int freq)
+        {
+            var stCode = "00";
+            var sgCode = "01";
+            var iFreq = 2;
+
+            using (var db = CreateDataStore(methods: new[] { "STR" }))
+            {
+                db.Execute($"UPDATE SampleGroup SET SamplingFrequency = @p2, InsuranceFrequency = @p3, SampleSelectorType = @p4 WHERE Code = @p1;",
+                    sgCode, freq, iFreq, CruiseMethods.SYSTEMATIC_SAMPLER_TYPE);
+
+                var sids = new SamplerInfoDataservice_V2(db);
+                var ssRepo = new SampleSelectorRepository(sids);
+
+                var sampler = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
+                sampler.Should().NotBeNull();
+
+                sampler.StratumCode.Should().Be(stCode);
+                sampler.SampleGroupCode.Should().Be(sgCode);
+
+                sampler.Should().BeAssignableTo<IFrequencyBasedSelecter>();
+                if (freq > 0)
+                { sampler.Should().BeOfType<SystematicSelecter>(); }
+                else
+                { sampler.Should().BeOfType<ZeroFrequencySelecter>(); }
+                ((IFrequencyBasedSelecter)sampler).Sample().Should().NotBeNull();
+
+                var samplerAgain = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
+                samplerAgain.Should().BeSameAs(sampler);
+
+                ssRepo.SaveSamplerStates();
             }
         }
 
@@ -99,6 +148,8 @@ namespace FScruiser.Core.Test.Services
 
                 var samplerAgain = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
                 samplerAgain.Should().BeSameAs(sampler);
+
+                ssRepo.SaveSamplerStates();
             }
         }
 
@@ -129,6 +180,8 @@ namespace FScruiser.Core.Test.Services
 
                 var samplerAgain = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
                 samplerAgain.Should().BeSameAs(sampler);
+
+                ssRepo.SaveSamplerStates();
             }
         }
 
@@ -376,6 +429,65 @@ namespace FScruiser.Core.Test.Services
                 else if (sampler is IThreePSelector tps)
                 { tps.Sample(10); }
                 else { throw new Exception("unexpected sampler type"); }
+
+                var samplerAgain = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
+                samplerAgain.Should().BeSameAs(sampler);
+
+                // save sampler states and repopulate them
+                ssRepo.SaveSamplerStates();
+
+                // repopulate samplers using a new repo
+                var ssRepo2 = new SampleSelectorRepository(sids);
+                var samplerAgian2 = ssRepo2.GetSamplerBySampleGroupCode(stCode, sgCode);
+                samplerAgian2.Should().BeEquivalentTo(sampler);
+
+                // make sure it works
+                if (samplerAgian2 is IFrequencyBasedSelecter fbs2)
+                { fbs2.Sample(); }
+                else if (sampler is IThreePSelector tps)
+                { tps.Sample(10); }
+                else { throw new Exception("unexpected sampler type"); }
+            }
+        }
+
+        [Theory]
+        [InlineData("100", null)]
+        [InlineData("FIX", null)]
+        [InlineData("PNT", null)]
+        [InlineData("FIXCNT", null)]
+        [InlineData("STR", null)]
+        [InlineData("STR", "SystematicSelecter")]
+        [InlineData("S3P", null)]
+        [InlineData("3P", null)]
+        [InlineData("P3P", null)]
+        [InlineData("F3P", null)]
+        [InlineData("FCM", null)]
+        [InlineData("PCM", null)]
+        public void SaveSamplerStates_WithoutTallying(string method, string sampleSelectorType)
+        {
+            var freq = 5;
+            var stCode = "00";
+            var sgCode = "01";
+            var iFreq = 1;
+
+            using (var db = CreateDataStore(methods: new[] { "STR" }))
+            {
+                if (sampleSelectorType != null)
+                {
+                    db.Execute($"UPDATE SampleGroup SET SamplingFrequency = @p2, InsuranceFrequency = @p3, SampleSelectorType = @p4 WHERE Code = @p1;",
+                    sgCode, freq, iFreq, sampleSelectorType);
+                }
+                else
+                {
+                    db.Execute($"UPDATE SampleGroup SET SamplingFrequency = @p2, InsuranceFrequency = @p3 WHERE Code = @p1;",
+                        sgCode, freq, iFreq);
+                }
+
+                var sids = new SamplerInfoDataservice_V2(db);
+                var ssRepo = new SampleSelectorRepository(sids);
+
+                var sampler = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
+                sampler.Should().NotBeNull();
 
                 var samplerAgain = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
                 samplerAgain.Should().BeSameAs(sampler);
