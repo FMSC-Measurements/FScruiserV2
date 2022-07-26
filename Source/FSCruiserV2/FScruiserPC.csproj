@@ -42,7 +42,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <ProjectReference Include="..\..\FMSC.Controls\FMSC.Controls\FMSC.Controls.VS15.csproj" />
+    <ProjectReference Include="..\..\FMSC.Controls\FMSC.Controls\FMSC.Controls.csproj" />
     <ProjectReference Include="..\FScruiser.Core\FScruiser.Core.csproj" />
   </ItemGroup>
 

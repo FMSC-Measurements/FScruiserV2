@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
@@ -19,6 +19,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
+	<!-- when targeting net461 or newer SqlitePCL.Raw cant find e_sqlite3 because of xunit's shadow copy feature
+  see https://github.com/reactiveui/Akavache/pull/496 and https://github.com/xunit/xunit/issues/1198 -->
+	<ItemGroup>
+		<Content Include="$(MSBuildThisFileDirectory)xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\FScruiser.Core\FScruiser.Core.csproj" />
