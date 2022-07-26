@@ -86,6 +86,39 @@ namespace FScruiser.Core.Test.Data
         }
 
         [Fact]
+        public void UpsertSamplerState_insert_throws()
+        {
+            var stCode = "00";
+            var sgCode = "01";
+
+            using (var db = CreateDataStore(methods: new[] { "STR" }))
+            {
+                var random = new Random();
+
+                var sg = db.Query<SampleGroupDO>("Select * from SampleGroup;").First();
+
+                var ds = new SamplerInfoDataservice_V2(db);
+
+                var ss = new SamplerState()
+                {
+                    StratumCode = stCode,
+                    SampleGroupCode = "something",
+                    Counter = random.Next(1000),
+                    BlockState = "blockStateTest1",
+                    InsuranceCounter = random.Next(1000),
+                    InsuranceIndex = random.Next(1000),
+                    SampleSelectorType = "ssTypeTest1",
+                    SystematicIndex = random.Next(1000),
+                };
+                ds.Invoking(x => x.UpsertSamplerState(ss)).Should().Throw<FMSC.ORM.ConstraintException>();
+
+                var ssAgain = ds.GetSamplerState(stCode, sgCode);
+                ssAgain.Should().BeNull();
+                //ssAgain.Should().BeEquivalentTo(ss);
+            }
+        }
+
+        [Fact]
         public void UpsertSamplerState_update()
         {
             var random = new Random();
