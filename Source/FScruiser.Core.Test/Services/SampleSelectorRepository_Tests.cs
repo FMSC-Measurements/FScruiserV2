@@ -437,17 +437,25 @@ namespace FScruiser.Core.Test.Services
         [InlineData("F3P")]
         [InlineData("FCM")]
         [InlineData("PCM")]
-        public void SaveSamplerStates(string method)
+        public void SaveSamplerStates(string method, int freq = 5, int iFreq = 2, int kz = 50)
         {
-            var freq = 5;
             var stCode = "00";
             var sgCode = "01";
-            var iFreq = 2;
 
             using (var db = CreateDataStore(stCode, sgCode, method))
             {
-                db.Execute($"UPDATE SampleGroup SET SamplingFrequency = @p2, InsuranceFrequency = @p3 WHERE Code = @p1;",
-                    sgCode, freq, iFreq);
+                if (CruiseMethods.TALLY_METHODS.Contains(method))
+                {
+                    db.Execute($"UPDATE SampleGroup SET KZ = @p2, InsuranceFrequency = @p3 WHERE Code = @p1;",
+                        sgCode, kz, iFreq);
+                }
+                if (CruiseMethods.FREQUENCY_SAMPLED_METHODS.Contains(method) || method == "S3P")
+                {
+                    db.Execute($"UPDATE SampleGroup SET SamplingFrequency = @p2, InsuranceFrequency = @p3 WHERE Code = @p1;",
+                        sgCode, freq, iFreq);
+                }
+
+
 
                 var sids = new SamplerInfoDataservice_V2(db);
                 var ssRepo = new SampleSelectorRepository(sids);
@@ -462,7 +470,7 @@ namespace FScruiser.Core.Test.Services
                 { tps.Sample(10); }
                 else { throw new Exception("unexpected sampler type"); }
 
-                // verify that repo cache mechinism works and returns same instance of sampler
+                // verify that repo cache mechanism works and returns same instance of sampler
                 var samplerAgain = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
                 samplerAgain.Should().BeSameAs(sampler);
 
@@ -484,6 +492,15 @@ namespace FScruiser.Core.Test.Services
         }
 
         [Theory]
+        [InlineData("STR")]
+        [InlineData("FCM")]
+        [InlineData("PCM")]
+        public void SaveSamplerStates_zeroFreq(string method)
+        {
+            SaveSamplerStates(method, freq: 0, iFreq: 0);
+        }
+
+        [Theory]
         [InlineData("100", null)]
         [InlineData("FIX", null)]
         [InlineData("PNT", null)]
@@ -502,18 +519,25 @@ namespace FScruiser.Core.Test.Services
             var stCode = "00";
             var sgCode = "01";
             var iFreq = 1;
+            var kz = 50;
 
             using (var db = CreateDataStore(stCode, sgCode, method))
             {
-                if (sampleSelectorType != null)
+                if (CruiseMethods.TALLY_METHODS.Contains(method))
                 {
-                    db.Execute($"UPDATE SampleGroup SET SamplingFrequency = @p2, InsuranceFrequency = @p3, SampleSelectorType = @p4 WHERE Code = @p1;",
-                    sgCode, freq, iFreq, sampleSelectorType);
+                    db.Execute($"UPDATE SampleGroup SET KZ = @p2, InsuranceFrequency = @p3 WHERE Code = @p1;",
+                        sgCode, kz, iFreq);
                 }
-                else
+                if (CruiseMethods.FREQUENCY_SAMPLED_METHODS.Contains(method) || method == "S3P")
                 {
                     db.Execute($"UPDATE SampleGroup SET SamplingFrequency = @p2, InsuranceFrequency = @p3 WHERE Code = @p1;",
                         sgCode, freq, iFreq);
+                }
+
+                if (sampleSelectorType != null)
+                {
+                    db.Execute($"UPDATE SampleGroup SET SampleSelectorType = @p2 WHERE Code = @p1;",
+                    sgCode, sampleSelectorType);
                 }
 
                 var sids = new SamplerInfoDataservice_V2(db);

@@ -200,6 +200,9 @@ namespace FScruiser.Services
         {
             foreach (var sampler in _sampleSelectors.Values.Select(x => x))
             {
+                //if(sampler is ZeroFrequencySelecter)    { continue; }
+                //if(sampler is HundredPCTSelector)       { continue; }
+
                 SaveSampler(sampler);
             }
         }

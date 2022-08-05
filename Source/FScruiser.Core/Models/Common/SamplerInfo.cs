@@ -6,6 +6,7 @@
         public string SampleGroupCode { get; set; }
         public string Method { get; set; }
         public string SampleSelectorType { get; set; }
+        public int TreeCountCountTree { get; set; }
         public bool UseExternalSampler { get; set; }
         public int SamplingFrequency { get; set; }
         public int InsuranceFrequency { get; set; }
