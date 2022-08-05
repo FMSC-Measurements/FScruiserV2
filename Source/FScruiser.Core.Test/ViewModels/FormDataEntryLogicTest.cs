@@ -234,9 +234,11 @@ namespace FScruiser.Core.Test.ViewModels
             dialogServiceMock.Setup(ds => ds.AskKPI(It.Is<int>(x => x == minKPI), It.Is<int>(x => x == maxKPI), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>() ))
                 .Returns(expectedKPI);
 
-            var sg = new SampleGroup() { MinKPI = minKPI, MaxKPI = maxKPI };
+            var st = new Stratum() { Code = "st1", };
+            var sg = new SampleGroup() { Code = "sg1", Stratum = st, MinKPI = minKPI, MaxKPI = maxKPI };
 
-            var count = new CountTree() { TreeCount = 0, SumKPI = 0 };
+            var tdv = new TreeDefaultValueDO() { Species = "sp1", LiveDead = "L", PrimaryProduct = "01" };
+            var count = new CountTree() { TreeDefaultValue = tdv, TreeCount = 0, SumKPI = 0 };
             var sampleSelector = new FMSC.Sampling.ThreePSelecter(1, 0);
 
             var expectedTree = new Tree();
@@ -266,9 +268,11 @@ namespace FScruiser.Core.Test.ViewModels
             dialogServiceMock.Setup(ds => ds.AskKPI(It.Is<int>(x => x == minKPI), It.Is<int>(x => x == maxKPI), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(expectedKPI);
 
-            var sg = new SampleGroup() { MinKPI = minKPI, MaxKPI = maxKPI };
+            var st = new Stratum() { Code = "st1", };
+            var sg = new SampleGroup() { Code = "sg1", Stratum = st, MinKPI = minKPI, MaxKPI = maxKPI };
 
-            var count = new CountTree() { TreeCount = 0, SumKPI = 0 };
+            var tdv = new TreeDefaultValueDO() { Species = "sp1", LiveDead = "L", PrimaryProduct = "01" };
+            var count = new CountTree() { TreeDefaultValue = tdv, TreeCount = 0, SumKPI = 0 };
             var sampleSelector = new FMSC.Sampling.ThreePSelecter(1,  0);
 
             var expectedTree = new Tree();
@@ -292,9 +296,11 @@ namespace FScruiser.Core.Test.ViewModels
             dialogServiceMock.Setup(ds => ds.AskKPI(It.Is<int>(x => x == minKPI), It.Is<int>(x => x == maxKPI), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(expectedKPI);
 
-            var sg = new SampleGroup() { MinKPI = minKPI, MaxKPI = maxKPI };
+            var st = new Stratum() { Code = "st1", };
+            var sg = new SampleGroup() { Code = "sg1", Stratum = st, MinKPI = minKPI, MaxKPI = maxKPI };
 
-            var count = new CountTree() { TreeCount = 0, SumKPI = 0 };
+            var tdv = new TreeDefaultValueDO() { Species = "sp1", LiveDead = "L", PrimaryProduct = "01" };
+            var count = new CountTree() { TreeDefaultValue = tdv, TreeCount = 0, SumKPI = 0 };
             var sampleSelector = new FMSC.Sampling.ThreePSelecter(1, 0);
 
             var expectedTree = new Tree();

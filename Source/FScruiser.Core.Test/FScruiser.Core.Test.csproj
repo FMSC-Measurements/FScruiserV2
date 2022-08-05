@@ -2,9 +2,11 @@
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CruiseDAL.V2.Models" Version="2.7.4.108" />
     <PackageReference Include="FluentAssertions" Version="5.4.1" />
     <PackageReference Include="Moq" Version="4.8.3" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />

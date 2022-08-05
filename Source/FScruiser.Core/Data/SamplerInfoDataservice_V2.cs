@@ -16,11 +16,18 @@ namespace FScruiser.Data
 
         public SamplerInfo GetSamplerInfo(string stratumCode, string sampleGroupCode)
         {
+            var treeCount = Database.ExecuteScalar<int>("SELECT ifnull(sum(TreeCount), 0) FROM CountTree " +
+                "JOIN SampleGroup AS sg USING (SampleGroup_CN) " +
+                "JOIN Stratum AS st USING (Stratum_CN) " +
+                "WHERE st.Code = @p1 and sg.Code = @p2 " +
+                "GROUP BY st.Code, sg.Code;", stratumCode, sampleGroupCode);
+
             return Database.Query<SamplerInfo>(
                 "SELECT st.Code AS StratumCode, " +
                 "sg.Code AS SampleGroupCode, " +
                 "st.Method, " +
                 String.Format("(CASE sg.SampleSelectorType WHEN '{0}' THEN 1 ELSE 0 END) AS UseExternalSampler, ", CruiseMethods.CLICKER_SAMPLER_TYPE) +
+                treeCount.ToString() + " AS CountTreeTotal, " +
                 "sg.SampleSelectorType, " +
                 "sg.SamplingFrequency, " +
                 "sg.InsuranceFrequency, " +

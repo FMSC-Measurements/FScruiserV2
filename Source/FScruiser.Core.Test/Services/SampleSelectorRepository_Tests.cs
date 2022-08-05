@@ -1,4 +1,5 @@
-﻿using CruiseDAL.Schema;
+﻿using CruiseDAL;
+using CruiseDAL.V2.Models;
 using FluentAssertions;
 using FMSC.Sampling;
 using FScruiser.Core.Test.Data;
@@ -10,18 +11,48 @@ using Moq;
 using System;
 using System.Linq;
 using Xunit;
+using CruiseMethods = CruiseDAL.Schema.CruiseMethods;
 
 namespace FScruiser.Core.Test.Services
 {
     public class SampleSelectorRepository_Tests : DataTestBase
     {
+        public DAL CreateDataStore(string stCode, string sgCode,  string method, string sampleSelectorType = null)
+        {
+            sampleSelectorType ??= CruiseDAL.Schema.CruiseMethods.BLOCK_SAMPLER_TYPE;
+
+            var ds = new DAL();
+
+            var st = new Stratum
+            {
+                Code = stCode,
+                Method = method,
+
+            };
+            ds.Insert(st);
+
+            var sg = new SampleGroup
+            {
+                Code = sgCode,
+                Stratum_CN = st.Stratum_CN.Value,
+                CutLeave = "C",
+                UOM = "something",
+                PrimaryProduct = "something",
+                SampleSelectorType = sampleSelectorType,
+            };
+            ds.Insert(sg);
+
+            return ds;
+        }
+
+
         [Fact]
         public void GetSamplerBySampleGroupCode_100pct()
         {
             var stCode = "00";
             var sgCode = "01";
 
-            using (var db = CreateDataStore(methods: new[] { "100" }))
+            using (var db = CreateDataStore(stCode, sgCode, "100"))
             {
                 var sids = new SamplerInfoDataservice_V2(db);
                 var ssRepo = new SampleSelectorRepository(sids);
@@ -53,7 +84,7 @@ namespace FScruiser.Core.Test.Services
             var sgCode = "01";
             var iFreq = 2;
 
-            using (var db = CreateDataStore(methods: new[] { "STR" }))
+            using (var db = CreateDataStore(stCode, sgCode, "STR"))
             {
                 db.Execute($"UPDATE SampleGroup SET SamplingFrequency = @p2, InsuranceFrequency = @p3 WHERE Code = @p1;",
                     sgCode, freq, iFreq);
@@ -94,10 +125,10 @@ namespace FScruiser.Core.Test.Services
             var sgCode = "01";
             var iFreq = 2;
 
-            using (var db = CreateDataStore(methods: new[] { "STR" }))
+            using (var db = CreateDataStore(stCode, sgCode, "STR"))
             {
                 db.Execute($"UPDATE SampleGroup SET SamplingFrequency = @p2, InsuranceFrequency = @p3, SampleSelectorType = @p4 WHERE Code = @p1;",
-                    sgCode, freq, iFreq, CruiseMethods.SYSTEMATIC_SAMPLER_TYPE);
+                    sgCode, freq, iFreq, CruiseDAL.Schema.CruiseMethods.SYSTEMATIC_SAMPLER_TYPE);
 
                 var sids = new SamplerInfoDataservice_V2(db);
                 var ssRepo = new SampleSelectorRepository(sids);
@@ -129,7 +160,7 @@ namespace FScruiser.Core.Test.Services
             var sgCode = "01";
             var freq = 5;
 
-            using (var db = CreateDataStore(methods: new[] { "STR" }))
+            using (var db = CreateDataStore(stCode, sgCode, "STR"))
             {
                 db.Execute($"UPDATE SampleGroup SET SamplingFrequency = @p2, SampleSelectorType = '{CruiseMethods.CLICKER_SAMPLER_TYPE}' WHERE Code = @p1;",
                     sgCode, freq);
@@ -161,7 +192,7 @@ namespace FScruiser.Core.Test.Services
             var kz = 101;
             var kpi = 50;
 
-            using (var db = CreateDataStore(methods: new[] { "3P" }))
+            using (var db = CreateDataStore(stCode, sgCode, "3P"))
             {
                 db.Execute($"UPDATE SampleGroup SET KZ = @p2 WHERE Code = @p1;",
                     sgCode, kz);
@@ -205,7 +236,7 @@ namespace FScruiser.Core.Test.Services
                 Method = method,
             };
 
-            var sState = new SamplerState()
+            var sState = new FScruiser.Models.SamplerState()
             {
                 SampleGroupCode = sgCode,
                 StratumCode = stCode,
@@ -253,7 +284,7 @@ namespace FScruiser.Core.Test.Services
                 Method = method,
             };
 
-            var sState = new SamplerState()
+            var sState = new FScruiser.Models.SamplerState()
             {
                 SampleGroupCode = sgCode,
                 StratumCode = stCode,
@@ -304,7 +335,7 @@ namespace FScruiser.Core.Test.Services
                 Method = method,
             };
 
-            var sState = new SamplerState()
+            var sState = new FScruiser.Models.SamplerState()
             {
                 SampleGroupCode = sgCode,
                 StratumCode = stCode,
@@ -344,7 +375,7 @@ namespace FScruiser.Core.Test.Services
             var stCode = "00";
             var sgCode = "01";
 
-            using (var db = CreateDataStore(methods: new[] { method }))
+            using (var db = CreateDataStore(stCode, sgCode, method))
             {
                 var sids = new SamplerInfoDataservice_V2(db);
                 var ssRepo = new SampleSelectorRepository(sids);
@@ -372,7 +403,7 @@ namespace FScruiser.Core.Test.Services
             var sgCode = "01";
             var kz = 101;
 
-            using (var db = CreateDataStore(methods: new[] { method }))
+            using (var db = CreateDataStore(stCode, sgCode, method))
             {
                 db.Execute($"UPDATE SampleGroup SET KZ = @p2 WHERE Code = @p1;",
                     sgCode, kz);
@@ -413,7 +444,7 @@ namespace FScruiser.Core.Test.Services
             var sgCode = "01";
             var iFreq = 2;
 
-            using (var db = CreateDataStore(methods: new[] { "STR" }))
+            using (var db = CreateDataStore(stCode, sgCode, method))
             {
                 db.Execute($"UPDATE SampleGroup SET SamplingFrequency = @p2, InsuranceFrequency = @p3 WHERE Code = @p1;",
                     sgCode, freq, iFreq);
@@ -424,12 +455,14 @@ namespace FScruiser.Core.Test.Services
                 var sampler = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
                 sampler.Should().NotBeNull();
 
+                // effect the sampler state
                 if (sampler is IFrequencyBasedSelecter fbs)
-                { fbs.Sample(); }
+                { fbs.Sample(); } 
                 else if (sampler is IThreePSelector tps)
                 { tps.Sample(10); }
                 else { throw new Exception("unexpected sampler type"); }
 
+                // verify that repo cache mechinism works and returns same instance of sampler
                 var samplerAgain = ssRepo.GetSamplerBySampleGroupCode(stCode, sgCode);
                 samplerAgain.Should().BeSameAs(sampler);
 
@@ -470,7 +503,7 @@ namespace FScruiser.Core.Test.Services
             var sgCode = "01";
             var iFreq = 1;
 
-            using (var db = CreateDataStore(methods: new[] { "STR" }))
+            using (var db = CreateDataStore(stCode, sgCode, method))
             {
                 if (sampleSelectorType != null)
                 {

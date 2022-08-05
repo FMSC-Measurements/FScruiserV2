@@ -23,8 +23,8 @@ namespace FScruiser.Services
 
         public ISampleSelector GetSamplerBySampleGroupCode(string stratumCode, string sgCode)
         {
-            if (string.IsNullOrEmpty(stratumCode)) { throw new ArgumentException($"'{nameof(stratumCode)}' cannot be null or empty", nameof(stratumCode)); }
-            if (string.IsNullOrEmpty(sgCode)) { throw new ArgumentException($"'{nameof(sgCode)}' cannot be null or empty", nameof(sgCode)); }
+            if (string.IsNullOrEmpty(stratumCode)) { throw new ArgumentException("'stratumCode' cannot be null or empty", "stratumCode"); }
+            if (string.IsNullOrEmpty(sgCode)) { throw new ArgumentException("'sgCode' cannot be null or empty", "sgCode"); }
 
             var key = stratumCode + "/" + sgCode;
 
@@ -69,11 +69,19 @@ namespace FScruiser.Services
 
                 case "STR":
                     {
+                        var freq = samplerInfo.SamplingFrequency;
+                        if (freq == 0) { return new ZeroFrequencySelecter(); }
+
+                        var state = Dataservice.GetSamplerState(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
+
+                        var sampleSelectorType = (state != null && state.SampleSelectorType != null && state.Counter > 0) ? 
+                            state.SampleSelectorType 
+                            : samplerInfo.SampleSelectorType;
                         // default sample selector for STR is blocked
-                        if (samplerInfo.SampleSelectorType == CruiseDAL.Schema.CruiseMethods.SYSTEMATIC_SAMPLER_TYPE)
-                        { return MakeSystematicSampleSelector(samplerInfo); }
+                        if (sampleSelectorType == CruiseDAL.Schema.CruiseMethods.SYSTEMATIC_SAMPLER_TYPE)
+                        { return MakeSystematicSampleSelector(state, samplerInfo); }
                         else
-                        { return MakeBlockSampleSelector(samplerInfo); }
+                        { return MakeBlockSampleSelector(state, samplerInfo); }
                     }
                 case "S3P":
                     {
@@ -88,6 +96,9 @@ namespace FScruiser.Services
                 case "FCM":
                 case "PCM":
                     {
+                        var freq = samplerInfo.SamplingFrequency;
+                        if (freq == 0) { return new ZeroFrequencySelecter(); }
+
                         return MakeSystematicSampleSelector(samplerInfo);
                     }
                 default:
@@ -135,35 +146,40 @@ namespace FScruiser.Services
         public ISampleSelector MakeSystematicSampleSelector(SamplerInfo samplerInfo)
         {
             var state = Dataservice.GetSamplerState(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
+            return MakeSystematicSampleSelector(state, samplerInfo);
+        }
+
+        public ISampleSelector MakeSystematicSampleSelector(SamplerState state, SamplerInfo samplerInfo)
+        {
+            if (samplerInfo == null) { throw new ArgumentNullException("samplerInfo"); }
 
             var freq = samplerInfo.SamplingFrequency;
-
-            if (freq == 0) { return new ZeroFrequencySelecter(); }
+            if (state != null)
+            {
+                return new SystematicSelecter(freq,
+                    samplerInfo.InsuranceFrequency,
+                    state.Counter,
+                    state.InsuranceIndex,
+                    state.InsuranceCounter,
+                    state.SystematicIndex);
+            }
             else
             {
-                if (state != null)
-                {
-                    return new SystematicSelecter(freq,
-                        samplerInfo.InsuranceFrequency,
-                        state.Counter,
-                        state.InsuranceIndex,
-                        state.InsuranceCounter,
-                        state.SystematicIndex);
-                }
-                else
-                {
-                    return new SystematicSelecter(freq, samplerInfo.InsuranceFrequency, true);
-                }
+                return new SystematicSelecter(freq, samplerInfo.InsuranceFrequency, true);
             }
         }
 
         public ISampleSelector MakeBlockSampleSelector(SamplerInfo samplerInfo)
         {
             var state = Dataservice.GetSamplerState(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
+            return MakeBlockSampleSelector(state, samplerInfo);
+        }
+
+        public ISampleSelector MakeBlockSampleSelector(SamplerState state, SamplerInfo samplerInfo)
+        {
+            if (samplerInfo == null) {  throw new ArgumentNullException("samplerInfo"); }
 
             var freq = samplerInfo.SamplingFrequency;
-
-            if (freq == 0) { return new ZeroFrequencySelecter(); }
 
             if (state == null)
             {
