@@ -418,7 +418,7 @@ namespace FSCruiser.Core.Models
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.Fail(e.GetType().Name, e.Message);
+                //System.Diagnostics.Debug.Fail(e.GetType().Name, e.Message);
                 //this.HandleNonCriticalException(e, "Unable to save tree. Ensure Tree Number, Sample Group and Stratum are valid");
                 return false;
             }
