@@ -13,7 +13,7 @@ namespace FScruiser.Sampling
             get {return  1; }
         }
 
-        public int Count { get; protected set; }
+        public int Count { get; set; }
 
         public int ITreeFrequency { get { return 0;} }
 

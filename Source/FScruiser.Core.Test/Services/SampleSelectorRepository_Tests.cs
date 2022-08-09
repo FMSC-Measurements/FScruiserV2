@@ -153,6 +153,74 @@ namespace FScruiser.Core.Test.Services
             }
         }
 
+
+        // test situation where the SampleSelectorType on sample group is different from the SampleState table
+        [Theory]
+        [InlineData(CruiseMethods.BLOCK_SAMPLER_TYPE, CruiseMethods.SYSTEMATIC_SAMPLER_TYPE)]
+        [InlineData(CruiseMethods.SYSTEMATIC_SAMPLER_TYPE, CruiseMethods.BLOCK_SAMPLER_TYPE)]
+        public void GetSamplerBySampleGroupCode_STR_SampleSelectorTypeDifferent(string sgSST, string ssSST)
+        {
+            var stratumCode = "00";
+            var sgCode = "01";
+            using var db = new DAL();
+
+            var unit = new CuttingUnit
+            {
+                Code = "u1"
+            };
+            db.Insert(unit);
+
+            var stratum = new Stratum
+            {
+                Code = stratumCode,
+                Method = "STR",
+            };
+            db.Insert(stratum);
+
+            var sg = new SampleGroup
+            {
+                Code = sgCode,
+                Stratum_CN = stratum.Stratum_CN.Value,
+                CutLeave = "C",
+                UOM = "something",
+                PrimaryProduct = "something",
+                SamplingFrequency = 10,
+                SampleSelectorType = sgSST,
+            };
+            db.Insert(sg);
+
+            var sState = new CruiseDAL.V2.Models.SamplerState
+            {
+                SampleGroup_CN = sg.SampleGroup_CN.Value,
+                Counter = 101,
+                SystematicIndex = 9,
+                SampleSelectorType = ssSST,
+            };
+            db.Insert(sState);
+
+            //var countTree = new CountTree
+            //{
+            //    CuttingUnit_CN = 1,
+            //    SampleGroup_CN = sg.SampleGroup_CN.Value,
+            //    TreeCount = 101,
+            //};
+            //db.Insert(countTree);
+
+            var sids = new SamplerInfoDataservice_V2(db);
+            var ssRepo = new SampleSelectorRepository(sids);
+
+            var sampler = ssRepo.GetSamplerBySampleGroupCode(stratumCode, sgCode);
+
+            if(ssSST == CruiseMethods.BLOCK_SAMPLER_TYPE)
+            {
+                sampler.Should().BeOfType<BlockSelecter>();
+            }
+            else if (ssSST == CruiseMethods.SYSTEMATIC_SAMPLER_TYPE)
+            {
+                sampler.Should().BeOfType<SystematicSelecter>();
+            }
+        }
+
         [Fact]
         public void GetSamplerBySampleGroupCode_STR_externalSampler()
         {
@@ -431,7 +499,7 @@ namespace FScruiser.Core.Test.Services
         [InlineData("PNT")]
         [InlineData("FIXCNT")]
         [InlineData("STR")]
-        [InlineData("S3P")]
+        [InlineData("S3P", Skip = "not implemented")]
         [InlineData("3P")]
         [InlineData("P3P")]
         [InlineData("F3P")]
@@ -495,9 +563,18 @@ namespace FScruiser.Core.Test.Services
         [InlineData("STR")]
         [InlineData("FCM")]
         [InlineData("PCM")]
-        public void SaveSamplerStates_zeroFreq(string method)
+        public void SaveSamplerStates_FreqOfZero(string method)
         {
             SaveSamplerStates(method, freq: 0, iFreq: 0);
+        }
+
+        [Theory]
+        [InlineData("STR")]
+        [InlineData("FCM")]
+        [InlineData("PCM")]
+        public void SaveSamplerStates_FreqOfOne(string method)
+        {
+            SaveSamplerStates(method, freq: 1, iFreq: 0);
         }
 
         [Theory]
@@ -507,7 +584,7 @@ namespace FScruiser.Core.Test.Services
         [InlineData("FIXCNT", null)]
         [InlineData("STR", null)]
         [InlineData("STR", "SystematicSelecter")]
-        [InlineData("S3P", null)]
+        [InlineData("S3P", null, Skip = "not implemented")]
         [InlineData("3P", null)]
         [InlineData("P3P", null)]
         [InlineData("F3P", null)]

@@ -64,15 +64,17 @@ namespace FScruiser.Services
                 case "PNT":
                 case "FIXCNT":
                     {
-                        return new HundredPCTSelector();
+                        var state = Dataservice.GetSamplerState(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
+
+                        return new HundredPCTSelector() { Count = (state != null ? state.Counter : 0), };
                     }
 
                 case "STR":
                     {
-                        var freq = samplerInfo.SamplingFrequency;
-                        if (freq == 0) { return new ZeroFrequencySelecter(); }
-
                         var state = Dataservice.GetSamplerState(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
+
+                        var freq = samplerInfo.SamplingFrequency;
+                        if (freq == 0) { return new ZeroFrequencySelecter() { Count = (state != null ? state.Counter : 0), }; }
 
                         var sampleSelectorType = (state != null && state.SampleSelectorType != null && state.Counter > 0) ? 
                             state.SampleSelectorType 
@@ -96,10 +98,12 @@ namespace FScruiser.Services
                 case "FCM":
                 case "PCM":
                     {
-                        var freq = samplerInfo.SamplingFrequency;
-                        if (freq == 0) { return new ZeroFrequencySelecter(); }
+                        var state = Dataservice.GetSamplerState(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
 
-                        return MakeSystematicSampleSelector(samplerInfo);
+                        var freq = samplerInfo.SamplingFrequency;
+                        if (freq == 0) { return new ZeroFrequencySelecter() { Count = (state != null ? state.Counter : 0), }; }
+
+                        return MakeSystematicSampleSelector(state, samplerInfo);
                     }
                 default:
                     {
@@ -143,18 +147,12 @@ namespace FScruiser.Services
 
         }
 
-        public ISampleSelector MakeSystematicSampleSelector(SamplerInfo samplerInfo)
-        {
-            var state = Dataservice.GetSamplerState(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
-            return MakeSystematicSampleSelector(state, samplerInfo);
-        }
-
         public ISampleSelector MakeSystematicSampleSelector(SamplerState state, SamplerInfo samplerInfo)
         {
             if (samplerInfo == null) { throw new ArgumentNullException("samplerInfo"); }
 
             var freq = samplerInfo.SamplingFrequency;
-            if (state != null)
+            if (state != null && state.SampleSelectorType == CruiseDAL.Schema.CruiseMethods.SYSTEMATIC_SAMPLER_TYPE)
             {
                 return new SystematicSelecter(freq,
                     samplerInfo.InsuranceFrequency,
@@ -169,23 +167,13 @@ namespace FScruiser.Services
             }
         }
 
-        public ISampleSelector MakeBlockSampleSelector(SamplerInfo samplerInfo)
-        {
-            var state = Dataservice.GetSamplerState(samplerInfo.StratumCode, samplerInfo.SampleGroupCode);
-            return MakeBlockSampleSelector(state, samplerInfo);
-        }
-
         public ISampleSelector MakeBlockSampleSelector(SamplerState state, SamplerInfo samplerInfo)
         {
             if (samplerInfo == null) {  throw new ArgumentNullException("samplerInfo"); }
 
             var freq = samplerInfo.SamplingFrequency;
 
-            if (state == null)
-            {
-                return new BlockSelecter(freq, samplerInfo.InsuranceFrequency);
-            }
-            else
+            if (state != null && state.SampleSelectorType == CruiseDAL.Schema.CruiseMethods.BLOCK_SAMPLER_TYPE)
             {
                 return new BlockSelecter(freq,
                     samplerInfo.InsuranceFrequency,
@@ -194,15 +182,16 @@ namespace FScruiser.Services
                     state.InsuranceIndex,
                     state.InsuranceCounter);
             }
+            else
+            {
+                return new BlockSelecter(freq, samplerInfo.InsuranceFrequency);
+            }
         }
 
         public void SaveSamplerStates()
         {
             foreach (var sampler in _sampleSelectors.Values.Select(x => x))
             {
-                //if(sampler is ZeroFrequencySelecter)    { continue; }
-                //if(sampler is HundredPCTSelector)       { continue; }
-
                 SaveSampler(sampler);
             }
         }
