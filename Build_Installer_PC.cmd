@@ -1,4 +1,4 @@
-@ECHO OFF
+::@ECHO OFF
 SETLOCAL ENABLEEXTENSIONS
 
 ::Boilderplate 
@@ -23,7 +23,16 @@ IF "%interactive%"=="0" PAUSE
 EXIT /B 1
 )
 
-"%localappdata%\Programs\Inno Setup 6\ISCC.exe" /dAPP_VERSION=%appVer% /F"FScruiserV2_PC_%verStamp%" "./Deployment/PCSetupScript.iss" 
+SET innoSetupPath="%localappdata%\Programs\Inno Setup 6\ISCC.exe"
+IF NOT EXIST %innoSetupPath% (
+	SET innoSetupPath="%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe")
+
+IF NOT EXIST %innoSetupPath% (
+	ECHO "inno setup not found"
+	IF "%interactive%"=="0" PAUSE
+	EXIT /B 1)
+
+%innoSetupPath% /dAPP_VERSION=%appVer% /F"FScruiserV2_PC_%verStamp%" "./Deployment/PCSetupScript.iss" 
 
 ::if invoked from windows explorer, pause
 IF "%interactive%"=="0" PAUSE
