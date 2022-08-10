@@ -2,7 +2,7 @@
 
 #define APP_VERSION "2022.08.09"
 #define SPECIALTAG ""
-#define BASEURL "http://www.fs.fed.us/fmsc/measure"
+#define BASEURL "https://www.fs.usda.gov/forestmanagement/products/measurement/index.shtml"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
 
 
