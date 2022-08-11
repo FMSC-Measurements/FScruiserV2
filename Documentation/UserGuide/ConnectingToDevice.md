@@ -4,7 +4,10 @@
 
 To connect your device to a PC, first make sure you have Windows Mobile Device Center (WMDC) installed. If you have used WMDC before, it may automatically start when you connect your device to your PC using USB, otherwise, start WMDC from the start menu.
 
-If you do not have WMDC installed see download link below. 
+If using a Forest Service computer you should be able to download and install WMDC using the software center. 
+Installing using the software center should also apply any nessicary patches to allow you to use WMDC with Windows 10.
+
+Otherwise if you need to download and install WMDC see download link below. 
 
 [Download WMDC](https://junipersys.com/data/support/drvupdate-amd64.exe)
 
@@ -29,6 +32,20 @@ There two are tools available that attempt to fix compatibility issues in Window
 If you are using Internet Explorer, you may need to save the file and run it outside of Internet Explorer, rather than using the "Run" button from inside your browser. 
 
 [Additional information on connecting using Windows 10](http://www.junipersys.com/Juniper-Systems-Rugged-Handheld-Computers/support/Knowledge-Base/Support-Knowledge-Base-Topics/Desktop-Connection-ActiveSync-or-Windows-Mobile-Device-Center/WMDC-in-Windows-10)
+
+## Use Device as External Storage Drive (Allegro Only)
+This method appears to be the most reliable and easiest for users using Juniper Allegro 2 devices, since it doesn't require any 
+software or configuring on the host computer. Note this method requires your device have a SD card installed and 
+not all files on the device will be accessible. Only files located on the SD card can be accessed, and the SD card 
+can not be accessed from the device while connected to the PC. 
+
+
+1. On the device, go to the connections tab in the settings menu
+2. Select the option that says "SD Card - Use as external drive"
+3. Plug the device into a usb cable connected to the pc. 
+4. A new drive labed `USB Drive` should appear under `This PC`
+
+
 
 ## Thumbdrive 
 If you are unable to connect to your device using WMDC, you might still be able to transfer files between your device and PC using a thumb drive or SD card. 
