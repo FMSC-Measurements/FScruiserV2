@@ -202,6 +202,28 @@ namespace FSCruiser.WinForms.DataEntry
                 this._tallyLayout.HandleLoad();
             }
 
+#if !NetCF
+            _startupStopwatch.Stop();
+            var elapsed = _startupStopwatch.ElapsedMilliseconds;
+            Microsoft.AppCenter.Analytics.Analytics.TrackEvent("DataEntry_Startup_Time", 
+                new Dictionary<string, string> { { "Milliseconds", elapsed.ToString() }, });
+
+            var gcMemory = Math.Round((double)GC.GetTotalMemory(false) / (1 << 20), 2); // convert to MB
+            using (var proc = Process.GetCurrentProcess())
+            {
+                var fullWorkingSet = Math.Round((double)proc.WorkingSet64 / (1 << 20), 2); // convert to MB
+                var privateMem = Math.Round((double)proc.PrivateMemorySize64 / (1 << 20), 2);
+                Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Memory_Checkpoint",
+                    new Dictionary<string, string>
+                    {
+                        {"Event", "DataEntry_OnLoad" },
+                        {"managedMem", gcMemory.ToString() },
+                        {"fullWorkingSet", fullWorkingSet.ToString() },
+                        {"privateMem", privateMem.ToString() },
+                    });
+            }
+#endif
+
             // Turn off the wait cursor that was turned on in when displaying main form
             Cursor.Current = Cursors.Default;
             this.OnFocusedLayoutChanged(null, null);

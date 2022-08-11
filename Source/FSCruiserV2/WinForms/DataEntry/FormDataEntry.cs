@@ -11,9 +11,13 @@ namespace FSCruiser.WinForms.DataEntry
 {
     public partial class FormDataEntry
     {
+        System.Diagnostics.Stopwatch _startupStopwatch;
+
         FormDataEntry()
         {
             InitializeComponent();
+            _startupStopwatch = new System.Diagnostics.Stopwatch();
+            _startupStopwatch.Start();
         }
 
         public FormDataEntry(IApplicationController controller,
@@ -22,6 +26,9 @@ namespace FSCruiser.WinForms.DataEntry
             ISampleSelectorRepository sampleSelectorRepository)
         {
             InitializeComponent();
+            _startupStopwatch = new System.Diagnostics.Stopwatch();
+            _startupStopwatch.Start();
+
             InitializeCommon(controller, appSettings, dataService, sampleSelectorRepository);
 
             UpdateAddTreeButton();
