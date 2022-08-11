@@ -96,7 +96,7 @@ namespace FSCruiser.Core.Models
 
         public override void Delete()
         {
-            Debug.Assert(this.CuttingUnit != null);
+            //Debug.Assert(this.CuttingUnit != null);
 
             lock (DAL.TransactionSyncLock)
             {

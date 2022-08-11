@@ -12,11 +12,9 @@ For all other users, the latest version of FScruiser V2 can be downloaded from t
 If installing FScruiser V2 for the first time from the Software Center you may need to uninstall previous versions first. [Follow These Instructions](Install_Remove_Old_Versions.md) for uninstalling older versions. 
 
 ### Portable Install (Zip)
-This option can be used to install FScruiser to a thumb drive, try out an older/newer version without doing a full installation, or install on a computer without administrative privileges. 
+This option can be used to install FScruiser to a thumb drive, or try out an older/newer version without doing a full installation. 
 
 If you get a "Windows protected your PC" message from when you try running the extracted exe, right click on the exe, go to Properties and check `Unblock` 
-
-Extracting using 7-zip can also prevent a "Windows protected your PC" message.
  
 
 ## Mobile

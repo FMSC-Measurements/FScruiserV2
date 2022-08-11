@@ -1,8 +1,10 @@
+
+#define MsBuildOutputDir "..\Source\FSCruiserV2\bin\Release\net462"
 #define APP "FSCruiserV2"
-#define MsBuildOutputDir "..\Source\FSCruiserV2\bin\Release\net461"
-#define APP_VERSION "2021.05.24"
+
+#define APP_VERSION "2022.08.11"
 #define SPECIALTAG ""
-#define BASEURL "https://www.fs.fed.us/forestmanagement/products/measurement"
+#define BASEURL "https://www.fs.usda.gov/forestmanagement/products/measurement"
 #define ORGANIZATION "U.S. Forest Service, Forest Management Service Center"
 
 

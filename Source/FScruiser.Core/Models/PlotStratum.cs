@@ -129,7 +129,6 @@ namespace FSCruiser.Core.Models
 
         public bool IsPlotNumberAvailable(long plotNumber)
         {
-            System.Diagnostics.Debug.Assert(this.Plots != null);
             foreach (Plot pi in Plots)
             {
                 if (pi.PlotNumber == plotNumber)

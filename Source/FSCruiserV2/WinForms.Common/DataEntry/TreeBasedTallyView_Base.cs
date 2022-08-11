@@ -209,7 +209,6 @@ namespace FSCruiser.WinForms
 
         protected void DisplayTallyPanel(Stratum stratumInfo, bool leaveOpen)
         {
-            System.Diagnostics.Debug.Assert(StrataViews.ContainsKey(stratumInfo));
             if (!StrataViews.ContainsKey(stratumInfo)) { return; }
 
             Panel tallyContainer = StrataViews[stratumInfo];

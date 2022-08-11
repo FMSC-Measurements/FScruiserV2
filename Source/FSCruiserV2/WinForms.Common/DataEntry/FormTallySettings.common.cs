@@ -1,5 +1,6 @@
 ﻿using FMSC.Sampling;
 using FScruiser.Core.Services;
+using FScruiser.Sampling;
 using FScruiser.Services;
 using System;
 using System.ComponentModel;
@@ -136,12 +137,13 @@ namespace FSCruiser.WinForms.DataEntry
                 this._totalTreeCount_TB.Text = (countsFromTrees + count.TreeCount).ToString();
                 this._measureTrees_TB.Text = count.GetMeasureTreeCount().ToString();
 
-                String samplingMethod = "Manual";
+                
 
                 var sgCode = count.SampleGroup.Code;
                 var stCode = count.SampleGroup.Stratum.Code;
                 var sampler = SampleSelectorRepository.GetSamplerBySampleGroupCode(stCode, sgCode);
 
+                var samplingMethod = sampler.GetType().Name;
                 if (sampler != null)
                 {
                     if (sampler is SystematicSelecter)
@@ -156,8 +158,18 @@ namespace FSCruiser.WinForms.DataEntry
                     {
                         samplingMethod = "Three P";
                     }
-                    else
-                    { samplingMethod = "undefined"; }
+                    else if (sampler is HundredPCTSelector)
+                    {
+                        samplingMethod = "100%";
+                    }
+                    else if (sampler is ZeroFrequencySelecter)
+                    {
+                        samplingMethod = "0%";
+                    }
+                    else if (sampler is ExternalSampleSelectorPlaceholder)
+                    {
+                        samplingMethod = "Manual";
+                    }
                 }
                 this._samplingMethod_TB.Text = samplingMethod;
             }

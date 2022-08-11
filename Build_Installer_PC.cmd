@@ -1,4 +1,4 @@
-@ECHO OFF
+::@ECHO OFF
 SETLOCAL ENABLEEXTENSIONS
 
 ::Boilderplate 
@@ -32,7 +32,7 @@ IF NOT EXIST %innoSetupPath% (
 	IF "%interactive%"=="0" PAUSE
 	EXIT /B 1)
 
-%innoSetupPath% /dAPP_VERSION=%appVer% /F"FScruiserV2_PC_%verStamp%" "./Deployment/PCSetupScript_old.iss" 
+%innoSetupPath% /dAPP_VERSION=%appVer% /F"FScruiserV2_PC_%verStamp%" "./Deployment/PCSetupScript.iss" 
 
 ::if invoked from windows explorer, pause
 IF "%interactive%"=="0" PAUSE

@@ -62,7 +62,7 @@
             this.label2.Size = new System.Drawing.Size(212, 68);
             this.label2.TabIndex = 9;
             this.label2.Text = "U.S. Forest Service\r\nForest Management Service Center\r\nFort Collins, CO\r\nhttps://" +
-    "www.fs.fed.us/forestmanagement/products/measurement/";
+    "www.fs.usda.gov/forestmanagement/products/measurement/index.shtml";
             // 
             // label1
             // 

@@ -1,4 +1,6 @@
-﻿using CruiseDAL.DataObjects;
+﻿using CruiseDAL;
+using CruiseDAL.DataObjects;
+using CruiseDAL.V2.Models;
 using FluentAssertions;
 using FScruiser.Data;
 using FScruiser.Models;
@@ -16,15 +18,51 @@ namespace FScruiser.Core.Test.Data
         [Fact]
         public void GetSamplerInfo()
         {
-            using(var db = CreateDataStore(methods: new[] { "STR" }))
-            {
-                var strata = db.Query<StratumDO>("select * from Stratum;").ToArray();
-                var sgs = db.Query<SampleGroupDO>("Select * from samplegroup;").ToArray();
+            var stratumCode = "00";
+            var sgCode = "01";
+            using var db = new DAL();
 
-                var ds = new SamplerInfoDataservice_V2(db);
-                var si = ds.GetSamplerInfo("00","01");
-                si.Should().NotBeNull();
-            }
+            var unit = new CuttingUnit
+            {
+                Code = "u1"
+            };
+            db.Insert(unit);
+
+            var stratum = new Stratum
+            {
+                Code = stratumCode,
+                Method = "STR",
+            };
+            db.Insert(stratum);
+
+            var sg = new SampleGroup
+            {
+                Code = sgCode,
+                Stratum_CN = stratum.Stratum_CN.Value,
+                CutLeave = "C",
+                UOM = "something",
+                PrimaryProduct = "something",
+                SamplingFrequency = 10,
+            };
+            db.Insert(sg);
+
+            var countTree = new CountTree
+            {
+                CuttingUnit_CN = 1,
+                SampleGroup_CN = sg.SampleGroup_CN.Value,
+                TreeCount = 101,
+            };
+            db.Insert(countTree);
+
+            //var strata = db.Query<StratumDO>("select * from Stratum;").ToArray();
+            //var sgs = db.Query<SampleGroupDO>("Select * from samplegroup;").ToArray();
+
+            var ds = new SamplerInfoDataservice_V2(db);
+            var si = ds.GetSamplerInfo(stratumCode, sgCode);
+            si.Should().NotBeNull();
+            si.SamplingFrequency.Should().Be(sg.SamplingFrequency);
+            si.TreeCountCountTree.Should().Be(countTree.TreeCount);
+            
         }
 
         [Fact]
@@ -66,7 +104,7 @@ namespace FScruiser.Core.Test.Data
 
                 var ds = new SamplerInfoDataservice_V2(db);
 
-                var ss = new SamplerState()
+                var ss = new FScruiser.Models.SamplerState()
                 {
                     StratumCode = stCode,
                     SampleGroupCode = sgCode,
@@ -86,6 +124,39 @@ namespace FScruiser.Core.Test.Data
         }
 
         [Fact]
+        public void UpsertSamplerState_insert_throws()
+        {
+            var stCode = "00";
+            var sgCode = "01";
+
+            using (var db = CreateDataStore(methods: new[] { "STR" }))
+            {
+                var random = new Random();
+
+                var sg = db.Query<SampleGroupDO>("Select * from SampleGroup;").First();
+
+                var ds = new SamplerInfoDataservice_V2(db);
+
+                var ss = new FScruiser.Models.SamplerState()
+                {
+                    StratumCode = stCode,
+                    SampleGroupCode = "something",
+                    Counter = random.Next(1000),
+                    BlockState = "blockStateTest1",
+                    InsuranceCounter = random.Next(1000),
+                    InsuranceIndex = random.Next(1000),
+                    SampleSelectorType = "ssTypeTest1",
+                    SystematicIndex = random.Next(1000),
+                };
+                ds.Invoking(x => x.UpsertSamplerState(ss)).Should().Throw<FMSC.ORM.ConstraintException>();
+
+                var ssAgain = ds.GetSamplerState(stCode, sgCode);
+                ssAgain.Should().BeNull();
+                //ssAgain.Should().BeEquivalentTo(ss);
+            }
+        }
+
+        [Fact]
         public void UpsertSamplerState_update()
         {
             var random = new Random();
@@ -99,7 +170,7 @@ namespace FScruiser.Core.Test.Data
 
                 var ds = new SamplerInfoDataservice_V2(db);
 
-                var ss = new SamplerState()
+                var ss = new FScruiser.Models.SamplerState()
                 {
                     StratumCode = stCode,
                     SampleGroupCode = sgCode,

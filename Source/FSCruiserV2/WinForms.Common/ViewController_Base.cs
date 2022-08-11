@@ -157,7 +157,7 @@ namespace FSCruiser.WinForms.Common
             }
             catch(Exception ex)
             {
-                Debug.Fail(ex.Message);
+                //Debug.Fail(ex.Message);
             }
 #else
             Crashes.TrackError(e);

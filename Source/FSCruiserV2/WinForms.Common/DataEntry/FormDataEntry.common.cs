@@ -76,7 +76,6 @@ namespace FSCruiser.WinForms.DataEntry
 
         protected void InitializePageContainer()
         {
-            Debug.Assert(DataService.CuttingUnit != null);
 
             PageContainer.SuspendLayout();
 
