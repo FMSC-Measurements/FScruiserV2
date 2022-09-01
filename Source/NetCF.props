@@ -13,7 +13,7 @@
     <FMSCOrmPackageDir>$(LocalNugetPackagesDir)fmsc.orm\$(FMSCOrmVersion)</FMSCOrmPackageDir>
     <CruiseDALCorePackageDir>$(LocalNugetPackagesDir)cruisedal.core\$(CruiseDALCoreVersion)</CruiseDALCorePackageDir>
     <CruiseDALV2PackageDir>$(LocalNugetPackagesDir)cruisedal.v2\$(CruiseDALV2Version)</CruiseDALV2PackageDir>
-	<CruiseDALV2UpdaterPackageDir>$(LocalNugetPackagesDir)cruisedal.v2.updator\$(CruiseDALV2Version)</CruiseDALV2UpdaterPackageDir>
+	<CruiseDALV2UpdaterPackageDir>$(LocalNugetPackagesDir)cruisedal.v2.updater\$(CruiseDALV2Version)</CruiseDALV2UpdaterPackageDir>
     <FMSCSamplingPackageDir>$(LocalNugetPackagesDir)fmsc.sampling\$(SamplingVersion)</FMSCSamplingPackageDir>
   </PropertyGroup>
 
@@ -32,7 +32,7 @@
     </Reference>
 	<Reference Include="CruiseDAL.V2.Updater, Version=$(CruiseDALV2Version), Culture=neutral, processorArchitecture=MSIL">
 		<SpecificVersion>False</SpecificVersion>
-		<HintPath>$(CruiseDALV2UpdaterPackageDir)\lib\net35-cf\CruiseDAL.V2.Updator.dll</HintPath>
+		<HintPath>$(CruiseDALV2UpdaterPackageDir)\lib\net35-cf\CruiseDAL.V2.Updater.dll</HintPath>
 	</Reference>
     <Reference Include="FMSC.ORM, Version=$(FMSCOrmVersion), Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
