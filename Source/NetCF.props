@@ -1,10 +1,10 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project=".\Common.props"/>
   <PropertyGroup>
-    <!-- these props just for CF version, these are automaicly determined for non-CF -->
+    <!-- these props just for CF version, these are automatically determined for non-CF -->
     <BackpackSqlBuilderVersion>1.1.5</BackpackSqlBuilderVersion>
     <FMSCOrmVersion>2.6.13</FMSCOrmVersion>
-    <CruiseDALCoreVersion>3.0.0.108</CruiseDALCoreVersion>
+    <CruiseDALCoreVersion>3.1.0.111</CruiseDALCoreVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -13,6 +13,7 @@
     <FMSCOrmPackageDir>$(LocalNugetPackagesDir)fmsc.orm\$(FMSCOrmVersion)</FMSCOrmPackageDir>
     <CruiseDALCorePackageDir>$(LocalNugetPackagesDir)cruisedal.core\$(CruiseDALCoreVersion)</CruiseDALCorePackageDir>
     <CruiseDALV2PackageDir>$(LocalNugetPackagesDir)cruisedal.v2\$(CruiseDALV2Version)</CruiseDALV2PackageDir>
+	<CruiseDALV2UpdaterPackageDir>$(LocalNugetPackagesDir)cruisedal.v2.updater\$(CruiseDALV2Version)</CruiseDALV2UpdaterPackageDir>
     <FMSCSamplingPackageDir>$(LocalNugetPackagesDir)fmsc.sampling\$(SamplingVersion)</FMSCSamplingPackageDir>
   </PropertyGroup>
 
@@ -29,6 +30,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(CruiseDALV2PackageDir)\lib\net35-cf\CruiseDAL.V2.dll</HintPath>
     </Reference>
+	<Reference Include="CruiseDAL.V2.Updater, Version=$(CruiseDALV2Version), Culture=neutral, processorArchitecture=MSIL">
+		<SpecificVersion>False</SpecificVersion>
+		<HintPath>$(CruiseDALV2UpdaterPackageDir)\lib\net35-cf\CruiseDAL.V2.Updater.dll</HintPath>
+	</Reference>
     <Reference Include="FMSC.ORM, Version=$(FMSCOrmVersion), Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(FMSCOrmPackageDir)\lib\net35-cf\FMSC.ORM.dll</HintPath>
